@@ -1,0 +1,326 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tbim.example/schema/tbim_symbol.schema.json",
+  "title": "TBIM drawing-annotation symbol catalog",
+  "description": "Root = catalog wrapper. A single symbol record is $defs/symbol (reference it as tbim_symbol.schema.json#/$defs/symbol). Based on the proposed record in research_notes/.../bim_data_model.md (Q6): Bonsai-style SVG in paper mm and {{query}} text templates, Revit-style tag vs generic field sources, QCAD-style per-item licence, bSDD-style classification URIs.",
+  "type": "object",
+  "required": ["catalog_id", "schema_version", "catalog_version", "generated", "title", "default_region", "status_definitions", "licence", "symbols", "vocabularies"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "catalog_id": {"type": "string"},
+    "schema_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "catalog_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "generated": {"type": "string", "format": "date"},
+    "title": {"$ref": "#/$defs/localized_text"},
+    "description": {"$ref": "#/$defs/localized_text"},
+    "default_region": {"$ref": "#/$defs/region"},
+    "units": {"type": "object", "additionalProperties": {"type": "string"}},
+    "svg_conventions": {"type": "string"},
+    "status_definitions": {
+      "type": "object",
+      "required": ["standard", "agency", "observed_practice", "unverified"],
+      "additionalProperties": {"$ref": "#/$defs/localized_text"}
+    },
+    "region_profile_definitions": {"type": "object", "propertyNames": {"$ref": "#/$defs/region"}, "additionalProperties": {"type": "string"}},
+    "discipline_definitions": {"type": "object", "propertyNames": {"$ref": "#/$defs/discipline"}, "additionalProperties": {"type": "string"}},
+    "category_definitions": {"type": "object", "propertyNames": {"$ref": "#/$defs/category"}, "additionalProperties": {"type": "string"}},
+    "classification_systems": {"type": "array", "items": {"type": "object", "required": ["system"]}},
+    "name_collision_note": {"type": "object"},
+    "licence": {"type": "object", "required": ["catalog", "rules"]},
+    "ifc_notes": {"type": "object"},
+    "basis": {"type": "object"},
+    "symbols": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/symbol"}},
+    "vocabularies": {"type": "object", "additionalProperties": {"$ref": "#/$defs/vocabulary"}}
+  },
+  "additionalProperties": false,
+
+  "$defs": {
+    "discipline": {"enum": ["ARCH", "STR", "ELEC", "ELV", "FA", "PLB", "SAN", "FP", "HVAC", "GAS", "CIVIL", "SURVEY", "GENERAL"]},
+    "category": {"enum": ["reference_marker", "tag", "level", "grid", "line_type", "hatch", "device", "fixture", "valve", "equipment", "notation", "dimension", "plan_symbol", "schedule", "sheet"]},
+    "status": {
+      "description": "standard = law or numbered standard; agency = agency manual/standard drawing; observed_practice = seen in Thai drawings or cited practitioner/teaching sources; unverified = general knowledge or inference not confirmed by a retrieved source.",
+      "enum": ["standard", "agency", "observed_practice", "unverified"]
+    },
+    "region": {"enum": ["TH", "ISO", "IEC", "US_NCS", "US_NECA", "NFPA", "US_AWS", "US_ACI", "US_ASHRAE", "ISA", "JIS", "GB", "DIN", "BS", "AS", "KS"]},
+    "general_unverified": {"const": "general practice (unverified)"},
+
+    "localized_text": {
+      "type": "object",
+      "description": "BCP-47 language keys (mirrors bSDD LanguageIsoCode). 'en' is required; 'th' is required where Thai text exists.",
+      "required": ["en"],
+      "properties": {"th": {"type": "string", "minLength": 1}, "en": {"type": "string", "minLength": 1}},
+      "additionalProperties": {"type": "string"}
+    },
+    "localized_text_th_en": {
+      "allOf": [{"$ref": "#/$defs/localized_text"}, {"required": ["th", "en"]}]
+    },
+
+    "source_ref": {
+      "type": "object",
+      "required": ["url", "evidence"],
+      "properties": {
+        "url": {"type": "string", "pattern": "^https?://"},
+        "title": {"type": "string"},
+        "evidence": {
+          "description": "How the research notes obtained it: full_text (read locally), search_snippet (search-engine extract only), schema_introspection (ifcopenshell schema), source_code (read from a repository), not_read (listed for later verification only).",
+          "enum": ["full_text", "search_snippet", "schema_introspection", "source_code", "not_read"]
+        },
+        "supports": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "standard_ref": {
+      "type": "object",
+      "required": ["code", "title", "relation"],
+      "properties": {
+        "code": {"type": "string", "description": "Standard number exactly as it appears in the research notes; never invented."},
+        "title": {"type": "string"},
+        "edition": {"type": "string"},
+        "clause": {"type": "string"},
+        "relation": {
+          "description": "defines = the standard defines this symbol/notation; governs_content = it governs the material/system the notation refers to; lineage = the glyph follows this family (not verified); drafting_reference = general drafting authority; related = context only.",
+          "enum": ["defines", "governs_content", "lineage", "drafting_reference", "related"]
+        },
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "classification_ref": {
+      "type": "object",
+      "required": ["system", "code"],
+      "properties": {
+        "system": {"type": "string", "description": "e.g. 'Uniclass 2015', 'TBIM-SYM', a bSDD dictionary"},
+        "edition": {"type": "string"},
+        "table": {"type": "string"},
+        "code": {"type": "string"},
+        "uri": {"type": ["string", "null"]},
+        "name": {"$ref": "#/$defs/localized_text"}
+      },
+      "additionalProperties": false
+    },
+    "size_mm": {
+      "type": "object",
+      "required": ["w", "h"],
+      "properties": {"w": {"type": "number", "exclusiveMinimum": 0}, "h": {"type": "number", "exclusiveMinimum": 0}},
+      "additionalProperties": false
+    },
+    "svg_path": {"type": "string", "pattern": "^[MmLlHhVvCcSsQqTtAaZz0-9 .,eE+-]+$", "description": "SVG path 'd' data; origin = insertion point; x right, y down; units per geometry.units."},
+
+    "region_profile": {
+      "type": "object",
+      "required": ["region", "status", "geometry_notes", "standards", "sources"],
+      "properties": {
+        "region": {"$ref": "#/$defs/region"},
+        "status": {"$ref": "#/$defs/status"},
+        "geometry_notes": {"$ref": "#/$defs/localized_text"},
+        "standards": {"type": "array", "items": {"$ref": "#/$defs/standard_ref"}},
+        "sources": {"type": "array", "items": {"$ref": "#/$defs/source_ref"}},
+        "source_note": {"$ref": "#/$defs/general_unverified"},
+        "svg_path": {"$ref": "#/$defs/svg_path"},
+        "nominal_size_mm": {"$ref": "#/$defs/size_mm"},
+        "symbol_ref": {"type": "string", "description": "External symbol id, e.g. IEC 60617 S-number or ISO 7010 sign code."},
+        "note": {"type": "string"}
+      },
+      "anyOf": [
+        {"properties": {"sources": {"minItems": 1}}},
+        {"required": ["source_note"]}
+      ],
+      "additionalProperties": false
+    },
+
+    "geometry": {
+      "type": "object",
+      "required": ["units", "scaling", "insertion_point", "rotation_mode", "nominal_size_mm", "size_basis", "svg_path", "svg_basis", "redraw_description"],
+      "properties": {
+        "units": {"enum": ["mm_paper", "mm_model"]},
+        "scaling": {"enum": ["paper", "model"], "description": "paper = annotative (fixed plotted size, scaled by view scale); model = true size."},
+        "insertion_point": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
+        "insertion_note": {"type": "string"},
+        "rotation_mode": {"enum": ["readable", "model", "screen"]},
+        "nominal_size_mm": {"oneOf": [{"$ref": "#/$defs/size_mm"}, {"type": "null"}]},
+        "size_basis": {"enum": ["source", "region_profile", "tbim_proposed_default", "unknown"]},
+        "size_note": {"type": "string"},
+        "svg_path": {"oneOf": [{"$ref": "#/$defs/svg_path"}, {"type": "null"}]},
+        "svg_basis": {"enum": ["notes", "notes_partial", "tbim_proposed", null]},
+        "svg_note": {"type": "string"},
+        "glyph_text": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["text", "height_mm", "at"],
+            "properties": {"text": {"type": "string"}, "height_mm": {"type": "number"}, "at": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
+            "additionalProperties": false
+          }
+        },
+        "line_pattern": {
+          "type": "object",
+          "required": ["pattern"],
+          "properties": {
+            "weight_class": {"enum": ["thin", "medium", "thick", null]},
+            "pattern": {"type": "string"},
+            "width_mm": {"type": "number"},
+            "dash_mm": {"oneOf": [{"type": "array", "items": {"type": "number"}}, {"type": "null"}], "description": "Positive = drawn, negative = gap (DXF .lin convention)."},
+            "colour": {"type": "string"},
+            "label": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "hatch_pattern": {
+          "type": "object",
+          "required": ["pattern"],
+          "properties": {"pattern": {"type": "string"}, "angle_deg": {"type": ["number", "null"]}, "spacing_mm": {"type": ["number", "null"]}},
+          "additionalProperties": false
+        },
+        "redraw_description": {"$ref": "#/$defs/localized_text_th_en"}
+      },
+      "allOf": [
+        {"if": {"properties": {"svg_path": {"type": "string"}}}, "then": {"properties": {"svg_basis": {"enum": ["notes", "notes_partial", "tbim_proposed"]}}}},
+        {"if": {"properties": {"scaling": {"const": "paper"}}}, "then": {"properties": {"units": {"const": "mm_paper"}}}},
+        {"if": {"properties": {"scaling": {"const": "model"}}}, "then": {"properties": {"units": {"const": "mm_model"}}}}
+      ],
+      "additionalProperties": false
+    },
+
+    "text_field": {
+      "type": "object",
+      "required": ["name", "source", "text_style", "required"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "source": {"enum": ["element_property", "user"], "description": "element_property = bound to the linked element/view via 'query' (Revit tag / Bonsai {{query}}); user = typed by the user (Revit generic annotation)."},
+        "query": {"type": "string", "description": "Bonsai-style {{attribute}} query evaluated against the related product or referenced view/sheet."},
+        "format": {"type": "string", "description": "Regex the value must match."},
+        "text_style": {"type": "string", "pattern": "^TH-(1\\.8|2\\.5|3\\.5|5|7)$"},
+        "required": {"type": "boolean"},
+        "default": {"type": "string"},
+        "description": {"type": "string"}
+      },
+      "if": {"properties": {"source": {"const": "element_property"}}},
+      "then": {"required": ["query"]},
+      "additionalProperties": false
+    },
+    "notation_grammar": {
+      "type": "object",
+      "required": ["name", "regex", "examples", "description", "status"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "regex": {"type": "string", "description": "Python/ECMAScript-compatible regex; every example must fully match."},
+        "examples": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "examples_note": {"type": "string"},
+        "description": {"type": "string"},
+        "groups": {"type": "array", "items": {"type": "string"}},
+        "normalization": {"type": "string"},
+        "status": {"$ref": "#/$defs/status"}
+      },
+      "additionalProperties": false
+    },
+    "ifc_mapping": {
+      "type": "object",
+      "required": ["entity", "predefined_type", "object_type", "host_relation", "host_ifc_classes"],
+      "properties": {
+        "entity": {"enum": ["IfcAnnotation", "IfcCurveStyleFont", "IfcCurveStyle", "IfcFillAreaStyleHatching", "IfcGridAxis", "IfcTextLiteral"]},
+        "predefined_type": {
+          "description": "IFC4X3_ADD2 IfcAnnotationTypeEnum (absent in IFC4). null for non-IfcAnnotation entities.",
+          "enum": ["CONTOURLINE", "DIMENSION", "ISOBAR", "ISOLUX", "ISOTHERM", "LEADER", "SURVEY", "SYMBOL", "TEXT", "USERDEFINED", "NOTDEFINED", null]
+        },
+        "object_type": {"type": ["string", "null"]},
+        "host_relation": {"enum": ["IfcRelAssignsToProduct", null]},
+        "host_ifc_classes": {"type": "array", "items": {"type": "string", "pattern": "^Ifc[A-Za-z]+$"}},
+        "ifc4_note": {"type": ["string", "null"]},
+        "pset": {
+          "type": "object",
+          "required": ["name", "properties"],
+          "properties": {"name": {"type": "string"}, "properties": {"type": "object"}},
+          "additionalProperties": false
+        },
+        "note": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"entity": {"const": "IfcAnnotation"}}}, "then": {"properties": {"predefined_type": {"type": "string"}}, "required": ["pset"]}},
+        {"if": {"properties": {"entity": {"not": {"const": "IfcAnnotation"}}}}, "then": {"properties": {"predefined_type": {"type": "null"}}}}
+      ],
+      "additionalProperties": false
+    },
+    "precedent": {
+      "type": "object",
+      "required": ["name", "note", "source"],
+      "properties": {"name": {"type": "string"}, "note": {"type": "string"}, "source": {"$ref": "#/$defs/source_ref"}},
+      "additionalProperties": false
+    },
+
+    "symbol": {
+      "type": "object",
+      "required": ["id", "version", "discipline", "category", "name", "abbreviations", "aliases", "description", "status", "region_profiles", "geometry", "text_fields", "notation_grammar", "ifc_mapping", "classification", "standards", "sources", "licence_note"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^(TH|INTL)\\.(ARCH|STR|ELEC|ELV|FA|PLB|SAN|FP|HVAC|GAS|CIVIL|SURVEY|GENERAL)\\.[A-Z0-9_]+$", "description": "Stable, language-neutral, namespaced id. Region namespace . discipline . NAME. Never reuse or rename."},
+        "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+        "discipline": {"$ref": "#/$defs/discipline"},
+        "category": {"$ref": "#/$defs/category"},
+        "name": {"$ref": "#/$defs/localized_text_th_en"},
+        "abbreviations": {"type": "array", "items": {"type": "string"}},
+        "aliases": {
+          "type": "object",
+          "required": ["th", "en"],
+          "properties": {"th": {"type": "array", "items": {"type": "string"}}, "en": {"type": "array", "items": {"type": "string"}}},
+          "additionalProperties": false
+        },
+        "description": {"$ref": "#/$defs/localized_text_th_en"},
+        "status": {"$ref": "#/$defs/status"},
+        "status_note": {"type": "string"},
+        "source_code": {"type": "string", "description": "Row code in the research notes (e.g. EL-REC-DUP)."},
+        "lineage": {"type": "array", "items": {"type": "string"}},
+        "region_profiles": {"type": "array", "items": {"$ref": "#/$defs/region_profile"}},
+        "geometry": {"$ref": "#/$defs/geometry"},
+        "text_fields": {"type": "array", "items": {"$ref": "#/$defs/text_field"}},
+        "notation_grammar": {"type": "array", "items": {"$ref": "#/$defs/notation_grammar"}},
+        "ifc_mapping": {"$ref": "#/$defs/ifc_mapping"},
+        "classification": {"type": "array", "items": {"$ref": "#/$defs/classification_ref"}},
+        "standards": {"type": "array", "items": {"$ref": "#/$defs/standard_ref"}},
+        "sources": {"type": "array", "items": {"$ref": "#/$defs/source_ref"}},
+        "source_note": {"$ref": "#/$defs/general_unverified"},
+        "verify_against": {"type": "array", "items": {"$ref": "#/$defs/source_ref"}, "description": "Primary documents named in the notes that were not read and should be used to verify this record."},
+        "precedents": {"type": "array", "items": {"$ref": "#/$defs/precedent"}},
+        "related_ids": {"type": "array", "items": {"type": "string"}},
+        "licence_note": {"type": "string", "minLength": 20}
+      },
+      "allOf": [
+        {"anyOf": [{"properties": {"sources": {"minItems": 1}}}, {"required": ["source_note"]}]},
+        {"if": {"properties": {"id": {"pattern": "^TH\\."}}},
+         "then": {"properties": {"region_profiles": {"contains": {"type": "object", "properties": {"region": {"const": "TH"}}, "required": ["region"]}}}}}
+      ],
+      "additionalProperties": false
+    },
+
+    "vocabulary": {
+      "type": "object",
+      "required": ["title", "description", "entries"],
+      "properties": {
+        "title": {"$ref": "#/$defs/localized_text_th_en"},
+        "description": {"type": "string"},
+        "resolution_rule": {"type": "string"},
+        "entries": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/vocabulary_entry"}}
+      },
+      "additionalProperties": false
+    },
+    "vocabulary_entry": {
+      "type": "object",
+      "required": ["code", "discipline", "region", "meaning", "status", "standards", "sources"],
+      "properties": {
+        "id": {"type": "string"},
+        "code": {"type": "string", "minLength": 1},
+        "discipline": {"oneOf": [{"$ref": "#/$defs/discipline"}, {"type": "null"}]},
+        "region": {"$ref": "#/$defs/region"},
+        "meaning": {"$ref": "#/$defs/localized_text_th_en"},
+        "status": {"$ref": "#/$defs/status"},
+        "standards": {"type": "array", "items": {"$ref": "#/$defs/standard_ref"}},
+        "sources": {"type": "array", "items": {"$ref": "#/$defs/source_ref"}},
+        "source_note": {"$ref": "#/$defs/general_unverified"},
+        "notes": {"type": "string"},
+        "attributes": {"type": "object"},
+        "used_by": {"type": "array", "items": {"type": "string"}},
+        "collides_with": {"type": "array", "items": {"type": "string"}}
+      },
+      "anyOf": [{"properties": {"sources": {"minItems": 1}}}, {"required": ["source_note"]}],
+      "additionalProperties": false
+    }
+  }
+}
