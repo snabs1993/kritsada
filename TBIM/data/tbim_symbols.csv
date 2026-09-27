@@ -1,0 +1,234 @@
+﻿id,discipline,category,name_th,name_en,abbreviation,status,standards,ifc_entity,geometry_summary_th
+TH.ARCH.SECTION_MARK,ARCH,reference_marker,สัญลักษณ์รูปตัด,Section mark,,observed_practice,ASA มาตรฐานการเขียนแบบก่อสร้าง; ISO 128-3:2022,IfcAnnotation,วงกลมบนกระดาษ (TBIM เสนอค่าเริ่มต้น Ø10 มม.; แหล่งไทยไม่ได้ระบุขนาด) แบ่งครึ่งด้วยเส้นผ่านศูนย์กลางแนวนอน ช่องบนใส่หมายเลขรูปตัด ช่องล่างใส่เลขแผ่น มีลูกศร/สามเหลี่ยมทึบชี้ทิศทางการมองติดกับเส้นแนวตัด (รูปทรงลูกศรยังไม่ยืนยันจากแหล่งไทย)
+TH.ARCH.DETAIL_CALLOUT,ARCH,reference_marker,สัญลักษณ์แบบขยาย,Detail / enlarged-plan callout,,observed_practice,ASA มาตรฐานการเขียนแบบก่อสร้าง,IfcAnnotation,วงกลมบนกระดาษ (TBIM เสนอค่าเริ่มต้น Ø10 มม.; แหล่งไทยไม่ได้ระบุขนาด) แบ่งครึ่งด้วยเส้นผ่านศูนย์กลางแนวนอน ช่องบนใส่หมายเลขแบบขยาย ช่องล่างใส่เลขแผ่น ต่อเส้นนำไปยังวงกลม/กรอบล้อมบริเวณที่ขยาย (กรอบล้อมเป็นการอนุมาน)
+TH.ARCH.ELEVATION_MARK,ARCH,reference_marker,สัญลักษณ์รูปด้าน (4 ทิศ),Elevation marker (four-way),,observed_practice,ASA มาตรฐานการเขียนแบบก่อสร้าง,IfcAnnotation,"เครื่องหมายสี่ส่วน มีเลข 1, 2, 3, 4 ในแต่ละส่วนพร้อมเลขแผ่น (เห็นเฉพาะชั้นข้อความ รูปทรงจริงยังไม่ทราบ) ขนาดยังไม่ทราบ"
+TH.GENERAL.GRID_BUBBLE,GENERAL,grid,หัวเส้นพิกัด (กริด),Grid bubble,,observed_practice,ASA มาตรฐานการเขียนแบบก่อสร้าง; ISO 4157-1:1998,IfcAnnotation,วงกลมบนกระดาษ (TBIM เสนอค่าเริ่มต้น Ø10 มม.) มีอักขระหนึ่งตัวอยู่กลาง ต่อกับเส้นศูนย์กลาง (เส้นลูกโซ่) ของแนวพิกัด
+TH.GENERAL.GRID_LINE,GENERAL,line_type,เส้นแนวศูนย์กลางพิกัด / เส้นศูนย์กลาง,Grid / centre line (chain line),,observed_practice,ISO 128-2:2022,IfcCurveStyleFont,เส้นลูกโซ่บาง (เส้นยาวสลับเส้นสั้น) ระยะเส้นและช่องว่างยังไม่ระบุในแหล่งไทย
+TH.ARCH.ROOM_TAG,ARCH,tag,ป้ายชื่อห้อง,Room tag,,observed_practice,ASA มาตรฐานการเขียนแบบก่อสร้าง; ISO 4157-2:1998,IfcAnnotation,"ข้อความหลายบรรทัด: บรรทัดแรกชื่อห้อง บรรทัดถัดไป ""F#,C#"" และระดับพื้นห้อง ไม่มีกรอบที่ยืนยันได้ (เห็นเฉพาะชั้นข้อความ)"
+TH.ARCH.FINISH_CODE_TAG,ARCH,tag,รหัสวัสดุพื้น/ฝ้าเพดาน,Floor / ceiling finish code tag,,observed_practice,,IfcAnnotation,"ข้อความ ""F#,C#"" ความสูงตามรูปแบบข้อความ ไม่มีกรอบที่ยืนยันได้"
+TH.ARCH.FLOOR_LEVEL_PLAN,ARCH,level,ระดับพื้นห้อง (ในแปลน),Room floor level (plan),,observed_practice,,IfcAnnotation,"ข้อความค่าระดับ เช่น ""+0.00"" อยู่ในป้ายห้องหรือข้างป้าย สัญลักษณ์กรอบ/สามเหลี่ยมของไทยยังไม่ยืนยัน"
+TH.ARCH.LEVEL_MARK,ARCH,level,ค่าระดับ (ผนัง พื้น รูปด้าน รูปตัด),"Level mark (walls, floors, elevations, sections)",CL.; EL.,observed_practice,,IfcAnnotation,ข้อความค่าระดับพร้อมคำนำหน้า (CL./EL./คำอธิบายไทย) ต่อกับเส้นระดับ รูปสามเหลี่ยม/เป้าของไทยยังไม่ยืนยัน
+TH.ARCH.STAIR_ARROW,ARCH,notation,ลูกศรทิศทางขึ้นลงบันได,Stair up/down direction arrow,,observed_practice,,IfcAnnotation,เส้นแนวกึ่งกลางบันไดพร้อมหัวลูกศรที่ปลาย มีข้อความ ขึ้น/ลง (หรือ UP/DN) รูปทรงยังไม่ยืนยัน
+TH.GENERAL.BREAK_LINE,GENERAL,line_type,เส้นตัดต่อ (เส้นแสดงเขตที่ไม่ต้องการ),Break line,,observed_practice,ISO 128-2:2022,IfcCurveStyleFont,เส้นบางมีรอยหยัก (zig-zag) หรือเส้นมือเปล่า รูปแบบที่แน่นอนยังไม่ยืนยัน
+TH.GENERAL.HIDDEN_LINE,GENERAL,line_type,เส้นประ (ส่วนที่มองไม่เห็นและส่วนปกคลุม),Hidden / overhead line (dashed),,observed_practice,ISO 128-2:2022,IfcCurveStyleFont,เส้นประ หนา 0.35 มม. ขีด 3 มม. เว้น 1 มม. (บนกระดาษ)
+TH.GENERAL.LINE_THICK_CONTINUOUS,GENERAL,line_type,เส้นเต็มหนา,Thick continuous line,,observed_practice,ISO 128-2:2022,IfcCurveStyleFont,เส้นเต็ม หนา 0.50 มม. บนกระดาษ
+TH.GENERAL.LINE_THIN_CONTINUOUS,GENERAL,line_type,เส้นเต็มบาง,Thin continuous line,,observed_practice,ISO 128-2:2022,IfcCurveStyleFont,เส้นเต็ม หนา 0.25 มม. บนกระดาษ
+TH.GENERAL.PROPERTY_LINE,GENERAL,line_type,แนวเขตที่ดิน,Property / land boundary line,,observed_practice,,IfcCurveStyleFont,รูปแบบเส้นยังไม่ทราบ (ปกติเป็นเส้นลูกโซ่หรือเส้นประยาว — ยังไม่ยืนยัน)
+TH.ARCH.PLASTER_GROOVE_LINE,ARCH,line_type,แนวเซาะร่องผนังปูนฉาบ,Plaster groove line,,observed_practice,,IfcCurveStyleFont,เส้นบนรูปด้าน/แปลนแสดงตำแหน่งร่อง ร่องจริงกว้าง 10 มม. ลึก 5 มม. (ขนาดจริง) รูปแบบเส้นยังไม่ทราบ
+TH.GENERAL.DIMENSION_EDGE_EDGE,GENERAL,dimension,ระยะริมถึงริม,"Dimension, edge to edge",,observed_practice,ISO 129-1:2018,IfcAnnotation,เส้นบอกระยะบาง 0.25 มม. พร้อมเส้นช่วยและค่าระยะ รูปแบบขีดปลาย/หัวลูกศรขึ้นกับการตั้งค่าภูมิภาค (ไทยยังไม่ยืนยัน)
+TH.GENERAL.DIMENSION_CENTRE_CENTRE,GENERAL,dimension,ระยะกึ่งกลางถึงกึ่งกลาง,"Dimension, centre to centre",,observed_practice,ISO 129-1:2018,IfcAnnotation,เส้นบอกระยะบาง 0.25 มม. พร้อมเส้นช่วยและค่าระยะ รูปแบบขีดปลาย/หัวลูกศรขึ้นกับการตั้งค่าภูมิภาค (ไทยยังไม่ยืนยัน)
+TH.GENERAL.DIMENSION_CENTRE_EDGE,GENERAL,dimension,ระยะกึ่งกลางถึงริม,"Dimension, centre to edge",,observed_practice,ISO 129-1:2018,IfcAnnotation,เส้นบอกระยะบาง 0.25 มม. พร้อมเส้นช่วยและค่าระยะ รูปแบบขีดปลาย/หัวลูกศรขึ้นกับการตั้งค่าภูมิภาค (ไทยยังไม่ยืนยัน)
+TH.ARCH.DOOR_TAG,ARCH,tag,ป้ายรหัสประตู,Door tag,D; ป,observed_practice,,IfcAnnotation,ข้อความ D# หรือ ป# ภายในกรอบ รูปทรงกรอบยังไม่ยืนยันจากแหล่งไทย
+TH.ARCH.WINDOW_TAG,ARCH,tag,ป้ายรหัสหน้าต่าง,Window tag,W; น,observed_practice,,IfcAnnotation,ข้อความ W# หรือ น# ภายในกรอบ รูปทรงกรอบยังไม่ยืนยัน
+TH.ARCH.DOOR_HINGED,ARCH,plan_symbol,ประตูบานเปิด,Hinged (swing) door,,observed_practice,,IfcAnnotation,วาดตามขนาดจริงของช่องเปิดในแปลน รูปแบบเส้นวงสวิง/รางเลื่อนยังไม่ยืนยันจากแหล่งไทย
+TH.ARCH.DOOR_SLIDING,ARCH,plan_symbol,ประตูบานเลื่อน,Sliding door,,observed_practice,,IfcAnnotation,วาดตามขนาดจริงของช่องเปิดในแปลน รูปแบบเส้นวงสวิง/รางเลื่อนยังไม่ยืนยันจากแหล่งไทย
+TH.ARCH.WINDOW_CASEMENT,ARCH,plan_symbol,หน้าต่างบานเปิด,Casement window,,observed_practice,,IfcAnnotation,วาดตามขนาดจริงของช่องเปิดในแปลน รูปแบบเส้นวงสวิง/รางเลื่อนยังไม่ยืนยันจากแหล่งไทย
+TH.ARCH.WINDOW_SLIDING,ARCH,plan_symbol,หน้าต่างบานเลื่อน,Sliding window,,observed_practice,,IfcAnnotation,วาดตามขนาดจริงของช่องเปิดในแปลน รูปแบบเส้นวงสวิง/รางเลื่อนยังไม่ยืนยันจากแหล่งไทย
+TH.ARCH.WINDOW_AWNING,ARCH,plan_symbol,หน้าต่างบานกระทุ้ง,Awning (top-hung) window,,observed_practice,,IfcAnnotation,วาดตามขนาดจริงของช่องเปิดในแปลน รูปแบบเส้นวงสวิง/รางเลื่อนยังไม่ยืนยันจากแหล่งไทย
+TH.GENERAL.NORTH_ARROW,GENERAL,notation,ลูกศรทิศเหนือ,North arrow,N,observed_practice,,IfcAnnotation,ใช้รูปแบบ GB/T 50001 เป็นค่าเริ่มต้นที่เสนอ: วงกลมบาง Ø24 มม. เข็มชี้กว้างที่หาง 3 มม. ปลายชี้ทิศเหนือ มีอักษร N ที่หัว (รูปแบบไทยยังไม่ยืนยัน)
+TH.ARCH.HATCH_WALL_RC,ARCH,hatch,สัญลักษณ์ผนัง ค.ส.ล.,Wall-type hatch: Reinforced-concrete wall,,observed_practice,,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริงตามแบบจำลอง ลวดลายยังไม่ทราบจากแหล่งไทย รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม
+TH.ARCH.HATCH_WALL_CONCRETE_BLOCK,ARCH,hatch,สัญลักษณ์ผนังคอนกรีตบล็อค,Wall-type hatch: Concrete-block wall,,observed_practice,,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริงตามแบบจำลอง ลวดลายยังไม่ทราบจากแหล่งไทย รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม
+TH.ARCH.HATCH_WALL_VENT_BLOCK,ARCH,hatch,สัญลักษณ์ผนังคอนกรีตบล็อคชนิดระบายอากาศ,Wall-type hatch: Ventilation-block wall,,observed_practice,,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริงตามแบบจำลอง ลวดลายยังไม่ทราบจากแหล่งไทย รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม
+TH.ARCH.HATCH_WALL_GYPSUM_PLYWOOD,ARCH,hatch,สัญลักษณ์ผนังยิปซั่มบอร์ดหรือไม้อัด,Wall-type hatch: Gypsum-board or plywood partition,,observed_practice,,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริงตามแบบจำลอง ลวดลายยังไม่ทราบจากแหล่งไทย รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม
+TH.ARCH.HATCH_WALL_BRICK_FULL,ARCH,hatch,สัญลักษณ์ผนังก่ออิฐมอญเต็มแผ่นหรือเต็มหน้าเสา,"Wall-type hatch: Clay-brick wall, full brick / full column width",,observed_practice,,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริงตามแบบจำลอง ลวดลายยังไม่ทราบจากแหล่งไทย รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม
+TH.ARCH.HATCH_WALL_BRICK_HALF,ARCH,hatch,สัญลักษณ์ผนังก่ออิฐมอญครึ่งแผ่น,"Wall-type hatch: Clay-brick wall, half brick",,observed_practice,,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริงตามแบบจำลอง ลวดลายยังไม่ทราบจากแหล่งไทย รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม
+TH.GENERAL.HATCH_CONCRETE_PLAIN,GENERAL,hatch,ลายวัสดุคอนกรีต,Material hatch: Plain concrete,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.HATCH_REINFORCED_CONCRETE,GENERAL,hatch,ลายวัสดุคอนกรีตเสริมเหล็ก (ค.ส.ล.),Material hatch: Reinforced concrete,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.HATCH_BRICK,GENERAL,hatch,ลายวัสดุอิฐ,Material hatch: Brick / masonry,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.HATCH_EARTH,GENERAL,hatch,ลายวัสดุดิน,Material hatch: Earth / soil,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.HATCH_TIMBER,GENERAL,hatch,ลายวัสดุไม้,Material hatch: Timber,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.HATCH_STEEL,GENERAL,hatch,ลายวัสดุเหล็ก,Material hatch: Steel,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.HATCH_INSULATION,GENERAL,hatch,ลายวัสดุฉนวน,Material hatch: Insulation,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.HATCH_SAND,GENERAL,hatch,ลายวัสดุทราย,Material hatch: Sand,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.HATCH_STONE,GENERAL,hatch,ลายวัสดุหิน,Material hatch: Stone / rubble,,unverified,ISO 128-3:2022,IfcFillAreaStyleHatching,ลายแรเงาขนาดจริง ลวดลายไทยยังไม่ทราบ ให้ใช้ตามโปรไฟล์ภูมิภาคหรือกำหนดโดยสำนักงาน
+TH.GENERAL.DRAWING_TITLE,GENERAL,notation,ชื่อรูปและมาตราส่วน,Drawing title with scale,,observed_practice,ISO 5455:1979,IfcAnnotation,ข้อความชื่อรูป (ขนาดใหญ่) ตามด้วยมาตราส่วน ขีดเส้นใต้หรือไม่ยังไม่ยืนยัน
+TH.GENERAL.SHEET_NUMBER,GENERAL,notation,เลขที่แผ่น,Sheet number,,observed_practice,US NCS V7 / UDS Module 1,IfcAnnotation,ข้อความในกรอบชื่อแบบ (DRAWING NO.) และ NO./TOTAL
+TH.GENERAL.TITLE_BLOCK,GENERAL,sheet,กรอบชื่อแบบ,Title block,,observed_practice,ISO 7200:2004; ISO 9431:1990; กฎกระทรวง ฉบับที่ 4 (พ.ศ. 2526),IfcAnnotation,กรอบข้อความตามขนาดกระดาษ ตำแหน่งช่องตามแม่แบบของสำนักงาน (ขนาดกระดาษ A1/A2/A3 ยังไม่ยืนยัน)
+TH.GENERAL.NOTE_DO_NOT_SCALE,GENERAL,notation,หมายเหตุห้ามวัดระยะจากแบบ,Do-not-scale note,,observed_practice,,IfcAnnotation,ข้อความคงที่ในกรอบชื่อแบบ
+TH.GENERAL.PERMIT_STAMP,GENERAL,notation,ตราแบบขออนุญาต,Permit-drawing stamp,,observed_practice,กฎกระทรวง ฉบับที่ 4 (พ.ศ. 2526),IfcAnnotation,ข้อความในกรอบหรือตรา ตำแหน่งตามแม่แบบ
+TH.STR.FOOTING_TAG,STR,tag,ป้ายรหัสฐานราก,Footing / pile-cap tag,F,observed_practice,,IfcAnnotation,ข้อความ F# ในกรอบหกเหลี่ยมหรือสี่เหลี่ยม (รูปกรอบเป็นแนวปฏิบัติที่ยังไม่ยืนยัน)
+TH.STR.COLUMN_TAG,STR,tag,ป้ายรหัสเสา,Column tag,C,observed_practice,,IfcAnnotation,ข้อความ C# ใกล้เสา กรอบยังไม่ยืนยัน
+TH.STR.GROUND_BEAM_TAG,STR,tag,ป้ายรหัสคานคอดิน,Ground-beam tag,GB,observed_practice,,IfcAnnotation,ข้อความ GB# ตามแนวคาน
+TH.STR.BEAM_TAG,STR,tag,ป้ายรหัสคาน,Beam tag,B; RB; TB,observed_practice,,IfcAnnotation,ข้อความ B# ตามแนวคาน
+TH.STR.STEEL_BEAM_TAG,STR,tag,ป้ายรหัสคานเหล็ก (อะเส),Steel beam tag,SB,observed_practice,,IfcAnnotation,ข้อความ SB# ตามแนวคาน
+TH.STR.SLAB_TAG,STR,tag,ป้ายรหัสพื้น,Slab tag,S; GS; SOG,unverified,,IfcAnnotation,ข้อความ S# ในวงกลมหรือวงรี
+TH.STR.STAIR_TAG,STR,tag,ป้ายรหัสบันได (โครงสร้าง),Stair tag (structural),ST,unverified,,IfcAnnotation,ข้อความ ST#
+TH.STR.PILE_MARK,STR,tag,สัญลักษณ์ตำแหน่งเสาเข็ม,Pile position mark,P; TP,unverified,,IfcAnnotation,วงกลมหรือสี่เหลี่ยมเล็กที่ตำแหน่งเสาเข็ม พร้อมข้อความ P#/TP
+TH.STR.WALL_TAG,STR,tag,ป้ายรหัสผนัง ค.ส.ล. / กำแพงกันดิน,RC wall / retaining wall tag,W; RW,unverified,,IfcAnnotation,ข้อความ W#/RW#
+TH.STR.REBAR_CALLOUT,STR,notation,คำกำกับเหล็กเสริม,Rebar callout,DB; RB; @,observed_practice,มอก. 24-2559; มอก. 20-2559; ISO 3766:2003,IfcAnnotation,ข้อความพร้อมเส้นนำชี้เหล็กเสริม ความสูงตัวอักษรตามรูปแบบข้อความ
+TH.STR.STIRRUP_CALLOUT,STR,notation,คำกำกับเหล็กปลอก,Stirrup / tie callout,ป-; ปลอก,observed_practice,มอก. 20-2559,IfcAnnotation,ข้อความพร้อมเส้นนำชี้เหล็กปลอก
+TH.STR.REBAR_GRADE_NOTE,STR,notation,ชั้นคุณภาพเหล็กเสริม,Rebar grade designation,,standard,มอก. 24-2559; มอก. 20-2559,IfcAnnotation,ข้อความในหมายเหตุทั่วไป
+TH.STR.CONCRETE_STRENGTH_NOTE,STR,notation,กำลังอัดคอนกรีต,Concrete strength note,,observed_practice,มยผ. 1101-64; วสท. 011008-21,IfcAnnotation,ข้อความในหมายเหตุทั่วไป
+TH.STR.CONCRETE_COVER_NOTE,STR,notation,ระยะหุ้มคอนกรีต,Concrete cover note,,observed_practice,มยผ. 1101-64,IfcAnnotation,ข้อความ/ตารางในหมายเหตุทั่วไป
+TH.STR.STEEL_SECTION_DESIGNATION,STR,notation,คำกำกับหน้าตัดเหล็กรูปพรรณ,Steel section designation,,observed_practice,มอก. 1228-2561; มอก. 1227; มอก. 107-2561,IfcAnnotation,ข้อความพร้อมเส้นนำ
+TH.STR.WELD_SYMBOL,STR,notation,สัญลักษณ์งานเชื่อม,Welding symbol,,unverified,AWS D1.1; AWS A2.4:2020; ISO 2553:2019,IfcAnnotation,เส้นอ้างอิงแนวนอนพร้อมลูกศรชี้รอยต่อ สัญลักษณ์รอยเชื่อมวางใต้เส้น (ด้านลูกศร) หรือเหนือเส้น (อีกด้าน) ตามระบบ AWS / ISO 2553 ระบบ B
+TH.STR.RC_MEMBER_SCHEDULE,STR,schedule,ตารางเสา / ตารางคาน,Column / beam schedule,,unverified,,IfcAnnotation,ตาราง: รหัสชิ้นส่วน | ขนาด | เหล็กบน | เหล็กล่าง | เหล็กปลอก | หมายเหตุ (คอลัมน์ยังไม่ยืนยัน)
+TH.CIVIL.STATION_CHAINAGE,CIVIL,notation,ระยะสถานี (STA),Station / chainage,STA; กม.,observed_practice,DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,ขีดตั้งฉากกับแนวศูนย์กลางพร้อมข้อความระยะสถานี
+TH.CIVIL.RC_PIPE_CULVERT,CIVIL,notation,ท่อกลมคอนกรีตเสริมเหล็ก,RC pipe culvert,RCP; ท่อ ค.ส.ล.,observed_practice,DOH Standard Drawing for Highway Design and Construction,IfcAnnotation,เส้นคู่หรือเส้นเดียวตามแนวท่อพร้อมข้อความขนาด
+TH.CIVIL.SLOPE_NOTE,CIVIL,notation,ความลาดชัน (SLOPE),Slope note,,observed_practice,,IfcAnnotation,ข้อความ SLOPE 1:n ข้างแนวท่อ/พื้นผิว
+TH.CIVIL.RC_BOX_CULVERT,CIVIL,notation,ท่อลอดเหลี่ยม ค.ส.ล.,RC box culvert,RCBC,unverified,DOH Standard Drawing for Highway Design and Construction; DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,สัญลักษณ์ในแบบยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558 / แบบมาตรฐานของหน่วยงาน
+TH.CIVIL.MANHOLE,CIVIL,equipment,บ่อพัก (งานทาง),Manhole (road drainage),MH; บ่อพัก,unverified,DOH Standard Drawing for Highway Design and Construction; DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,สัญลักษณ์ในแบบยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558 / แบบมาตรฐานของหน่วยงาน
+TH.CIVIL.CATCH_BASIN,CIVIL,equipment,บ่อรับน้ำ / ตะแกรงรับน้ำ,Catch basin,CB,unverified,DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,สัญลักษณ์ในแบบยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558 / แบบมาตรฐานของหน่วยงาน
+TH.CIVIL.CENTRELINE,CIVIL,line_type,แนวศูนย์กลางทาง,Road centreline,CL; ℄,unverified,DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcCurveStyleFont,รูปแบบเส้นยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558
+TH.CIVIL.RIGHT_OF_WAY,CIVIL,line_type,เขตทาง,Right-of-way line,ROW; เขตทาง,unverified,DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcCurveStyleFont,รูปแบบเส้นยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558
+TH.CIVIL.RID_REGULATOR_GATE,CIVIL,equipment,ประตูระบายน้ำ (ปตร.),Regulator gate (RID),ปตร.,unverified,RID มาตรฐานการเขียนแบบ กองออกแบบ; DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,สัญลักษณ์ในแบบยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558 / แบบมาตรฐานของหน่วยงาน
+TH.CIVIL.RID_CULVERT,CIVIL,equipment,ท่อระบายน้ำ (ทรบ.),Culvert (RID),ทรบ.,unverified,RID มาตรฐานการเขียนแบบ กองออกแบบ; DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,สัญลักษณ์ในแบบยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558 / แบบมาตรฐานของหน่วยงาน
+TH.CIVIL.RID_FARM_TURNOUT,CIVIL,equipment,ท่อระบายน้ำเข้านา (ทรม.),Farm turnout (RID),ทรม.,unverified,RID มาตรฐานการเขียนแบบ กองออกแบบ; DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,สัญลักษณ์ในแบบยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558 / แบบมาตรฐานของหน่วยงาน
+TH.CIVIL.DRAINAGE_SLOPE_ARROW,CIVIL,notation,ลูกศรทิศทางการไหลพร้อมความลาดชัน,Drainage slope arrow,,unverified,DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,สัญลักษณ์ในแบบยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558 / แบบมาตรฐานของหน่วยงาน
+TH.CIVIL.INVERT_LEVEL,CIVIL,level,ระดับท้องท่อ,Invert level,IL.; ร.ท.,unverified,DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcAnnotation,สัญลักษณ์ในแบบยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558 / แบบมาตรฐานของหน่วยงาน
+TH.CIVIL.EXISTING_VS_PROPOSED,CIVIL,line_type,เส้นแสดงสิ่งเดิม/สิ่งก่อสร้างใหม่,Existing vs proposed linework,,unverified,ISO 7518:1983; DOH คู่มือการเขียนแบบวิศวกรรมงานทาง,IfcCurveStyleFont,รูปแบบเส้นยังไม่ทราบ ต้องตรวจกับคู่มือการเขียนแบบวิศวกรรมงานทาง 2558
+TH.CIVIL.PAVEMENT_SEPARATION_LINE,CIVIL,line_type,เส้นแบ่งทิศทางจราจร,Pavement marking: separation (centre) line,,agency,DOH Standard Drawing for Highway Design and Construction,IfcCurveStyleFont,เส้นขนาดจริง (มม. ในแบบจำลอง) ตามค่าในรายละเอียด
+TH.CIVIL.PAVEMENT_LANE_LINE,CIVIL,line_type,เส้นแบ่งช่องจราจร,Pavement marking: lane line,,agency,DOH Standard Drawing for Highway Design and Construction,IfcCurveStyleFont,เส้นขนาดจริง (มม. ในแบบจำลอง) ตามค่าในรายละเอียด
+TH.CIVIL.PAVEMENT_WARNING_LINE,CIVIL,line_type,เส้นประเตือน,Pavement marking: warning dashed line,,agency,DOH Standard Drawing for Highway Design and Construction,IfcCurveStyleFont,เส้นขนาดจริง (มม. ในแบบจำลอง) ตามค่าในรายละเอียด
+TH.CIVIL.PAVEMENT_EDGE_LINE,CIVIL,line_type,เส้นขอบทาง,Pavement marking: edge line,,agency,DOH Standard Drawing for Highway Design and Construction,IfcCurveStyleFont,เส้นขนาดจริง (มม. ในแบบจำลอง) ตามค่าในรายละเอียด
+TH.SURVEY.BOUNDARY_MONUMENT,SURVEY,notation,หลักเขตที่ดิน,Land boundary monument (DOL),,agency,ระเบียบกรมที่ดิน ระวางแผนที่ UTM,IfcAnnotation,ในแปลน: วงกลมเล็กพร้อมหมายเลข 4 หลัก (แนวปฏิบัติ ยังไม่ยืนยัน) หัวหลักจริง Ø80 มม.
+TH.SURVEY.BENCHMARK,SURVEY,notation,หมุดหลักฐานระดับ (BM),Benchmark,BM; RL.; รทก.,unverified,,IfcAnnotation,สัญลักษณ์หมุด (รูปทรงยังไม่ยืนยัน) พร้อมข้อความ BM และค่าระดับ
+TH.SURVEY.SPOT_HEIGHT,SURVEY,level,ค่าระดับจุด,Spot height,,observed_practice,RTSD L7018,IfcAnnotation,จุดหรือกากบาทเล็กพร้อมค่าระดับ (รูปแบบยังไม่ยืนยัน)
+TH.SURVEY.CONTOUR_LINE,SURVEY,line_type,เส้นชั้นความสูง,Contour line,,agency,RTSD L7018,IfcAnnotation,เส้นชั้นความสูง รูปแบบ/สี/เส้นหลักยังไม่ทราบ
+TH.SURVEY.DOL_SHEET_REFERENCE,SURVEY,notation,เลขระวางแผนที่ UTM (กรมที่ดิน),DOL UTM cadastral sheet reference,,agency,ระเบียบกรมที่ดิน ระวางแผนที่ UTM; RTSD L7018,IfcAnnotation,ข้อความในกรอบแผนที่
+TH.ELEC.RECEPTACLE_DUPLEX,ELEC,device,เต้ารับคู่ 2P+G,Duplex receptacle,GFCI; RCD; WP; E,unverified,วสท. 022001,IfcAnnotation,"วงกลมโปร่ง Ø3 มม. สัมผัสแนวผนัง มีเส้นสั้นขนาน 2 เส้น ยาว 5 มม. ตัดผ่านวงกลมตั้งฉากกับผนัง ต่อท้ายด้วย GFCI/RCD, WP (กันน้ำ), E (ฉุกเฉิน), +1.20 (ความสูงติดตั้ง)"
+TH.ELEC.RECEPTACLE_SINGLE,ELEC,device,เต้ารับเดี่ยว,Single receptacle,,unverified,วสท. 022001,IfcAnnotation,วงกลม Ø3 มม. มีเส้นตรง 1 เส้นตัดผ่าน
+TH.ELEC.SOCKET_OUTLET_IEC,ELEC,device,เต้ารับ (แบบ IEC),Socket outlet (IEC),,unverified,วสท. 022001,IfcAnnotation,ครึ่งวงกลม Ø4 มม. ด้านโค้งหันเข้าห้อง ด้านตรงขนานผนัง มีก้านสั้นต่อถึงผนัง แบบมีขั้วสายดินเพิ่มเส้นขีดขวางครึ่งวงกลม
+TH.ELEC.RECEPTACLE_FLOOR,ELEC,device,เต้ารับฝังพื้น,Floor outlet,FB,unverified,วสท. 022001,IfcAnnotation,สัญลักษณ์เต้ารับคู่อยู่ภายในกรอบสี่เหลี่ยมจัตุรัส 5×5 มม.
+TH.ELEC.RECEPTACLE_3PHASE,ELEC,device,เต้ารับ 3 เฟส / เต้ารับกำลัง,3-phase power outlet,,unverified,วสท. 022001,IfcAnnotation,วงกลม Ø4 มม. ภายในมีสามเหลี่ยมทึบหรือเส้นสั้น 3 เส้น พร้อมป้ายข้อความ
+TH.ELEC.AC_OUTLET_ISOLATOR,ELEC,device,จุดต่อเครื่องปรับอากาศ,A/C outlet / isolator,AC; ISO,unverified,วสท. 022001,IfcAnnotation,สี่เหลี่ยมจัตุรัส 4×4 มม. มีอักษร AC หรือวงกลมมีเส้นทแยง
+TH.ELEC.SWITCH_1WAY,ELEC,device,สวิตช์ทางเดียว,Single-pole (one-way) switch,S; S₁,unverified,วสท. 022001,IfcAnnotation,อักษร S สูง 2.5 มม. ณ ตำแหน่งสวิตช์ หรือแบบ IEC: จุด Ø1.5 มม. มีเส้นยาว 4 มม. เอียง 45° ปลายมีขีดสั้น
+TH.ELEC.SWITCH_2WAY,ELEC,device,สวิตช์ 2 ทาง (US: 3-way),Two-way switch (US '3-way'),S3,unverified,วสท. 022001,IfcAnnotation,อักษร S₃ (แบบสหรัฐฯ) หรือแบบ IEC: จุด มีเส้นเอียง 45° และขีดสั้นที่ปลายทั้งสองด้าน
+TH.ELEC.SWITCH_DIMMER,ELEC,device,สวิตช์หรี่ไฟ,Dimmer switch,SD,unverified,วสท. 022001,IfcAnnotation,อักษร S ห้อย D หรือสัญลักษณ์สวิตช์แบบ IEC ที่มีลูกศร
+TH.ELEC.OCCUPANCY_SENSOR,ELEC,device,สวิตช์ตรวจจับการเคลื่อนไหว,Occupancy sensor,OS; PIR,unverified,วสท. 022001,IfcAnnotation,วงกลม Ø5 มม. มีอักษร OS หรือ PIR
+TH.ELEC.LUMINAIRE_LINEAR,ELEC,fixture,โคมฟลูออเรสเซนต์/LED T8,Linear luminaire,A,unverified,วสท. 022001,IfcAnnotation,สี่เหลี่ยมผืนผ้าขนาดจริงตามโคม (เช่น 1200×100 มม.) มีเส้นกึ่งกลางตามแนวยาว และป้ายระบุชนิด/จำนวนหลอดใกล้ ๆ
+TH.ELEC.LUMINAIRE_TROFFER,ELEC,fixture,โคมตะแกรง (ฝังฝ้า),Recessed troffer 600×600,B,unverified,วสท. 022001,IfcAnnotation,สี่เหลี่ยมจัตุรัสขนาดจริง 600×600 มม. มีเส้นทแยง 1 เส้น หรือเส้นภายใน 2 เส้นต่อหลอด
+TH.ELEC.LUMINAIRE_DOWNLIGHT,ELEC,fixture,โคมดาวน์ไลท์,Downlight,C,unverified,วสท. 022001,IfcAnnotation,วงกลมโปร่ง Ø6 มม. หากเป็นไฟสปอต LED มีวงกลมเล็กทึบด้านใน
+TH.ELEC.LUMINAIRE_WALL,ELEC,fixture,โคมติดผนัง,Wall bracket luminaire,D,unverified,วสท. 022001,IfcAnnotation,ครึ่งวงกลมชิดผนัง ระบายทึบครึ่งหนึ่ง
+TH.ELEC.EMERGENCY_LIGHT,ELEC,fixture,ไฟฉุกเฉิน,Emergency light (self-contained twin-head),EL; E,unverified,วสท. 3003-43,IfcAnnotation,สี่เหลี่ยมผืนผ้า 8×4 มม. มีวงกลมหรือสามเหลี่ยมเล็ก 2 อัน (หัวโคม) หรือใช้สัญลักษณ์โคมปกติที่ระบายทึบ/ทึบครึ่งหนึ่ง แสดงว่าต่อวงจรฉุกเฉิน
+TH.ELEC.EXIT_SIGN,ELEC,fixture,ป้ายทางออกฉุกเฉิน,Exit sign,EXIT,unverified,วสท. 3003-43,IfcAnnotation,สี่เหลี่ยมผืนผ้า 8×4 มม. มีข้อความ EXIT หรือวงกลมมีกากบาท สามเหลี่ยมทึบแสดงทิศทางลูกศร
+TH.ELEC.PANEL_MDB,ELEC,equipment,ตู้เมนไฟฟ้า,Main distribution board,MDB; EMDB,unverified,วสท. 022001,IfcAnnotation,สี่เหลี่ยมผืนผ้าขนาดใหญ่ ระบายทึบดำ (หรือแรเงา)
+TH.ELEC.PANEL_DB,ELEC,equipment,ตู้ย่อย,Distribution board / load panel,DB; LP; PP; EDB,unverified,วสท. 022001,IfcAnnotation,สี่เหลี่ยมผืนผ้า 10×4 มม. ระบายทึบครึ่งตามแนวทแยง ติดลอย = ทึบทั้งหมด ฝังผนัง = ทึบครึ่ง
+TH.ELEC.CONSUMER_UNIT,ELEC,equipment,ตู้คอนซูเมอร์,Consumer unit,CU,unverified,วสท. 022001,IfcAnnotation,สี่เหลี่ยมผืนผ้า ระบายดำครึ่งหนึ่ง
+TH.ELEC.JUNCTION_BOX,ELEC,device,กล่องต่อสาย,Junction box,JB; J,unverified,วสท. 022001,IfcAnnotation,วงกลม Ø3 มม. มีอักษร J หรือสี่เหลี่ยมเล็ก
+TH.ELEC.HOME_RUN,ELEC,notation,ลูกศรโฮมรัน,Home-run arrow,,unverified,วสท. 022001,IfcAnnotation,"หัวลูกศรทึบยาว 3 มม. ที่ปลายแนวสายชี้ไปยังตู้ไฟ มีรหัสวงจรกำกับ ขีดขวางแนวสายแสดงจำนวนตัวนำ (ขีดยาว = นิวทรัล, ขีดสั้น = เฟส, จุด = สายดิน ตามแบบสหรัฐฯ)"
+TH.ELEC.WIRING_CONCEALED,ELEC,line_type,สายเดินในฝ้า/ผนัง,Wiring concealed in ceiling/wall,,unverified,วสท. 022001,IfcCurveStyleFont,เส้นเต็มโค้ง
+TH.ELEC.WIRING_UNDERFLOOR,ELEC,line_type,สายเดินใต้พื้น,Wiring in floor / underground,,unverified,วสท. 022001,IfcCurveStyleFont,เส้นประ
+TH.ELEC.KWH_METER,ELEC,device,มิเตอร์ (kWh),kWh meter,kWh; M,unverified,วสท. 022001,IfcAnnotation,วงกลม Ø6 มม. มีอักษร kWh หรือ M
+TH.ELEC.TRANSFORMER,ELEC,equipment,หม้อแปลง,Transformer (SLD),TR,unverified,วสท. 022001,IfcAnnotation,วงกลม 2 วงซ้อนเหลื่อมกัน (แบบ IEC)
+TH.ELEC.CIRCUIT_BREAKER,ELEC,device,เซอร์กิตเบรกเกอร์ (SLD),Circuit breaker (SLD),MCCB; ACB,unverified,วสท. 022001,IfcAnnotation,แบบ IEC: เส้นสวิตช์มีเครื่องหมาย × ที่หน้าสัมผัสคงที่; แบบสหรัฐฯ: เส้นโค้งคร่อมขั้วสองขั้ว
+TH.ELEC.ATS,ELEC,equipment,สวิตช์สลับอัตโนมัติ,Automatic transfer switch,ATS,unverified,วสท. 022001,IfcAnnotation,สี่เหลี่ยมผืนผ้ามีอักษร ATS มีสายเข้า 2 ทาง
+TH.ELEC.GENERATOR,ELEC,equipment,เครื่องกำเนิดไฟฟ้า,Generator,GEN; G,unverified,วสท. 022001,IfcAnnotation,วงกลมมีอักษร G หรือ ~
+TH.ELEC.CAPACITOR_BANK,ELEC,equipment,คาปาซิเตอร์แบงค์,Capacitor bank,CAP,unverified,วสท. 022001,IfcAnnotation,เส้นขนาน 2 เส้น (แผ่นเพลต)
+TH.ELEC.MOTOR,ELEC,equipment,มอเตอร์,Motor,M,unverified,วสท. 022001,IfcAnnotation,วงกลม Ø6 มม. มีอักษร M
+TH.ELEC.AIR_TERMINAL,ELEC,device,ตัวนำล่อฟ้า (แท่ง),Air terminal,AT,unverified,IEC 62305,IfcAnnotation,วงกลม Ø3 มม. มีจุดตรงกลาง (ในแปลน) หรือจุดทึบ
+TH.ELEC.AIR_TERMINAL_ESE,ELEC,device,ล่อฟ้าแบบ ESE,ESE air terminal (non-IEC),ESE,unverified,NF C 17-102,IfcAnnotation,วงกลม Ø6 มม. มีรูปดาว/เส้นรัศมี
+TH.ELEC.ROOF_CONDUCTOR,ELEC,line_type,ตัวนำบนหลังคา,Roof conductor,,unverified,IEC 62305,IfcCurveStyleFont,เส้นหนามีเครื่องหมาย X หรือขีดขวางสั้นเป็นระยะ
+TH.ELEC.DOWN_CONDUCTOR,ELEC,device,ตัวนำลงดิน,Down conductor,DC,unverified,IEC 62305,IfcAnnotation,เส้นตัวนำ มีวงกลมและลูกศรชี้ลงที่ตำแหน่งท่อลง
+TH.ELEC.TEST_JOINT,ELEC,device,จุดทดสอบ,Test joint / test box,TJ,unverified,IEC 62305,IfcAnnotation,สี่เหลี่ยมเล็กมีอักษร TJ
+TH.ELEC.GROUND_ROD,ELEC,device,หลักดิน,Ground rod,GR,unverified,IEC 62305,IfcAnnotation,วงกลม Ø4 มม. มีกากบาท หรือสัญลักษณ์ดินแบบ IEC (เส้นนอน 3 เส้นสั้นลงตามลำดับ)
+TH.ELEC.GROUND_PIT,ELEC,device,บ่อตรวจหลักดิน,Ground inspection pit,GP,unverified,IEC 62305,IfcAnnotation,สี่เหลี่ยมมีสัญลักษณ์หลักดินอยู่ภายใน
+TH.ELEC.MAIN_GROUND_BUSBAR,ELEC,equipment,บัสบาร์ต่อลงดินหลัก,Main ground busbar,MGB; MET,unverified,IEC 62305,IfcAnnotation,สี่เหลี่ยมผืนผ้ายาวแคบระบายทึบ
+TH.ELEC.EQUIPOTENTIAL_BOND,ELEC,line_type,การต่อประสานศักย์,Equipotential bond,EB,unverified,IEC 62305,IfcCurveStyleFont,เส้นประมีจุดเล็กที่จุดต่อประสานแต่ละจุด
+TH.ELV.TELEPHONE_OUTLET,ELV,device,เต้ารับโทรศัพท์,Telephone outlet,TEL; T,unverified,,IfcAnnotation,สามเหลี่ยมทึบ ด้านยาว 4 มม. ฐานชิดผนัง
+TH.ELV.DATA_OUTLET,ELV,device,เต้ารับ LAN,Data outlet,D; DT; LAN,unverified,,IfcAnnotation,สามเหลี่ยมโปร่งมีอักษร D (หรือ LAN) เต้ารับโทรศัพท์+ข้อมูลใช้สามเหลี่ยมแบ่งครึ่ง
+TH.ELV.TV_OUTLET,ELV,device,เต้ารับทีวี (MATV),TV / MATV outlet,TV,unverified,,IfcAnnotation,วงกลม Ø4 มม. มีอักษร TV
+TH.ELV.CCTV_CAMERA,ELV,device,กล้องวงจรปิด,CCTV camera,CCTV; C,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้า 6×3 มม. (ตัวกล้อง) มีรูปสี่เหลี่ยมคางหมู (เลนส์) ที่ปลายด้านหนึ่ง แบบโดม = วงกลมมีวงกลมในระบายครึ่ง
+TH.ELV.SPEAKER,ELV,device,ลำโพง,Ceiling speaker (PA/BGM),SP; S,unverified,,IfcAnnotation,วงกลม Ø5 มม. มีอักษร S หรือรูปกรวยลำโพง
+TH.ELV.ACCESS_CONTROL,ELV,device,ระบบควบคุมการเข้าออก,Card reader / access control,CR; DC; EB; EM,unverified,,IfcAnnotation,สี่เหลี่ยมจัตุรัส 4×4 มม. มีอักษร CR; สวิตช์ประตู DC; ปุ่มออก EB; กลอนแม่เหล็ก EM
+TH.ELV.WIFI_AP,ELV,device,จุดกระจายสัญญาณไร้สาย,Wi-Fi access point,AP,unverified,,IfcAnnotation,วงกลมมีอักษร AP หรือเส้นโค้งกระจายคลื่น
+TH.ELV.RACK,ELV,equipment,ตู้ Rack,Rack / MDF / IDF,MDF; IDF; TTB,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้าแรเงา
+TH.ELV.NURSE_CALL,ELV,device,ระบบเรียกพยาบาล,Nurse call,NC,unverified,,IfcAnnotation,วงกลมมีอักษร NC
+TH.FA.SMOKE_DETECTOR,FA,device,อุปกรณ์ตรวจจับควัน,Smoke detector,SD; S; P,unverified,วสท. 021002-24,IfcAnnotation,วงกลม Ø6 มม. มีอักษร S (หรือ SD) ชนิดโฟโตอิเล็กทริกบางครั้งใช้ P
+TH.FA.HEAT_DETECTOR,FA,device,อุปกรณ์ตรวจจับความร้อน,Heat detector (fixed / rate-of-rise),HD; H; F; R,unverified,วสท. 021002-24,IfcAnnotation,"วงกลม Ø6 มม. มีอักษร H; F = อุณหภูมิคงที่, R = อัตราการเพิ่มอุณหภูมิ"
+TH.FA.BEAM_DETECTOR,FA,device,อุปกรณ์ตรวจจับควันลำแสง,Beam smoke detector,BD-T; BD-R,unverified,วสท. 021002-24,IfcAnnotation,กล่องตัวส่ง (Tx) และตัวรับ (Rx) เชื่อมด้วยเส้นประมีลูกศร
+TH.FA.FLAME_DETECTOR,FA,device,อุปกรณ์ตรวจจับเปลวไฟ,Flame detector,FD,unverified,วสท. 021002-24,IfcAnnotation,วงกลมมีอักษร F และรูปเปลวไฟ
+TH.FA.GAS_DETECTOR,FA,device,อุปกรณ์ตรวจจับแก๊ส,Gas detector,GD,unverified,วสท. 021002-24,IfcAnnotation,วงกลมมีอักษร G
+TH.FA.DUCT_SMOKE_DETECTOR,FA,device,อุปกรณ์ตรวจจับควันในท่อลม,Duct smoke detector,DSD,unverified,วสท. 021002-24,IfcAnnotation,สี่เหลี่ยมมีอักษร SD วางในท่อลม
+TH.FA.MANUAL_STATION,FA,device,อุปกรณ์แจ้งเหตุด้วยมือ,Manual pull station,MS; MCP,unverified,วสท. 021002-24,IfcAnnotation,สี่เหลี่ยมจัตุรัส 5×5 มม. มีอักษร F (แบบ NFPA 170) หรือ MS
+TH.FA.BELL,FA,device,กระดิ่ง,Fire alarm bell,FB; B,unverified,วสท. 021002-24,IfcAnnotation,วงกลม Ø6 มม. มีรูปกระดิ่งหรืออักษร B ติดผนัง
+TH.FA.HORN_STROBE,FA,device,ไซเรน/แฟลช,Horn / strobe,HS,unverified,วสท. 021002-24,IfcAnnotation,สี่เหลี่ยมมีอักษร H และรูปสายฟ้า/X หรือสามเหลี่ยมมีอักษร HS
+TH.FA.CONTROL_PANEL,FA,equipment,ตู้ควบคุม,Fire alarm control panel,FCP; FACP,unverified,วสท. 021002-24,IfcAnnotation,สี่เหลี่ยมผืนผ้ามีอักษร FACP หรือ FCP
+TH.FA.ANNUNCIATOR,FA,equipment,ตู้แสดงผล (ตู้กราฟฟิก),Annunciator / graphic panel,ANN; GA,unverified,วสท. 021002-24,IfcAnnotation,สี่เหลี่ยมผืนผ้ามีอักษร ANN หรือ GA
+TH.FA.EOL_DEVICE,FA,device,ตัวต้านทานปลายสาย,End-of-line device,EOL,unverified,วสท. 021002-24,IfcAnnotation,สี่เหลี่ยมผืนผ้าเล็กมีอักษร EOL
+TH.FA.FLOW_TAMPER_INTERFACE,FA,device,สวิตช์ตรวจการไหล / สวิตช์ตรวจวาล์ว (จุดเชื่อมระบบแจ้งเหตุ),Flow switch / tamper switch (FA interface),FS; TS,unverified,วสท. 021002-24,IfcAnnotation,สี่เหลี่ยมมีอักษร FS หรือ TS
+TH.FA.FIRE_TELEPHONE,FA,device,โทรศัพท์ดับเพลิง,Fire telephone jack,FT,unverified,วสท. 021002-24,IfcAnnotation,สามเหลี่ยมมีอักษร FT
+TH.PLB.COLD_WATER_LINE,PLB,line_type,ท่อน้ำดี (น้ำเย็น),Cold water line,CW,unverified,มยผ. 3501-51,IfcCurveStyleFont,เส้นเต็ม เว้นช่วงเป็นระยะแล้วเขียนอักษร CW
+TH.PLB.HOT_WATER_LINE,PLB,line_type,ท่อน้ำร้อน,Hot water line,HW; HWR,unverified,มยผ. 3501-51,IfcCurveStyleFont,เส้นเต็มมีอักษร HW ท่อน้ำร้อนไหลกลับใช้ HWR
+TH.SAN.SOIL_LINE,SAN,line_type,ท่อโสโครก,Soil line,S,unverified,มยผ. 3101-51,IfcCurveStyleFont,เส้นเต็มหนามีอักษร S
+TH.SAN.WASTE_LINE,SAN,line_type,ท่อน้ำทิ้ง,Waste line,W,unverified,มยผ. 3101-51,IfcCurveStyleFont,เส้นเต็มมีอักษร W
+TH.SAN.VENT_LINE,SAN,line_type,ท่ออากาศ,Vent line,V,unverified,มยผ. 3101-51,IfcCurveStyleFont,เส้นประมีอักษร V
+TH.SAN.RAINWATER_LINE,SAN,line_type,ท่อน้ำฝน,Rainwater leader,RW; RWL,unverified,มยผ. 3101-51,IfcCurveStyleFont,เส้นมีอักษร RW หรือ RWL
+TH.SAN.CONDENSATE_DRAIN_LINE,SAN,line_type,ท่อน้ำทิ้งแอร์,Condensate drain,D; CD,unverified,มยผ. 3101-51,IfcCurveStyleFont,เส้นมีอักษร D หรือ CD
+TH.SAN.FLOOR_DRAIN,SAN,fixture,ท่อระบายน้ำพื้น (ฟลอร์เดรน),Floor drain,FD,unverified,มยผ. 3101-51,IfcAnnotation,วงกลม Ø6 มม. มีลายตาราง หรือวงกลม Ø6 มม. มีอักษร FD
+TH.SAN.CLEANOUT,SAN,fixture,ที่เปิดล้าง,Cleanout,CO; FCO; WCO,unverified,มยผ. 3101-51,IfcAnnotation,วงกลม Ø4 มม. มีอักษร CO ที่พื้นใช้ FCO ที่ผนังใช้ WCO
+TH.SAN.VENT_THROUGH_ROOF,SAN,fixture,ท่ออากาศทะลุหลังคา,Vent through roof,VTR,unverified,มยผ. 3101-51,IfcAnnotation,วงกลมที่ปลายท่ออากาศ มีอักษร VTR
+TH.SAN.ROOF_DRAIN,SAN,fixture,ตะแกรงรับน้ำฝน (รูฟเดรน),Roof drain,RD,unverified,มยผ. 3101-51,IfcAnnotation,วงกลม Ø6 มม. มีรูปโดมหรือกากบาท
+TH.SAN.GREASE_TRAP,SAN,equipment,บ่อดักไขมัน,Grease trap,GT,unverified,มยผ. 3101-51,IfcAnnotation,สี่เหลี่ยมผืนผ้ามีอักษร GT
+TH.SAN.MANHOLE,SAN,equipment,บ่อพัก,Manhole / inspection chamber,MH; บ่อพัก,unverified,มยผ. 3101-51,IfcAnnotation,สี่เหลี่ยมหรือวงกลม มีอักษร MH หรือคำว่า บ่อพัก
+TH.SAN.SEPTIC_TANK,SAN,equipment,ถังบำบัดน้ำเสีย,Septic / treatment tank,ST; WWT,unverified,มยผ. 3101-51,IfcAnnotation,สี่เหลี่ยมผืนผ้าหรือวงกลม มีข้อความ ถังบำบัดน้ำเสียสำเร็จรูป
+TH.PLB.GATE_VALVE,PLB,valve,ประตูน้ำ,Gate valve,GV,unverified,มยผ. 3501-51,IfcAnnotation,สามเหลี่ยม 2 รูปชนยอดกัน (รูปโบว์ไท) แบบโปร่ง
+TH.PLB.GLOBE_VALVE,PLB,valve,วาล์วลูกโลก,Globe valve,GLV,unverified,มยผ. 3501-51,IfcAnnotation,รูปโบว์ไทมีจุดทึบตรงกลาง
+TH.PLB.BALL_VALVE,PLB,valve,บอลวาล์ว,Ball valve,BV,unverified,มยผ. 3501-51,IfcAnnotation,รูปโบว์ไทมีวงกลมโปร่งตรงกลาง
+TH.PLB.CHECK_VALVE,PLB,valve,เช็ควาล์ว,Check valve,CV,unverified,มยผ. 3501-51,IfcAnnotation,รูปโบว์ไทที่ระบายทึบสามเหลี่ยมหนึ่งข้าง หรือเส้นมีลูกศรและขีดเฉียง
+TH.PLB.BUTTERFLY_VALVE,PLB,valve,วาล์วปีกผีเสื้อ,Butterfly valve,BFV,unverified,มยผ. 3501-51,IfcAnnotation,รูปโบว์ไทมีเส้นตั้งผ่านกึ่งกลาง
+TH.PLB.FLOAT_VALVE,PLB,valve,วาล์วลูกลอย,Float control valve,FCV,unverified,มยผ. 3501-51,IfcAnnotation,รูปโบว์ไทมีลูกลอยติดก้าน
+TH.PLB.PRESSURE_REDUCING_VALVE,PLB,valve,วาล์วลดแรงดัน,Pressure reducing valve,PRV,unverified,มยผ. 3501-51,IfcAnnotation,รูปโบว์ไทมีลูกศร หรืออักษร PRV
+TH.PLB.Y_STRAINER,PLB,valve,ตัวกรอง (วายสเตรนเนอร์),Y-strainer,STR,unverified,มยผ. 3501-51,IfcAnnotation,รูปตัว Y (กิ่งแยก)
+TH.PLB.WATER_METER,PLB,device,มาตรวัดน้ำ,Water meter,WM; M,unverified,มยผ. 3501-51,IfcAnnotation,สี่เหลี่ยมหรือวงกลม มีอักษร M หรือ WM
+TH.PLB.HOSE_BIBB,PLB,fixture,ก๊อกสนาม,Hose bibb,HB,unverified,มยผ. 3501-51,IfcAnnotation,รูปก๊อกน้ำขนาดเล็ก
+TH.PLB.PUMP,PLB,equipment,เครื่องสูบน้ำ,Pump,P,unverified,มยผ. 3501-51,IfcAnnotation,วงกลมมีสามเหลี่ยมภายในชี้ไปทางท่อส่ง
+TH.PLB.WATER_TANK,PLB,equipment,ถังเก็บน้ำ,Water tank,WT,unverified,มยผ. 3501-51,IfcAnnotation,สี่เหลี่ยมผืนผ้าหรือวงกลม
+TH.FP.FIRE_MAIN_LINE,FP,line_type,ท่อดับเพลิง,Fire protection main,FP; F,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcCurveStyleFont,เส้นมีอักษร FP (หรือ F)
+TH.FP.SPRINKLER_PENDENT,FP,fixture,หัวกระจายน้ำคว่ำ,Pendent sprinkler,SP,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,วงกลมโปร่ง Ø3 มม.
+TH.FP.SPRINKLER_UPRIGHT,FP,fixture,หัวกระจายน้ำหงาย,Upright sprinkler,SU,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,วงกลม Ø3 มม. มีจุดตรงกลาง หรือระบายทึบ
+TH.FP.SPRINKLER_SIDEWALL,FP,fixture,หัวกระจายน้ำติดผนัง,Sidewall sprinkler,SW,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,ครึ่งวงกลมชิดผนัง
+TH.FP.FIRE_HOSE_CABINET,FP,equipment,ตู้สายฉีดน้ำดับเพลิง,Fire hose cabinet,FHC; FHR,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,สี่เหลี่ยมผืนผ้า 8×4 มม. แบ่งตามแนวทแยง ระบายทึบครึ่งหนึ่ง หากเป็นสายฉีดแบบม้วน (FHR) มีวงกลมภายใน
+TH.FP.FIRE_DEPARTMENT_CONNECTION,FP,equipment,หัวรับน้ำดับเพลิง,Fire department connection (Siamese),FDC,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,รูปตัว Y มีวงกลม 2 วง
+TH.FP.HYDRANT,FP,equipment,หัวดับเพลิง (ภายนอก),Fire hydrant,FH,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,วงกลมมีจุดทึบตรงกลางและกิ่งแยก
+TH.FP.EXTINGUISHER,FP,equipment,ถังดับเพลิง,Portable extinguisher,FE,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,สามเหลี่ยมทึบ หรือสี่เหลี่ยมผืนผ้ามีอักษร FE ต่อท้ายชนิด CO2 / ABC (ผงเคมีแห้ง)
+TH.FP.ALARM_CHECK_VALVE,FP,valve,วาล์วสัญญาณเตือน,Alarm check valve,ACV,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,สัญลักษณ์เช็ควาล์วอยู่ในวงกลม มีอักษร ACV
+TH.FP.ZONE_CONTROL_VALVE,FP,valve,ชุดวาล์วควบคุมโซน,Zone control valve assembly,ZCV,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,ชุดประกอบ: ประตูน้ำแบบ OS&Y + สวิตช์ตรวจการไหล (FS) + สวิตช์ตรวจวาล์ว (TS) + วาล์วทดสอบ/ระบายน้ำ
+TH.FP.FLOW_SWITCH,FP,device,สวิตช์ตรวจการไหล,Flow switch,FS,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,สี่เหลี่ยมมีอักษร FS วางบนท่อ
+TH.FP.TAMPER_SWITCH,FP,device,สวิตช์ตรวจวาล์ว,Tamper / supervisory switch,TS,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,สี่เหลี่ยมมีอักษร TS
+TH.FP.FIRE_PUMP,FP,equipment,เครื่องสูบน้ำดับเพลิง,Fire pump / jockey pump,FP; JP,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,สัญลักษณ์ปั๊ม (วงกลม) มีอักษร FP หรือ JP
+TH.FP.INSPECTOR_TEST_VALVE,FP,valve,ชุดทดสอบ (วาล์วทดสอบ),Inspector's test valve,ITV,unverified,วสท. 3002-51; ประกาศกระทรวงอุตสาหกรรม พ.ศ. 2552,IfcAnnotation,สัญลักษณ์วาล์วพร้อมอักษร ITV
+TH.HVAC.SUPPLY_DIFFUSER,HVAC,fixture,หัวจ่ายลมเย็น,Supply air diffuser (square / 4-way),SAD,unverified,,IfcAnnotation,สี่เหลี่ยมจัตุรัสขนาดจริง มีเส้นทแยงทั้งสองเส้น (X) ลูกศรแสดงทิศทางการกระจายลม
+TH.HVAC.RETURN_GRILLE,HVAC,fixture,หน้ากากลมกลับ,Return air grille,RAG,unverified,,IfcAnnotation,สี่เหลี่ยมมีเส้นทแยง 1 เส้น
+TH.HVAC.EXHAUST_GRILLE,HVAC,fixture,หน้ากากลมดูดออก,Exhaust air grille,EAG,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้ามีเส้นทแยง 1 เส้น และอักษร EAG
+TH.HVAC.FRESH_AIR_LOUVER,HVAC,fixture,หน้ากากลมภายนอก,Fresh air louver,FAL; OAL,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้ามีเส้นขนาน (ครีบ)
+TH.HVAC.SLOT_DIFFUSER,HVAC,fixture,หัวจ่ายลมแบบสล็อต,Linear slot diffuser,SLD,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้ายาวมีเส้นช่องสล็อต
+TH.HVAC.SUPPLY_DUCT,HVAC,line_type,ท่อลมส่ง,Supply duct,,unverified,,IfcCurveStyleFont,ท่อลมเขียนเส้นคู่ รูปตัดเป็นสี่เหลี่ยมมีกากบาท X (ลมส่ง)
+TH.HVAC.RETURN_DUCT,HVAC,line_type,ท่อลมกลับ,Return duct,,unverified,,IfcCurveStyleFont,ท่อลมเขียนเส้นคู่ รูปตัดเป็นสี่เหลี่ยมมีเส้นทแยง 1 เส้น (ลมกลับ)
+TH.HVAC.FIRE_DAMPER,HVAC,device,ลิ้นกันไฟ,Fire damper,FD; MFD; SD,unverified,,IfcAnnotation,เส้นท่อลมมีสามเหลี่ยมทึบ หรืออักษร FD แบบมอเตอร์ MFD ลิ้นกันควัน SD
+TH.HVAC.VOLUME_DAMPER,HVAC,device,ลิ้นปรับปริมาณลม,Volume damper,VD,unverified,,IfcAnnotation,เส้นขวางท่อลมมีวงกลมเล็ก (จุดหมุน)
+TH.HVAC.FLEX_DUCT,HVAC,line_type,ท่อลมอ่อน,Flexible duct,,unverified,,IfcCurveStyleFont,เส้นคู่หยักหรือซิกแซก
+TH.HVAC.FCU,HVAC,equipment,เครื่องเป่าลมเย็น (แฟนคอยล์),Fan coil unit,FCU,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้าขนาดจริง ป้ายชื่อในวงรีหรือหกเหลี่ยม เช่น FCU-1
+TH.HVAC.AHU,HVAC,equipment,เครื่องส่งลมเย็น,Air handling unit,AHU,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้า ป้ายชื่อ AHU-1
+TH.HVAC.CONDENSING_UNIT,HVAC,equipment,คอยล์ร้อน,Condensing unit,CDU,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้ามีวงกลมพัดลม ป้ายชื่อ CDU-1
+TH.HVAC.EXHAUST_FAN,HVAC,equipment,พัดลมระบายอากาศ,Exhaust / supply / pressurisation fan,EF; SF; PF,unverified,,IfcAnnotation,วงกลมมีรูปใบพัด หรือสี่เหลี่ยมผืนผ้าป้ายชื่อ EF-1
+TH.HVAC.CHILLER,HVAC,equipment,เครื่องทำน้ำเย็น,Chiller,CH,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้า ป้ายชื่อ CH-1
+TH.HVAC.CHILLED_WATER_PIPE,HVAC,line_type,ท่อน้ำเย็นส่ง/กลับ,Chilled / condenser water pipe,CHS; CHR; CDS; CDR,unverified,,IfcCurveStyleFont,เส้นท่อมีอักษร CHS/CHR ท่อน้ำระบายความร้อนใช้ CDS/CDR
+TH.HVAC.REFRIGERANT_PIPE,HVAC,line_type,ท่อสารทำความเย็น,Refrigerant piping,RL; RS; R,unverified,,IfcCurveStyleFont,เส้นท่อมีอักษร RL (ท่อของเหลว) / RS (ท่อดูด) หรือ R
+TH.HVAC.THERMOSTAT,HVAC,device,เทอร์โมสตัท,Thermostat,T,unverified,,IfcAnnotation,วงกลม Ø4 มม. มีอักษร T
+TH.GAS.GAS_LINE,GAS,line_type,ท่อก๊าซ,Gas line,G; LPG,unverified,,IfcCurveStyleFont,เส้นมีอักษร G หรือ LPG
+TH.GAS.GAS_VALVE,GAS,valve,วาล์วก๊าซ,Gas shut-off valve,GV,unverified,,IfcAnnotation,รูปโบว์ไท (ประตูน้ำ/บอลวาล์ว) มีอักษร G
+TH.GAS.REGULATOR,GAS,device,ตัวปรับความดัน,Gas pressure regulator,REG,unverified,,IfcAnnotation,วงกลมหรือสี่เหลี่ยมมีอักษร REG
+TH.GAS.CYLINDER_BANK,GAS,equipment,ถังก๊าซ / ถังเก็บ,Cylinder bank / bulk tank,LPG,unverified,,IfcAnnotation,สี่เหลี่ยมผืนผ้าหรือวงกลมหลายวง มีอักษร LPG
+TH.GAS.LEAK_DETECTOR,GAS,device,อุปกรณ์ตรวจจับแก๊ส (ระบบก๊าซ),Gas leak detector,GD,unverified,,IfcAnnotation,วงกลมมีอักษร G
+INTL.GENERAL.REVISION_CLOUD,GENERAL,notation,เมฆแก้ไขแบบ,Revision cloud,,observed_practice,ASME Y14.35,IfcAnnotation,เส้นโค้งต่อเนื่องเป็นรูปเมฆล้อมบริเวณ ขนาดโค้งยังไม่กำหนด
+INTL.SURVEY.CONTROL_POINT,SURVEY,notation,หมุดควบคุม,Survey control point,,observed_practice,,IfcAnnotation,รูปทรงยังไม่ได้บันทึกในโน้ต ให้วาดใหม่ภายหลัง
+INTL.SURVEY.TRAVERSE_POINT,SURVEY,notation,หมุดวงรอบ,Traverse point,,observed_practice,,IfcAnnotation,รูปทรงยังไม่ได้บันทึกในโน้ต ให้วาดใหม่ภายหลัง
+INTL.SURVEY.SETOUT_POINT,SURVEY,notation,จุดวางผัง,Set-out point,,observed_practice,,IfcAnnotation,รูปทรงยังไม่ได้บันทึกในโน้ต ให้วาดใหม่ภายหลัง
+INTL.ELEC.PUSH_BUTTON,ELEC,device,ปุ่มกด,Push-button,,standard,IEC 60617,IfcAnnotation,วงกลมมีจุดตรงกลาง (ตามแนวปฏิบัติ ต้องตรวจกับฐานข้อมูล IEC)
+INTL.ELEC.PUSH_BUTTON_PROTECTED,ELEC,device,ปุ่มกดแบบมีฝาป้องกัน,Push-button protected against unintentional operation,,standard,IEC 60617,IfcAnnotation,ปุ่มกดอยู่ภายในกรอบป้องกัน (ต้องตรวจสอบ)
+INTL.ELEC.PULL_CORD_SWITCH,ELEC,device,สวิตช์ดึงเชือกขั้วเดียว,Pull-cord single-pole switch,,standard,IEC 60617,IfcAnnotation,สัญลักษณ์สวิตช์มีลูกศรเล็กตามเส้น (ต้องตรวจสอบ)
+INTL.GENERAL.ISA_INSTRUMENT_BUBBLE,GENERAL,device,สัญลักษณ์เครื่องมือวัด (ISA-5.1),Instrument bubble (ISA-5.1),,standard,ANSI/ISA-5.1-2024,IfcAnnotation,วงกลม (หรือรูปทรงตามชนิด) พร้อมแถบบอกตำแหน่ง อักษรฟังก์ชันด้านบน เลขลูปด้านล่าง ขนาดยังไม่ระบุ
+INTL.GENERAL.ISA_SIGNAL_LINES,GENERAL,line_type,เส้นสัญญาณควบคุม (P&ID),Instrument signal lines (P&ID),,unverified,ANSI/ISA-5.1-2024,IfcCurveStyleFont,รูปแบบเส้นตามชนิดสัญญาณ
+INTL.ELEC.REFERENCE_DESIGNATION,ELEC,notation,รหัสอ้างอิงอุปกรณ์ (IEC 81346),Reference designation (IEC 81346),,unverified,IEC 81346-1:2022; IEC 81346-2:2019,IfcAnnotation,ข้อความ
+INTL.FA.EVACUATION_PLAN_VIEWER_POSITION,FA,notation,ตำแหน่งผู้ดูบนแผนผังหนีไฟ,Evacuation plan: viewer position ('you are here'),,standard,ISO 23601:2020; ISO 7010:2019,IfcAnnotation,รูปทรงยังไม่ได้สกัดจากมาตรฐาน
+INTL.ARCH.DEMOLITION_REPRESENTATION,ARCH,notation,การแสดงงานรื้อถอนและก่อสร้างใหม่,Demolition and rebuilding representation,,standard,ISO 7518:1983,IfcAnnotation,รูปทรงยังไม่ได้สกัดจากมาตรฐาน
+INTL.CIVIL.LANDSCAPE_SYMBOL,CIVIL,plan_symbol,สัญลักษณ์งานภูมิสถาปัตย์,Landscape drawing symbols,,standard,ISO 11091:1994,IfcAnnotation,รูปทรงยังไม่ได้สกัดจากมาตรฐาน
+INTL.STR.BAR_SHAPE_CODE,STR,notation,รหัสรูปทรงเหล็กเสริม (ISO 3766),Bar shape code (ISO 3766),,standard,ISO 3766:2003,IfcAnnotation,รูปทรงยังไม่ได้สกัดจากมาตรฐาน
+SG.GENERAL.CORENET_X_SUBMISSION_LABEL,GENERAL,notation,ป้ายระบุ Gateway การยื่น CORENET X,CORENET X gateway / submission label,,unverified,CORENET X Code of Practice,IfcAnnotation,ข้อความในกรอบสี่เหลี่ยมใกล้กรอบชื่อแบบ: ชื่อ gateway + เลขอ้างอิงโครงการ CORENET X ขนาดและตำแหน่งตามแม่แบบสำนักงาน (ไม่มีแหล่งกำหนด)
+SG.GENERAL.IFC_SG_PROPERTY_REFERENCE,GENERAL,notation,การอ้างอิงคุณสมบัติ IFC+SG (SGPset),IFC+SG property-set reference (SGPset mapping note),SGPset,agency,IFC+SG; CORENET X Code of Practice,IfcAnnotation,ข้อความเท่านั้น (อ้างอิงคุณสมบัติในแม่แบบป้าย legend หรือหมายเหตุ)
+SG.GENERAL.CP83_LAYER_NAME,GENERAL,notation,ชื่อเลเยอร์ CAD ตาม CP 83,CP 83 CAD layer name,,observed_practice,CP 83-1:2004(2026)+A1:2026; CP 83-5:2001(2026)+A1:2026,IfcAnnotation,ไม่ใช่สัญลักษณ์ที่วาด เป็นกฎการตั้งชื่อเลเยอร์ตอนส่งออก CAD
+SG.ARCH.FIRE_COMPARTMENT_LINE,ARCH,line_type,เส้นขอบเขตส่วนกันไฟ (แบบยื่น SCDF),Fire-compartment boundary line (SCDF submission),,observed_practice,SCDF Fire Code 2023,IfcCurveStyleFont,เส้นต่อเนื่องหรือเส้นลูกโซ่ตามแนวขอบเขตส่วนกันไฟ สี ความหนา และจังหวะเส้นตาม legend ของโครงการ (ไม่มีค่าจาก SCDF)
+SG.SURVEY.LOT_NUMBER,SURVEY,notation,เลขแปลงที่ดิน (MK/TS),Land lot number (MK / TS),MK; TS; U,agency,,IfcAnnotation,ข้อความในแปลงที่ดินบนผังบริเวณ/ผังที่ตั้ง
+SG.SURVEY.SHD_LEVEL_NOTATION,SURVEY,notation,สัญกรณ์ค่าระดับอ้างอิง SHD (และ RL เดิม +100 ม.),SHD level notation (and legacy +100 m RL),SHD; RL; FFL; SFL; SSL; IL; AMSL,agency,Chief Surveyor's Circular 2/2015; LSB Directives on Land Survey and Geomatics Practices 2022,IfcAnnotation,ข้อความเท่านั้น: คำนำหน้า (ถ้ามี) ค่าระดับทศนิยม 3 ตำแหน่ง และคำต่อท้าย 'SHD' (หรือค่าแบบเก่า ≥ 100 ไม่มีคำต่อท้าย)
+SG.CIVIL.MIN_PLATFORM_LEVEL,CIVIL,level,ระดับพื้นขั้นต่ำตามข้อกำหนด PUB (MPL),PUB minimum platform level (MPL),MPL,agency,PUB COP on Surface Water Drainage,IfcAnnotation,เส้นประอ้างอิงที่ระดับ MPL ที่ป้อน พร้อมป้าย 'MPL <ค่า> SHD' ชนิดเส้นเป็นข้อเสนอของ TBIM

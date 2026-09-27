@@ -1,0 +1,273 @@
+<title>ชุดแบบตัวอย่าง TBIM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Sarabun:wght@400;600;700&display=swap">
+<style>
+:root {
+  --page: #EEF0EC; --sheet: #FDFDFA; --panel: #FFFFFF;
+  --ink: #1C2327; --ink-2: #56626A; --rule: #CBD1CC; --grid: #7C8A93;
+  --under: #B9C0BC; --under-fill: #E6E9E5; --under-text: #9AA39F; --water: #DCEBF3;
+  --accent: #2F5BD3; --accent-soft: #E3E9FB; --hl: rgba(47, 91, 211, 0.16);
+  --d-ARCH: #1C2327; --d-GENERAL: #1C2327; --d-STR: #3B5A8C; --d-ELEC: #B0306E; --d-ELV: #6F48B0; --d-FA: #C2410C;
+  --d-FP: #C81E1E; --d-PLB: #1F6FB2; --d-SAN: #137A70; --d-HVAC: #0E7490; --d-GAS: #9A6400; --d-CIVIL: #4D7C0F; --d-SURVEY: #7A5230;
+  --sg-new: #C026D3; --sg-exist: #0891B2; --sg-demo: #B7950B;
+  --st-standard: #2E7D4F; --st-agency: #5B4BB7; --st-observed: #8F6400; --st-unverified: #B3261E;
+  --font-body: "IBM Plex Sans Thai", "Sarabun", "Noto Sans Thai", system-ui, sans-serif;
+  --font-draw: "Sarabun", "IBM Plex Sans Thai", "Noto Sans Thai", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0F1316; --sheet: #161D22; --panel: #1A2228;
+    --ink: #DCE4E8; --ink-2: #98A6AE; --rule: #2F3C45; --grid: #7F909B;
+    --under: #45525A; --under-fill: #20292F; --under-text: #5F6E77; --water: #16303D;
+    --accent: #86A6FF; --accent-soft: #22304F; --hl: rgba(134, 166, 255, 0.2);
+    --d-ARCH: #DCE4E8; --d-GENERAL: #DCE4E8; --d-STR: #8FB0E6; --d-ELEC: #EE86B9; --d-ELV: #B99BEF; --d-FA: #FB9A5B;
+    --d-FP: #FF7B7B; --d-PLB: #6CB6F2; --d-SAN: #5CCABE; --d-HVAC: #4FC3DB; --d-GAS: #E3B34F; --d-CIVIL: #9ACD5A; --d-SURVEY: #D1A67A;
+    --sg-new: #E879F9; --sg-exist: #22D3EE; --sg-demo: #FACC15;
+    --st-standard: #6CC592; --st-agency: #A99BFF; --st-observed: #E1B24A; --st-unverified: #FF8A80;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0F1316; --sheet: #161D22; --panel: #1A2228;
+  --ink: #DCE4E8; --ink-2: #98A6AE; --rule: #2F3C45; --grid: #7F909B;
+  --under: #45525A; --under-fill: #20292F; --under-text: #5F6E77; --water: #16303D;
+  --accent: #86A6FF; --accent-soft: #22304F; --hl: rgba(134, 166, 255, 0.2);
+  --d-ARCH: #DCE4E8; --d-GENERAL: #DCE4E8; --d-STR: #8FB0E6; --d-ELEC: #EE86B9; --d-ELV: #B99BEF; --d-FA: #FB9A5B;
+  --d-FP: #FF7B7B; --d-PLB: #6CB6F2; --d-SAN: #5CCABE; --d-HVAC: #4FC3DB; --d-GAS: #E3B34F; --d-CIVIL: #9ACD5A; --d-SURVEY: #D1A67A;
+  --sg-new: #E879F9; --sg-exist: #22D3EE; --sg-demo: #FACC15;
+  --st-standard: #6CC592; --st-agency: #A99BFF; --st-observed: #E1B24A; --st-unverified: #FF8A80;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--page); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.6; padding-inline: 16px; padding-block: 20px 48px; }
+.wrap { max-width: 1400px; margin: 0 auto; display: grid; gap: 22px; }
+header.top { display: grid; gap: 8px; max-width: 80ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+h1 { font-family: var(--font-draw); font-weight: 700; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.2; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--font-draw); font-weight: 700; font-size: 22px; margin: 0; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede { color: var(--ink-2); }
+code, .mono { font-family: var(--font-mono); font-size: 0.92em; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13.5px; color: var(--ink-2); }
+.stats span { display: inline-flex; gap: 6px; align-items: center; }
+.stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* Toolbar */
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; background: var(--panel); }
+.seg button { font: inherit; font-size: 13.5px; border: 0; background: transparent; color: var(--ink); padding: 6px 12px; cursor: pointer; border-right: 1px solid var(--rule); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.group-label { font-size: 12.5px; color: var(--ink-2); margin-right: 6px; }
+.region-note { font-size: 13px; color: var(--ink-2); max-width: 90ch; }
+
+/* Sheet index tabs */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--rule); }
+.tabs button { font: inherit; font-size: 13.5px; display: grid; gap: 0; text-align: left; white-space: nowrap; background: transparent; color: var(--ink-2);
+  border: 1px solid transparent; border-bottom: 0; border-radius: 6px 6px 0 0; padding: 6px 12px 7px; cursor: pointer; }
+.tabs button .tab-no { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; }
+.tabs button[aria-selected="true"] { background: var(--panel); color: var(--ink); border-color: var(--rule); font-weight: 600; }
+
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start; }
+@media (max-width: 1080px) { .workspace { grid-template-columns: minmax(0, 1fr); } }
+.sheet-frame { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; overflow-y: hidden; }
+.sheet-frame svg { display: block; width: 100%; height: auto; min-width: 720px; }
+.sheet-frame.zoomed svg { width: 200%; }
+.sheet-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-2); padding-top: 8px; }
+
+/* glyph classes (paper mm) */
+.gl .s, .gl .st, .gl .sk { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+.gl .s:not([stroke-width]) { stroke-width: 0.25; }
+.gl .st:not([stroke-width]) { stroke-width: 0.18; }
+.gl .sk:not([stroke-width]) { stroke-width: 0.5; }
+.gl .f { fill: currentColor; stroke: none; }
+.gl .bg { fill: var(--sheet); stroke: currentColor; }
+.gl .bg:not([stroke-width]) { stroke-width: 0.25; }
+.gl .tx { fill: currentColor; stroke: none; font-family: var(--font-draw); dominant-baseline: central; }
+.gl .tx:not([text-anchor]) { text-anchor: middle; }
+
+svg .sym { cursor: pointer; }
+svg .sym:focus { outline: none; }
+svg .sym .hit { fill: transparent; stroke: none; }
+svg .sym:hover .hit, svg .sym:focus-visible .hit { fill: var(--hl); }
+svg .sym.selected .hit { fill: var(--hl); stroke: var(--accent); stroke-width: 0.35; stroke-dasharray: 1 0.8; }
+
+.inspector { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 18px; display: grid; gap: 14px;
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); max-height: calc(100vh - 24px); overflow-y: auto; }
+@media (max-width: 1080px) { .inspector { position: static; max-height: none; } }
+.insp-head { display: grid; gap: 4px; }
+.insp-id { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-2); word-break: break-all; }
+.insp-name { font-family: var(--font-draw); font-size: 22px; font-weight: 700; line-height: 1.25; }
+.insp-en { color: var(--ink-2); font-size: 14px; }
+.insp-glyph { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.insp-glyph svg { display: block; width: 100%; height: auto; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-2); white-space: nowrap; }
+.status { font-weight: 600; border-color: currentColor; }
+.status.standard { color: var(--st-standard); } .status.agency { color: var(--st-agency); }
+.status.observed_practice { color: var(--st-observed); } .status.unverified { color: var(--st-unverified); }
+.status-note { font-size: 13px; color: var(--ink-2); }
+.kv { display: grid; gap: 4px; }
+.kv > span:first-child { font-size: 12px; letter-spacing: 0.04em; color: var(--ink-2); text-transform: uppercase; font-family: var(--font-mono); }
+.kv p { font-size: 14px; }
+.profiles { display: grid; gap: 8px; }
+.profile { border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; font-size: 13.5px; }
+.profile.active { border-color: var(--accent); background: var(--accent-soft); }
+.profile .row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.profile .region { font-family: var(--font-mono); font-weight: 500; }
+.code { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7; background: var(--page); border-radius: 6px; padding: 8px 10px; overflow-x: auto; white-space: pre; }
+.sources { display: grid; gap: 4px; font-size: 13px; padding-left: 18px; margin: 0; }
+.sources a { color: var(--accent); word-break: break-word; }
+details summary { cursor: pointer; font-size: 13.5px; color: var(--accent); }
+details pre { font-family: var(--font-mono); font-size: 11.5px; line-height: 1.5; background: var(--page); padding: 10px; border-radius: 6px; overflow: auto; max-height: 360px; margin: 8px 0 0; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; }
+.dot.standard { background: var(--st-standard); } .dot.agency { background: var(--st-agency); }
+.dot.observed_practice { background: var(--st-observed); } .dot.unverified { background: var(--st-unverified); }
+
+/* All-symbols grid */
+.filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.filters select, .filters input { font: inherit; font-size: 14px; color: var(--ink); background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 6px 10px; }
+.filters input { min-width: 0; flex: 1 1 200px; }
+.grid-h { margin-top: 12px; display: flex; gap: 8px; align-items: baseline; }
+.grid-h .mono { color: var(--ink-2); font-weight: 400; font-size: 12px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
+.card { font: inherit; text-align: left; display: grid; gap: 4px; align-content: start; background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; padding: 6px; cursor: pointer; }
+.card svg { width: 100%; height: auto; display: block; border-radius: 4px; }
+.card[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.card-name { font-size: 13px; line-height: 1.35; display: flex; gap: 6px; align-items: baseline; }
+.card-id { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-2); word-break: break-all; }
+
+/* Beam tool */
+section.block { display: grid; gap: 16px; border-top: 1px solid var(--rule); padding-top: 24px; }
+.block-intro { max-width: 78ch; color: var(--ink-2); }
+.rebar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .rebar { grid-template-columns: minmax(0, 1fr); } }
+.form { display: grid; gap: 12px; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; }
+.field { display: grid; gap: 4px; }
+.field label { font-size: 13px; color: var(--ink-2); }
+.field-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.field-row .field { flex: 1 1 120px; }
+input[type="text"], .form select { font: inherit; font-family: var(--font-mono); font-size: 15px; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 10px; width: 100%; }
+input.bad { border-color: var(--st-unverified); }
+.parse { font-size: 13px; color: var(--ink-2); min-height: 1.4em; }
+.parse.err { color: var(--st-unverified); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 600; color: var(--ink-2); font-size: 12.5px; }
+td.num { text-align: right; font-family: var(--font-mono); }
+.table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; }
+.beam-frame { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; }
+.beam-frame svg { display: block; width: 100%; height: auto; max-height: 460px; }
+.note { font-size: 13px; color: var(--ink-2); }
+footer { font-size: 13px; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 16px; display: grid; gap: 6px; }
+@media (prefers-reduced-motion: no-preference) { svg .sym .hit { transition: fill 120ms ease; } }
+</style>
+
+<svg id="defs" width="0" height="0" style="position:absolute" aria-hidden="true"></svg>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">TBIM · Drawing annotation · ชุดแบบตัวอย่าง</div>
+    <h1>บ้านพักอาศัย 1 ชั้น ครบทุกระบบ วาดจากคลังสัญลักษณ์ TBIM</h1>
+    <p class="lede">ชุดแบบนี้มีผังบริเวณ สถาปัตย์ โครงสร้าง ไฟฟ้า กระแสอ่อน แจ้งเหตุ ล่อฟ้า ประปา สุขาภิบาล ดับเพลิง ก๊าซ และปรับอากาศ ทุกแผ่นมีตารางสัญลักษณ์ของสาขานั้นครบทุกรายการในชุดข้อมูล กดที่สัญลักษณ์บนแผ่นหรือในตารางเพื่อดูข้อมูลที่ TBIM เก็บไว้ สลับเป็นแบบสิงคโปร์เพื่อดูระดับ SHD สีงานต่อเติม และกรอบชื่อแบบของ QP</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="toolbar" role="group" aria-label="ตัวเลือกการแสดงผล">
+    <div>
+      <span class="group-label">มาตรฐาน</span>
+      <span class="seg" id="region-seg">
+        <button type="button" data-region="TH" aria-pressed="true">ไทย</button>
+        <button type="button" data-region="SG" aria-pressed="false">สิงคโปร์</button>
+        <button type="button" data-region="GB" aria-pressed="false">จีน GB/T</button>
+        <button type="button" data-region="JIS" aria-pressed="false">ญี่ปุ่น JIS</button>
+        <button type="button" data-region="US_NCS" aria-pressed="false">สหรัฐฯ NCS</button>
+      </span>
+    </div>
+    <div>
+      <span class="group-label">ป้ายประตู-หน้าต่าง</span>
+      <span class="seg" id="prefix-seg">
+        <button type="button" data-prefix="latin" aria-pressed="true">D1 / W1</button>
+        <button type="button" data-prefix="thai" aria-pressed="false">ป1 / น1</button>
+      </span>
+    </div>
+    <span class="seg"><button type="button" id="zoom-btn" aria-pressed="false">ขยายแผ่น</button></span>
+  </div>
+  <p class="region-note" id="region-note"></p>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="สารบัญแบบ"></nav>
+
+  <div class="workspace">
+    <div>
+      <div id="sheet-view">
+        <div class="sheet-frame" id="sheet-frame">
+          <svg id="sheet" viewBox="0 0 420 297" role="img" aria-label="แผ่นแบบ"></svg>
+        </div>
+        <div class="sheet-meta"><span id="sheet-caption"></span><span>กระดาษ A3 420 × 297 มม. · ขนาดสัญลักษณ์เป็นมิลลิเมตรบนกระดาษ</span></div>
+      </div>
+
+      <div id="legend-view" hidden>
+        <div class="filters">
+          <select id="f-disc" aria-label="สาขา"></select>
+          <select id="f-status" aria-label="สถานะ"></select>
+          <input type="search" id="f-q" placeholder="ค้นหา เช่น FCU, เต้ารับ, DB" aria-label="ค้นหาสัญลักษณ์">
+          <span class="note" id="legend-count"></span>
+        </div>
+        <div id="legend-grid"></div>
+      </div>
+
+      <div id="beam-view" hidden>
+        <section class="block" aria-labelledby="rebar-h" style="border-top:0;padding-top:0">
+          <h2 id="rebar-h">อ่านคำกำกับเหล็กเสริมแล้ววาดรูปตัดคาน</h2>
+          <p class="block-intro">พิมพ์คำกำกับแบบไทย (<code>4-DB16</code>, <code>ป-RB6@0.15</code>) หรือแบบสิงคโปร์ตาม BS 8666 (<code>4H16</code>, <code>H10-150</code>) TBIM จะแยกเป็นจำนวน ชนิด ขนาด ระยะห่าง บอกมาตรฐานวัสดุ แล้ววาดรูปตัดคานใหม่ รูปแบบไทยใช้ regex จากระเบียน <code>TH.STR.REBAR_CALLOUT</code></p>
+          <div class="rebar">
+            <div class="form">
+              <div class="field-row">
+                <div class="field"><label for="beam-tag">ป้ายคาน</label><input type="text" id="beam-tag" value="B1" autocomplete="off" spellcheck="false"></div>
+                <div class="field"><label for="beam-size">ขนาดคาน (ม.)</label>
+                  <select id="beam-size"><option value="0.15x0.30">0.15 × 0.30</option><option value="0.20x0.40" selected>0.20 × 0.40</option><option value="0.20x0.50">0.20 × 0.50</option><option value="0.25x0.60">0.25 × 0.60</option></select></div>
+                <div class="field"><label for="db-grade">ชั้นคุณภาพ</label><select id="db-grade"></select></div>
+              </div>
+              <div class="field"><label for="rb-top">เหล็กบน</label><input type="text" id="rb-top" value="2-DB12" autocomplete="off" spellcheck="false"><div class="parse" id="parse-top"></div></div>
+              <div class="field"><label for="rb-bot">เหล็กล่าง</label><input type="text" id="rb-bot" value="4-DB16" autocomplete="off" spellcheck="false"><div class="parse" id="parse-bot"></div></div>
+              <div class="field"><label for="rb-stir">เหล็กปลอก</label><input type="text" id="rb-stir" value="ป-RB6@0.15" autocomplete="off" spellcheck="false"><div class="parse" id="parse-stir"></div></div>
+              <div class="table-wrap"><table><thead><tr><th>คำกำกับ</th><th>อ่านได้ว่า</th><th>มาตรฐานวัสดุ</th><th style="text-align:right">กก./ม.</th></tr></thead><tbody id="rebar-table"></tbody></table></div>
+              <p class="note">น้ำหนัก 0.00617 × d² กก./ม. ระยะหุ้มคาน 3 ซม. เป็นค่าที่อ้างกันทั่วไปในไทย (ตารางบังคับอยู่ใน มยผ. 1101-64) รูปแบบสิงคโปร์ H/R ตาม BS 8666 และเกรดตาม SS 560 ยังไม่ได้ยืนยันกับต้นฉบับ</p>
+            </div>
+            <div class="beam-frame"><svg id="beam" viewBox="0 0 120 90" role="img" aria-label="รูปตัดคาน"></svg></div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <aside class="inspector" id="inspector" aria-live="polite"></aside>
+  </div>
+
+  <section class="block" aria-labelledby="clash-h">
+    <h2 id="clash-h">รหัสเดียวกัน ความหมายต่างกันตามสาขา</h2>
+    <p class="block-intro">F1 บนแผ่น A คือวัสดุพื้น แต่บนแผ่น S คือฐานราก TBIM จึงเก็บรหัสป้ายเป็น <code>สาขา:รหัส</code> และเลือกความหมายจากชุดแผ่นที่ป้ายวางอยู่</p>
+    <div class="table-wrap"><table><thead><tr><th>รหัส</th><th>ID ในชุดข้อมูล</th><th>สาขา</th><th>ความหมาย</th><th>สถานะ</th></tr></thead><tbody id="clash-table"></tbody></table></div>
+  </section>
+
+  <footer>
+    <p id="footer-cat"></p>
+    <p>โครงการ สถานที่ และเลขทะเบียนผู้ออกแบบในชุดแบบนี้สมมติขึ้นเพื่อสาธิต ใช้ก่อสร้างไม่ได้ รูปทรงสัญลักษณ์ส่วนใหญ่ยังเป็นค่าที่เสนอ (ดูสถานะของแต่ละรายการ) ต้องตรวจกับคู่มือ ASA แผ่นสัญลักษณ์ของหน่วยงาน และ CP 83-2 ของสิงคโปร์ก่อนใช้จริง</p>
+  </footer>
+</div>
+
+<script type="application/json" id="tbim-data">__TBIM_DATA__</script>
+<script>
+__TBIM_GLYPHS__
+</script>
+<script>
+__TBIM_ENGINE__
+</script>
+<script>
+__TBIM_SHEETS__
+</script>
+<script>
+__TBIM_TOOLS__
+</script>
