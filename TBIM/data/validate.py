@@ -7,11 +7,11 @@ Usage:  python3 validate.py            (validate + write CSV)
 Checks:
   * JSON Schema (draft 2020-12) via `jsonschema` (installed with pip if missing; falls back to basic checks)
   * unique symbol ids; id namespace/discipline agree with the `discipline` field
-  * every TH.* record has a TH region profile; every record/profile/vocab entry has a source URL
+  * every TH.* record has a TH region profile and every SG.* record an SG profile; every record/profile/vocab entry has a source URL
     or source_note "general practice (unverified)"
   * related_ids resolve; notation-grammar regexes compile and every example fully matches;
     text-field formats compile
-  * every source URL appears verbatim in the research notes (when the notes folder is present)
+  * every source URL appears verbatim in the research notes (TH/international notes + Singapore notes, when present)
   * vocabulary entry ids unique; collides_with references resolve
 Exit code 0 = pass, 1 = errors.
 """
@@ -27,7 +27,11 @@ HERE = Path(__file__).resolve().parent
 CATALOG = HERE / "tbim_symbols.json"
 SCHEMA = HERE / "tbim_symbol.schema.json"
 CSV_OUT = HERE / "tbim_symbols.csv"
-NOTES_DIR = HERE.parent / "research_notes" / "สัญลักษณ์งานเขียนแบบสำหรับ TBIM"
+NOTES_DIRS = [
+    HERE.parent / "research_notes" / "สัญลักษณ์งานเขียนแบบสำหรับ TBIM",
+    HERE.parent / "research_notes" / "มาตรฐานสิงคโปร์สำหรับ TBIM",
+]
+NAMESPACES = ("TH", "INTL", "SG")
 
 GENERAL_UNVERIFIED = "general practice (unverified)"
 DISCIPLINES = {"ARCH", "STR", "ELEC", "ELV", "FA", "PLB", "SAN", "FP", "HVAC", "GAS", "CIVIL", "SURVEY", "GENERAL"}
@@ -100,10 +104,14 @@ def _scan_url(text, start):
 
 
 def note_urls():
-    if not NOTES_DIR.is_dir():
+    dirs = [d for d in NOTES_DIRS if d.is_dir()]
+    if not dirs:
         return None
+    for d in NOTES_DIRS:
+        if not d.is_dir():
+            print(f"note: research notes folder missing: {d}", file=sys.stderr)
     urls = set()
-    for p in NOTES_DIR.glob("*.md"):
+    for p in (f for d in dirs for f in d.glob("*.md")):
         t = p.read_text(encoding="utf-8")
         for m in re.finditer(r"https?://", t):
             urls.add(_scan_url(t, m.start()))
@@ -137,12 +145,14 @@ def semantic_errors(catalog):
     for r in symbols:
         rid = r["id"]
         parts = rid.split(".")
-        if len(parts) != 3 or parts[0] not in ("TH", "INTL"):
+        if len(parts) != 3 or parts[0] not in NAMESPACES:
             errs.append(f"{rid}: id must be REGION.DISCIPLINE.NAME")
         elif parts[1] != r["discipline"]:
             errs.append(f"{rid}: id discipline {parts[1]} != discipline field {r['discipline']}")
         if rid.startswith("TH.") and not any(p["region"] == "TH" for p in r["region_profiles"]):
             errs.append(f"{rid}: TH record without a TH region profile")
+        if rid.startswith("SG.") and not any(p["region"] == "SG" for p in r["region_profiles"]):
+            errs.append(f"{rid}: SG record without an SG region profile")
         if not has_source(r):
             errs.append(f"{rid}: no source URL and no '{GENERAL_UNVERIFIED}' note")
         for p in r["region_profiles"]:
@@ -187,7 +197,7 @@ def semantic_errors(catalog):
                     errs.append(f"vocab {vname}: {e.get('id')} used_by unknown {u}")
     urls = note_urls()
     if urls is None:
-        print(f"note: research notes not found at {NOTES_DIR}; skipping URL provenance check", file=sys.stderr)
+        print(f"note: research notes not found at {NOTES_DIRS}; skipping URL provenance check", file=sys.stderr)
     else:
         bad = sorted({s["url"] for s in iter_sources(catalog) if s["url"] not in urls})
         for u in bad:
@@ -221,6 +231,7 @@ def main(argv):
     print("by discipline: " + ", ".join(f"{k} {v}" for k, v in sorted(Counter(r['discipline'] for r in syms).items())))
     print("by status:     " + ", ".join(f"{k} {v}" for k, v in sorted(Counter(r['status'] for r in syms).items())))
     print("by region ns:  " + ", ".join(f"{k} {v}" for k, v in sorted(Counter(r['id'].split('.')[0] for r in syms).items())))
+    print("profiles:      " + ", ".join(f"{k} {v}" for k, v in sorted(Counter(p['region'] for r in syms for p in r['region_profiles']).items())))
     print(f"with svg_path: {sum(1 for r in syms if r['geometry']['svg_path'])}")
     print(f"vocabularies:  {len(catalog['vocabularies'])} ({sum(len(v['entries']) for v in catalog['vocabularies'].values())} entries)")
     print(f"validator:     {'jsonschema ' + __import__('importlib.metadata').metadata.version('jsonschema') if js else 'basic checks'}")

@@ -86,7 +86,7 @@ var SHEETS = (function (TB) {
     var reg = TB.profileFor("TH.ARCH.LEVEL_MARK"), inner, id = "TH.ARCH.LEVEL_MARK";
     var sign = value > 0 ? "+" : value < 0 ? "-" : "±";
     if (reg === "GB" || reg === "SG") {
-      var v = reg === "SG" ? (caption && /FFL|พื้น/.test(caption) ? "FFL " : "") + (value + 3.3).toFixed(3) + " SHD" : sign + Math.abs(value).toFixed(3);
+      var v = reg === "SG" ? (caption && /FFL|พื้นชั้น|พื้นห้อง/.test(caption) ? "FFL " : "") + (value + 3.3).toFixed(3) + " SHD" : sign + Math.abs(value).toFixed(3);
       inner = '<polygon points="' + f(x) + "," + f(y) + " " + f(x - 1.6) + "," + f(y - 1.6) + " " + f(x + 1.6) + "," + f(y - 1.6) + '" style="fill:' + (reg === "SG" ? "var(--ink)" : "none") + ';stroke:var(--ink);stroke-width:0.25"/>' +
         line(x - 1.6, y - 1.6, x + 18, y - 1.6, 0.25) + text(x + 1.2, y - 3.5, v, 2.4, { anchor: "start" });
       return wrap(id, inner, [x - 2, y - 5.5, 21, 6], "ค่าระดับ " + v);
@@ -214,7 +214,7 @@ var SHEETS = (function (TB) {
     var note = text(x + 1.6, yy + 3.2, sg ? "Do not scale. Verify on site." : "หมายเหตุ: ห้ามวัดระยะจากแบบ", 1.9, { anchor: "start" }) +
       text(x + 1.6, yy + 6, sg ? "" : "ให้ตรวจสอบระยะที่หน้างาน", 1.9, { anchor: "start" });
     var nt = wrap("TH.GENERAL.NOTE_DO_NOT_SCALE", note, [x, yy, w, 8], "หมายเหตุห้ามวัดระยะจากแบบ");
-    var stamp = wrap("TH.GENERAL.PERMIT_STAMP", rect(x + 6, yy + 11, w - 12, 9, 0.4, "var(--d-GENERAL)", "none") +
+    var stamp = sg ? TB.P("SG.GENERAL.CORENET_X_SUBMISSION_LABEL", x + w / 2, yy + 15.5, { scale: 1.2 }) : wrap("TH.GENERAL.PERMIT_STAMP", rect(x + 6, yy + 11, w - 12, 9, 0.4, "var(--d-GENERAL)", "none") +
       text(x + w / 2, yy + 15.5, sg ? "FOR SUBMISSION" : "แบบขออนุญาต", 2.8, { weight: 700, color: "var(--d-GENERAL)" }), [x + 6, yy + 11, w - 12, 9], "ตราแบบขออนุญาต");
     var sy = 256;
     var sn = line(x, sy, x + w, sy, 0.4) + text(x + 1.6, sy + 3, "DRAWING NO.  แผ่นที่", 1.7, { anchor: "start", color: "var(--ink-2)" }) +
@@ -254,10 +254,15 @@ var SHEETS = (function (TB) {
     o.push(L("TH.CIVIL.EXISTING_VS_PROPOSED", [[sx(26), sy(4)], [sx(33), sy(4)], [sx(33), sy(9)], [sx(26), sy(9)], [sx(26), sy(4)]], { labelText: "สิ่งปลูกสร้างเดิม", color: sg ? "var(--sg-demo)" : undefined }));
     o.push(P("INTL.ARCH.DEMOLITION_REPRESENTATION", sx(29.5), sy(6.5)));
     o.push(rect(sx(12), sy(8), 40, 30, 0.6, sg ? "var(--sg-new)" : "var(--ink)", "var(--under-fill)"));
+    if (sg) {
+      o.push(T("SG.SURVEY.LOT_NUMBER", sx(20), sy(2.5), { anchor: "middle", size: 2.6 }));
+      o.push(T("SG.SURVEY.SHD_LEVEL_NOTATION", sx(12), sy(16.4), { text: "FFL 3.500 SHD", size: 2.2 }));
+      o.push(P("SG.CIVIL.MIN_PLATFORM_LEVEL", sx(34), sy(12.5)));
+    }
     if (sg) o.push(rect(sx(2), sy(18), 16, 12, 0.4, "var(--sg-exist)", "none") + text(sx(3.6), sy(22), "เดิม (existing)", 1.9, { anchor: "start", color: "var(--sg-exist)" }) +
       text(20, 262, "สีตาม URA / CP 83-5: ม่วงแดง = ก่อสร้างใหม่, ฟ้า = ของเดิม, เหลือง = รื้อถอน", 2.2, { anchor: "start", color: "var(--ink-2)" }));
     o.push(text(sx(16), sy(14), "อาคารพักอาศัย 1 ชั้น", 2.6, { weight: 600 }));
-    o.push(text(sx(16), sy(17.4), "FFL +0.20", 2.2));
+    if (!sg) o.push(text(sx(16), sy(17.4), "FFL +0.20", 2.2));
     [[12, 8], [20, 8], [12, 14], [20, 14]].forEach(function (p) { o.push(P("INTL.SURVEY.SETOUT_POINT", sx(p[0]), sy(p[1]))); });
     // Landscape, levels, survey marks
     [[4, 4], [6, 20], [36, 17], [33, 21]].forEach(function (p) { o.push(P("INTL.CIVIL.LANDSCAPE_SYMBOL", sx(p[0]), sy(p[1]))); });
@@ -319,6 +324,11 @@ var SHEETS = (function (TB) {
     o.push(L("TH.GENERAL.BREAK_LINE", [pt(2.9, 6.4), pt(2.9, 7.4)]));
     o.push(detailCallout(X(8.9), Y(5.2), 1, "A-07", X(7.0), Y(4.9), 7));
     o.push(P("INTL.GENERAL.REVISION_CLOUD", X(8.55), Y(1.5)));
+    if (ST.region === "SG") {
+      o.push(L("SG.ARCH.FIRE_COMPARTMENT_LINE", [pt(4.0, -0.3), pt(4.0, 6.3)], { color: "var(--d-FA)" }));
+      o.push(T("SG.GENERAL.IFC_SG_PROPERTY_REFERENCE", X(1.95), Y(7.6), { anchor: "middle", size: 2 }));
+      o.push(T("SG.GENERAL.CP83_LAYER_NAME", 20, 274, { text: "เลเยอร์ผนัง: A-_WALL----_E · ประตู: A-_DOOR----_A (CP 83-1)", size: 2 }));
+    }
     // Section cut A-A at y = 4.5 m
     o.push(line(X(-2.2) + 5.5, Y(4.5), X(-1.2), Y(4.5), 0.7) + line(X(8.6), Y(4.5), X(9.1) - 5.5, Y(4.5), 0.7));
     o.push(sectionMark(X(-2.2), Y(4.5), "A", "A-06"));

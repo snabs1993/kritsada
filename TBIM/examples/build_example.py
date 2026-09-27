@@ -13,7 +13,7 @@ HERE = Path(__file__).resolve().parent
 CATALOG = HERE.parent / "data" / "tbim_symbols.json"
 TEMPLATE = HERE / "template.html"
 OUT = HERE / "tbim_example.html"
-GLYPH_FILES = ["g1_elec.js", "g2_fire.js", "g3_plumb_hvac.js", "g4_arch_str.js", "g5_general_civil.js"]
+GLYPH_FILES = ["g1_elec.js", "g2_fire.js", "g3_plumb_hvac.js", "g4_arch_str.js", "g5_general_civil.js", "g6_sg.js"]
 SRC_FILES = {"__TBIM_ENGINE__": "engine.js", "__TBIM_SHEETS__": "sheets.js", "__TBIM_TOOLS__": "tools.js"}
 CLASH_CODES = ["F", "C", "W"]
 

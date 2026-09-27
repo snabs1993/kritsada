@@ -2,8 +2,9 @@
 
 ชุดข้อมูลสัญลักษณ์และสัญกรณ์ (notation) สำหรับแบบก่อสร้าง ในรูปแบบที่โปรแกรมอ่านได้ สำหรับโปรแกรม BIM ของไทยชื่อ **TBIM**
 ยึดแนวปฏิบัติของไทยเป็นหลัก และเก็บรูปแบบของต่างประเทศ (ISO, IEC, US NCS/NECA, NFPA, GB, JIS, DIN ฯลฯ) ไว้เป็น "โปรไฟล์ภูมิภาค" ของระเบียนเดียวกัน
+ตั้งแต่เวอร์ชัน 0.2.0 มี **โปรไฟล์สิงคโปร์ (`SG`)** สำหรับงานโครงการในสิงคโปร์ (ดูหัวข้อ 11)
 
-> **ที่มา:** สร้างจากบันทึกการค้นคว้า 6 ฉบับใน `TBIM/research_notes/สัญลักษณ์งานเขียนแบบสำหรับ TBIM/` เท่านั้น (ค้นคว้าเมื่อ 2026-09-27) **ไม่ได้ค้นเว็บเพิ่ม**
+> **ที่มา:** สร้างจากบันทึกการค้นคว้า 6 ฉบับใน `TBIM/research_notes/สัญลักษณ์งานเขียนแบบสำหรับ TBIM/` และ 3 ฉบับใน `TBIM/research_notes/มาตรฐานสิงคโปร์สำหรับ TBIM/` เท่านั้น (ค้นคว้าเมื่อ 2026-09-27) **ไม่ได้ค้นเว็บเพิ่ม**
 > URL ทุกตัวในแคตตาล็อกคัดลอกมาจากบันทึกโดยตรง (`validate.py` ตรวจให้) และไม่มีเลขมาตรฐานใดที่ไม่ได้ปรากฏในบันทึก
 
 > **ข้อควรทราบเรื่องชื่อ:** "TBIM" เป็นชื่อของ **สมาคม TBIM (Thai BIM Association, tbim.or.th)** อยู่แล้ว สมาคมนี้เผยแพร่ Thailand BIM Object / Construction Material Guideline ควรประสานงานกับสมาคม (อาจขอให้รับรองแคตตาล็อกนี้) หรือเปลี่ยนชื่อโปรแกรม
@@ -15,7 +16,7 @@
 | ไฟล์ | คืออะไร |
 |---|---|
 | `tbim_symbol.schema.json` | JSON Schema (draft 2020-12) ระดับรากคือ "แคตตาล็อก" ส่วนระเบียนสัญลักษณ์หนึ่งรายการคือ `#/$defs/symbol` ออกแบบตามโครงที่เสนอใน `bim_data_model.md` (Q6) |
-| `tbim_symbols.json` | แคตตาล็อกหลัก ประกอบด้วย `symbols` (226 ระเบียน) และ `vocabularies` (20 ชุดคำศัพท์ รวม 435 รายการ) พร้อมคำอธิบายสถานะ ภูมิภาค หมวดงาน การจัดหมวด ลิขสิทธิ์ และหมายเหตุ IFC |
+| `tbim_symbols.json` | แคตตาล็อกหลัก (catalog_version 0.2.0) ประกอบด้วย `symbols` (233 ระเบียน) และ `vocabularies` (22 ชุดคำศัพท์ รวม 661 รายการ) พร้อมคำอธิบายสถานะ ภูมิภาค หมวดงาน การจัดหมวด ลิขสิทธิ์ และหมายเหตุ IFC |
 | `tbim_symbols.csv` | ตารางแบน 1 แถวต่อ 1 สัญลักษณ์ เข้ารหัส UTF-8 พร้อม BOM เพื่อให้ Excel แสดงภาษาไทยถูกต้อง คอลัมน์: `id, discipline, category, name_th, name_en, abbreviation, status, standards, ifc_entity, geometry_summary_th` **ห้ามแก้ไฟล์นี้ด้วยมือ** ให้สร้างใหม่จาก JSON |
 | `validate.py` | ตรวจ JSON กับ schema และตรวจความถูกต้องเชิงความหมาย แล้วสร้าง CSV ใหม่ |
 | `README.md` | เอกสารนี้ |
@@ -26,11 +27,11 @@
 
 | หมวดงาน | standard | agency | observed_practice | unverified | รวม |
 |---|---:|---:|---:|---:|---:|
-| ARCH สถาปัตยกรรม | 1 | 0 | 22 | 0 | 23 |
+| ARCH สถาปัตยกรรม | 1 | 0 | 23 | 0 | 24 |
 | STR โครงสร้าง | 2 | 0 | 10 | 6 | 18 |
-| CIVIL โยธา/งานทาง | 1 | 4 | 3 | 11 | 19 |
-| SURVEY สำรวจ | 0 | 3 | 4 | 1 | 8 |
-| GENERAL ทั่วไป | 1 | 0 | 17 | 10 | 28 |
+| CIVIL โยธา/งานทาง | 1 | 5 | 3 | 11 | 20 |
+| SURVEY สำรวจ | 0 | 5 | 4 | 1 | 10 |
+| GENERAL ทั่วไป | 1 | 1 | 18 | 11 | 31 |
 | ELEC ไฟฟ้า (รวมป้องกันฟ้าผ่า) | 3 | 0 | 0 | 40 | 43 |
 | ELV สื่อสาร/สัญญาณอ่อน | 0 | 0 | 0 | 9 | 9 |
 | FA แจ้งเหตุเพลิงไหม้ | 1 | 0 | 0 | 14 | 15 |
@@ -39,37 +40,40 @@
 | SAN สุขาภิบาล | 0 | 0 | 0 | 12 | 12 |
 | HVAC ปรับอากาศ | 0 | 0 | 0 | 18 | 18 |
 | GAS ก๊าซ | 0 | 0 | 0 | 5 | 5 |
-| **รวม** | **9** | **7** | **56** | **154** | **226** |
+| **รวม** | **9** | **11** | **58** | **155** | **233** |
 
 - ระเบียนไทย (`TH.*`) 212 รายการ ในจำนวนนี้เป็นงานระบบ (MEP) 125 รายการ ครบทุกแถวของตารางใน `th_mep.md` Q4 (มี `source_code` เดิม เช่น `EL-REC-DUP`)
 - ระเบียนต่างประเทศล้วน (`INTL.*`) 14 รายการ มีเฉพาะแนวคิดที่ไม่มีคู่เทียบในไทย: revision cloud, หมุดควบคุม/วงรอบ/วางผัง, ปุ่มกด IEC S00475/S00477, สวิตช์ดึงเชือก S00474, instrument bubble และ signal lines ของ ISA-5.1, reference designation ของ IEC 81346, ตำแหน่งผู้ดูบนแผนผังหนีไฟ (ISO 23601), การแสดงงานรื้อถอน (ISO 7518), สัญลักษณ์ภูมิทัศน์ (ISO 11091), รหัสรูปทรงเหล็ก (ISO 3766)
-- โปรไฟล์ภูมิภาค: TH 212, ISO 39, IEC 20, US_NCS 19, JIS 18, US_NECA 17, GB 14, NFPA 13, DIN 12, KS 7, US_ASHRAE 6, AS 4, ISA 2, US_ACI 1, US_AWS 1
+- ระเบียนสิงคโปร์ล้วน (`SG.*`) 7 รายการ (ดูหัวข้อ 11)
+- โปรไฟล์ภูมิภาค: TH 212, **SG 124**, ISO 39, IEC 20, US_NCS 19, JIS 18, US_NECA 17, GB 14, NFPA 13, DIN 12, KS 7, US_ASHRAE 6, AS 4, ISA 2, US_ACI 1, US_AWS 1
 - มี `svg_path` 40 ระเบียน (เฉพาะกรณีที่บันทึกให้มิติพอจะวาดได้)
 
 ### ชุดคำศัพท์ (`vocabularies`)
 
 | ชื่อ | จำนวน | เนื้อหา |
 |---|---:|---|
-| `tag_prefixes` | 208 | คำนำหน้ารหัสป้ายทุกหมวดงาน แยกตามหมวดงาน พร้อม `collides_with` (74 รายการชนกัน) |
+| `tag_prefixes` | 291 (SG 83) | คำนำหน้ารหัสป้ายทุกหมวดงาน แยกตามหมวดงาน พร้อม `collides_with` (74 รายการชนกันในชุดไทย) รายการ SG มี `id` แบบ `SG:<หมวด>:<รหัส>` |
 | `sheet_number_prefixes` | 10 | A (กลุ่ม A0–A8), S, ST, SN, E, EE, AC และรูปแบบ UDS (A-101) |
-| `pipe_services` | 41 | อักษรย่อระบบท่อ ไทย / US / GB |
-| `pipe_colours` | 20 | สีท่อ ไทย (บทความ) / ASME A13.1 / BS 1710 |
+| `pipe_services` | 54 (SG 13) | อักษรย่อระบบท่อ ไทย / US / GB / SG |
+| `pipe_colours` | 21 (SG 1) | สีท่อ ไทย (บทความ) / ASME A13.1 / BS 1710 / SG (ดับเพลิงสีแดง) |
 | `pipe_materials` | 9 | วัสดุท่อ (ยังไม่ยืนยันทั้งหมด) |
-| `cable_codes` | 8 | รหัสสายไฟ (มีแหล่งยืนยันเฉพาะ 60227 IEC 01 (THW)) |
+| `cable_codes` | 11 (SG 3) | รหัสสายไฟ (มีแหล่งยืนยันเฉพาะ 60227 IEC 01 (THW)) |
 | `conduit_codes` | 6 | EMT, IMC, RSC, PVC, HDPE, FMC |
-| `conductor_colours` | 12 | สีฉนวนสาย ไทย (วสท./มอก. 11-2553) และ IEC 60445 |
-| `rebar_designations` | 5 | DB, RB, ไวร์เมช, ชั้นคุณภาพ SD/SR |
-| `steel_sections` | 4 | C/LC (มีแหล่ง), STKR400, SSC400/STK400, H/I/[/L/□ (ยังไม่ยืนยัน) |
-| `pile_designations` | 6 | ชนิดเสาเข็ม (มีแหล่ง) และขนาด (ยังไม่ยืนยัน) |
-| `general_abbreviations` | 25 | ค.ส.ล., Ø, @, CL., EL., SLOPE, STA ฯลฯ |
+| `conductor_colours` | 19 (SG 7) | สีฉนวนสาย ไทย (วสท./มอก. 11-2553), IEC 60445 และ SG (EMA) |
+| `rebar_designations` | 14 (SG 9) | DB, RB, ไวร์เมช, ชั้นคุณภาพ SD/SR; SG: H, R, T, B500/B600, ตะแกรง A6/A7/A8/A10 |
+| `steel_sections` | 6 (SG 2) | C/LC (มีแหล่ง), STKR400, SSC400/STK400, H/I/[/L/□ (ยังไม่ยืนยัน) |
+| `pile_designations` | 10 (SG 4) | ชนิดเสาเข็ม (มีแหล่ง) และขนาด (ยังไม่ยืนยัน) |
+| `general_abbreviations` | 36 (SG 11) | ค.ส.ล., Ø, @, CL., EL., SLOPE, STA ฯลฯ; SG: FFL, SHD, AMSL, MPL, A&A, GFA ฯลฯ |
 | `text_styles` | 5 | TH-1.8 / 2.5 / 3.5 / 5 / 7 มม. |
 | `line_weights` | 13 | อนุกรม ISO 128-2 และความหนาตามตำราไทย |
-| `crs_datums` | 9 | EPSG:24047/24048, UTM 47N/48N, Indian 1975, รทก. เกาะหลัก, L7018, ระวาง UTM กรมที่ดิน |
-| `licence_prefixes` | 7 | ภ-สถ, ภย. (พบจริง) และแบบอื่น (ยังไม่ยืนยัน) |
-| `drawing_scale_rules` | 6 | กฎมาตราส่วนแบบขออนุญาต (กฎกระทรวง ฉบับที่ 4) |
+| `crs_datums` | 17 (SG 8) | EPSG:24047/24048, UTM 47N/48N, Indian 1975, รทก. เกาะหลัก, L7018, ระวาง UTM กรมที่ดิน; SG: EPSG:3414/6916/6927/6917, SHD, PWD datum +100 ม. |
+| `licence_prefixes` | 11 (SG 4) | ภ-สถ, ภย. (พบจริง) และแบบอื่น (ยังไม่ยืนยัน); SG: QP, RA, PE, LEW |
+| `drawing_scale_rules` | 8 (SG 2) | กฎมาตราส่วนแบบขออนุญาต (กฎกระทรวง ฉบับที่ 4); SG: CP 83-4 A.2, SCDF |
 | `ifc_annotation_types` | 29 | ค่า IfcAnnotationTypeEnum (IFC4.3) และ ObjectType ของ Bonsai |
 | `iec_symbol_ids` | 5 | S-number ของ IEC 60617 ที่ยืนยันแล้ว |
-| `cad_layer_codes` | 7 | รหัสผู้รับผิดชอบ ISO 13567 และโครงชื่อเลเยอร์ ASA CAD 2554 |
+| `cad_layer_codes` | 32 (SG 25) | รหัสผู้รับผิดชอบ ISO 13567 และโครงชื่อเลเยอร์ ASA CAD 2554; SG: ชื่อเลเยอร์ CP 83 ตามตาราง Revit ของ Autodesk |
+| `drawing_colours` (ใหม่) | 5 (SG 5) | สีงานใหม่/เดิม/รื้อถอน: Magenta ACI 6 / Cyan ACI 4 / Yellow ACI 2 (URA + CP 83-5) และแบบ A&A ย่อยของ SCDF |
+| `standards_register` (ใหม่) | 49 (SG 49) | ทะเบียนมาตรฐาน/ข้อกำหนดพร้อมฉบับที่พบในบันทึก (ตอนนี้มีเฉพาะสิงคโปร์) |
 
 ## 3. ความหมายของสถานะ (`status`)
 
@@ -90,7 +94,7 @@
 
 | ฟิลด์ | คำอธิบาย |
 |---|---|
-| `id` | รหัสถาวร เป็น ASCII ไม่ขึ้นกับภาษา รูปแบบ `ภูมิภาค.หมวดงาน.ชื่อ` เช่น `TH.ARCH.SECTION_MARK`, `INTL.ELEC.PUSH_BUTTON` **ห้ามเปลี่ยนหรือนำกลับมาใช้ซ้ำ** |
+| `id` | รหัสถาวร เป็น ASCII ไม่ขึ้นกับภาษา รูปแบบ `ภูมิภาค.หมวดงาน.ชื่อ` เช่น `TH.ARCH.SECTION_MARK`, `INTL.ELEC.PUSH_BUTTON`, `SG.SURVEY.LOT_NUMBER` **ห้ามเปลี่ยนหรือนำกลับมาใช้ซ้ำ** |
 | `version` | เวอร์ชันของระเบียน (semver) |
 | `discipline` | ARCH, STR, ELEC, ELV, FA, PLB, SAN, FP, HVAC, GAS, CIVIL, SURVEY, GENERAL (ต้องตรงกับส่วนกลางของ `id`) |
 | `category` | reference_marker, tag, level, grid, line_type, hatch, device, fixture, valve, equipment, notation, dimension, plan_symbol, schedule, sheet |
@@ -100,7 +104,7 @@
 | `status`, `status_note` | ดูหัวข้อ 3 |
 | `source_code` | รหัสแถวเดิมในบันทึก (เฉพาะ MEP) |
 | `lineage` | สายรูปแบบของสัญลักษณ์ (US / IEC / local ฯลฯ) |
-| `region_profiles[]` | รูปแบบตามภูมิภาค: `region` (TH, ISO, IEC, US_NCS, US_NECA, NFPA, US_AWS, US_ACI, US_ASHRAE, ISA, JIS, GB, DIN, BS, AS, KS), `status`, `geometry_notes`, `standards`, `sources`, และอาจมี `svg_path`, `nominal_size_mm`, `symbol_ref` (เช่น IEC S00473, ISO 7010 E001) ระเบียน `TH.*` ต้องมีโปรไฟล์ `TH` เสมอ |
+| `region_profiles[]` | รูปแบบตามภูมิภาค: `region` (TH, SG, ISO, IEC, US_NCS, US_NECA, NFPA, US_AWS, US_ACI, US_ASHRAE, ISA, JIS, GB, DIN, BS, AS, KS), `status`, `geometry_notes`, `standards`, `sources`, และอาจมี `svg_path`, `nominal_size_mm`, `symbol_ref` (เช่น IEC S00473, ISO 7010 E001) ระเบียน `TH.*` ต้องมีโปรไฟล์ `TH` เสมอ และระเบียน `SG.*` ต้องมีโปรไฟล์ `SG` |
 | `geometry` | ดูหัวข้อ 5 |
 | `text_fields[]` | ช่องข้อความ: `name`, `source` (`element_property` = อ่านค่าจากองค์ประกอบ/วิวที่ลิงก์ผ่าน `query` แบบ `{{...}}` ของ Bonsai; `user` = ผู้ใช้พิมพ์เอง), `format` (regex), `text_style` (TH-1.8…TH-7), `required`, `default` |
 | `notation_grammar[]` | ไวยากรณ์ของสัญกรณ์ข้อความ: `regex`, `examples` (ทุกตัวอย่างต้อง match ทั้งสตริง), `groups`, `normalization`, `status` เช่น เหล็กเสริม `4-DB16` / `RB9@0.20`, ระยะสถานี `0+000`, ค่าระดับ `+0.20`, เลขแผ่น `A0-01`, ระวางกรมที่ดิน `5136II9214` ตัวอย่างที่แต่งขึ้นเองมี `examples_note` กำกับ |
@@ -148,19 +152,19 @@ python3 validate.py --no-csv # ตรวจอย่างเดียว
 
 `validate.py` ใช้ `jsonschema` (ถ้าไม่มีจะลอง `pip install jsonschema` ถ้ายังไม่ได้จะตรวจแบบพื้นฐาน) และตรวจเพิ่ม:
 - `id` ไม่ซ้ำ และหมวดงานใน `id` ตรงกับ `discipline`
-- ระเบียน `TH.*` มีโปรไฟล์ TH
+- ระเบียน `TH.*` มีโปรไฟล์ TH และระเบียน `SG.*` มีโปรไฟล์ SG
 - ทุกระเบียน/โปรไฟล์/รายการคำศัพท์มี URL หรือ `source_note`
 - `related_ids`, `used_by`, `collides_with` อ้างถึงรายการที่มีอยู่จริง
 - regex คอมไพล์ได้ และตัวอย่างทุกตัว match
 - `object_type` ของ IfcAnnotation เท่ากับ `id`
-- **URL แหล่งที่มาทุกตัวต้องปรากฏในบันทึกการค้นคว้า** (ถ้าพบโฟลเดอร์บันทึก)
+- **URL แหล่งที่มาทุกตัวต้องปรากฏในบันทึกการค้นคว้า** (ตรวจทั้งโฟลเดอร์บันทึกไทย/สากล และโฟลเดอร์บันทึกสิงคโปร์ ถ้าพบ)
 
 ถ้าผ่านจะจบด้วย `OK: catalog is valid` (exit code 0)
 
 ## 8. วิธีเพิ่มหรือแก้ไขข้อมูล
 
 1. แก้ `tbim_symbols.json` โดยตรง (ไฟล์เป็น UTF-8, indent 2) แล้วรัน `python3 validate.py` ทุกครั้ง
-2. **สัญลักษณ์ใหม่:** ตั้ง `id` ใหม่ตามรูปแบบ `TH.<DISC>.<NAME>` (ใช้ `INTL.` เฉพาะแนวคิดที่ไม่มีคู่เทียบในไทย) ใส่โปรไฟล์ `TH` เสมอ แล้วเพิ่มรูปแบบต่างประเทศเป็น `region_profiles` ของระเบียนเดียวกัน **อย่าสร้างระเบียนแยก** ถ้าเป็นแนวคิดเดียวกัน
+2. **สัญลักษณ์ใหม่:** ตั้ง `id` ใหม่ตามรูปแบบ `TH.<DISC>.<NAME>` (ใช้ `INTL.` เฉพาะแนวคิดที่ไม่มีคู่เทียบในไทย และ `SG.` เฉพาะแนวคิดของสิงคโปร์ที่ไม่มีระเบียนเดิมรองรับ) ใส่โปรไฟล์ `TH` เสมอ (ระเบียน `SG.*` ใส่โปรไฟล์ `SG`) แล้วเพิ่มรูปแบบต่างประเทศเป็น `region_profiles` ของระเบียนเดียวกัน **อย่าสร้างระเบียนแยก** ถ้าเป็นแนวคิดเดียวกัน
 3. **ยืนยันข้อมูล:** เมื่อเปิดอ่าน PDF ใน `verify_against` ได้ (เช่น แผ่นสัญลักษณ์ ops.go.th, smpkhos.go.th, คู่มือ ASA 2549/2554, คู่มือการเขียนแบบวิศวกรรมงานทาง 2558 ของกรมทางหลวง) ให้ปรับ `status`, เพิ่ม `sources` (evidence = `full_text`), ใส่ขนาดจริงใน `nominal_size_mm` (`size_basis: "source"`) และ `svg_path` (`svg_basis: "notes"`) แล้วเพิ่ม `version`
 4. **แหล่งที่มาใหม่:** `validate.py` บังคับว่า URL ต้องอยู่ในบันทึกการค้นคว้า ถ้าจะเพิ่มแหล่งใหม่ ให้เพิ่มลงในไฟล์บันทึก (หรือบันทึกฉบับใหม่ในโฟลเดอร์เดียวกัน) ก่อน
 5. **มาตรฐาน:** ใส่เลขมาตรฐานตามที่ปรากฏในเอกสารต้นฉบับเท่านั้น ห้ามเดาเลข/ปี
@@ -194,3 +198,102 @@ python3 validate.py --no-csv # ตรวจอย่างเดียว
 - **แหล่ง GPL เช่น Bonsai / IfcOpenShell (GPL-3.0 / LGPL-3.0) ห้ามนำโค้ดหรือไฟล์ SVG เข้าไปในโค้ดของ TBIM ที่เป็นกรรมสิทธิ์** ในแคตตาล็อกอ้างถึงเฉพาะในฐานะตัวอย่างเชิงออกแบบ (`precedents`) ไลบรารี GPL อื่น (LibreCAD GPLv2, SpaceTeam/pnid-lib) ก็เช่นกัน
 - แหล่งที่ใช้ซ้ำได้ง่ายกว่า (ตามบันทึก): US A/E/C CAD Standard (งานของรัฐบาลสหรัฐฯ ต้องตรวจเป็นรายไฟล์), รายการ CC0/public domain ของ QCAD, ไลบรารี KiCad (CC-BY-SA 4.0 + ข้อยกเว้น), FreeCAD-symbols (CC-BY 3.0) ต้องใส่ attribution ตามสัญญาอนุญาต
 - ควรให้นักกฎหมายไทยตรวจก่อนเผยแพร่เชิงพาณิชย์
+
+## 11. โปรไฟล์สิงคโปร์ (`SG`)
+
+เพิ่มในเวอร์ชัน 0.2.0 (schema 1.1.0) เพราะสำนักงานทำงานโครงการในสิงคโปร์เป็นหลัก สร้างจากบันทึก 3 ฉบับใน `TBIM/research_notes/มาตรฐานสิงคโปร์สำหรับ TBIM/` เท่านั้น (`sg_general_arch_bim.md`, `sg_structural_civil_survey.md`, `sg_mep_fire.md`) รายงานสรุปภาษาไทยอยู่ที่ `TBIM/reports/มาตรฐานสิงคโปร์สำหรับ TBIM.md`
+
+> **ข้อจำกัดของหลักฐาน:** ระหว่างค้นคว้า proxy บล็อกเว็บ `*.gov.sg` ทั้งหมด (BCA, URA, SCDF, PUB, CORENET X, SLA ฯลฯ), SS eShop, scribd และเว็บที่ปรึกษาส่วนใหญ่ **หลักฐานส่วนใหญ่จึงเป็น snippet จากเครื่องมือค้นหา** (`evidence: "search_snippet"`) มีเพียง 2 ไฟล์ที่อ่านครบจาก GitHub คือ `IFC-SG Property Mapping Export.txt` ของ Autodesk และตารางเลเยอร์ `exportlayers-dwg-CP83.txt` ของ Revit (`evidence: "source_code"`) เอกสารที่รู้แค่ชื่อใช้ `evidence: "not_read"`
+
+### 11.1 สิ่งที่เพิ่ม
+
+| รายการ | จำนวน | รายละเอียด |
+|---|---:|---|
+| โปรไฟล์ `SG` บนระเบียนเดิม | 117 | ระเบียนที่ถูกแก้เปลี่ยน `version` จาก 1.0.0 เป็น 1.1.0 |
+| ระเบียน `SG.*` ใหม่ | 7 | แต่ละรายการมีโปรไฟล์ `SG` ของตัวเอง (รวมโปรไฟล์ SG ทั้งหมด 124) |
+| `notation_grammar` ของ SG | 15 | 9 รายการบนระเบียนเดิม (ชื่อขึ้นต้น `sg_`) + 6 รายการบนระเบียน `SG.*` |
+| `text_fields` ของ SG | 6 | บน `TH.GENERAL.TITLE_BLOCK`: `sg_qp_name`, `sg_qp_role`, `sg_qp_registration_no`, `sg_lew_name`, `sg_lew_licence_no`, `sg_corenet_x_project_ref` |
+| รายการคำศัพท์ `region: "SG"` | 226 | ใน 15 ชุด (สร้างใหม่ 2 ชุด: `drawing_colours`, `standards_register`) |
+
+**โปรไฟล์ SG แยกตามหมวดงาน × สถานะ**
+
+| หมวดงาน | standard | agency | observed_practice | unverified | รวม |
+|---|---:|---:|---:|---:|---:|
+| ARCH | 0 | 3 | 13 | 0 | 16 |
+| STR | 1 | 0 | 3 | 10 | 14 |
+| CIVIL | 0 | 8 | 0 | 1 | 9 |
+| SURVEY | 0 | 5 | 0 | 1 | 6 |
+| GENERAL | 0 | 3 | 7 | 4 | 14 |
+| ELEC | 0 | 1 | 3 | 15 | 19 |
+| ELV | 0 | 0 | 0 | 1 | 1 |
+| FA | 0 | 0 | 0 | 7 | 7 |
+| FP | 0 | 1 | 0 | 9 | 10 |
+| PLB | 0 | 0 | 0 | 7 | 7 |
+| SAN | 0 | 0 | 0 | 8 | 8 |
+| HVAC | 0 | 0 | 3 | 8 | 11 |
+| GAS | 0 | 0 | 0 | 2 | 2 |
+| **รวม** | **1** | **21** | **29** | **73** | **124** |
+
+**ระเบียน `SG.*` ใหม่ 7 รายการ** (มีเฉพาะแนวคิดที่ไม่มีระเบียนเดิมรองรับ; `svg_path` เป็น `null` ทั้งหมด ใช้ `redraw_description`)
+
+| id | สถานะ | สาระ |
+|---|---|---|
+| `SG.GENERAL.CORENET_X_SUBMISSION_LABEL` | unverified | ป้าย gateway (Design / Piling / Construction / Completion / Direct Submission) ชื่อ gateway เป็น agency แต่ "ตรา" บนแผ่นเป็นข้อเสนอของ TBIM |
+| `SG.GENERAL.IFC_SG_PROPERTY_REFERENCE` | agency | สัญกรณ์ `SGPset_<ชุด>.<คุณสมบัติ>` และรายการ SGPset ที่เกี่ยวกับป้าย (Door, Window, Space, BuildingStorey, Wall, Beam/Column/PileDimension) |
+| `SG.GENERAL.CP83_LAYER_NAME` | observed_practice | ชื่อเลเยอร์ CP 83 ตามตาราง Revit ของ Autodesk เช่น `A-_WALL----_E` |
+| `SG.ARCH.FIRE_COMPARTMENT_LINE` | observed_practice | เส้นส่วนกันไฟในแบบ SCDF: legend ต้องเหมือนกันทุกแผ่น สี/ชนิดเส้นให้ผู้ใช้กำหนด (ไม่พบค่าจาก SCDF) |
+| `SG.SURVEY.LOT_NUMBER` | agency | เลขแปลง `MK 10 Lot 123X`, แปลงห้องชุด `MK 20 Lot U123X` |
+| `SG.SURVEY.SHD_LEVEL_NOTATION` | agency | ค่าระดับอ้างอิง SHD และค่าเดิม +100 ม. (SHD = RL − 100.000 โดยประมาณ) รูปแบบข้อความยังไม่ยืนยัน |
+| `SG.CIVIL.MIN_PLATFORM_LEVEL` | agency | ระดับพื้นขั้นต่ำ PUB (ถนน/พื้นดิน + 300 มม., สิ่งอำนวยความสะดวกพิเศษ + 600 มม., ระดับน้ำท่วม + 300 มม.) ค่าสัมบูรณ์ให้ผู้ใช้ป้อน |
+
+**ไวยากรณ์ (`notation_grammar`) ของ SG:** `sg_rebar_count` (`4H16`), `sg_rebar_spacing` (`H10-200`), `sg_bs8666_label` (`12H16-01-200 B1`) — ทั้งสามเป็น unverified; `sg_ss560_grade` (`B500B`, standard); `sg_concrete_class` (`C32/40`, observed_practice); `sg_concrete_grade_legacy` (`Grade 40`, unverified); `sg_uk_steel_section` (`UB 457x191x67`, unverified); `sg_lta_chainage_m` (`CH 12345.678`, agency); `sg_cable_designation` (unverified); `corenet_x_gateway`, `sgpset_property_ref`, `sg_lot_number` (agency); `cp83_layer_autodesk`, `sg_level_legacy_rl` (observed_practice); `sg_level_shd` (unverified)
+
+### 11.2 วิธีอ่านสถานะของโปรไฟล์ SG
+
+- `status` ของโปรไฟล์ SG บอกความน่าเชื่อถือของ **ข้อกำหนดด้านการเขียนแบบที่โปรไฟล์นั้นบันทึก** (พื้นหลักฐานระดับ สีงาน A&A ชื่อเลเยอร์ ค่าควบคุม IFC+SG ที่กำหนดข้อความในป้าย) มาตรฐานที่กำกับเพียง "เนื้อหาของระบบ" (`relation: "governs_content"` เช่น SS 645 สำหรับอุปกรณ์แจ้งเหตุ) **ไม่ได้ทำให้สถานะสูงขึ้น** — เหมือนกับระเบียน MEP ของไทย
+- เมื่อโปรไฟล์มีหลายประเด็น จะระบุสถานะรายประเด็นไว้ใน `geometry_notes` (วงเล็บ agency / unverified) และใน `note` ("Aspect status: …")
+- **รูปทรงสัญลักษณ์ของสิงคโปร์แทบทั้งหมดยังไม่ยืนยัน** เพราะไม่ได้อ่าน CP 83-2 (CAD symbols) จึงไม่มี `svg_path` ของ SG
+- `standard` ใช้เฉพาะเมื่อบันทึกอ้างเลขมาตรฐานสำหรับประเด็นนั้นโดยตรง ในโปรไฟล์มีเพียง `TH.STR.REBAR_GRADE_NOTE` (ชั้นคุณภาพ SS 560)
+- URL ทุกตัวคัดลอกจากบันทึกสิงคโปร์ `validate.py` ตรวจให้
+
+### 11.3 มาตรฐานหลักและฉบับ (ตามที่พบในบันทึก)
+
+| หมวด | มาตรฐาน / ข้อกำหนด | ฉบับ |
+|---|---|---|
+| CAD | CP 83-1 เลเยอร์ / CP 83-2 สัญลักษณ์ / CP 83-3 ชื่อไฟล์ / CP 83-4 การเขียนแบบ / CP 83-5 สีและชนิดเส้น | 83-1:2004(2026)+A1:2026, 83-2:2000(2026)+A2:2026, 83-3:2001(2026)+A1:2026, 83-4:2001(2026)+A1:2026, 83-5:2001(2026)+A1:2026 |
+| BIM/ยื่นแบบ | Code of Practice for CORENET X; IFC+SG | ฉบับที่ 3 ก.ย. 2025 (+Annex COP 3.1); บังคับ ≥ 30,000 ตร.ม. ตั้งแต่ 1 ต.ค. 2025 |
+| วาดแบบทั่วไป | SS ISO 128, SS ISO 406 | 1982, 1987 |
+| ดับเพลิง | SCDF Fire Code 2023; SS 645 (แจ้งเหตุ); CP 52 (สปริงเกอร์); SS 575 (หัวรับน้ำ/สายฉีด); SS 578 (เครื่องดับเพลิง); SS 508-1/-3/-5 (ป้าย); SS 563-1/-2 (ไฟฉุกเฉิน) | 2023 (มีผล 1 มี.ค. 2024, แก้ไข 6 ชุด); 2019; 2004 (ปรับปรุงครึ่งหลัง 2026); 2012+A1:2021; 2019+A1:2022; 2013; 2010 (2017) |
+| ไฟฟ้า | SS 638 (ดัดแปลงจาก BS 7671:2008); SS 555 (ฟ้าผ่า, IEC 62305); สีสายตาม EMA; IMDA COPIF | 2018+C1:2020+A1:2022; 2018 (+C1:2019); บังคับ 1 มี.ค. 2009; 2018 |
+| ประปา/สุขาภิบาล/ก๊าซ | SS 636; PUB COP Sewerage & Sanitary Works; PUB COP Surface Water Drainage; SS 608 | 2018+A4:2021; ฉบับที่ 3 มี.ค. 2025; ฉบับที่ 7 ธ.ค. 2018 + Addendum 3 เม.ย. 2025; 2024 (บังคับ 1 ก.ย. 2025) |
+| ปรับอากาศ | SS 553; SS 530 | 2026; 2024 |
+| โครงสร้าง | SS EN 1992-1-1 + NA; BCA Approved Document; BC1; SS 560; SS 561; SS EN 206 + SS 544-1/-2; BS 8666 (สาย UK) | 2008 (ฉบับ 2024 ยังไม่บังคับ); v7.08 (1 ต.ค. 2025); 2012; 2016(2024)+A1:2024; 2010(2022)+A2:2022; 2014 + 2019; 2005 |
+| โยธา/สำรวจ | LTA SDRE; LTA Civil Design Criteria; SVY21 EPSG:3414; SHD (EPSG datum 1140, EPSG:6916, รวม EPSG:6927); Chief Surveyor's Circular 2/2015; LSB Directives | Apr 2014 Rev F (2024), Rev H มีผล 1 มี.ค. 2026; —; —; SHD บังคับในแผนที่สำรวจตั้งแต่ 15 มิ.ย. 2015; 2022 |
+| วิชาชีพ | Architects Act 1991; Professional Engineers Act 1991 | Architects Rules ปรับปรุง 30 พ.ค. 2025 |
+
+รายการครบพร้อม URL อยู่ใน vocabulary `standards_register`
+
+### 11.4 ข้อมูลที่ขัดกัน (บันทึกไว้ ไม่ได้ตัดสิน)
+
+- **เกณฑ์ CORENET X ตั้งแต่ 1 ต.ค. 2026:** FAQ/หนังสือเวียน URA ระบุ GFA ≥ 5,000 ตร.ม. (ต่ำกว่านั้นสมัครใจ) แต่บล็อกผู้ขาย (Bimeco, CVC Engineers) และ GovInsider ระบุ "โครงการใหม่ทั้งหมดไม่ว่าขนาดใด" บันทึกให้ถือถ้อยคำทางการ (5,000 ตร.ม.) จนกว่าจะอ่านต้นฉบับ
+- **EPSG:6916:** บันทึกสถาปัตย์อ้าง epsg.io (standard) แต่บันทึกโครงสร้างระบุ "เชื่อว่า" (unverified)
+- **พารามิเตอร์ EPSG:3414:** จุดกำเนิด 1°22′N / 103°50′E (บันทึกสถาปัตย์) กับ 1°22'02.9154"N / 103°49'31.9752"E (บันทึกโครงสร้าง, unverified)
+- **โครงข่าย ISN:** หมุดปฐมภูมิประมาณ 39 หมุด กับหมุดชั้นที่ 1 ประมาณ 65 หมุด
+- **SHD:** SLA ใช้ตั้งแต่ 2015 แต่พจนานุกรมสถาปนิกระบุว่าหน่วยงานเปลี่ยนจาก AMSL เป็น SHD "ตั้งแต่ปี 2019"
+- **ค่า MPL สัมบูรณ์** 104.5 / 104.0 m RL มาจากเว็บรวบรวมข้อมูลและใช้ระบบ +100 ม. จึงไม่ได้ฝังค่าในแคตตาล็อก
+- **รหัสที่ชนกัน:** `T` (เหล็กกำลังสูงแบบเก่า / Top), `CWS` (น้ำเย็นประปา / น้ำระบายความร้อน), `CT` (หอผึ่งเย็น / หม้อแปลงกระแส), `SD` (ตรวจจับควัน / ลิ้นกันควัน), `TB` (terminal branch / transfer beam), `SP` (soil pipe / spun pile), `CL` (cover level ใน SG / ceiling level ในไทย)
+
+### 11.5 ช่องว่างที่ยังไม่มีข้อมูล
+
+- รูปทรงสัญลักษณ์ใน CP 83-2 (ระดับ หัวกริด เครื่องหมายรูปตัด ทิศเหนือ) และรายการใน CP 83-4 (ขนาดกระดาษ/กรอบชื่อแบบ มาตราส่วน ลายแรเงา ชนิดเส้น อักษรย่อ) รวมถึงเนื้อหาฉบับแก้ไข 2026
+- นิยามฟิลด์ชื่อเลเยอร์ใน CP 83-1 (ความหมายของ `A-_`) และรหัสสาขา/วิวใน CP 83-3
+- เนื้อหา COP CORENET X ฉบับที่ 3 (แผ่นแบบ 2 มิติที่ต้องยื่นในแต่ละ gateway กฎตั้งชื่อชั้น รายการค่า SpaceName) และคุณสมบัติ IFC+SG ของงานระบบ/ดับเพลิง
+- สีส่วนกันไฟ/ทางหนีไฟของ SCDF, Table 1.2A ของ Fire Code 2023, ชุดสัญลักษณ์อุปกรณ์แจ้งเหตุ/สปริงเกอร์
+- รูปแบบตรา QP/PE และเลขทะเบียน, ถ้อยคำตราสถานะแบบ, ระบบเลขแผ่นและรหัสแก้ไข
+- ตาราง SS 561 (ขนาดตะแกรง), รูปแบบการเขียนสายไฟ, legend ของ PUB/SLA/NParks, ความกว้างเส้นจราจร LTA, ค่าต่างระหว่าง SHD กับ RL เดิมหลังการปรับโครงข่าย 2009
+
+### 11.6 สิ่งที่ควรซื้อ / ดาวน์โหลด / ขอจากสำนักงาน
+
+1. **ซื้อจาก SS eShop (Enterprise Singapore):** CP 83 ทั้ง 5 ส่วน ฉบับ 2026 พร้อม A1/A2 (สำคัญที่สุดคือ CP 83-2, CP 83-4, CP 83-5), SS 561 (ตารางตะแกรง), SS 645 / CP 52 / SS 575 (ตรวจว่ามีภาคผนวกสัญลักษณ์หรือไม่), SS 638
+2. **ดาวน์โหลดฟรี (ต้องใช้เครือข่ายที่เข้า `*.gov.sg` ได้):** COP CORENET X ฉบับที่ 3 + Annex 3.1, **IFC+SG Excel Mapping File** และ Resource Kit (รายการ SpaceName, คุณสมบัติ MEP/ดับเพลิง), **SCDF Fire Safety Checklist for Building Plan Submissions** และ Fire Code 2023 (Table 1.2A), แนวทาง CAD ของ URA, PUB COPSSW ฉบับที่ 3 + แบบมาตรฐาน PUB, PUB COP Surface Water Drainage + Addendum 3, LTA SDRE บทที่ 8, SLA Utility Survey Standard v1.0, ประกาศ SHD ของ LSB/SLA และบทความ FIG 2015 (เพื่อหาค่าต่างของพื้นหลักฐาน)
+3. **ขอจากสำนักงาน:** คู่มือ CAD/BIM ของสำนักงาน แม่แบบกรอบชื่อแบบที่ใช้ยื่นจริง แผ่น legend (เช่นแบบ 00-ACMV-001) และตัวอย่างตารางเหล็กเสริม เพื่อยืนยันรายการ `unverified`

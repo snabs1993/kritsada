@@ -41,7 +41,7 @@
       "description": "standard = law or numbered standard; agency = agency manual/standard drawing; observed_practice = seen in Thai drawings or cited practitioner/teaching sources; unverified = general knowledge or inference not confirmed by a retrieved source.",
       "enum": ["standard", "agency", "observed_practice", "unverified"]
     },
-    "region": {"enum": ["TH", "ISO", "IEC", "US_NCS", "US_NECA", "NFPA", "US_AWS", "US_ACI", "US_ASHRAE", "ISA", "JIS", "GB", "DIN", "BS", "AS", "KS"]},
+    "region": {"enum": ["TH", "SG", "ISO", "IEC", "US_NCS", "US_NECA", "NFPA", "US_AWS", "US_ACI", "US_ASHRAE", "ISA", "JIS", "GB", "DIN", "BS", "AS", "KS"]},
     "general_unverified": {"const": "general practice (unverified)"},
 
     "localized_text": {
@@ -251,7 +251,7 @@
       "type": "object",
       "required": ["id", "version", "discipline", "category", "name", "abbreviations", "aliases", "description", "status", "region_profiles", "geometry", "text_fields", "notation_grammar", "ifc_mapping", "classification", "standards", "sources", "licence_note"],
       "properties": {
-        "id": {"type": "string", "pattern": "^(TH|INTL)\\.(ARCH|STR|ELEC|ELV|FA|PLB|SAN|FP|HVAC|GAS|CIVIL|SURVEY|GENERAL)\\.[A-Z0-9_]+$", "description": "Stable, language-neutral, namespaced id. Region namespace . discipline . NAME. Never reuse or rename."},
+        "id": {"type": "string", "pattern": "^(TH|INTL|SG)\\.(ARCH|STR|ELEC|ELV|FA|PLB|SAN|FP|HVAC|GAS|CIVIL|SURVEY|GENERAL)\\.[A-Z0-9_]+$", "description": "Stable, language-neutral, namespaced id. Region namespace (TH = Thai, INTL = concept with no Thai counterpart, SG = Singapore-only concept) . discipline . NAME. Never reuse or rename."},
         "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
         "discipline": {"$ref": "#/$defs/discipline"},
         "category": {"$ref": "#/$defs/category"},
@@ -285,7 +285,9 @@
       "allOf": [
         {"anyOf": [{"properties": {"sources": {"minItems": 1}}}, {"required": ["source_note"]}]},
         {"if": {"properties": {"id": {"pattern": "^TH\\."}}},
-         "then": {"properties": {"region_profiles": {"contains": {"type": "object", "properties": {"region": {"const": "TH"}}, "required": ["region"]}}}}}
+         "then": {"properties": {"region_profiles": {"contains": {"type": "object", "properties": {"region": {"const": "TH"}}, "required": ["region"]}}}}},
+        {"if": {"properties": {"id": {"pattern": "^SG\\."}}},
+         "then": {"properties": {"region_profiles": {"contains": {"type": "object", "properties": {"region": {"const": "SG"}}, "required": ["region"]}}}}}
       ],
       "additionalProperties": false
     },
