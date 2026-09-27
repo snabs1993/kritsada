@@ -1,0 +1,997 @@
+<title>แผ่นตัวอย่าง TBIM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Sarabun:wght@400;600;700&display=swap">
+<style>
+:root {
+  --page: #EEF0EC;
+  --sheet: #FDFDFA;
+  --panel: #FFFFFF;
+  --ink: #1C2327;
+  --ink-2: #56626A;
+  --rule: #CBD1CC;
+  --grid: #7C8A93;
+  --accent: #2F5BD3;
+  --accent-soft: #E3E9FB;
+  --elec: #B0306E;
+  --san: #137A70;
+  --st-standard: #2E7D4F;
+  --st-agency: #5B4BB7;
+  --st-observed: #8F6400;
+  --st-unverified: #B3261E;
+  --hl: rgba(47, 91, 211, 0.16);
+  --font-body: "IBM Plex Sans Thai", "Sarabun", "Noto Sans Thai", system-ui, sans-serif;
+  --font-draw: "Sarabun", "IBM Plex Sans Thai", "Noto Sans Thai", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0F1316;
+    --sheet: #161D22;
+    --panel: #1A2228;
+    --ink: #DCE4E8;
+    --ink-2: #98A6AE;
+    --rule: #2F3C45;
+    --grid: #7F909B;
+    --accent: #86A6FF;
+    --accent-soft: #22304F;
+    --elec: #EE86B9;
+    --san: #5CCABE;
+    --st-standard: #6CC592;
+    --st-agency: #A99BFF;
+    --st-observed: #E1B24A;
+    --st-unverified: #FF8A80;
+    --hl: rgba(134, 166, 255, 0.2);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0F1316;
+  --sheet: #161D22;
+  --panel: #1A2228;
+  --ink: #DCE4E8;
+  --ink-2: #98A6AE;
+  --rule: #2F3C45;
+  --grid: #7F909B;
+  --accent: #86A6FF;
+  --accent-soft: #22304F;
+  --elec: #EE86B9;
+  --san: #5CCABE;
+  --st-standard: #6CC592;
+  --st-agency: #A99BFF;
+  --st-observed: #E1B24A;
+  --st-unverified: #FF8A80;
+  --hl: rgba(134, 166, 255, 0.2);
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  padding-inline: 16px;
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 1320px; margin: 0 auto; display: grid; gap: 28px; }
+
+header.top { display: grid; gap: 8px; max-width: 78ch; }
+.eyebrow {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+h1 {
+  font-family: var(--font-draw); font-weight: 700; font-size: clamp(26px, 3.4vw, 36px);
+  line-height: 1.2; margin: 0; text-wrap: balance;
+}
+h2 { font-family: var(--font-draw); font-weight: 700; font-size: 22px; margin: 0; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede { color: var(--ink-2); }
+code, .mono { font-family: var(--font-mono); font-size: 0.92em; }
+
+/* Toolbar */
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; background: var(--panel); }
+.seg button {
+  font: inherit; font-size: 13.5px; border: 0; background: transparent; color: var(--ink);
+  padding: 6px 12px; cursor: pointer; border-right: 1px solid var(--rule);
+}
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.seg button:focus-visible, .chip:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.group-label { font-size: 12.5px; color: var(--ink-2); margin-right: 6px; }
+.toggles { display: inline-flex; gap: 12px; flex-wrap: wrap; }
+.toggles label { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; cursor: pointer; }
+.swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+/* Sheet + inspector */
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start; }
+@media (max-width: 1020px) { .workspace { grid-template-columns: minmax(0, 1fr); } }
+.sheet-frame {
+  background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px;
+  overflow-x: auto; overflow-y: hidden;
+}
+.sheet-frame svg { display: block; width: 100%; height: auto; min-width: 640px; }
+.sheet-frame.zoomed svg { width: 190%; }
+.sheet-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-2); padding-top: 8px; }
+
+svg .sym { cursor: pointer; }
+svg .sym:focus { outline: none; }
+svg .sym .hit { fill: transparent; stroke: none; }
+svg .sym:hover .hit, svg .sym:focus-visible .hit { fill: var(--hl); }
+svg .sym.selected .hit { fill: var(--hl); stroke: var(--accent); stroke-width: 0.35; stroke-dasharray: 1 0.8; }
+
+.inspector {
+  background: var(--panel); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 18px; display: grid; gap: 14px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px);
+  max-height: calc(100vh - 24px); overflow-y: auto;
+}
+@media (max-width: 1020px) { .inspector { position: static; max-height: none; } }
+.insp-head { display: grid; gap: 4px; }
+.insp-id { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-2); word-break: break-all; }
+.insp-name { font-family: var(--font-draw); font-size: 22px; font-weight: 700; line-height: 1.25; }
+.insp-en { color: var(--ink-2); font-size: 14px; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge {
+  font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--rule);
+  color: var(--ink-2); background: transparent; white-space: nowrap;
+}
+.status { font-weight: 600; border-color: currentColor; }
+.status.standard { color: var(--st-standard); }
+.status.agency { color: var(--st-agency); }
+.status.observed_practice { color: var(--st-observed); }
+.status.unverified { color: var(--st-unverified); }
+.status-note { font-size: 13px; color: var(--ink-2); }
+.kv { display: grid; gap: 4px; }
+.kv > span:first-child { font-size: 12px; letter-spacing: 0.04em; color: var(--ink-2); text-transform: uppercase; font-family: var(--font-mono); }
+.kv p { font-size: 14px; }
+.profiles { display: grid; gap: 8px; }
+.profile { border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; font-size: 13.5px; }
+.profile.active { border-color: var(--accent); background: var(--accent-soft); }
+.profile .row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.profile .region { font-family: var(--font-mono); font-weight: 500; }
+.ifc { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7; background: var(--page); border-radius: 6px; padding: 8px 10px; overflow-x: auto; white-space: pre; }
+.sources { display: grid; gap: 4px; font-size: 13px; padding-left: 18px; margin: 0; }
+.sources a { color: var(--accent); word-break: break-word; }
+details summary { cursor: pointer; font-size: 13.5px; color: var(--accent); }
+details pre { font-family: var(--font-mono); font-size: 11.5px; line-height: 1.5; background: var(--page); padding: 10px; border-radius: 6px; overflow: auto; max-height: 360px; margin: 8px 0 0; }
+
+/* Legend chips */
+.legend { display: grid; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font: inherit; font-size: 13px; display: inline-flex; gap: 6px; align-items: center;
+  border: 1px solid var(--rule); background: var(--panel); color: var(--ink); border-radius: 6px;
+  padding: 4px 10px; cursor: pointer;
+}
+.chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.dot.standard { background: var(--st-standard); }
+.dot.agency { background: var(--st-agency); }
+.dot.observed_practice { background: var(--st-observed); }
+.dot.unverified { background: var(--st-unverified); }
+.legend-key { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--ink-2); }
+.legend-key span { display: inline-flex; gap: 6px; align-items: center; }
+
+/* Sections below */
+section.block { display: grid; gap: 16px; border-top: 1px solid var(--rule); padding-top: 24px; }
+.block-intro { max-width: 76ch; color: var(--ink-2); }
+.rebar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .rebar { grid-template-columns: minmax(0, 1fr); } }
+.form { display: grid; gap: 12px; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; }
+.field { display: grid; gap: 4px; }
+.field label { font-size: 13px; color: var(--ink-2); }
+.field-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.field-row .field { flex: 1 1 120px; }
+input[type="text"], select {
+  font: inherit; font-family: var(--font-mono); font-size: 15px; color: var(--ink);
+  background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 10px; width: 100%;
+}
+input.bad { border-color: var(--st-unverified); }
+.parse { font-size: 13px; color: var(--ink-2); min-height: 1.4em; }
+.parse.err { color: var(--st-unverified); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 600; color: var(--ink-2); font-size: 12.5px; }
+td.num { text-align: right; font-family: var(--font-mono); }
+.table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; }
+.beam-frame { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; }
+.beam-frame svg { display: block; width: 100%; height: auto; max-height: 460px; }
+.note { font-size: 13px; color: var(--ink-2); }
+footer { font-size: 13px; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 16px; display: grid; gap: 6px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  svg .sym .hit { transition: fill 120ms ease; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">TBIM · Drawing annotation · ตัวอย่าง</div>
+    <h1>แปลนบ้านชั้นเดียว วาดจากคลังสัญลักษณ์ TBIM</h1>
+    <p class="lede">ทุกสัญลักษณ์บนแผ่นนี้ดึงมาจากไฟล์ <code>tbim_symbols.json</code> กดที่สัญลักษณ์ใดก็ได้ แผงด้านข้างจะแสดงข้อมูลที่ TBIM เก็บไว้ ได้แก่ ชื่อไทย-อังกฤษ สถานะความเป็นมาตรฐาน รูปแบบของแต่ละภูมิภาค การแปลงเป็น IFC และแหล่งอ้างอิง ลองสลับภูมิภาคเพื่อดูว่าหัวรูปตัด เส้นบอกระยะ และค่าระดับเปลี่ยนไปตามมาตรฐานอย่างไร</p>
+  </header>
+
+  <div class="toolbar" role="group" aria-label="ตัวเลือกการแสดงผล">
+    <div>
+      <span class="group-label">ภูมิภาค</span>
+      <span class="seg" id="region-seg">
+        <button type="button" data-region="TH" aria-pressed="true">ไทย (TH)</button>
+        <button type="button" data-region="GB" aria-pressed="false">จีน GB/T 50001</button>
+        <button type="button" data-region="JIS" aria-pressed="false">ญี่ปุ่น JIS</button>
+        <button type="button" data-region="US_NCS" aria-pressed="false">สหรัฐฯ NCS</button>
+      </span>
+    </div>
+    <div>
+      <span class="group-label">ป้ายประตู-หน้าต่าง</span>
+      <span class="seg" id="prefix-seg">
+        <button type="button" data-prefix="latin" aria-pressed="true">D1 / W1</button>
+        <button type="button" data-prefix="thai" aria-pressed="false">ป1 / น1</button>
+      </span>
+    </div>
+    <div class="toggles" aria-label="ชั้นข้อมูล">
+      <label><input type="checkbox" id="layer-arch" checked> <span class="swatch" style="background: var(--ink)"></span>สถาปัตยกรรม</label>
+      <label><input type="checkbox" id="layer-elec" checked> <span class="swatch" style="background: var(--elec)"></span>ไฟฟ้า/แจ้งเหตุ</label>
+      <label><input type="checkbox" id="layer-san" checked> <span class="swatch" style="background: var(--san)"></span>สุขาภิบาล</label>
+    </div>
+    <div>
+      <span class="seg"><button type="button" id="zoom-btn" aria-pressed="false">ขยายแผ่น</button></span>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <div>
+      <div class="sheet-frame" id="sheet-frame">
+        <svg id="sheet" viewBox="0 0 340 220" role="img" aria-label="แผ่นแบบ A1-01 แปลนพื้นชั้น 1 มาตราส่วน 1:50"></svg>
+      </div>
+      <div class="sheet-meta">
+        <span>กระดาษ 340 × 220 มม. · หน่วยสัญลักษณ์เป็นมิลลิเมตรบนกระดาษ · แปลนมาตราส่วน 1:50</span>
+        <span id="active-region-note"></span>
+      </div>
+    </div>
+
+    <aside class="inspector" id="inspector" aria-live="polite"></aside>
+  </div>
+
+  <div class="legend">
+    <h3>สัญลักษณ์บนแผ่นนี้</h3>
+    <div class="legend-key" id="legend-key"></div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <section class="block" aria-labelledby="rebar-h">
+    <h2 id="rebar-h">อ่านคำกำกับเหล็กเสริมแล้ววาดรูปตัดคาน</h2>
+    <p class="block-intro">TBIM ใช้รูปแบบข้อความ (regex) ที่เก็บในระเบียน <code>TH.STR.REBAR_CALLOUT</code> และ <code>TH.STR.STIRRUP_CALLOUT</code> แยกคำกำกับแบบไทยเป็นจำนวน ชนิด ขนาด และระยะห่าง แล้ววาดรูปตัดคานใหม่ทันที ลองแก้ข้อความ เช่น <code>3-DB20</code> หรือ <code>ป-RB9@0.20</code></p>
+    <div class="rebar">
+      <div class="form">
+        <div class="field-row">
+          <div class="field">
+            <label for="beam-tag">ป้ายคาน</label>
+            <input type="text" id="beam-tag" value="B1" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="beam-size">ขนาดคาน (ม.)</label>
+            <select id="beam-size">
+              <option value="0.15x0.30">0.15 × 0.30</option>
+              <option value="0.20x0.40" selected>0.20 × 0.40</option>
+              <option value="0.20x0.50">0.20 × 0.50</option>
+              <option value="0.25x0.60">0.25 × 0.60</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="db-grade">ชั้นคุณภาพ DB</label>
+            <select id="db-grade"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="rb-top">เหล็กบน</label>
+          <input type="text" id="rb-top" value="2-DB12" autocomplete="off" spellcheck="false">
+          <div class="parse" id="parse-top"></div>
+        </div>
+        <div class="field">
+          <label for="rb-bot">เหล็กล่าง</label>
+          <input type="text" id="rb-bot" value="4-DB16" autocomplete="off" spellcheck="false">
+          <div class="parse" id="parse-bot"></div>
+        </div>
+        <div class="field">
+          <label for="rb-stir">เหล็กปลอก</label>
+          <input type="text" id="rb-stir" value="ป-RB6@0.15" autocomplete="off" spellcheck="false">
+          <div class="parse" id="parse-stir"></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>คำกำกับ</th><th>อ่านได้ว่า</th><th>มาตรฐานวัสดุ</th><th style="text-align:right">น้ำหนัก กก./ม.</th></tr></thead>
+            <tbody id="rebar-table"></tbody>
+          </table>
+        </div>
+        <p class="note">น้ำหนักคำนวณจาก 0.00617 × d² กก./ม. (d เป็นมม.) ตรงกับตัวอย่างในชุดข้อมูล เช่น DB20 ยาว 10 ม. หนัก 24.66 กก. ระยะหุ้มคอนกรีตคาน 3 ซม. เป็นค่าที่อ้างกันทั่วไป ตารางที่มีผลบังคับอยู่ใน มยผ. 1101-64 ซึ่งยังไม่ได้เปิดอ่าน</p>
+      </div>
+      <div class="beam-frame">
+        <svg id="beam" viewBox="0 0 120 90" role="img" aria-label="รูปตัดคาน"></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="clash-h">
+    <h2 id="clash-h">รหัสเดียวกัน ความหมายต่างกันตามสาขา</h2>
+    <p class="block-intro">ในชุดแบบไทยชุดเดียว F1 บนแผ่น A หมายถึงวัสดุพื้น แต่บนแผ่น S หมายถึงฐานราก TBIM จึงเก็บรหัสป้ายเป็น <code>สาขา:รหัส</code> เสมอ และให้โปรแกรมเลือกความหมายจากชุดแผ่นที่ป้ายนั้นวางอยู่</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รหัส</th><th>ID ในชุดข้อมูล</th><th>สาขา</th><th>ความหมาย</th><th>สถานะ</th></tr></thead>
+        <tbody id="clash-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p id="footer-cat"></p>
+    <p>โครงการในแผ่นนี้สมมติขึ้นเพื่อสาธิตเท่านั้น ใช้ก่อสร้างไม่ได้ รูปทรงที่ติดสถานะ “ยังไม่ยืนยัน” เป็นค่าที่เสนอไว้ ต้องตรวจกับคู่มือ ASA และแผ่นสัญลักษณ์ของหน่วยงานราชการก่อนใช้จริง</p>
+  </footer>
+</div>
+
+<script type="application/json" id="tbim-data">{"catalog":{"catalog_id":"TBIM-SYM","catalog_version":"0.1.0","total_symbols":226},"status_definitions":{"standard":{"th":"กำหนดโดยกฎหมายหรือมาตรฐานที่มีเลขที่ (มอก., มยผ., วสท., กฎกระทรวง, ISO, IEC, NFPA, GB ฯลฯ)","en":"Defined by law or a numbered standard (TIS, DPT, EIT, ministerial regulation, ISO, IEC, NFPA, GB, …)."},"agency":{"th":"กำหนดในคู่มือหรือแบบมาตรฐานของหน่วยงาน (กรมทางหลวง, ทช., กรมชลประทาน, กรมที่ดิน, กรมแผนที่ทหาร) มีผลกับงานของหน่วยงานนั้น","en":"Defined in an agency manual or standard drawing set (DOH, DRR, RID, DOL, RTSD); binding for that agency's work."},"observed_practice":{"th":"พบในแบบจริงของไทยหรือแหล่งการสอน/ผู้ปฏิบัติที่อ้างในบันทึก ไม่มีมาตรฐานกำกับ","en":"Seen in real Thai drawings or cited practitioner/teaching sources; no governing standard."},"unverified":{"th":"มาจากความรู้ทั่วไปหรือการอนุมานในบันทึก ยังไม่ได้ยืนยันกับแหล่งที่เปิดอ่านได้","en":"From general knowledge or inference in the notes; not confirmed by a retrieved source."}},"symbols":{"TH.GENERAL.GRID_BUBBLE":{"id":"TH.GENERAL.GRID_BUBBLE","discipline":"GENERAL","category":"grid","name":{"th":"หัวเส้นพิกัด (กริด)","en":"Grid bubble"},"abbreviations":[],"description":{"th":"สัญลักษณ์พิกัดแนวนอนและแนวตั้ง (แสดงพิกัดแนวนอนและแนวตั้ง) วงกลมมีอักขระหนึ่งตัว ด้านหนึ่งใช้ตัวเลข 1, 2, 3… อีกด้านใช้อักษรละตินตัวใหญ่ A, B, C… แม้ในชุดแบบภาษาไทย ยังไม่พบหลักฐานการใช้อักษรไทย (ก ข ค)","en":"Grid bubble ('แสดงพิกัดแนวนอนและแนวตั้ง'): circle with a single character; numbers 1, 2, 3… on one axis and Latin capitals A, B, C… on the other, even in Thai-language sets. No evidence of Thai-letter grids (ก ข ค)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Circle with one character; numbers one axis, Latin letters the other. Letter exclusions (I/O) not confirmed in Thai sources.","th":"วงกลมมีอักขระหนึ่งตัว ตัวเลขแกนหนึ่ง อักษรละตินอีกแกน ยังไม่ยืนยันการเว้นอักษร I/O"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"GB","status":"standard","geometry_notes":{"en":"Thin solid circle, line 0.25b, diameter 8–10 mm; numerals left→right, capitals bottom→top; letters I, O, Z not used; double or subscripted letters when needed."},"standards":[{"code":"GB/T 50001-2017","title":"房屋建筑制图统一标准 (Unified standard for building drawings)","edition":"2017 (effective 2018-05-01)"}],"sources":[{"url":"https://www.soujianzhu.cn/NormAndRules/gfnr.aspx?id=327&conid=7896","title":"GB/T 50001 ch.8 (soujianzhu)","evidence":"search_snippet"},{"url":"https://mnovel.read.qq.com/read/1044175206/27","title":"Textbook quoting GB/T 50001","evidence":"search_snippet"}]},{"region":"ISO","status":"unverified","geometry_notes":{"en":"Grid/space designation per ISO 4157; bubble geometry not extracted."},"standards":[{"code":"ISO 4157-1:1998","title":"Construction drawings — Designation systems — Part 1: Buildings and parts of buildings","edition":"1998"}],"sources":[{"url":"https://www.iso.org/standard/26189.html","title":"ISO 4157-1:1998","evidence":"search_snippet"}]},{"region":"JIS","status":"observed_practice","geometry_notes":{"en":"Grid lines (通り芯) drawn as chain lines; bubble geometry not extracted."},"standards":[{"code":"JIS A 0150:1999","title":"建築製図通則 (General rules for architectural drawing)","edition":"1999 (confirmed 2019)"}],"sources":[{"url":"https://marketing.ipros.jp/contents/basics/basic-architectural-drafting2/","title":"iPros 建築製図の基礎知識2","evidence":"search_snippet"}]},{"region":"AS","status":"unverified","geometry_notes":{"en":"Grids covered in an appendix of AS 1100.301; geometry behind paywall."},"standards":[{"code":"AS 1100.301-2008","title":"Technical drawing — Architectural drawing","edition":"2008 (Amdt 1 2011, R2018)"}],"sources":[{"url":"https://www.scribd.com/doc/300142503/AS-1100-Part-301-Architectural-Drawing","title":"AS 1100.301 summary (Scribd)","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"วงกลมบนกระดาษ (TBIM เสนอค่าเริ่มต้น Ø10 มม.) มีอักขระหนึ่งตัวอยู่กลาง ต่อกับเส้นศูนย์กลาง (เส้นลูกโซ่) ของแนวพิกัด","en":"Paper-space circle (TBIM proposed default Ø10 mm) with one centred character, attached to the grid centre (chain) line."},"nominal_size_mm":{"w":10,"h":10},"size_basis":"tbim_proposed_default","svg_path":"M -5 0 A 5 5 0 1 0 5 0 A 5 5 0 1 0 -5 0 Z","svg_basis":"notes_partial","insertion_point":[0,0]},"text_fields":[{"name":"axis_tag","source":"element_property","text_style":"TH-5","required":true,"format":"^(?:[A-Z]{1,2}|\\d{1,3})$","query":"{{AxisTag}}","description":"IfcGridAxis.AxisTag"}],"notation_grammar":[{"name":"grid_axis_tag","regex":"^(?:[A-Z]{1,2}|\\d{1,3})$","examples":["1","5","A","E","AA"],"description":"Numbers on one axis, Latin capitals on the other. Double letters for >26 axes (GB practice; Thai unverified).","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.GENERAL.GRID_BUBBLE","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcGrid"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.GENERAL.GRID_BUBBLE"}},"note":"Bonsai pattern: axis labels use IfcRelAssignsToProduct to the IfcGrid with Name = IfcGridAxis.AxisTag. IfcGrid is an IfcPositioningElement in IFC4.3."},"standards":[{"code":"ASA มาตรฐานการเขียนแบบก่อสร้าง","title":"คู่มือปฏิบัติวิชาชีพ มาตรฐานการเขียนแบบก่อสร้าง (สมาคมสถาปนิกสยามฯ)","edition":"พ.ศ. 2554 (2011); earlier edition พ.ศ. 2549"},{"code":"ISO 4157-1:1998","title":"Construction drawings — Designation systems — Part 1: Buildings and parts of buildings","edition":"1998"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://github.com/IfcOpenShell/IfcOpenShell/blob/v0.8.0/src/bonsai/bonsai/tool/drawing.py","title":"Bonsai tool/drawing.py (GPL-3.0; design reference only)","evidence":"source_code"}]},"TH.GENERAL.GRID_LINE":{"id":"TH.GENERAL.GRID_LINE","discipline":"GENERAL","category":"line_type","name":{"th":"เส้นแนวศูนย์กลางพิกัด / เส้นศูนย์กลาง","en":"Grid / centre line (chain line)"},"abbreviations":[],"description":{"th":"เส้นแสดงแนวศูนย์กลางพิกัด (แสดงแนวศูนย์กลางพิกัด) และเส้นศูนย์กลาง (แกนสมมาตร) ใช้เส้นลูกโซ่ (เส้นยาว-จุด/เส้นสั้น) ตามแนวทางการสอนเขียนแบบที่อิง ISO/JIS","en":"Grid axis / centre line ('แสดงแนวศูนย์กลางพิกัด'); drawn as a chain line (long dash–short dash), per Thai drafting teaching derived from ISO/JIS."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Chain line for grid axes and symmetry axes.","th":"เส้นลูกโซ่สำหรับแนวพิกัดและแกนสมมาตร"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://academic.kus.ku.ac.th/ctech/Drawing/P2/u2.pdf","title":"KU Sriracha: มาตรฐานเส้นที่ใช้ในงานเขียนแบบ และมาตราส่วน","evidence":"search_snippet"}]},{"region":"ISO","status":"standard","geometry_notes":{"en":"Chain line types and widths per ISO 128-2:2022 (widths 0.13–2 mm, √2 series)."},"standards":[{"code":"ISO 128-2:2022","title":"TPD — General principles of representation — Basic conventions for lines","edition":"2022"}],"sources":[{"url":"https://www.iso.org/standard/83355.html","title":"ISO 128-2:2022","evidence":"search_snippet"},{"url":"https://blog.draftsperson.net/standard-colors-and-line-weights-in-cad/","title":"draftsperson.net line weights summary","evidence":"search_snippet"}]},{"region":"JIS","status":"observed_practice","geometry_notes":{"en":"通り芯 drawn as chain lines."},"standards":[{"code":"JIS A 0150:1999","title":"建築製図通則 (General rules for architectural drawing)","edition":"1999 (confirmed 2019)"}],"sources":[{"url":"https://marketing.ipros.jp/contents/basics/basic-architectural-drafting2/","title":"iPros 建築製図の基礎知識2","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"เส้นลูกโซ่บาง (เส้นยาวสลับเส้นสั้น) ระยะเส้นและช่องว่างยังไม่ระบุในแหล่งไทย","en":"Thin chain line (long dash alternating with short dash); dash/gap lengths not stated in Thai sources."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcCurveStyleFont","predefined_type":null,"object_type":"TH.GENERAL.GRID_LINE","host_relation":null,"host_ifc_classes":[],"ifc4_note":null,"note":"Map the dash pattern to IfcCurveStyleFont.PatternList; exact IfcDraughtingPreDefinedCurveFont names unverified."},"standards":[{"code":"ISO 128-2:2022","title":"TPD — General principles of representation — Basic conventions for lines","edition":"2022"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://academic.kus.ku.ac.th/ctech/Drawing/P2/u2.pdf","title":"KU Sriracha: มาตรฐานเส้นที่ใช้ในงานเขียนแบบ และมาตราส่วน","evidence":"search_snippet"},{"url":"https://dltv.ac.th/utils/files/download/150821","title":"DLTV ชนิดและความหมายของเส้น","evidence":"search_snippet"}]},"TH.GENERAL.DIMENSION_CENTRE_CENTRE":{"id":"TH.GENERAL.DIMENSION_CENTRE_CENTRE","discipline":"GENERAL","category":"dimension","name":{"th":"ระยะกึ่งกลางถึงกึ่งกลาง","en":"Dimension, centre to centre"},"abbreviations":[],"description":{"th":"เส้นบอกระยะจากศูนย์กลางถึงศูนย์กลาง สัญลักษณ์แบบไทยแยกประเภทเส้นบอกระยะเป็น 3 แบบ (ริม-ริม, กึ่งกลาง-กึ่งกลาง, กึ่งกลาง-ริม) ค่าระยะในแบบขยายเป็นเมตร (เช่น 0.20, 1.20, \"@ 2.00 ม.\") ชนิดหัวลูกศร/ขีดปลายของไทยยังไม่ยืนยัน","en":"Dimension measured centre to centre. Thai legends separate three dimension reference types. Detail dimensions are in metres (0.20, 1.20, '@ 2.00 ม.'). Thai terminator style (arrow vs tick) is unconfirmed."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Three dimension reference types; values in metres.","th":"แยก 3 ประเภท ค่าระยะเป็นเมตร"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"GB","status":"standard","geometry_notes":{"en":"Terminator: medium-thick oblique stroke 45° clockwise from the dimension line, 2–3 mm long; arrows (≥1 mm wide) for radius, diameter, angle, arc length; 1 mm dots in axonometric."},"standards":[{"code":"GB/T 50001-2017","title":"房屋建筑制图统一标准 (Unified standard for building drawings)","edition":"2017 (effective 2018-05-01)"}],"sources":[{"url":"https://bbs.co188.com/thread-10357926-1-1.html","title":"co188 forum quoting GB/T 50001 cl. 11.1.4","evidence":"search_snippet"}]},{"region":"JIS","status":"observed_practice","geometry_notes":{"en":"Arrows normally; oblique stroke or black dot in tight spaces; only one style per drawing."},"standards":[{"code":"JIS A 0150:1999","title":"建築製図通則 (General rules for architectural drawing)","edition":"1999 (confirmed 2019)"}],"sources":[{"url":"https://marketing.ipros.jp/contents/basics/basic-architectural-drafting2/","title":"iPros 建築製図の基礎知識2","evidence":"search_snippet"}]},{"region":"ISO","status":"unverified","geometry_notes":{"en":"Dimension lines, extension lines, terminators (arrow, oblique stroke, dot) and origin indication per ISO 129-1:2018 + Amd 1:2020; sizes not extracted."},"standards":[{"code":"ISO 129-1:2018","title":"TPD — Presentation of dimensions and tolerances — Part 1: General principles","edition":"2018 + Amd 1:2020"}],"sources":[{"url":"https://www.iso.org/standard/64007.html","title":"ISO 129-1:2018","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"เส้นบอกระยะบาง 0.25 มม. พร้อมเส้นช่วยและค่าระยะ รูปแบบขีดปลาย/หัวลูกศรขึ้นกับการตั้งค่าภูมิภาค (ไทยยังไม่ยืนยัน)","en":"Thin (0.25 mm) dimension line with extension lines and value; terminator style is a regional parameter (Thai unconfirmed)."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"value","source":"element_property","text_style":"TH-2.5","required":true,"format":"^\\d+\\.\\d{2}$","query":"{{measured_length_m}}"}],"notation_grammar":[{"name":"dimension_value_m","regex":"^(?:@\\s*)?(\\d+\\.\\d{2})(?:\\s*ม\\.)?$","examples":["0.20","1.20","@ 2.00 ม."],"description":"Metric dimension in metres, 2 decimals; '@' prefix = spacing.","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"DIMENSION","object_type":"TH.GENERAL.DIMENSION_CENTRE_CENTRE","host_relation":null,"host_ifc_classes":[],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.GENERAL.DIMENSION_CENTRE_CENTRE"}}},"standards":[{"code":"ISO 129-1:2018","title":"TPD — Presentation of dimensions and tolerances — Part 1: General principles","edition":"2018 + Amd 1:2020"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.ARCH.SECTION_MARK":{"id":"TH.ARCH.SECTION_MARK","discipline":"ARCH","category":"reference_marker","name":{"th":"สัญลักษณ์รูปตัด","en":"Section mark"},"abbreviations":[],"description":{"th":"สัญลักษณ์แสดงแนวตัดบนแปลน (แสดงรูปตัดที่ _) เป็นวงกลมแบ่งครึ่งด้วยเส้นนอน ช่องบนเป็นหมายเลขรูปตัด (มักเป็นอักษรละติน A, B… หรือตัวเลข) ช่องล่างเป็นเลขแผ่นที่เขียนรูปตัดนั้น มีลูกศรชี้ทิศทางการมอง วางที่ปลายทั้งสองของเส้นแนวตัด แผ่นรูปตัดตั้งชื่อว่า \"รูปตัด A-A\"","en":"Section cut marker ('แสดงรูปตัดที่ _'): a circle halved by a horizontal line; upper field = section ID (Latin letter or number), lower field = sheet number where the section is drawn; an arrow shows the viewing direction; placed at both ends of the cutting line. Section sheets are titled 'รูปตัด A-A'."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Circle halved by a horizontal line, ID over sheet no., direction arrow. Size unknown (ASA plates not read).","th":"วงกลมแบ่งครึ่งด้วยเส้นนอน เลขรูปตัดอยู่บน เลขแผ่นอยู่ล่าง มีลูกศรทิศทาง ขนาดยังไม่ทราบ"},"standards":[{"code":"ASA มาตรฐานการเขียนแบบก่อสร้าง","title":"คู่มือปฏิบัติวิชาชีพ มาตรฐานการเขียนแบบก่อสร้าง (สมาคมสถาปนิกสยามฯ)","edition":"พ.ศ. 2554 (2011); earlier edition พ.ศ. 2549"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://www.narongmicrospun.com/micropile-symbol/","title":"ณรงค์ไมโครสปัน: สัญลักษณ์ที่ปรากฏในแบบสถาปัตยกรรมบ้าน","evidence":"search_snippet"}]},{"region":"US_NCS","status":"observed_practice","geometry_notes":{"en":"1/2 in diameter circle, solid-filled arrow for viewing direction, section number on top, sheet number below (UDS-style, educational source)."},"standards":[{"code":"US NCS V7","title":"United States National CAD Standard V7 (AIA CAD Layer Guidelines + CSI Uniform Drawing System + NIBS BIM Implementation & Plotting)","edition":"V7 (© 2025 NIBS)"}],"sources":[{"url":"https://www.graduateschool.edu/learn/blueprint-reading/understanding-architectural-symbols-keynotes-elevations-sections-and-details","title":"Graduate School USA: architectural symbols","evidence":"search_snippet"}]},{"region":"GB","status":"standard","geometry_notes":{"en":"Index circle 8–10 mm, thin line ≈0.25b, with horizontal diameter; section index adds two perpendicular line segments tangent to the circle."},"standards":[{"code":"GB/T 50001-2017","title":"房屋建筑制图统一标准 (Unified standard for building drawings)","edition":"2017 (effective 2018-05-01)"}],"sources":[{"url":"https://www.waizi.org.cn/bz/131445.html","title":"GB/T 50001-2017 (waizi)","evidence":"search_snippet"},{"url":"https://www.soujianzhu.cn/NormAndRules/gfnr.aspx?id=327&conid=7896","title":"GB/T 50001 ch.8 (soujianzhu)","evidence":"search_snippet"}]},{"region":"ISO","status":"unverified","geometry_notes":{"en":"Views, sections and cuts per ISO 128-3:2022; exact cutting-plane arrow/letter layout not extracted."},"standards":[{"code":"ISO 128-3:2022","title":"TPD — General principles of representation — Views, sections and cuts","edition":"2022"}],"sources":[{"url":"https://www.iso.org/standard/83356.html","title":"ISO 128-3:2022","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"วงกลมบนกระดาษ (TBIM เสนอค่าเริ่มต้น Ø10 มม.; แหล่งไทยไม่ได้ระบุขนาด) แบ่งครึ่งด้วยเส้นผ่านศูนย์กลางแนวนอน ช่องบนใส่หมายเลขรูปตัด ช่องล่างใส่เลขแผ่น มีลูกศร/สามเหลี่ยมทึบชี้ทิศทางการมองติดกับเส้นแนวตัด (รูปทรงลูกศรยังไม่ยืนยันจากแหล่งไทย)","en":"Paper-space circle (TBIM proposed default Ø10 mm; no Thai source gives a size) halved by a horizontal diameter; upper field section ID, lower field sheet number; arrow or filled triangle showing view direction attached to the cut line (arrow shape not confirmed by a Thai source)."},"nominal_size_mm":{"w":10,"h":10},"size_basis":"tbim_proposed_default","svg_path":"M -5 0 A 5 5 0 1 0 5 0 A 5 5 0 1 0 -5 0 Z M -5 0 L 5 0","svg_basis":"notes_partial","insertion_point":[0,0]},"text_fields":[{"name":"section_id","source":"element_property","text_style":"TH-2.5","required":true,"format":"^[A-Z0-9]{1,3}$","query":"{{ref.view.identifier}}","description":"Upper field: section ID of the referenced view"},{"name":"sheet_no","source":"element_property","text_style":"TH-2.5","required":true,"format":"^(A|S|ST|SN|E|EE|AC)(\\d?)-(\\d{2})$","query":"{{ref.sheet.number}}","description":"Lower field: sheet number (computed link to the sheet)"}],"notation_grammar":[{"name":"section_view_title","regex":"^รูปตัด\\s*([A-Z0-9]+)-\\1$","examples":["รูปตัด A-A","รูปตัด B-B"],"description":"Title of a section view on its sheet; the ID is repeated.","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.SECTION_MARK","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcAnnotation"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.SECTION_MARK"}},"note":"Host is the referenced drawing (Bonsai pattern: IfcAnnotation with ObjectType DRAWING)."},"standards":[{"code":"ASA มาตรฐานการเขียนแบบก่อสร้าง","title":"คู่มือปฏิบัติวิชาชีพ มาตรฐานการเขียนแบบก่อสร้าง (สมาคมสถาปนิกสยามฯ)","edition":"พ.ศ. 2554 (2011); earlier edition พ.ศ. 2549"},{"code":"ISO 128-3:2022","title":"TPD — General principles of representation — Views, sections and cuts","edition":"2022"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://www.narongmicrospun.com/micropile-symbol/","title":"ณรงค์ไมโครสปัน: สัญลักษณ์ที่ปรากฏในแบบสถาปัตยกรรมบ้าน","evidence":"search_snippet"},{"url":"https://dsignsomething.com/2016/08/09/dtip-%E0%B8%A3%E0%B8%B9%E0%B9%89%E0%B8%88%E0%B8%B1%E0%B8%81%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%A9%E0%B8%93%E0%B9%8C%E0%B9%83%E0%B8%99%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B8%81/","title":"Dsign Something: Dtip รู้จักสัญลักษณ์ในแบบกันเถอะ","evidence":"search_snippet"}]},"TH.ARCH.ELEVATION_MARK":{"id":"TH.ARCH.ELEVATION_MARK","discipline":"ARCH","category":"reference_marker","name":{"th":"สัญลักษณ์รูปด้าน (4 ทิศ)","en":"Elevation marker (four-way)"},"abbreviations":[],"description":{"th":"สัญลักษณ์อ้างอิงรูปด้าน (แสดงรูปด้านที่ _) มีหมายเลข 1–4 ในแต่ละส่วน แต่ละส่วนมีเลขแผ่นกำกับ (เช่น A-05) รูปด้านในชุดแบบที่สังเกตตั้งชื่อเป็น \"รูปด้าน 1…4\" ไม่ได้ตั้งตามทิศ","en":"Elevation key ('แสดงรูปด้านที่ _') with quadrant numbers 1–4, each paired with a sheet number (e.g. A-05). Elevations in the observed set are titled 'รูปด้าน 1…4' (numbered, not compass-named)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Quadrants 1–4 each with a sheet number.","th":"สี่ส่วน เลข 1–4 แต่ละส่วนมีเลขแผ่น"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"US_NCS","status":"observed_practice","geometry_notes":{"en":"Circle plus arrow pointing to the elevated surface; federal template variant 16 mm (5/8 in)."},"standards":[{"code":"US NCS V7","title":"United States National CAD Standard V7 (AIA CAD Layer Guidelines + CSI Uniform Drawing System + NIBS BIM Implementation & Plotting)","edition":"V7 (© 2025 NIBS)"}],"sources":[{"url":"https://www.graduateschool.edu/learn/blueprint-reading/understanding-architectural-symbols-keynotes-elevations-sections-and-details","title":"Graduate School USA: architectural symbols","evidence":"search_snippet"},{"url":"https://imlive.s3.amazonaws.com/Federal%20Government/ID161340668832143895465238474714384190453/1.5_Drawings-ARCHITECTURE.pdf","title":"Federal drawing standard: section, detail and elevation symbol identifiers","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"เครื่องหมายสี่ส่วน มีเลข 1, 2, 3, 4 ในแต่ละส่วนพร้อมเลขแผ่น (เห็นเฉพาะชั้นข้อความ รูปทรงจริงยังไม่ทราบ) ขนาดยังไม่ทราบ","en":"Four-quadrant key with numbers 1–4, each with a sheet reference (only the PDF text layer was seen; drawn shape unknown). Size unknown."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"view_no_1","source":"element_property","text_style":"TH-2.5","required":false,"format":"^\\d{1,2}$","query":"{{ref.view[1].identifier}}"},{"name":"view_no_2","source":"element_property","text_style":"TH-2.5","required":false,"format":"^\\d{1,2}$","query":"{{ref.view[2].identifier}}"},{"name":"view_no_3","source":"element_property","text_style":"TH-2.5","required":false,"format":"^\\d{1,2}$","query":"{{ref.view[3].identifier}}"},{"name":"view_no_4","source":"element_property","text_style":"TH-2.5","required":false,"format":"^\\d{1,2}$","query":"{{ref.view[4].identifier}}"},{"name":"sheet_no_1","source":"element_property","text_style":"TH-2.5","required":false,"format":"^(A|S|ST|SN|E|EE|AC)(\\d?)-(\\d{2})$","query":"{{ref.view[1].sheet.number}}"},{"name":"sheet_no_2","source":"element_property","text_style":"TH-2.5","required":false,"format":"^(A|S|ST|SN|E|EE|AC)(\\d?)-(\\d{2})$","query":"{{ref.view[2].sheet.number}}"},{"name":"sheet_no_3","source":"element_property","text_style":"TH-2.5","required":false,"format":"^(A|S|ST|SN|E|EE|AC)(\\d?)-(\\d{2})$","query":"{{ref.view[3].sheet.number}}"},{"name":"sheet_no_4","source":"element_property","text_style":"TH-2.5","required":false,"format":"^(A|S|ST|SN|E|EE|AC)(\\d?)-(\\d{2})$","query":"{{ref.view[4].sheet.number}}"}],"notation_grammar":[{"name":"elevation_view_title","regex":"^รูปด้าน\\s*(\\d+)$","examples":["รูปด้าน 1","รูปด้าน 4"],"description":"Title of an elevation view in the observed set.","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.ELEVATION_MARK","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcAnnotation"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.ELEVATION_MARK"}}},"standards":[{"code":"ASA มาตรฐานการเขียนแบบก่อสร้าง","title":"คู่มือปฏิบัติวิชาชีพ มาตรฐานการเขียนแบบก่อสร้าง (สมาคมสถาปนิกสยามฯ)","edition":"พ.ศ. 2554 (2011); earlier edition พ.ศ. 2549"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.ARCH.ROOM_TAG":{"id":"TH.ARCH.ROOM_TAG","discipline":"ARCH","category":"tag","name":{"th":"ป้ายชื่อห้อง","en":"Room tag"},"abbreviations":[],"description":{"th":"ป้ายชื่อห้องบนแปลน ประกอบด้วยชื่อห้อง รหัสวัสดุพื้นและรหัสฝ้าเพดาน (เขียนรวมเป็น \"F1,C1\") และระดับพื้นห้อง (เช่น +0.00)","en":"Room tag: room name, then floor-finish and ceiling codes written together ('F1,C1'), then room floor level (e.g. +0.00)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Name + 'F#,C#' + level.","th":"ชื่อห้อง + F#,C# + ระดับพื้น"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"ISO","status":"standard","geometry_notes":{"en":"Room numbers per ISO 4157-2: numbered in logical order per floor starting n01 (n = floor number)."},"standards":[{"code":"ISO 4157-2:1998","title":"Construction drawings — Designation systems — Part 2: Room names and numbers","edition":"1998 (confirmed 2023)"}],"sources":[{"url":"https://www.iso.org/standard/26190.html","title":"ISO 4157-2:1998","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความหลายบรรทัด: บรรทัดแรกชื่อห้อง บรรทัดถัดไป \"F#,C#\" และระดับพื้นห้อง ไม่มีกรอบที่ยืนยันได้ (เห็นเฉพาะชั้นข้อความ)","en":"Multi-line text: room name; then 'F#,C#'; then floor level. Any frame is unconfirmed (text layer only)."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"room_name","source":"element_property","text_style":"TH-3.5","required":true,"query":"{{LongName}}"},{"name":"floor_finish_code","source":"element_property","text_style":"TH-2.5","required":false,"format":"^F\\d+$","query":"{{TBIM_Finish.FloorCode}}"},{"name":"ceiling_finish_code","source":"element_property","text_style":"TH-2.5","required":false,"format":"^C\\d+$","query":"{{TBIM_Finish.CeilingCode}}"},{"name":"floor_level","source":"element_property","text_style":"TH-2.5","required":false,"format":"^(?:(CL|EL|FFL)\\.?\\s*|(ระดับ\\S*)\\s+)?([+\\-±])(\\d+\\.\\d{2,3})$","query":"{{TBIM_Level.FloorLevel}}"}],"notation_grammar":[{"name":"finish_code_pair","regex":"^(F\\d+),(C\\d+)$","examples":["F1,C1","F1,C0"],"description":"Floor-finish code, ceiling code (ARCH scope; F/C clash with STR footing/column).","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.ROOM_TAG","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcSpace"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.ROOM_TAG"}}},"standards":[{"code":"ASA มาตรฐานการเขียนแบบก่อสร้าง","title":"คู่มือปฏิบัติวิชาชีพ มาตรฐานการเขียนแบบก่อสร้าง (สมาคมสถาปนิกสยามฯ)","edition":"พ.ศ. 2554 (2011); earlier edition พ.ศ. 2549"},{"code":"ISO 4157-2:1998","title":"Construction drawings — Designation systems — Part 2: Room names and numbers","edition":"1998 (confirmed 2023)"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.ARCH.LEVEL_MARK":{"id":"TH.ARCH.LEVEL_MARK","discipline":"ARCH","category":"level","name":{"th":"ค่าระดับ (ผนัง พื้น รูปด้าน รูปตัด)","en":"Level mark (walls, floors, elevations, sections)"},"abbreviations":["CL.","EL."],"description":{"th":"สัญลักษณ์ค่าระดับในผนัง พื้น รูปด้าน และรูปตัด ใช้คำนำหน้า CL. (ระดับฝ้าเพดาน) และ EL. (ระดับ) ตามด้วยค่าเช่น +0.00 ในรูปด้านเขียนคำอธิบายภาษาไทย เช่น \"ระดับพื้นดินเดิม +0.00\", \"ระดับพื้นชั้น +0.20\", \"ระดับหลังคาน +3.70\", \"ระดับหลังคา +8.57\" แบบขยายใช้ \"ระดับอ้างอิง\" (ความหมาย CL/EL เป็นการตีความ ไม่ได้อธิบายไว้ในแผ่น)","en":"Level value in walls, floors, elevations and sections: 'CL. EL. +0.00', 'CL-', 'EL-' (CL = ceiling level, EL = elevation level — reading of the abbreviations, not glossed on the sheet). Elevations carry Thai captions such as 'ระดับพื้นชั้น +0.20', 'ระดับหลังคาน +3.70'."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Prefix CL./EL. or Thai caption + signed metres (2 d.p.).","th":"คำนำหน้า CL./EL. หรือคำอธิบายไทย + ค่าระดับเมตร 2 ตำแหน่ง"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"GB","status":"standard","geometry_notes":{"en":"Thin-line isosceles right triangle, tip on the measured level, pointing down or up; filled black triangle for outdoor site levels; metres to 3 decimals (2 on site plans)."},"standards":[{"code":"GB/T 50001-2017","title":"房屋建筑制图统一标准 (Unified standard for building drawings)","edition":"2017 (effective 2018-05-01)"}],"sources":[{"url":"https://www.119.news/portal.php?mod=view&aid=16083&mobile=no","title":"GB/T 50001 11.8 标高","evidence":"search_snippet"}]},{"region":"DIN","status":"unverified","geometry_notes":{"en":"Height marks (Höhenkoten) for finished and structural surfaces in DIN 1356-1 Table 4; geometry not extracted."},"standards":[{"code":"DIN 1356-1:2024-04","title":"Bauzeichnungen — Teil 1: Arten, Inhalte und Grundregeln der Darstellung","edition":"2024-04 (draft 2026-09 exists)"}],"sources":[{"url":"https://www.ingenieurkurse.de/technische-darstellungen-bauwesen/darstellung-und-kennzeichnung-bautechnischer-objekte-und-symbole-in-bauzeichnungen/schraffuren-und-deren-farbige-darstellung.html","title":"ingenieurkurse.de DIN 1356-1 hatching","evidence":"search_snippet"}]},{"region":"AS","status":"observed_practice","geometry_notes":{"en":"Levels in metres to 3 decimals, rounded to 5 mm."},"standards":[{"code":"AS 1100.301-2008","title":"Technical drawing — Architectural drawing","edition":"2008 (Amdt 1 2011, R2018)"}],"sources":[{"url":"https://mekel.net/folio/buildersreg/content/res_levels_on_drawings.html","title":"Mekel: levels on drawings (AS 1100.301)","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความค่าระดับพร้อมคำนำหน้า (CL./EL./คำอธิบายไทย) ต่อกับเส้นระดับ รูปสามเหลี่ยม/เป้าของไทยยังไม่ยืนยัน","en":"Prefixed level text (CL./EL./Thai caption) on a level line; Thai triangle/target glyph unconfirmed."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"prefix","source":"user","text_style":"TH-2.5","required":false,"format":"^(CL|EL|FFL)\\.?$|^ระดับ\\S*$"},{"name":"level","source":"element_property","text_style":"TH-2.5","required":true,"format":"^(?:(CL|EL|FFL)\\.?\\s*|(ระดับ\\S*)\\s+)?([+\\-±])(\\d+\\.\\d{2,3})$","query":"{{Elevation}}"}],"notation_grammar":[{"name":"level_value","regex":"^(?:(CL|EL|FFL)\\.?\\s*|(ระดับ\\S*)\\s+)?([+\\-±])(\\d+\\.\\d{2,3})$","examples":["+0.00","+3.70","+8.57","ระดับพื้นดินเดิม +0.00","ระดับหลังคาน +3.70","EL. +0.00"],"description":"Signed level in metres with optional prefix.","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.LEVEL_MARK","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcBuildingStorey","IfcSlab","IfcBeam","IfcRoof"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.LEVEL_MARK"}},"note":"Bonsai object type SECTION_LEVEL is the closest precedent."},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.ARCH.DOOR_TAG":{"id":"TH.ARCH.DOOR_TAG","discipline":"ARCH","category":"tag","name":{"th":"ป้ายรหัสประตู","en":"Door tag"},"abbreviations":["D","ป"],"description":{"th":"ป้ายรหัสประตู ใช้อักษรละติน D ตามด้วยหมายเลข (D1) หรืออักษรไทย ป ตามด้วยหมายเลข (ป1) อ้างอิงตารางประตู-หน้าต่าง ทั้งสองแบบใช้ร่วมกันในทางปฏิบัติ","en":"Door tag: Latin 'D' + number (D1) or Thai 'ป' (ประตู) + number (ป1), keyed to the door/window schedule (ตารางประตู-หน้าต่าง). Both conventions coexist."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"D# (Latin) or ป# (Thai).","th":"D# หรือ ป#"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://tostemthailand.com/en/2022/10/16/%E0%B8%84%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%87%E0%B8%AA%E0%B8%B1%E0%B8%A2-%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%A9%E0%B8%93%E0%B9%8C%E0%B8%9B/","title":"TOSTEM Thailand: สัญลักษณ์ประตูหน้าต่าง","evidence":"search_snippet"}]},{"region":"KS","status":"unverified","geometry_notes":{"en":"Door/window symbols per KS F 1502; geometry not extracted."},"standards":[{"code":"KS F 1502","title":"창호 기호 (door/window symbols)","edition":"confirmed 2024"}],"sources":[{"url":"https://www.kssn.net/search/stddetail.do?itemNo=K001010148683","title":"KSSN KS F 1502","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความ D# หรือ ป# ภายในกรอบ รูปทรงกรอบยังไม่ยืนยันจากแหล่งไทย","en":"Text D# or ป# in a frame; frame shape not confirmed by a Thai source."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"door_mark","source":"element_property","text_style":"TH-2.5","required":true,"format":"^(D|ป)\\d+$","query":"{{Tag}}"}],"notation_grammar":[{"name":"door_mark","regex":"^(D|ป)(\\d+)$","examples":["D1","D12","ป1"],"description":"Latin D or Thai ป prefix; TBIM must support both.","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.DOOR_TAG","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcDoor"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.DOOR_TAG"}}},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://tostemthailand.com/en/2022/10/16/%E0%B8%84%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%87%E0%B8%AA%E0%B8%B1%E0%B8%A2-%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%A9%E0%B8%93%E0%B9%8C%E0%B8%9B/","title":"TOSTEM Thailand: สัญลักษณ์ประตูหน้าต่าง","evidence":"search_snippet"},{"url":"https://kutsunskill.com/articles/read-house-plans-basics","title":"KUTSUNSKILL อ่านแบบบ้านเบื้องต้น","evidence":"search_snippet"}]},"TH.ARCH.WINDOW_TAG":{"id":"TH.ARCH.WINDOW_TAG","discipline":"ARCH","category":"tag","name":{"th":"ป้ายรหัสหน้าต่าง","en":"Window tag"},"abbreviations":["W","น"],"description":{"th":"ป้ายรหัสหน้าต่าง ใช้อักษรละติน W ตามด้วยหมายเลข (W1) หรืออักษรไทย น ตามด้วยหมายเลข (น1) อ้างอิงตารางประตู-หน้าต่าง ระวัง: W อาจหมายถึงผนังในบางสำนักงาน","en":"Window tag: Latin 'W' + number (W1) or Thai 'น' (หน้าต่าง) + number (น1), keyed to the door/window schedule. W is sometimes also used for walls."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"W# (Latin) or น# (Thai).","th":"W# หรือ น#"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://tostemthailand.com/en/2022/10/16/%E0%B8%84%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%87%E0%B8%AA%E0%B8%B1%E0%B8%A2-%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%A9%E0%B8%93%E0%B9%8C%E0%B8%9B/","title":"TOSTEM Thailand: สัญลักษณ์ประตูหน้าต่าง","evidence":"search_snippet"}]},{"region":"KS","status":"unverified","geometry_notes":{"en":"Door/window symbols per KS F 1502; geometry not extracted."},"standards":[{"code":"KS F 1502","title":"창호 기호 (door/window symbols)","edition":"confirmed 2024"}],"sources":[{"url":"https://www.kssn.net/search/stddetail.do?itemNo=K001010148683","title":"KSSN KS F 1502","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความ W# หรือ น# ภายในกรอบ รูปทรงกรอบยังไม่ยืนยัน","en":"Text W# or น# in a frame; frame shape unconfirmed."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"window_mark","source":"element_property","text_style":"TH-2.5","required":true,"format":"^(W|น)\\d+$","query":"{{Tag}}"}],"notation_grammar":[{"name":"window_mark","regex":"^(W|น)(\\d+)$","examples":["W1","W2","น1"],"description":"Latin W or Thai น prefix.","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.WINDOW_TAG","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcWindow"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.WINDOW_TAG"}}},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://tostemthailand.com/en/2022/10/16/%E0%B8%84%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%87%E0%B8%AA%E0%B8%B1%E0%B8%A2-%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%A9%E0%B8%93%E0%B9%8C%E0%B8%9B/","title":"TOSTEM Thailand: สัญลักษณ์ประตูหน้าต่าง","evidence":"search_snippet"},{"url":"https://kutsunskill.com/articles/read-house-plans-basics","title":"KUTSUNSKILL อ่านแบบบ้านเบื้องต้น","evidence":"search_snippet"}]},"TH.ARCH.DOOR_HINGED":{"id":"TH.ARCH.DOOR_HINGED","discipline":"ARCH","category":"plan_symbol","name":{"th":"ประตูบานเปิด","en":"Hinged (swing) door"},"abbreviations":[],"description":{"th":"สัญลักษณ์แปลนประตูบานเปิด ปรากฏในสัญลักษณ์แบบ (A0-01) แต่รูปทรงเส้นไม่ได้บันทึก (เห็นเฉพาะชั้นข้อความ)","en":"Plan symbol for hinged (swing) door, listed on legend sheet A0-01; drawn geometry not captured (text layer only)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Legend label only.","th":"มีเฉพาะชื่อในสัญลักษณ์แบบ"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"JIS","status":"unverified","geometry_notes":{"en":"Plan display symbols (平面表示記号) for 1:100 and 1:200 plans in JIS A 0150; geometry not extracted."},"standards":[{"code":"JIS A 0150:1999","title":"建築製図通則 (General rules for architectural drawing)","edition":"1999 (confirmed 2019)"}],"sources":[{"url":"https://kikakurui.com/a0/A0150-1999-01.html","title":"JIS A 0150 (kikakurui)","evidence":"search_snippet"}]},{"region":"KS","status":"unverified","geometry_notes":{"en":"KS F 1502 door/window symbols; geometry not extracted."},"standards":[{"code":"KS F 1502","title":"창호 기호 (door/window symbols)","edition":"confirmed 2024"}],"sources":[{"url":"https://www.kssn.net/search/stddetail.do?itemNo=K001010148683","title":"KSSN KS F 1502","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"วาดตามขนาดจริงของช่องเปิดในแปลน รูปแบบเส้นวงสวิง/รางเลื่อนยังไม่ยืนยันจากแหล่งไทย","en":"Drawn at opening size in plan; swing arc / sliding-track convention not confirmed by a Thai source."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.DOOR_HINGED","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcDoor"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.DOOR_HINGED"}},"note":"Normally generated from the element's Plan representation rather than placed as a separate annotation."},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.ARCH.WINDOW_SLIDING":{"id":"TH.ARCH.WINDOW_SLIDING","discipline":"ARCH","category":"plan_symbol","name":{"th":"หน้าต่างบานเลื่อน","en":"Sliding window"},"abbreviations":[],"description":{"th":"สัญลักษณ์แปลนหน้าต่างบานเลื่อน ปรากฏในสัญลักษณ์แบบ (A0-01) แต่รูปทรงเส้นไม่ได้บันทึก (เห็นเฉพาะชั้นข้อความ)","en":"Plan symbol for sliding window, listed on legend sheet A0-01; drawn geometry not captured (text layer only)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Legend label only.","th":"มีเฉพาะชื่อในสัญลักษณ์แบบ"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"JIS","status":"unverified","geometry_notes":{"en":"Plan display symbols (平面表示記号) for 1:100 and 1:200 plans in JIS A 0150; geometry not extracted."},"standards":[{"code":"JIS A 0150:1999","title":"建築製図通則 (General rules for architectural drawing)","edition":"1999 (confirmed 2019)"}],"sources":[{"url":"https://kikakurui.com/a0/A0150-1999-01.html","title":"JIS A 0150 (kikakurui)","evidence":"search_snippet"}]},{"region":"KS","status":"unverified","geometry_notes":{"en":"KS F 1502 door/window symbols; geometry not extracted."},"standards":[{"code":"KS F 1502","title":"창호 기호 (door/window symbols)","edition":"confirmed 2024"}],"sources":[{"url":"https://www.kssn.net/search/stddetail.do?itemNo=K001010148683","title":"KSSN KS F 1502","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"วาดตามขนาดจริงของช่องเปิดในแปลน รูปแบบเส้นวงสวิง/รางเลื่อนยังไม่ยืนยันจากแหล่งไทย","en":"Drawn at opening size in plan; swing arc / sliding-track convention not confirmed by a Thai source."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.WINDOW_SLIDING","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcWindow"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.WINDOW_SLIDING"}},"note":"Normally generated from the element's Plan representation rather than placed as a separate annotation."},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.ARCH.WINDOW_AWNING":{"id":"TH.ARCH.WINDOW_AWNING","discipline":"ARCH","category":"plan_symbol","name":{"th":"หน้าต่างบานกระทุ้ง","en":"Awning (top-hung) window"},"abbreviations":[],"description":{"th":"สัญลักษณ์แปลนหน้าต่างบานกระทุ้ง ปรากฏในสัญลักษณ์แบบ (A0-01) แต่รูปทรงเส้นไม่ได้บันทึก (เห็นเฉพาะชั้นข้อความ)","en":"Plan symbol for awning (top-hung) window, listed on legend sheet A0-01; drawn geometry not captured (text layer only)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Legend label only.","th":"มีเฉพาะชื่อในสัญลักษณ์แบบ"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"JIS","status":"unverified","geometry_notes":{"en":"Plan display symbols (平面表示記号) for 1:100 and 1:200 plans in JIS A 0150; geometry not extracted."},"standards":[{"code":"JIS A 0150:1999","title":"建築製図通則 (General rules for architectural drawing)","edition":"1999 (confirmed 2019)"}],"sources":[{"url":"https://kikakurui.com/a0/A0150-1999-01.html","title":"JIS A 0150 (kikakurui)","evidence":"search_snippet"}]},{"region":"KS","status":"unverified","geometry_notes":{"en":"KS F 1502 door/window symbols; geometry not extracted."},"standards":[{"code":"KS F 1502","title":"창호 기호 (door/window symbols)","edition":"confirmed 2024"}],"sources":[{"url":"https://www.kssn.net/search/stddetail.do?itemNo=K001010148683","title":"KSSN KS F 1502","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"วาดตามขนาดจริงของช่องเปิดในแปลน รูปแบบเส้นวงสวิง/รางเลื่อนยังไม่ยืนยันจากแหล่งไทย","en":"Drawn at opening size in plan; swing arc / sliding-track convention not confirmed by a Thai source."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ARCH.WINDOW_AWNING","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcWindow"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ARCH.WINDOW_AWNING"}},"note":"Normally generated from the element's Plan representation rather than placed as a separate annotation."},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.ARCH.HATCH_WALL_BRICK_FULL":{"id":"TH.ARCH.HATCH_WALL_BRICK_FULL","discipline":"ARCH","category":"hatch","name":{"th":"สัญลักษณ์ผนังก่ออิฐมอญเต็มแผ่นหรือเต็มหน้าเสา","en":"Wall-type hatch: Clay-brick wall, full brick / full column width"},"abbreviations":[],"description":{"th":"ลายแรเงา/พอเชของผนังก่ออิฐมอญเต็มแผ่นหรือเต็มหน้าเสาในแปลน ตามรายการสัญลักษณ์ผนังในแผ่น A0-01 ลวดลายจริงยังไม่ได้บันทึก รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม","en":"Plan hatch/poché for clay-brick wall, full brick / full column width, from the wall-type legend on A0-01; actual pattern geometry not captured. Detail depends on scale: simplified at 1:100, full pattern at 1:25 or larger."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Legend name only; pattern unknown.","th":"มีเฉพาะชื่อในสัญลักษณ์ผนัง ลวดลายยังไม่ทราบ"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"DIN","status":"observed_practice","geometry_notes":{"en":"Masonry: parallel thin 45° lines; colour fills for cut materials allowed since DIN 1356-1:2024 (e.g. red masonry) with a legend; hatch in thinnest pen."},"standards":[{"code":"DIN 1356-1:2024-04","title":"Bauzeichnungen — Teil 1: Arten, Inhalte und Grundregeln der Darstellung","edition":"2024-04 (draft 2026-09 exists)"}],"sources":[{"url":"https://www.ingenieurkurse.de/technische-darstellungen-bauwesen/darstellung-und-kennzeichnung-bautechnischer-objekte-und-symbole-in-bauzeichnungen/schraffuren-und-deren-farbige-darstellung.html","title":"ingenieurkurse.de DIN 1356-1 hatching","evidence":"search_snippet"},{"url":"https://www.dinmedia.de/en/standard/din-1356-1/325728444","title":"DIN Media DIN 1356-1:2024-04","evidence":"search_snippet"}]},{"region":"JIS","status":"unverified","geometry_notes":{"en":"Material/structure display symbols (材料構造表示記号), scale-dependent; geometry not extracted."},"standards":[{"code":"JIS A 0150:1999","title":"建築製図通則 (General rules for architectural drawing)","edition":"1999 (confirmed 2019)"}],"sources":[{"url":"https://kikakurui.com/a0/A0150-1999-01.html","title":"JIS A 0150 (kikakurui)","evidence":"search_snippet"}]},{"region":"US_NCS","status":"unverified","geometry_notes":{"en":"AIA Architectural Graphic Standards patterns are the usual US CAD reference; not extracted."},"standards":[{"code":"AIA Architectural Graphic Standards","title":"Architectural Graphic Standards (material hatch reference)"}],"sources":[{"url":"https://www.cadhatch.com/architectural-graphic-standard","title":"CADhatch AGS patterns","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ลายแรเงาขนาดจริงตามแบบจำลอง ลวดลายยังไม่ทราบจากแหล่งไทย รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม","en":"Model-scaled hatch; pattern not known from a Thai source. Detail depends on scale: simplified at 1:100, full pattern at 1:25 or larger."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcFillAreaStyleHatching","predefined_type":null,"object_type":"TH.ARCH.HATCH_WALL_BRICK_FULL","host_relation":null,"host_ifc_classes":[],"ifc4_note":null,"note":"Keep a .pat-style master definition; export as IfcFillAreaStyleHatching (or a fill colour where colour fills are used)."},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://sites.google.com/site/arc257rsu/lecture-list/drawing-standard/material-symbols","title":"Rangsit Univ. ARC257 material symbols","evidence":"search_snippet"}]},"TH.ARCH.HATCH_WALL_BRICK_HALF":{"id":"TH.ARCH.HATCH_WALL_BRICK_HALF","discipline":"ARCH","category":"hatch","name":{"th":"สัญลักษณ์ผนังก่ออิฐมอญครึ่งแผ่น","en":"Wall-type hatch: Clay-brick wall, half brick"},"abbreviations":[],"description":{"th":"ลายแรเงา/พอเชของผนังก่ออิฐมอญครึ่งแผ่นในแปลน ตามรายการสัญลักษณ์ผนังในแผ่น A0-01 ลวดลายจริงยังไม่ได้บันทึก รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม","en":"Plan hatch/poché for clay-brick wall, half brick, from the wall-type legend on A0-01; actual pattern geometry not captured. Detail depends on scale: simplified at 1:100, full pattern at 1:25 or larger."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Legend name only; pattern unknown.","th":"มีเฉพาะชื่อในสัญลักษณ์ผนัง ลวดลายยังไม่ทราบ"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"DIN","status":"observed_practice","geometry_notes":{"en":"Masonry: parallel thin 45° lines; colour fills for cut materials allowed since DIN 1356-1:2024 (e.g. red masonry) with a legend; hatch in thinnest pen."},"standards":[{"code":"DIN 1356-1:2024-04","title":"Bauzeichnungen — Teil 1: Arten, Inhalte und Grundregeln der Darstellung","edition":"2024-04 (draft 2026-09 exists)"}],"sources":[{"url":"https://www.ingenieurkurse.de/technische-darstellungen-bauwesen/darstellung-und-kennzeichnung-bautechnischer-objekte-und-symbole-in-bauzeichnungen/schraffuren-und-deren-farbige-darstellung.html","title":"ingenieurkurse.de DIN 1356-1 hatching","evidence":"search_snippet"},{"url":"https://www.dinmedia.de/en/standard/din-1356-1/325728444","title":"DIN Media DIN 1356-1:2024-04","evidence":"search_snippet"}]},{"region":"JIS","status":"unverified","geometry_notes":{"en":"Material/structure display symbols (材料構造表示記号), scale-dependent; geometry not extracted."},"standards":[{"code":"JIS A 0150:1999","title":"建築製図通則 (General rules for architectural drawing)","edition":"1999 (confirmed 2019)"}],"sources":[{"url":"https://kikakurui.com/a0/A0150-1999-01.html","title":"JIS A 0150 (kikakurui)","evidence":"search_snippet"}]},{"region":"US_NCS","status":"unverified","geometry_notes":{"en":"AIA Architectural Graphic Standards patterns are the usual US CAD reference; not extracted."},"standards":[{"code":"AIA Architectural Graphic Standards","title":"Architectural Graphic Standards (material hatch reference)"}],"sources":[{"url":"https://www.cadhatch.com/architectural-graphic-standard","title":"CADhatch AGS patterns","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ลายแรเงาขนาดจริงตามแบบจำลอง ลวดลายยังไม่ทราบจากแหล่งไทย รายละเอียดลายขึ้นกับมาตราส่วน: ที่ 1:100 ใช้แบบย่อ ที่ 1:25 หรือใหญ่กว่าต้องแสดงลายเต็ม","en":"Model-scaled hatch; pattern not known from a Thai source. Detail depends on scale: simplified at 1:100, full pattern at 1:25 or larger."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcFillAreaStyleHatching","predefined_type":null,"object_type":"TH.ARCH.HATCH_WALL_BRICK_HALF","host_relation":null,"host_ifc_classes":[],"ifc4_note":null,"note":"Keep a .pat-style master definition; export as IfcFillAreaStyleHatching (or a fill colour where colour fills are used)."},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://sites.google.com/site/arc257rsu/lecture-list/drawing-standard/material-symbols","title":"Rangsit Univ. ARC257 material symbols","evidence":"search_snippet"}]},"TH.GENERAL.NORTH_ARROW":{"id":"TH.GENERAL.NORTH_ARROW","discipline":"GENERAL","category":"notation","name":{"th":"ลูกศรทิศเหนือ","en":"North arrow"},"abbreviations":["N"],"description":{"th":"สัญลักษณ์ทิศเหนือ ปรากฏเป็นอักษร \"N\" พร้อมสัญลักษณ์ในแผนที่พอสังเขป ผังโฉนด ผังบริเวณ และแปลนพื้น รูปทรงลูกศรของไทยยังไม่ยืนยัน","en":"North arrow; observed as the letter 'N' with a symbol on location map, title-deed plan, site plan and floor plans. Thai arrow form unconfirmed."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Letter 'N' with a symbol; shape not confirmed.","th":"อักษร N พร้อมสัญลักษณ์ รูปทรงยังไม่ยืนยัน"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"GB","status":"standard","geometry_notes":{"en":"Thin circle 24 mm diameter; pointer tail 3 mm wide (1/8 of diameter if larger); head marked '北' or 'N' (cl. 7.4)."},"standards":[{"code":"GB/T 50001-2017","title":"房屋建筑制图统一标准 (Unified standard for building drawings)","edition":"2017 (effective 2018-05-01)"}],"sources":[{"url":"https://gf.cabr-fire.com/article-45617.htm","title":"GB/T 50001 7.4 其他符号","evidence":"search_snippet"}]},{"region":"AS","status":"unverified","geometry_notes":{"en":"North point covered in AS 1100.301; geometry not extracted."},"standards":[{"code":"AS 1100.301-2008","title":"Technical drawing — Architectural drawing","edition":"2008 (Amdt 1 2011, R2018)"}],"sources":[{"url":"https://aimsindustrial.com.au/blogs/product-guides/engineering-drawing-symbols-guide","title":"aimsindustrial engineering drawing symbols guide","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ใช้รูปแบบ GB/T 50001 เป็นค่าเริ่มต้นที่เสนอ: วงกลมบาง Ø24 มม. เข็มชี้กว้างที่หาง 3 มม. ปลายชี้ทิศเหนือ มีอักษร N ที่หัว (รูปแบบไทยยังไม่ยืนยัน)","en":"Proposed default taken from the GB profile: thin circle Ø24 mm, pointer 3 mm wide at the tail, tip to north, 'N' at the head (Thai form unconfirmed)."},"nominal_size_mm":{"w":24,"h":24},"size_basis":"region_profile","svg_path":"M -12 0 A 12 12 0 1 0 12 0 A 12 12 0 1 0 -12 0 Z M -1.5 12 L 0 -12 L 1.5 12 Z","svg_basis":"notes","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.GENERAL.NORTH_ARROW","host_relation":null,"host_ifc_classes":[],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.GENERAL.NORTH_ARROW"}},"note":"Rotation from IfcGeometricRepresentationContext.TrueNorth."},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.GENERAL.DRAWING_TITLE":{"id":"TH.GENERAL.DRAWING_TITLE","discipline":"GENERAL","category":"notation","name":{"th":"ชื่อรูปและมาตราส่วน","en":"Drawing title with scale"},"abbreviations":[],"description":{"th":"ชื่อรูปใต้ภาพ เขียนว่า \"<ชื่อรูป> มาตราส่วน 1:100\" ใช้ภาษาไทยและอังกฤษปนกัน เช่น \"SCALE 1:25\" หรือ \"มาตราส่วน AS SHOWN\"","en":"View title '<title> มาตราส่วน 1:100'; Thai and English mixed ('SCALE 1:25', 'มาตราส่วน AS SHOWN')."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Thai/English mixed title + scale.","th":"ชื่อรูปและมาตราส่วน ไทยและอังกฤษปนกัน"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"ISO","status":"standard","geometry_notes":{"en":"Preferred scales 1:2, 1:5, 1:10 families (1:20, 1:50, 1:100, 1:200 …)."},"standards":[{"code":"ISO 5455:1979","title":"Technical drawings — Scales","edition":"1979"}],"sources":[{"url":"https://www.iso.org/standard/11500.html","title":"ISO 5455:1979","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความชื่อรูป (ขนาดใหญ่) ตามด้วยมาตราส่วน ขีดเส้นใต้หรือไม่ยังไม่ยืนยัน","en":"Title text followed by the scale; underline convention unconfirmed."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"title","source":"element_property","text_style":"TH-5","required":true,"query":"{{view.Name}}"},{"name":"scale","source":"element_property","text_style":"TH-3.5","required":false,"format":"^1:\\d+$|^AS SHOWN$","query":"{{view.scale}}"}],"notation_grammar":[{"name":"drawing_title_scale","regex":"^(?:(.+?)\\s*)?(?:มาตราส่วน|SCALE)\\s*(?:1\\s*:\\s*(\\d+)|(AS SHOWN))$","examples":["เเปลนพื้น มาตราส่วน1:100","ผังบริเวณ มาตราส่วน1:750","แบบขยายฐานราก F2 มาตราส่วน 1:25","SCALE 1:25","มาตราส่วน AS SHOWN"],"description":"Title + scale; group 2 = scale denominator.","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"TEXT","object_type":"TH.GENERAL.DRAWING_TITLE","host_relation":null,"host_ifc_classes":[],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.GENERAL.DRAWING_TITLE"}}},"standards":[{"code":"ISO 5455:1979","title":"Technical drawings — Scales","edition":"1979"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.GENERAL.TITLE_BLOCK":{"id":"TH.GENERAL.TITLE_BLOCK","discipline":"GENERAL","category":"sheet","name":{"th":"กรอบชื่อแบบ","en":"Title block"},"abbreviations":[],"description":{"th":"กรอบชื่อแบบของไทยที่สังเกตเป็นสองภาษา (หัวข้อภาษาอังกฤษ เนื้อหาภาษาไทย) มี PROJECT, LOCATION, OWNER, ARCHITECT, STRUCTURAL ENGINEER, DRAWN BY, ตารางรายการแก้ไข/วันที่ (1–7), รหัสโครงการ, DRAWING TITLE, DATE, DRAWING NO., NO./TOTAL, ชื่อและเลขใบอนุญาตผู้ออกแบบ (ภ-สถ, ภย.), หมายเหตุห้ามวัดระยะจากแบบ และตรา \"แบบขออนุญาต\" กฎหมายไม่ได้กำหนดช่องของกรอบชื่อแบบ กำหนดเพียงลายมือชื่อผู้ประกอบวิชาชีพ","en":"Observed Thai title block: bilingual (English labels, Thai content) with PROJECT, LOCATION, OWNER, ARCHITECT, STRUCTURAL ENGINEER, DRAWN BY, revision table (1–7), project code, DRAWING TITLE, DATE, DRAWING NO., NO./TOTAL, designers' names with licence numbers (ภ-สถ, ภย.), a do-not-scale note and a 'แบบขออนุญาต' stamp. Law mandates signatures, not title-block fields."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Bilingual labels; licence numbers; revision rows 1–7.","th":"หัวข้ออังกฤษ เนื้อหาไทย มีเลขใบอนุญาตและตารางแก้ไข 1–7"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"ISO","status":"standard","geometry_notes":{"en":"Title-block data fields (identifying/descriptive/administrative, mandatory/optional) per ISO 7200:2004; placement per ISO 9431:1990."},"standards":[{"code":"ISO 7200:2004","title":"TPD — Data fields in title blocks and document headers","edition":"2004"},{"code":"ISO 9431:1990","title":"Construction drawings — Spaces for drawing and for text, and title blocks on drawing sheets","edition":"1990 (confirmed 2026)"}],"sources":[{"url":"https://www.iso.org/standard/35446.html","title":"ISO 7200:2004","evidence":"search_snippet"},{"url":"https://www.iso.org/standard/17133.html","title":"ISO 9431:1990","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"กรอบข้อความตามขนาดกระดาษ ตำแหน่งช่องตามแม่แบบของสำนักงาน (ขนาดกระดาษ A1/A2/A3 ยังไม่ยืนยัน)","en":"Sheet-size frame; field layout per office template (paper size A1/A2/A3 unconfirmed)."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"project","source":"user","text_style":"TH-2.5","required":false},{"name":"location","source":"user","text_style":"TH-2.5","required":false},{"name":"owner","source":"user","text_style":"TH-2.5","required":false},{"name":"architect","source":"user","text_style":"TH-2.5","required":false},{"name":"architect_licence","source":"user","text_style":"TH-2.5","required":false,"format":"^ภ-สถ\\s?\\d+$"},{"name":"structural_engineer","source":"user","text_style":"TH-2.5","required":false},{"name":"engineer_licence","source":"user","text_style":"TH-2.5","required":false,"format":"^ภย\\.\\s?\\d+$"},{"name":"drawn_by","source":"user","text_style":"TH-2.5","required":false},{"name":"project_code","source":"user","text_style":"TH-2.5","required":false},{"name":"drawing_title","source":"element_property","text_style":"TH-2.5","required":false,"query":"{{sheet.Name}}"},{"name":"date","source":"user","text_style":"TH-2.5","required":false},{"name":"drawing_no","source":"element_property","text_style":"TH-2.5","required":false,"format":"^(A|S|ST|SN|E|EE|AC)(\\d?)-(\\d{2})$","query":"{{sheet.number}}"},{"name":"no_total","source":"element_property","text_style":"TH-2.5","required":false,"format":"^\\d+/\\d+$","query":"{{sheet.index}}/{{sheet.total}}"},{"name":"revision_no","source":"user","text_style":"TH-2.5","required":false,"format":"^\\d+$"},{"name":"revision_date","source":"user","text_style":"TH-2.5","required":false}],"notation_grammar":[{"name":"licence_number","regex":"^\\(?(ภ-สถ|ภย\\.)\\s?(\\d{3,6})\\)?$","examples":["(ภ-สถ12345)","(ภย.12345)"],"description":"Architect (ภาคีสถาปนิก) and associate civil engineer (ภาคีวิศวกรโยธา) licence numbers as printed.","status":"observed_practice","examples_note":"Digits are synthetic; the notes show the pattern '(ภ-สถ#####)' / '(ภย.#####)'. Other prefixes (ส-สถ, วส., สย., วย.) are unverified."}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"USERDEFINED","object_type":"TH.GENERAL.TITLE_BLOCK","host_relation":null,"host_ifc_classes":[],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.GENERAL.TITLE_BLOCK"}},"note":"Sheet furniture; Bonsai models sheets/drawings as IfcAnnotation groups."},"standards":[{"code":"ISO 7200:2004","title":"TPD — Data fields in title blocks and document headers","edition":"2004"},{"code":"ISO 9431:1990","title":"Construction drawings — Spaces for drawing and for text, and title blocks on drawing sheets","edition":"1990 (confirmed 2026)"},{"code":"กฎกระทรวง ฉบับที่ 4 (พ.ศ. 2526)","title":"กฎกระทรวง ฉบับที่ 4 ออกตามความในพระราชบัญญัติควบคุมอาคาร พ.ศ. 2522","edition":"พ.ศ. 2526 (consolidated to 2567 on ASA site)"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://nongoo.go.th/public/list_upload/backend/list_1166/files_3406_1.pdf","title":"Nongoo SAO: หนังสือรับรองของผู้ประกอบวิชาชีพสถาปัตยกรรมควบคุม","evidence":"search_snippet"},{"url":"https://bangphrachon.go.th/public/list_upload/backend/list_4086/files_11037_4.pdf","title":"แบบ ข.1 (Bangphrachon)","evidence":"search_snippet"}]},"TH.GENERAL.SHEET_NUMBER":{"id":"TH.GENERAL.SHEET_NUMBER","discipline":"GENERAL","category":"notation","name":{"th":"เลขที่แผ่น","en":"Sheet number"},"abbreviations":[],"description":{"th":"เลขที่แผ่นแบบของไทยใช้อักษรหมวดงานนำหน้า: A<กลุ่ม>-<ลำดับ> สำหรับสถาปัตย์ (A0-01), S-01 โครงสร้าง, SN-01 สุขาภิบาล, E-01 ไฟฟ้า และมีเลขหน้ารวมต่อเนื่องด้วย ดูคำศัพท์ sheet_number_prefixes","en":"Thai sheet numbers: discipline prefix + group digit + dash + sequence — A0-01 (architecture), S-01 (structure), SN-01 (sanitary), E-01 (electrical); plus a running page number. See vocabulary sheet_number_prefixes."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"A<group>-<nn>, S-nn, SN-nn, E-nn.","th":"A<กลุ่ม>-<ลำดับ>, S-nn, SN-nn, E-nn"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},{"region":"US_NCS","status":"standard","geometry_notes":{"en":"Sheet ID 'A A N N N' — e.g. A-101 = Architectural, plans, sheet 01."},"standards":[{"code":"US NCS V7 / UDS Module 1","title":"Uniform Drawing System — Drawing Set Organization (sheet identification)","edition":"NCS V7"}],"sources":[{"url":"https://www.nationalcadstandard.org/ncs6/pdfs/ncs6_uds1.pdf","title":"NCS V6 UDS Module 1","evidence":"search_snippet"}]},{"region":"ISO","status":"observed_practice","geometry_notes":{"en":"ISO 19650 container naming (UK NA: Project-Originator-Functional-Spatial-Form-Discipline-Number)."},"standards":[{"code":"BS EN ISO 19650-2 UK NA","title":"UK National Annex container naming"}],"sources":[{"url":"https://www.symetri.co.uk/insights/blog/iso-19650-file-naming-update/","title":"Symetri ISO 19650 naming update","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความในกรอบชื่อแบบ (DRAWING NO.) และ NO./TOTAL","en":"Text in the title block DRAWING NO. field, plus NO./TOTAL."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"sheet_no","source":"element_property","text_style":"TH-5","required":true,"format":"^(A|S|ST|SN|E|EE|AC)(\\d?)-(\\d{2})$","query":"{{sheet.number}}"},{"name":"sheet_index","source":"element_property","text_style":"TH-2.5","required":false,"format":"^\\d+/\\d+$","query":"{{sheet.index}}/{{sheet.total}}"}],"notation_grammar":[{"name":"sheet_no_th","regex":"^(A|S|ST|SN|E|EE|AC)(\\d?)-(\\d{2})$","examples":["A0-01","A2-02","S-01","SN-07","E-05"],"description":"Observed Thai sheet number grammar (prefix set extendable).","status":"observed_practice"},{"name":"sheet_no_us_uds","regex":"^([A-Z])([A-Z]|-)(\\d)(\\d{2})$","examples":["A-101","FP101"],"description":"US UDS: 1–2 letter discipline (hyphen placeholder), 1-digit sheet type, 2-digit sequence.","status":"standard"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"TEXT","object_type":"TH.GENERAL.SHEET_NUMBER","host_relation":null,"host_ifc_classes":[],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.GENERAL.SHEET_NUMBER"}}},"standards":[{"code":"US NCS V7 / UDS Module 1","title":"Uniform Drawing System — Drawing Set Organization (sheet identification)","edition":"NCS V7"}],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"http://eng.sut.ac.th/ce/CE_homework/T02PlanView.pdf","title":"SUT CE Drawing 02","evidence":"search_snippet"},{"url":"https://www.cmru.ac.th/attachment/get/4774/ST-%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B8%87%E0%B8%AA%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%87.pdf","title":"CMRU ST drawing set (ST- prefix)","evidence":"search_snippet"}]},"TH.GENERAL.NOTE_DO_NOT_SCALE":{"id":"TH.GENERAL.NOTE_DO_NOT_SCALE","discipline":"GENERAL","category":"notation","name":{"th":"หมายเหตุห้ามวัดระยะจากแบบ","en":"Do-not-scale note"},"abbreviations":[],"description":{"th":"ข้อความหมายเหตุในกรอบชื่อแบบ: \"ไม่อนุญาตให้วัดระยะจากแบบ ทุกระยะให้ตรวจสอบจากสถานที่ก่อสร้าง\"","en":"Title-block note: 'ไม่อนุญาตให้วัดระยะจากแบบ ทุกระยะให้ตรวจสอบจากสถานที่ก่อสร้าง' (do not scale from drawings; verify all dimensions on site)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Verbatim Thai note.","th":"ข้อความภาษาไทยตามต้นฉบับ"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]}],"geometry":{"redraw_description":{"th":"ข้อความคงที่ในกรอบชื่อแบบ","en":"Fixed text in the title block."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"note","source":"user","text_style":"TH-2.5","required":false,"default":"หมายเหตุ : ไม่อนุญาตให้วัดระยะจากแบบ ทุกระยะให้ตรวจสอบจากสถานที่ก่อสร้าง"}],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"TEXT","object_type":"TH.GENERAL.NOTE_DO_NOT_SCALE","host_relation":null,"host_ifc_classes":[],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.GENERAL.NOTE_DO_NOT_SCALE"}}},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.ELEC.RECEPTACLE_DUPLEX":{"id":"TH.ELEC.RECEPTACLE_DUPLEX","discipline":"ELEC","category":"device","name":{"th":"เต้ารับคู่ 2P+G","en":"Duplex receptacle"},"abbreviations":["GFCI","RCD","WP","E"],"description":{"th":"สัญลักษณ์เต้ารับคู่ 2P+G (Duplex receptacle) — รูปแบบ: วงกลมโปร่ง Ø3 มม. สัมผัสแนวผนัง มีเส้นสั้นขนาน 2 เส้น ยาว 5 มม. ตัดผ่านวงกลมตั้งฉากกับผนัง ต่อท้ายด้วย GFCI/RCD, WP (กันน้ำ), E (ฉุกเฉิน), +1.20 (ความสูงติดตั้ง) — อักษรกำกับ: GFCI, RCD, WP, E — ที่มาของรูปแบบ (lineage): US — ยังไม่ได้ตรวจกับแผ่นสัญลักษณ์ของไทย","en":"Duplex receptacle (เต้ารับคู่ 2P+G). Glyph: ø3 open circle tangent to the wall, two parallel 5 mm lines through the circle perpendicular to the wall; suffix GFCI/RCD, WP (weatherproof), E (emergency), +1.20 mounting height. Label: GFCI, RCD, WP, E. Glyph lineage: US. Not yet checked against a Thai legend sheet."},"status":"unverified","region_profiles":[{"region":"TH","status":"unverified","geometry_notes":{"en":"Thai seed-catalog glyph (US lineage): ø3 open circle tangent to the wall, two parallel 5 mm lines through the circle perpendicular to the wall; suffix GFCI/RCD, WP (weatherproof), E (emergency), +1.20 mounting height.","th":"วงกลมโปร่ง Ø3 มม. สัมผัสแนวผนัง มีเส้นสั้นขนาน 2 เส้น ยาว 5 มม. ตัดผ่านวงกลมตั้งฉากกับผนัง ต่อท้ายด้วย GFCI/RCD, WP (กันน้ำ), E (ฉุกเฉิน), +1.20 (ความสูงติดตั้ง)"},"standards":[],"sources":[]},{"region":"US_NECA","status":"unverified","geometry_notes":{"en":"Duplex receptacle: circle Ø≈1/4 in crossed by two short parallel lines perpendicular to the wall; GFCI written beside or special fill (NECA 100 lineage; verify against the standard)."},"standards":[{"code":"NECA 100-2024","title":"Symbols for Electrical Construction Drawings","edition":"2024"}],"sources":[{"url":"https://webstore.ansi.org/standards/neca/neca1002024","title":"ANSI webstore NECA 100-2024","evidence":"search_snippet"},{"url":"https://electricalflux.com/wire-switches/duplex-receptacle-symbol-blueprint-guide","title":"ElectricalFlux: duplex receptacle symbol","evidence":"search_snippet"}]},{"region":"IEC","status":"unverified","geometry_notes":{"en":"Twin socket: semicircle with two short lines (number of lines = gangs)."},"standards":[{"code":"IEC 60617","title":"Graphical symbols for diagrams (online database)","edition":"IEC 60617:2026 DB"}],"sources":[{"url":"https://www.totalskills.co.uk/guides/electrical-symbols-explained","title":"Total Skills UK: electrical symbols explained","evidence":"search_snippet"},{"url":"https://webstore.iec.ch/en/iec_catalog/product/preview/?id=L3B1Yi9wZGYvcHJldmlldy9pbmZvX2llYzYwNjE3e2VkMS4wfWIucGRm","title":"IEC 60617 info sheet","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"วงกลมโปร่ง Ø3 มม. สัมผัสแนวผนัง มีเส้นสั้นขนาน 2 เส้น ยาว 5 มม. ตัดผ่านวงกลมตั้งฉากกับผนัง ต่อท้ายด้วย GFCI/RCD, WP (กันน้ำ), E (ฉุกเฉิน), +1.20 (ความสูงติดตั้ง)","en":"ø3 open circle tangent to the wall, two parallel 5 mm lines through the circle perpendicular to the wall; suffix GFCI/RCD, WP (weatherproof), E (emergency), +1.20 mounting height."},"nominal_size_mm":{"w":3,"h":5},"size_basis":"source","svg_path":"M -1.5 0 A 1.5 1.5 0 1 0 1.5 0 A 1.5 1.5 0 1 0 -1.5 0 Z M -0.5 -2.5 L -0.5 2.5 M 0.5 -2.5 L 0.5 2.5","svg_basis":"notes_partial","insertion_point":[0,0]},"text_fields":[{"name":"suffix","source":"user","text_style":"TH-2.5","required":false,"format":"^(GFCI|RCD|WP|E)$"},{"name":"mounting_height","source":"element_property","text_style":"TH-2.5","required":false,"format":"^\\+\\d+\\.\\d{2}$","query":"{{TBIM_Mounting.Height}}"}],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ELEC.RECEPTACLE_DUPLEX","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcOutlet"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ELEC.RECEPTACLE_DUPLEX"}},"note":"host_ifc_classes are a TBIM mapping proposal (not from the research notes); verify against IFC4.3."},"standards":[{"code":"วสท. 022001","title":"มาตรฐานการติดตั้งทางไฟฟ้าสำหรับประเทศไทย (EIT with MEA/PEA)","edition":"2564 (2021); earlier 2556 (2013)"}],"sources":[{"url":"https://electricalflux.com/wire-switches/duplex-receptacle-symbol-blueprint-guide","title":"ElectricalFlux: duplex receptacle symbol","evidence":"search_snippet"}]},"TH.ELEC.SWITCH_1WAY":{"id":"TH.ELEC.SWITCH_1WAY","discipline":"ELEC","category":"device","name":{"th":"สวิตช์ทางเดียว","en":"Single-pole (one-way) switch"},"abbreviations":["S","S₁"],"description":{"th":"สัญลักษณ์สวิตช์ทางเดียว (Single-pole (one-way) switch) — รูปแบบ: อักษร S สูง 2.5 มม. ณ ตำแหน่งสวิตช์ หรือแบบ IEC: จุด Ø1.5 มม. มีเส้นยาว 4 มม. เอียง 45° ปลายมีขีดสั้น — อักษรกำกับ: S, S₁ — ที่มาของรูปแบบ (lineage): US / IEC — ยังไม่ได้ตรวจกับแผ่นสัญลักษณ์ของไทย","en":"Single-pole (one-way) switch (สวิตช์ทางเดียว). Glyph: Letter 'S' (2.5 mm text) at the switch location; or IEC: ø1.5 dot with a 4 mm line at 45° ending in a short tick. Label: S, S₁. Glyph lineage: US / IEC. Not yet checked against a Thai legend sheet."},"status":"unverified","region_profiles":[{"region":"TH","status":"unverified","geometry_notes":{"en":"Thai seed-catalog glyph (US / IEC lineage): Letter 'S' (2.5 mm text) at the switch location; or IEC: ø1.5 dot with a 4 mm line at 45° ending in a short tick.","th":"อักษร S สูง 2.5 มม. ณ ตำแหน่งสวิตช์ หรือแบบ IEC: จุด Ø1.5 มม. มีเส้นยาว 4 มม. เอียง 45° ปลายมีขีดสั้น"},"standards":[],"sources":[]},{"region":"US_NECA","status":"unverified","geometry_notes":{"en":"Switch = letter S with subscripts: S, S2, S3, S4, SD (dimmer), SK (key), SP (pilot), SOS (occupancy) (NECA 100 lineage; verify against the standard)."},"standards":[{"code":"NECA 100-2024","title":"Symbols for Electrical Construction Drawings","edition":"2024"}],"sources":[{"url":"https://webstore.ansi.org/standards/neca/neca1002024","title":"ANSI webstore NECA 100-2024","evidence":"search_snippet"},{"url":"https://electricalflux.com/wire-switches/duplex-receptacle-symbol-blueprint-guide","title":"ElectricalFlux: duplex receptacle symbol","evidence":"search_snippet"}]},{"region":"IEC","status":"unverified","geometry_notes":{"en":"Switch, general: small dot/open circle with an oblique line at about 45°; a short perpendicular tick at the end = single-pole; more ticks for 2/3-pole."},"standards":[{"code":"IEC 60617","title":"Graphical symbols for diagrams (online database)","edition":"IEC 60617:2026 DB"}],"sources":[{"url":"https://www.totalskills.co.uk/guides/electrical-symbols-explained","title":"Total Skills UK: electrical symbols explained","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"อักษร S สูง 2.5 มม. ณ ตำแหน่งสวิตช์ หรือแบบ IEC: จุด Ø1.5 มม. มีเส้นยาว 4 มม. เอียง 45° ปลายมีขีดสั้น","en":"Letter 'S' (2.5 mm text) at the switch location; or IEC: ø1.5 dot with a 4 mm line at 45° ending in a short tick."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"subscript","source":"user","text_style":"TH-2.5","required":false,"format":"^(1|2|3|4|D|K|P|OS)?$"},{"name":"mounting_height","source":"element_property","text_style":"TH-2.5","required":false,"format":"^\\+\\d+\\.\\d{2}$","query":"{{TBIM_Mounting.Height}}"}],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ELEC.SWITCH_1WAY","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcSwitchingDevice"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ELEC.SWITCH_1WAY"}},"note":"host_ifc_classes are a TBIM mapping proposal (not from the research notes); verify against IFC4.3."},"standards":[{"code":"วสท. 022001","title":"มาตรฐานการติดตั้งทางไฟฟ้าสำหรับประเทศไทย (EIT with MEA/PEA)","edition":"2564 (2021); earlier 2556 (2013)"}],"sources":[]},"TH.ELEC.LUMINAIRE_DOWNLIGHT":{"id":"TH.ELEC.LUMINAIRE_DOWNLIGHT","discipline":"ELEC","category":"fixture","name":{"th":"โคมดาวน์ไลท์","en":"Downlight"},"abbreviations":["C"],"description":{"th":"สัญลักษณ์โคมดาวน์ไลท์ (Downlight) — รูปแบบ: วงกลมโปร่ง Ø6 มม. หากเป็นไฟสปอต LED มีวงกลมเล็กทึบด้านใน — อักษรกำกับ: C — ที่มาของรูปแบบ (lineage): US — ยังไม่ได้ตรวจกับแผ่นสัญลักษณ์ของไทย","en":"Downlight (โคมดาวน์ไลท์). Glyph: ø6 open circle; a filled small inner circle for an LED spot. Label: C. Glyph lineage: US. Not yet checked against a Thai legend sheet."},"status":"unverified","region_profiles":[{"region":"TH","status":"unverified","geometry_notes":{"en":"Thai seed-catalog glyph (US lineage): ø6 open circle; a filled small inner circle for an LED spot.","th":"วงกลมโปร่ง Ø6 มม. หากเป็นไฟสปอต LED มีวงกลมเล็กทึบด้านใน"},"standards":[],"sources":[]},{"region":"US_NECA","status":"unverified","geometry_notes":{"en":"Downlights drawn as circles (NECA 100 lineage; verify against the standard)."},"standards":[{"code":"NECA 100-2024","title":"Symbols for Electrical Construction Drawings","edition":"2024"}],"sources":[{"url":"https://webstore.ansi.org/standards/neca/neca1002024","title":"ANSI webstore NECA 100-2024","evidence":"search_snippet"},{"url":"https://electricalflux.com/wire-switches/duplex-receptacle-symbol-blueprint-guide","title":"ElectricalFlux: duplex receptacle symbol","evidence":"search_snippet"}]},{"region":"IEC","status":"standard","geometry_notes":{"en":"Luminaire, general: circle with a cross (X-in-circle) — used in both ANSI and IEC practice."},"standards":[{"code":"IEC 60617","title":"Graphical symbols for diagrams (online database)","edition":"IEC 60617:2026 DB"}],"sources":[{"url":"https://qelectrotech.org/forum/misc.php?action=pun_attachment&item=2124&download=1","title":"IEC 60617 symbol list (QElectroTech attachment)","evidence":"search_snippet"},{"url":"https://kth-electric.com/en/electrical-symbols-guide-iec-ansi/","title":"kth-electric: electrical symbols IEC vs ANSI","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"วงกลมโปร่ง Ø6 มม. หากเป็นไฟสปอต LED มีวงกลมเล็กทึบด้านใน","en":"ø6 open circle; a filled small inner circle for an LED spot."},"nominal_size_mm":{"w":6,"h":6},"size_basis":"source","svg_path":"M -3 0 A 3 3 0 1 0 3 0 A 3 3 0 1 0 -3 0 Z","svg_basis":"notes","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ELEC.LUMINAIRE_DOWNLIGHT","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcLightFixture"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ELEC.LUMINAIRE_DOWNLIGHT"}},"note":"host_ifc_classes are a TBIM mapping proposal (not from the research notes); verify against IFC4.3."},"standards":[{"code":"วสท. 022001","title":"มาตรฐานการติดตั้งทางไฟฟ้าสำหรับประเทศไทย (EIT with MEA/PEA)","edition":"2564 (2021); earlier 2556 (2013)"}],"sources":[]},"TH.ELEC.PANEL_DB":{"id":"TH.ELEC.PANEL_DB","discipline":"ELEC","category":"equipment","name":{"th":"ตู้ย่อย","en":"Distribution board / load panel"},"abbreviations":["DB","LP","PP","EDB"],"description":{"th":"สัญลักษณ์ตู้ย่อย (Distribution board / load panel) — รูปแบบ: สี่เหลี่ยมผืนผ้า 10×4 มม. ระบายทึบครึ่งตามแนวทแยง ติดลอย = ทึบทั้งหมด ฝังผนัง = ทึบครึ่ง — อักษรกำกับ: DB, LP, PP, EDB — ที่มาของรูปแบบ (lineage): US — ยังไม่ได้ตรวจกับแผ่นสัญลักษณ์ของไทย","en":"Distribution board / load panel (ตู้ย่อย). Glyph: Rectangle 10×4, half filled diagonally; surface = fully filled, flush = half filled. Label: DB, LP, PP, EDB. Glyph lineage: US. Not yet checked against a Thai legend sheet."},"status":"unverified","region_profiles":[{"region":"TH","status":"unverified","geometry_notes":{"en":"Thai seed-catalog glyph (US lineage): Rectangle 10×4, half filled diagonally; surface = fully filled, flush = half filled.","th":"สี่เหลี่ยมผืนผ้า 10×4 มม. ระบายทึบครึ่งตามแนวทแยง ติดลอย = ทึบทั้งหมด ฝังผนัง = ทึบครึ่ง"},"standards":[],"sources":[]},{"region":"US_NECA","status":"unverified","geometry_notes":{"en":"Panelboard: rectangle, solid-filled for FLUSH mounting and outlined for SURFACE mounting — note this is the opposite of the Thai row (surface = fully filled, flush = half filled); resolve per project legend."},"standards":[{"code":"NECA 100-2024","title":"Symbols for Electrical Construction Drawings","edition":"2024"}],"sources":[{"url":"https://www.weld.gov/files/sharedassets/public/v/1/departments/purchasing/documents/archive/bid-specs-1-weld-county-dispatch-console-addition-75.pdf","title":"Weld County symbol list (NECA-based)","evidence":"search_snippet"},{"url":"https://webstore.ansi.org/standards/neca/neca1002024","title":"ANSI webstore NECA 100-2024","evidence":"search_snippet"}]},{"region":"IEC","status":"unverified","geometry_notes":{"en":"Distribution board: rectangle, often half-filled (diagonal fill)."},"standards":[{"code":"IEC 60617","title":"Graphical symbols for diagrams (online database)","edition":"IEC 60617:2026 DB"}],"sources":[{"url":"https://www.totalskills.co.uk/guides/electrical-symbols-explained","title":"Total Skills UK: electrical symbols explained","evidence":"search_snippet"},{"url":"https://webstore.iec.ch/en/iec_catalog/product/preview/?id=L3B1Yi9wZGYvcHJldmlldy9pbmZvX2llYzYwNjE3e2VkMS4wfWIucGRm","title":"IEC 60617 info sheet","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"สี่เหลี่ยมผืนผ้า 10×4 มม. ระบายทึบครึ่งตามแนวทแยง ติดลอย = ทึบทั้งหมด ฝังผนัง = ทึบครึ่ง","en":"Rectangle 10×4, half filled diagonally; surface = fully filled, flush = half filled."},"nominal_size_mm":{"w":10,"h":4},"size_basis":"source","svg_path":"M -5 -2 H 5 V 2 H -5 Z M -5 2 L 5 -2","svg_basis":"notes","insertion_point":[0,0]},"text_fields":[{"name":"panel_name","source":"element_property","text_style":"TH-2.5","required":true,"format":"^(DB|LP|PP|EDB)-?\\w*$","query":"{{Name}}"}],"notation_grammar":[{"name":"panel_tag","regex":"^(E?MDB|DB|LP|PP|EDB|CU)(?:-([A-Z0-9]+))?$","examples":["MDB","EMDB","DB-1","LP-1","PP-2","EDB"],"description":"Panel designation.","status":"unverified"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.ELEC.PANEL_DB","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcElectricDistributionBoard"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.ELEC.PANEL_DB"}},"note":"host_ifc_classes are a TBIM mapping proposal (not from the research notes); verify against IFC4.3."},"standards":[{"code":"วสท. 022001","title":"มาตรฐานการติดตั้งทางไฟฟ้าสำหรับประเทศไทย (EIT with MEA/PEA)","edition":"2564 (2021); earlier 2556 (2013)"}],"sources":[{"url":"https://pantip.com/topic/32310879","title":"Pantip: วงจร MDB และ LP","evidence":"search_snippet"}]},"TH.FA.SMOKE_DETECTOR":{"id":"TH.FA.SMOKE_DETECTOR","discipline":"FA","category":"device","name":{"th":"อุปกรณ์ตรวจจับควัน","en":"Smoke detector"},"abbreviations":["SD","S","P"],"description":{"th":"สัญลักษณ์อุปกรณ์ตรวจจับควัน (Smoke detector) — รูปแบบ: วงกลม Ø6 มม. มีอักษร S (หรือ SD) ชนิดโฟโตอิเล็กทริกบางครั้งใช้ P — อักษรกำกับ: SD, S, P — ที่มาของรูปแบบ (lineage): US — ยังไม่ได้ตรวจกับแผ่นสัญลักษณ์ของไทย","en":"Smoke detector (อุปกรณ์ตรวจจับควัน). Glyph: ø6 circle with 'S' (or 'SD'); photoelectric sometimes marked 'P'. Label: SD, S, P. Glyph lineage: US. Not yet checked against a Thai legend sheet."},"status":"unverified","region_profiles":[{"region":"TH","status":"unverified","geometry_notes":{"en":"Thai seed-catalog glyph (US lineage): ø6 circle with 'S' (or 'SD'); photoelectric sometimes marked 'P'.","th":"วงกลม Ø6 มม. มีอักษร S (หรือ SD) ชนิดโฟโตอิเล็กทริกบางครั้งใช้ P"},"standards":[],"sources":[]},{"region":"NFPA","status":"unverified","geometry_notes":{"en":"Initiating device: square or circle with 'S'. Symbol type is named in NFPA 170; exact geometry not read."},"standards":[{"code":"NFPA 170-2024","title":"Standard for Fire Safety and Emergency Symbols","edition":"2024"}],"sources":[{"url":"https://www.nfpa.org/product/nfpa-170-standard/p0170code","title":"NFPA 170-2024","evidence":"search_snippet"},{"url":"https://nationaltrainingcenter.com/fire-alarm-symbols/","title":"search extract citing NFPA 170 / NFPA 72","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"วงกลม Ø6 มม. มีอักษร S (หรือ SD) ชนิดโฟโตอิเล็กทริกบางครั้งใช้ P","en":"ø6 circle with 'S' (or 'SD'); photoelectric sometimes marked 'P'."},"nominal_size_mm":{"w":6,"h":6},"size_basis":"source","svg_path":"M -3 0 A 3 3 0 1 0 3 0 A 3 3 0 1 0 -3 0 Z","svg_basis":"notes","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.FA.SMOKE_DETECTOR","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcSensor"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.FA.SMOKE_DETECTOR"}},"note":"host_ifc_classes are a TBIM mapping proposal (not from the research notes); verify against IFC4.3."},"standards":[{"code":"วสท. 021002-24","title":"มาตรฐานระบบแจ้งเหตุเพลิงไหม้ พ.ศ. 2567","edition":"2567 (2024)"}],"sources":[{"url":"https://km.mrta.co.th/files/article/attachment/9e4f6147b5aa13e33b3d243a6c61962a.pdf","title":"MRTA KM: ระบบแจ้งเหตุเพลิงไหม้","evidence":"search_snippet"},{"url":"https://www.uptech-shop.com/15569641/%E0%B8%95%E0%B8%B9%E0%B9%89%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1%E0%B8%A3%E0%B8%B0%E0%B8%9A%E0%B8%9A%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%8D%E0%B8%B2%E0%B8%93%E0%B9%81%E0%B8%88%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%AB%E0%B8%95%E0%B8%B8%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%B4%E0%B8%87%E0%B9%84%E0%B8%AB%E0%B8%A1%E0%B9%89-fire-alarm-control-panel","title":"uptech-shop FACP page","evidence":"search_snippet"},{"url":"https://www.firepump-firealarm.com/TH/service/fire-alarm.html","title":"firepump-firealarm.com","evidence":"search_snippet"}]},"TH.SAN.FLOOR_DRAIN":{"id":"TH.SAN.FLOOR_DRAIN","discipline":"SAN","category":"fixture","name":{"th":"ท่อระบายน้ำพื้น (ฟลอร์เดรน)","en":"Floor drain"},"abbreviations":["FD"],"description":{"th":"สัญลักษณ์ท่อระบายน้ำพื้น (ฟลอร์เดรน) (Floor drain) — รูปแบบ: วงกลม Ø6 มม. มีลายตาราง หรือวงกลม Ø6 มม. มีอักษร FD — อักษรกำกับ: FD — ที่มาของรูปแบบ (lineage): US — ยังไม่ได้ตรวจกับแผ่นสัญลักษณ์ของไทย","en":"Floor drain (ท่อระบายน้ำพื้น (ฟลอร์เดรน)). Glyph: ø6 circle with a cross-hatch grid, or ø6 circle with 'FD'. Label: FD. Glyph lineage: US. Not yet checked against a Thai legend sheet."},"status":"unverified","region_profiles":[{"region":"TH","status":"unverified","geometry_notes":{"en":"Thai seed-catalog glyph (US lineage): ø6 circle with a cross-hatch grid, or ø6 circle with 'FD'.","th":"วงกลม Ø6 มม. มีลายตาราง หรือวงกลม Ø6 มม. มีอักษร FD"},"standards":[],"sources":[]}],"geometry":{"redraw_description":{"th":"วงกลม Ø6 มม. มีลายตาราง หรือวงกลม Ø6 มม. มีอักษร FD","en":"ø6 circle with a cross-hatch grid, or ø6 circle with 'FD'."},"nominal_size_mm":{"w":6,"h":6},"size_basis":"source","svg_path":"M -3 0 A 3 3 0 1 0 3 0 A 3 3 0 1 0 -3 0 Z","svg_basis":"notes_partial","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.SAN.FLOOR_DRAIN","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcWasteTerminal"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.SAN.FLOOR_DRAIN"}},"note":"host_ifc_classes are a TBIM mapping proposal (not from the research notes); verify against IFC4.3."},"standards":[{"code":"มยผ. 3101-51","title":"มาตรฐานท่อระบบสุขาภิบาล (DPT)","edition":"2551 (2008)"}],"sources":[{"url":"http://www.saentriputh.com/blog.php?b=8","title":"SaenTriputh: สัญลักษณ์ของท่อ","evidence":"search_snippet"}]},"TH.SAN.CLEANOUT":{"id":"TH.SAN.CLEANOUT","discipline":"SAN","category":"fixture","name":{"th":"ที่เปิดล้าง","en":"Cleanout"},"abbreviations":["CO","FCO","WCO"],"description":{"th":"สัญลักษณ์ที่เปิดล้าง (Cleanout) — รูปแบบ: วงกลม Ø4 มม. มีอักษร CO ที่พื้นใช้ FCO ที่ผนังใช้ WCO — อักษรกำกับ: CO, FCO, WCO — ที่มาของรูปแบบ (lineage): US — ยังไม่ได้ตรวจกับแผ่นสัญลักษณ์ของไทย","en":"Cleanout (ที่เปิดล้าง). Glyph: ø4 circle with 'CO'; floor cleanout 'FCO', wall 'WCO'. Label: CO, FCO, WCO. Glyph lineage: US. Not yet checked against a Thai legend sheet."},"status":"unverified","region_profiles":[{"region":"TH","status":"unverified","geometry_notes":{"en":"Thai seed-catalog glyph (US lineage): ø4 circle with 'CO'; floor cleanout 'FCO', wall 'WCO'.","th":"วงกลม Ø4 มม. มีอักษร CO ที่พื้นใช้ FCO ที่ผนังใช้ WCO"},"standards":[],"sources":[]}],"geometry":{"redraw_description":{"th":"วงกลม Ø4 มม. มีอักษร CO ที่พื้นใช้ FCO ที่ผนังใช้ WCO","en":"ø4 circle with 'CO'; floor cleanout 'FCO', wall 'WCO'."},"nominal_size_mm":{"w":4,"h":4},"size_basis":"source","svg_path":"M -2 0 A 2 2 0 1 0 2 0 A 2 2 0 1 0 -2 0 Z","svg_basis":"notes","insertion_point":[0,0]},"text_fields":[{"name":"variant","source":"user","text_style":"TH-2.5","required":false,"format":"^(CO|FCO|WCO)$","default":"CO"}],"notation_grammar":[],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.SAN.CLEANOUT","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcPipeFitting"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.SAN.CLEANOUT"}},"note":"host_ifc_classes are a TBIM mapping proposal (not from the research notes); verify against IFC4.3."},"standards":[{"code":"มยผ. 3101-51","title":"มาตรฐานท่อระบบสุขาภิบาล (DPT)","edition":"2551 (2008)"}],"sources":[{"url":"http://www.saentriputh.com/blog.php?b=8","title":"SaenTriputh: สัญลักษณ์ของท่อ","evidence":"search_snippet"}]},"TH.STR.BEAM_TAG":{"id":"TH.STR.BEAM_TAG","discipline":"STR","category":"tag","name":{"th":"ป้ายรหัสคาน","en":"Beam tag"},"abbreviations":["B","RB","TB"],"description":{"th":"ป้ายรหัสคาน B1, B1A, B1B (พบในชุดแบบ) บางสำนักงานใช้ RB = คานหลังคา, TB = คานทับหลัง (ยังไม่ยืนยัน) ระวาง: RB ชนกับ RB = เหล็กกลม ให้แยกตามบริบท (ป้ายชิ้นส่วนไม่มีขนาดเส้นผ่านศูนย์กลาง)","en":"Beam mark: B1, B1A, B1B (observed). Some offices use RB = roof beam, TB = tie beam (unverified). RB clashes with the round-bar prefix: disambiguate by context (a member tag has no diameter)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"Office practice; letters vary by office (per-office overrides allowed).","th":"ตามแนวปฏิบัติของสำนักงาน ตัวอักษรต่างกันได้"},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://www.bloggang.com/m/viewdiary.php?id=jfamily&month=08-2009&date=30&group=1&gblog=11","title":"Bloggang: วิธีอ่านแบบก่อสร้าง สำหรับผู้ที่ไม่ใช่ช่าง (2009)","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความ B# ตามแนวคาน","en":"Text B# along the beam."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"mark","source":"element_property","text_style":"TH-2.5","required":true,"format":"^(B|RB|TB)(\\d+)([A-Z])?$","query":"{{Tag}}","description":"Type mark keyed to the member schedule"}],"notation_grammar":[{"name":"beam_tag_mark","regex":"^(B|RB|TB)(\\d+)([A-Z])?$","examples":["B1","B1A","B1B","RB1","TB2"],"description":"STR-scope member mark (Beam tag).","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"SYMBOL","object_type":"TH.STR.BEAM_TAG","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcBeam"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.STR.BEAM_TAG"}}},"standards":[],"sources":[{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"},{"url":"https://www.bloggang.com/m/viewdiary.php?id=jfamily&month=08-2009&date=30&group=1&gblog=11","title":"Bloggang: วิธีอ่านแบบก่อสร้าง สำหรับผู้ที่ไม่ใช่ช่าง (2009)","evidence":"search_snippet"},{"url":"https://www.a-westproperty.co.th/plan/","title":"A-West Property: 4 แบบแปลน ต้องรู้","evidence":"search_snippet"}]},"TH.STR.REBAR_CALLOUT":{"id":"TH.STR.REBAR_CALLOUT","discipline":"STR","category":"notation","name":{"th":"คำกำกับเหล็กเสริม","en":"Rebar callout"},"abbreviations":["DB","RB","@"],"description":{"th":"รูปแบบการเขียนเหล็กเสริม: จำนวน-ชนิดขนาด เช่น \"10-DB12\" = เหล็กข้ออ้อย 12 มม. 10 เส้น; ระยะห่าง เช่น \"RB9@0.20\" = เหล็กกลม 9 มม. ทุก 0.20 ม. DB = เหล็กข้ออ้อย (มอก. 24-2559), RB = เหล็กกลม (มอก. 20-2559) ตัวเลขคือเส้นผ่านศูนย์กลาง มม. บางสำนักงานเขียนระยะเป็น ซม. (@15) ให้แปลงเป็นเมตร ไม่มีมาตรฐานไทยกำหนดไวยากรณ์นี้","en":"Rebar callout grammar: count-type+size ('10-DB12' = ten 12 mm deformed bars); spacing ('RB9@0.20' = 9 mm round bars at 0.20 m). DB = deformed (มอก. 24-2559), RB = round (มอก. 20-2559); number = diameter in mm. Some offices write spacing in cm ('@15'); normalise to metres. No Thai standard prescribes this grammar."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"n-DBd, DBd@s, RBd@s; s in metres (cm in some offices).","th":"n-DBd, DBd@s, RBd@s; ระยะเป็นเมตร (บางสำนักงานเป็น ซม.)"},"standards":[{"code":"มอก. 24-2559","title":"เหล็กเส้นข้ออ้อย (deformed bars; grades SD30/SD40/SD50)","edition":"2559 (2016)"},{"code":"มอก. 20-2559","title":"เหล็กเส้นกลม (round bars; grade SR24)","edition":"2559 (2016)"}],"sources":[{"url":"https://www.bloggang.com/m/viewdiary.php?id=jfamily&month=08-2009&date=30&group=1&gblog=11","title":"Bloggang: วิธีอ่านแบบก่อสร้าง สำหรับผู้ที่ไม่ใช่ช่าง (2009)","evidence":"search_snippet"}]},{"region":"ISO","status":"unverified","geometry_notes":{"en":"Simplified representation of reinforcement (single bars, bundles, hooks, fabric, layers, tendons) and bar-scheduling/shape codes per ISO 3766:2003; line conventions not extracted."},"standards":[{"code":"ISO 3766:2003","title":"Construction drawings — Simplified representation of concrete reinforcement","edition":"2003"}],"sources":[{"url":"https://www.iso.org/standard/34171.html","title":"ISO 3766:2003","evidence":"search_snippet"}]},{"region":"US_ACI","status":"standard","geometry_notes":{"en":"ACI 315-18: any system of letters and numerals is acceptable for bar marks."},"standards":[{"code":"ACI 315-18","title":"Details and Detailing of Concrete Reinforcement","edition":"2018"}],"sources":[{"url":"https://www.concrete.org/frequentlyaskedquestions.aspx?faqid=908","title":"ACI FAQ on detailing standard","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความพร้อมเส้นนำชี้เหล็กเสริม ความสูงตัวอักษรตามรูปแบบข้อความ","en":"Text with a leader to the bars, in the note text style."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[{"name":"callout","source":"element_property","text_style":"TH-2.5","required":true,"format":"^(?:(\\d+)-)?(DB|RB)(\\d{1,2})(?:@(\\d+(?:\\.\\d+)?)\\s*(ม\\.|m|ซม\\.|cm)?)?$","query":"{{TBIM_Rebar.Callout}}"}],"notation_grammar":[{"name":"rebar_callout","regex":"^(?:(\\d+)-)?(DB|RB)(\\d{1,2})(?:@(\\d+(?:\\.\\d+)?)\\s*(ม\\.|m|ซม\\.|cm)?)?$","examples":["4-DB16","10-DB12","RB9@0.20","DB12@0.15 ม.","RB9@15 ซม."],"description":"Regex given in the research notes (practice).","status":"observed_practice","groups":["count","bar_type","diameter_mm","spacing","spacing_unit"],"normalization":"spacing: if unit is ซม./cm or value >= 1 with no unit, divide by 100 to metres."},{"name":"rebar_callout_lenient","regex":"^(?:(\\d+)\\s*-\\s*)?(DB|RB)\\s*(\\d{1,2})\\s*(?:mm\\.?)?(?:\\s*@\\s*(\\d+(?:\\.\\d+)?)\\s*(ม\\.|m\\.?|ซม\\.|cm\\.?)?)?$","examples":["RB 6mm.@0.15m.","DB16 mm.","4 - DB16"],"description":"Lenient parser for spaced/'mm.' forms observed in the permit set.","status":"observed_practice","groups":["count","bar_type","diameter_mm","spacing","spacing_unit"]}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"TEXT","object_type":"TH.STR.REBAR_CALLOUT","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcReinforcingBar"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.STR.REBAR_CALLOUT"}},"note":"Use LEADER when the callout has a leader line."},"standards":[{"code":"มอก. 24-2559","title":"เหล็กเส้นข้ออ้อย (deformed bars; grades SD30/SD40/SD50)","edition":"2559 (2016)"},{"code":"มอก. 20-2559","title":"เหล็กเส้นกลม (round bars; grade SR24)","edition":"2559 (2016)"},{"code":"ISO 3766:2003","title":"Construction drawings — Simplified representation of concrete reinforcement","edition":"2003"}],"sources":[{"url":"https://www.bloggang.com/m/viewdiary.php?id=jfamily&month=08-2009&date=30&group=1&gblog=11","title":"Bloggang: วิธีอ่านแบบก่อสร้าง สำหรับผู้ที่ไม่ใช่ช่าง (2009)","evidence":"search_snippet"},{"url":"https://www.scribd.com/document/435357827/%E0%B8%AD%E0%B8%AD%E0%B8%81%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B8%90%E0%B8%B2%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%81-F1","title":"search summary: 'RB9@0.20'","evidence":"search_snippet"},{"url":"https://fw-fileupload-th.s3.ap-southeast-1.amazonaws.com/jobs/48467c64-4901-41e5-baf4-d8476cdfaa80/brief/a9b2bf75-f49f-4633-a5d0-39e217d81af3.pdf","title":"Thai building-permit drawing set (legend sheet A0-01 and others)","evidence":"full_text"}]},"TH.STR.STIRRUP_CALLOUT":{"id":"TH.STR.STIRRUP_CALLOUT","discipline":"STR","category":"notation","name":{"th":"คำกำกับเหล็กปลอก","en":"Stirrup / tie callout"},"abbreviations":["ป-","ปลอก"],"description":{"th":"เหล็กปลอก (ป = ปลอก) เขียนเป็น \"ป-RB6@0.15\" = เหล็กปลอก RB6 ทุก 0.15 ม. รูปแบบ \"ปลอก RB9@0.15\" เป็นแนวปฏิบัติที่ยังไม่ยืนยัน ระวาง: \"ป\" ชนกับรหัสประตูภาษาไทย (ป1) ในแผ่นสถาปัตย์","en":"Stirrups/ties ('ป' = ปลอก): 'ป-RB6@0.15' = RB6 stirrups at 0.15 m. The form 'ปลอก RB9@0.15' is unverified. Clash: 'ป' is also the Thai door-tag prefix (ป1) on ARCH sheets."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"ป-RBd@s.","th":"ป-RBd@s"},"standards":[],"sources":[{"url":"https://www.bloggang.com/m/viewdiary.php?id=jfamily&month=08-2009&date=30&group=1&gblog=11","title":"Bloggang: วิธีอ่านแบบก่อสร้าง สำหรับผู้ที่ไม่ใช่ช่าง (2009)","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความพร้อมเส้นนำชี้เหล็กปลอก","en":"Text with a leader to the stirrups."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[{"name":"stirrup_callout","regex":"^(?:ป|ปลอก)\\s*-?\\s*(RB|DB)(\\d{1,2})\\s*@\\s*(\\d+(?:\\.\\d+)?)\\s*(ม\\.|m|ซม\\.|cm)?$","examples":["ป-RB6@0.15","ป-RB9@0.20","ปลอก RB9@0.15"],"description":"Stirrup prefix ป/ปลอก + bar + spacing.","status":"observed_practice","groups":["bar_type","diameter_mm","spacing","spacing_unit"]}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"TEXT","object_type":"TH.STR.STIRRUP_CALLOUT","host_relation":"IfcRelAssignsToProduct","host_ifc_classes":["IfcReinforcingBar"],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.STR.STIRRUP_CALLOUT"}}},"standards":[{"code":"มอก. 20-2559","title":"เหล็กเส้นกลม (round bars; grade SR24)","edition":"2559 (2016)"}],"sources":[{"url":"https://www.bloggang.com/m/viewdiary.php?id=jfamily&month=08-2009&date=30&group=1&gblog=11","title":"Bloggang: วิธีอ่านแบบก่อสร้าง สำหรับผู้ที่ไม่ใช่ช่าง (2009)","evidence":"search_snippet"}]},"TH.STR.REBAR_GRADE_NOTE":{"id":"TH.STR.REBAR_GRADE_NOTE","discipline":"STR","category":"notation","name":{"th":"ชั้นคุณภาพเหล็กเสริม","en":"Rebar grade designation"},"abbreviations":[],"description":{"th":"ชั้นคุณภาพเหล็กเสริมตาม มอก.: เหล็กข้ออ้อย SD30, SD40, SD50 (มอก. 24-2559; SD40 = กำลังจุดครากต่ำสุด 4,000 กก./ตร.ซม.) และเหล็กกลม SR24 (มอก. 20-2559) ในตลาดมี SD40T ซึ่งความหมายของ T ไม่ปรากฏในข้อความที่ค้นได้ ในชุดแบบเขียนเช่น \"มอก.24 … ชั้นคุณภาพ SD-30\" มักอยู่ในหมายเหตุทั่วไป (ตำแหน่งยังไม่ยืนยัน)","en":"Rebar grades per TIS: deformed SD30/SD40/SD50 (มอก. 24-2559; SD40 = min. yield 4,000 ksc) and round SR24 (มอก. 20-2559). 'SD40T' is sold but the meaning of T was not found. Permit sets write 'มอก.24 … ชั้นคุณภาพ SD-30', usually in general notes (placement unverified)."},"status":"standard","region_profiles":[{"region":"TH","status":"standard","geometry_notes":{"en":"SD30/SD40/SD50, SR24.","th":"SD30/SD40/SD50, SR24"},"standards":[{"code":"มอก. 24-2559","title":"เหล็กเส้นข้ออ้อย (deformed bars; grades SD30/SD40/SD50)","edition":"2559 (2016)"},{"code":"มอก. 20-2559","title":"เหล็กเส้นกลม (round bars; grade SR24)","edition":"2559 (2016)"}],"sources":[{"url":"https://www.tisi.go.th/data/standard/fulltext/TIS-24-2559p.pdf","title":"TISI full text มอก. 24-2559","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความในหมายเหตุทั่วไป","en":"Text in general notes."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[{"name":"rebar_grade","regex":"^S(D|R)-?(24|30|40|50)(T)?$","examples":["SD30","SD-30","SD40","SD50","SR24","SD40T"],"description":"TIS rebar grade designation; 'T' suffix meaning unknown.","status":"standard"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"TEXT","object_type":"TH.STR.REBAR_GRADE_NOTE","host_relation":null,"host_ifc_classes":[],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.STR.REBAR_GRADE_NOTE"}}},"standards":[{"code":"มอก. 24-2559","title":"เหล็กเส้นข้ออ้อย (deformed bars; grades SD30/SD40/SD50)","edition":"2559 (2016)"},{"code":"มอก. 20-2559","title":"เหล็กเส้นกลม (round bars; grade SR24)","edition":"2559 (2016)"}],"sources":[{"url":"https://www.tisi.go.th/data/standard/fulltext/TIS-24-2559p.pdf","title":"TISI full text มอก. 24-2559","evidence":"search_snippet"},{"url":"http://www.bks-steel.co.th/index.php?option=com_content&view=article&id=23&Itemid=18","title":"bks-steel มอก.20/24-2559","evidence":"search_snippet"},{"url":"https://www.builk.com/yello/product/%E0%B9%80%E0%B8%AB%E0%B8%A5%E0%B9%87%E0%B8%81%E0%B9%80%E0%B8%AA%E0%B9%89%E0%B8%99%E0%B8%81%E0%B8%A5%E0%B8%A1/","title":"BUILK Yello round bar","evidence":"search_snippet"}]},"TH.STR.CONCRETE_COVER_NOTE":{"id":"TH.STR.CONCRETE_COVER_NOTE","discipline":"STR","category":"notation","name":{"th":"ระยะหุ้มคอนกรีต","en":"Concrete cover note"},"abbreviations":[],"description":{"th":"รายการในหมายเหตุทั่วไป: ระยะหุ้มคอนกรีตต่ำสุดที่อ้างกันทั่วไป — ฐานรากและส่วนที่สัมผัสดินถาวร 7.5 ซม.; เหล็กหลักคานและปลอก 3 ซม.; เสา 3.5 ซม.; พื้น ผนัง คานย่อย 2 ซม. ตารางที่มีผลบังคับอยู่ใน มยผ. 1101-64 (ยังไม่ได้เปิดอ่าน)","en":"General-notes item: commonly quoted minimum covers — footings/soil contact 7.5 cm; beam main bars and stirrups 3 cm; columns 3.5 cm; slabs, walls, minor beams 2 cm. The binding table is in มยผ. 1101-64 (not opened)."},"status":"observed_practice","region_profiles":[{"region":"TH","status":"observed_practice","geometry_notes":{"en":"7.5 / 3 / 3.5 / 2 cm.","th":"7.5 / 3 / 3.5 / 2 ซม."},"standards":[{"code":"มยผ. 1101-64","title":"มาตรฐานคอนกรีตและคอนกรีตเสริมเหล็ก (DPT)","edition":"2564 (2021)"}],"sources":[{"url":"https://www.thitinan.co.th/concrete-covering/","title":"Thitinan Micropile: concrete covering","evidence":"search_snippet"}]}],"geometry":{"redraw_description":{"th":"ข้อความ/ตารางในหมายเหตุทั่วไป","en":"Text/table in general notes."},"size_basis":"unknown","insertion_point":[0,0]},"text_fields":[],"notation_grammar":[{"name":"cover_value","regex":"^(\\d+(?:\\.\\d+)?)\\s*(ซม\\.|cm)$","examples":["7.5 ซม.","3 ซม.","3.5 cm"],"description":"Cover value in cm.","status":"observed_practice"}],"ifc_mapping":{"entity":"IfcAnnotation","predefined_type":"TEXT","object_type":"TH.STR.CONCRETE_COVER_NOTE","host_relation":null,"host_ifc_classes":[],"ifc4_note":"IFC4 has no IfcAnnotation.PredefinedType: export ObjectType only.","pset":{"name":"TBIM_Annotation","properties":{"SymbolId":"TH.STR.CONCRETE_COVER_NOTE"}}},"standards":[{"code":"มยผ. 1101-64","title":"มาตรฐานคอนกรีตและคอนกรีตเสริมเหล็ก (DPT)","edition":"2564 (2021)"}],"sources":[{"url":"https://www.thitinan.co.th/concrete-covering/","title":"Thitinan Micropile: concrete covering","evidence":"search_snippet"},{"url":"https://www.phangroup.co.th/news/%E0%B8%A3%E0%B8%B0%E0%B8%A2%E0%B8%B0%E0%B8%AB%E0%B8%B8%E0%B9%89%E0%B8%A1%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%84%E0%B8%AD%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B5%E0%B8%95-concrete-covering/","title":"Phan Group: ระยะหุ้มคอนกรีต","evidence":"search_snippet"},{"url":"https://saraneaknowledge.blogspot.com/2020/04/covering.html?m=1","title":"saraneaknowledge: covering","evidence":"search_snippet"}]}},"clashes":[{"id":"ARCH:F","code":"F","discipline":"ARCH","meaning":{"th":"รหัสวัสดุพื้น (F1…F8)","en":"Floor-finish code"},"status":"observed_practice","used_by":["TH.ARCH.FINISH_CODE_TAG"]},{"id":"ARCH:C","code":"C","discipline":"ARCH","meaning":{"th":"รหัสฝ้าเพดาน (C0/C1)","en":"Ceiling code"},"status":"observed_practice","used_by":["TH.ARCH.FINISH_CODE_TAG"]},{"id":"ARCH:W","code":"W","discipline":"ARCH","meaning":{"th":"หน้าต่าง (ละติน)","en":"Window (Latin prefix)"},"status":"observed_practice","used_by":["TH.ARCH.WINDOW_TAG"]},{"id":"ARCH:W:2","code":"W","discipline":"ARCH","meaning":{"th":"ผนัง (บางสำนักงาน)","en":"Wall (some offices)"},"status":"unverified","used_by":null},{"id":"STR:F","code":"F","discipline":"STR","meaning":{"th":"ฐานราก / หัวเสาเข็ม","en":"Footing / pile cap"},"status":"observed_practice","used_by":["TH.STR.FOOTING_TAG"]},{"id":"STR:C","code":"C","discipline":"STR","meaning":{"th":"เสา","en":"Column"},"status":"observed_practice","used_by":["TH.STR.COLUMN_TAG"]},{"id":"STR:W","code":"W","discipline":"STR","meaning":{"th":"ผนัง ค.ส.ล.","en":"RC wall"},"status":"unverified","used_by":["TH.STR.WALL_TAG"]},{"id":"ELEC:C","code":"C","discipline":"ELEC","meaning":{"th":"โคมดาวน์ไลท์","en":"Downlight"},"status":"unverified","used_by":["TH.ELEC.LUMINAIRE_DOWNLIGHT"]},{"id":"ELV:C","code":"C","discipline":"ELV","meaning":{"th":"กล้องวงจรปิด","en":"CCTV camera"},"status":"unverified","used_by":["TH.ELV.CCTV_CAMERA"]},{"id":"FA:F","code":"F","discipline":"FA","meaning":{"th":"อุปกรณ์ตรวจจับความร้อน","en":"Heat detector (fixed / rate-of-rise)"},"status":"unverified","used_by":["TH.FA.HEAT_DETECTOR"]},{"id":"SAN:W","code":"W","discipline":"SAN","meaning":{"th":"ท่อน้ำทิ้ง","en":"Waste line"},"status":"unverified","used_by":["TH.SAN.WASTE_LINE"]},{"id":"FP:F","code":"F","discipline":"FP","meaning":{"th":"ท่อดับเพลิง","en":"Fire protection main"},"status":"unverified","used_by":["TH.FP.FIRE_MAIN_LINE"]}],"rebar":[{"code":"DB","meaning":{"th":"เหล็กข้ออ้อย","en":"Deformed bar"},"status":"standard","standards":[{"code":"มอก. 24-2559","title":"เหล็กเส้นข้ออ้อย (deformed bars; grades SD30/SD40/SD50)","relation":"governs_content","edition":"2559 (2016)"}],"attributes":{"grades":["SD30","SD40","SD50"],"common_sizes_mm":[10,12,16,20,25],"SD40_min_yield_ksc":4000,"example_mass":"SD40 DB20 10 m = 24.66 kg"}},{"code":"RB","meaning":{"th":"เหล็กเส้นกลม","en":"Round bar"},"status":"standard","standards":[{"code":"มอก. 20-2559","title":"เหล็กเส้นกลม (round bars; grade SR24)","relation":"governs_content","edition":"2559 (2016)"}],"attributes":{"grade":"SR24","sizes_mm":[6,9,12,15],"size_range_mm":[6,25],"mass_per_10m_kg":{"RB6":2.22,"RB9":4.99}}}]}</script>
+<script>
+(function () {
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("tbim-data").textContent);
+  var SYM = DATA.symbols;
+  var STATUS_TH = { standard: "มาตรฐาน", agency: "มาตรฐานหน่วยงาน", observed_practice: "พบในแบบจริง", unverified: "ยังไม่ยืนยัน" };
+  var REGION_TH = { TH: "ไทย", GB: "จีน GB/T", JIS: "ญี่ปุ่น JIS", US_NCS: "สหรัฐฯ NCS", US_NECA: "สหรัฐฯ NECA", IEC: "IEC", ISO: "ISO", NFPA: "NFPA", DIN: "เยอรมนี DIN", AS: "ออสเตรเลีย AS", KS: "เกาหลี KS" };
+  var DISC_TH = { ARCH: "สถาปัตยกรรม", GENERAL: "ทั่วไป", STR: "โครงสร้าง", ELEC: "ไฟฟ้า", FA: "แจ้งเหตุเพลิงไหม้", SAN: "สุขาภิบาล", PLB: "ประปา", ELV: "ไฟฟ้ากระแสอ่อน", FP: "ดับเพลิง", HVAC: "ปรับอากาศ", CIVIL: "โยธา", SURVEY: "สำรวจ", GAS: "แก๊ส" };
+
+  var state = { region: "TH", prefix: "latin", selected: "TH.ARCH.SECTION_MARK", layers: { arch: true, elec: true, san: true } };
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function f(n) { return Math.round(n * 100) / 100; }
+
+  // Which region profile a symbol renders with: the chosen one if the record has it, else TH.
+  function profileFor(id) {
+    var rec = SYM[id];
+    if (!rec) return "TH";
+    for (var i = 0; i < rec.region_profiles.length; i++) {
+      if (rec.region_profiles[i].region === state.region) return state.region;
+    }
+    return "TH";
+  }
+
+  /* ---------- drawing helpers (all units = paper mm) ---------- */
+  var S = { ink: "var(--ink)", grid: "var(--grid)", elec: "var(--elec)", san: "var(--san)" };
+
+  function wrap(id, inner, box, label) {
+    var hit = '<rect class="hit" x="' + f(box[0]) + '" y="' + f(box[1]) + '" width="' + f(box[2]) + '" height="' + f(box[3]) + '" rx="1"/>';
+    var name = SYM[id] ? SYM[id].name.th : id;
+    return '<g class="sym" tabindex="0" role="button" data-id="' + id + '" aria-label="' + esc(label || name) + '">' + hit + inner + "</g>";
+  }
+  function text(x, y, s, size, opts) {
+    opts = opts || {};
+    return '<text x="' + f(x) + '" y="' + f(y) + '" font-size="' + size + '" text-anchor="' + (opts.anchor || "middle") +
+      '" dominant-baseline="central" style="fill:' + (opts.color || S.ink) + ';font-family:var(--font-draw);font-weight:' + (opts.weight || 400) + '"' +
+      (opts.rotate ? ' transform="rotate(' + opts.rotate + " " + f(x) + " " + f(y) + ')"' : "") + ">" + esc(s) + "</text>";
+  }
+  function line(x1, y1, x2, y2, w, color, dash) {
+    return '<line x1="' + f(x1) + '" y1="' + f(y1) + '" x2="' + f(x2) + '" y2="' + f(y2) + '" style="stroke:' + (color || S.ink) +
+      ";stroke-width:" + w + (dash ? ";stroke-dasharray:" + dash : "") + '"/>';
+  }
+  function circle(x, y, r, w, color, fill) {
+    return '<circle cx="' + f(x) + '" cy="' + f(y) + '" r="' + r + '" style="stroke:' + (color || S.ink) + ";stroke-width:" + w + ";fill:" + (fill || "var(--sheet)") + '"/>';
+  }
+
+  /* Grid bubble: TBIM default Ø10 (catalog geometry). */
+  function gridBubble(x, y, label) {
+    var inner = circle(x, y, 5, 0.3, S.ink) + text(x, y + 0.2, label, 4.2, { weight: 600 });
+    return wrap("TH.GENERAL.GRID_BUBBLE", inner, [x - 6, y - 6, 12, 12], "หัวเส้นพิกัด " + label);
+  }
+
+  /* Dimension terminator per region: oblique tick (TH default, GB) or arrow (JIS). */
+  function terminator(x, y, horizontal, dir) {
+    var reg = profileFor("TH.GENERAL.DIMENSION_CENTRE_CENTRE");
+    if (reg === "JIS") {
+      var L = 2.5, W = 0.8, p;
+      if (horizontal) p = [[x, y], [x - dir * L, y - W / 2], [x - dir * L, y + W / 2]];
+      else p = [[x, y], [x - W / 2, y - dir * L], [x + W / 2, y - dir * L]];
+      return '<polygon points="' + p.map(function (q) { return f(q[0]) + "," + f(q[1]); }).join(" ") + '" style="fill:' + S.ink + '"/>';
+    }
+    var d = 1.1;
+    return line(x - d, y + d, x + d, y - d, 0.45);
+  }
+  function dimH(x1, x2, y, label, extFrom) {
+    var inner = line(x1 - 2, y, x2 + 2, y, 0.18) +
+      line(x1, extFrom, x1, y - 1.5, 0.13) + line(x2, extFrom, x2, y - 1.5, 0.13) +
+      terminator(x1, y, true, -1) + terminator(x2, y, true, 1) +
+      text((x1 + x2) / 2, y - 2.2, label, 2.8);
+    return wrap("TH.GENERAL.DIMENSION_CENTRE_CENTRE", inner, [x1, y - 4.5, x2 - x1, 6], "ระยะกึ่งกลางถึงกึ่งกลาง " + label + " ม.");
+  }
+  function dimV(y1, y2, x, label, extFrom) {
+    var inner = line(x, y1 - 2, x, y2 + 2, 0.18) +
+      line(extFrom, y1, x - 1.5, y1, 0.13) + line(extFrom, y2, x - 1.5, y2, 0.13) +
+      terminator(x, y1, false, -1) + terminator(x, y2, false, 1) +
+      text(x - 2.2, (y1 + y2) / 2, label, 2.8, { rotate: -90 });
+    return wrap("TH.GENERAL.DIMENSION_CENTRE_CENTRE", inner, [x - 4.5, y1, 6, y2 - y1], "ระยะกึ่งกลางถึงกึ่งกลาง " + label + " ม.");
+  }
+
+  /* Section mark at one end of the cut; view direction = up (north). */
+  function sectionMark(x, y, id, sheet) {
+    var reg = profileFor("TH.ARCH.SECTION_MARK");
+    var inner = "";
+    if (reg === "US_NCS") {
+      var r = 6.35, tipY = y - 11, a = Math.acos(r / 11), sx = r * Math.sin(a), sy = r * Math.cos(a);
+      inner += '<path d="M ' + f(x) + " " + f(tipY) + " L " + f(x - sx) + " " + f(y - sy) + " A " + r + " " + r + " 0 0 1 " + f(x + sx) + " " + f(y - sy) + ' Z" style="fill:' + S.ink + '"/>';
+      inner += circle(x, y, r, 0.35) + line(x - r, y, x + r, y, 0.25);
+      inner += text(x, y - 2.8, id, 3.6, { weight: 700 }) + text(x, y + 3, sheet, 2.6);
+      return wrap("TH.ARCH.SECTION_MARK", inner, [x - 7.5, y - 12, 15, 19.5], "สัญลักษณ์รูปตัด " + id + " แผ่น " + sheet);
+    }
+    if (reg === "GB") {
+      inner += circle(x, y, 5, 0.25) + line(x - 5, y, x + 5, y, 0.25);
+      inner += line(x - 6.5, y + 5, x + 6.5, y + 5, 0.7);
+      inner += text(x, y - 2.3, id, 3.2, { weight: 700 }) + text(x, y + 2.4, sheet, 2.2);
+      return wrap("TH.ARCH.SECTION_MARK", inner, [x - 7.5, y - 6.5, 15, 13], "สัญลักษณ์รูปตัด " + id + " แผ่น " + sheet);
+    }
+    inner += '<polygon points="' + f(x) + "," + f(y - 9.5) + " " + f(x - 3.2) + "," + f(y - 3.9) + " " + f(x + 3.2) + "," + f(y - 3.9) + '" style="fill:' + S.ink + '"/>';
+    inner += circle(x, y, 5, 0.3) + line(x - 5, y, x + 5, y, 0.25);
+    inner += text(x, y - 2.3, id, 3.2, { weight: 700 }) + text(x, y + 2.4, sheet, 2.2);
+    return wrap("TH.ARCH.SECTION_MARK", inner, [x - 6.5, y - 10.5, 13, 17], "สัญลักษณ์รูปตัด " + id + " แผ่น " + sheet);
+  }
+
+  /* Level mark: TH = prefix + signed metres, 2 d.p.; GB = open triangle + 3 d.p. */
+  function levelMark(x, y, value, caption) {
+    var reg = profileFor("TH.ARCH.LEVEL_MARK");
+    var inner;
+    if (reg === "GB") {
+      var v = (value >= 0 ? (value === 0 ? "±" : "+") : "-") + Math.abs(value).toFixed(3);
+      inner = '<polygon points="' + f(x) + "," + f(y) + " " + f(x - 1.6) + "," + f(y - 1.6) + " " + f(x + 1.6) + "," + f(y - 1.6) + '" style="fill:none;stroke:' + S.ink + ';stroke-width:0.25"/>' +
+        line(x - 1.6, y - 1.6, x + 14, y - 1.6, 0.25) + text(x + 1.2, y - 3.6, v, 2.6, { anchor: "start" });
+      return wrap("TH.ARCH.LEVEL_MARK", inner, [x - 2.5, y - 6, 18, 7], "ค่าระดับ " + v);
+    }
+    var t = "EL. " + (value >= 0 ? "+" : "-") + Math.abs(value).toFixed(2);
+    inner = text(x, y - 5.4, caption, 2.4, { anchor: "start", color: "var(--ink-2)" }) +
+      text(x, y - 2.2, t, 2.8, { anchor: "start", weight: 600 }) + line(x, y - 0.4, x + 15, y - 0.4, 0.2);
+    return wrap("TH.ARCH.LEVEL_MARK", inner, [x - 1, y - 7.4, 26, 8], caption + " " + t);
+  }
+
+  function roomTag(x, y, name, finish, level) {
+    var inner = text(x, y - 3.4, name, 3.4, { weight: 600 }) + text(x, y + 0.6, finish, 2.5) +
+      text(x, y + 3.8, (level >= 0 ? "+" : "-") + Math.abs(level).toFixed(2), 2.5);
+    return wrap("TH.ARCH.ROOM_TAG", inner, [x - 10, y - 6.2, 20, 11.8], "ป้ายชื่อห้อง " + name);
+  }
+
+  function openingTag(kind, x, y, n) {
+    var isDoor = kind === "door";
+    var pre = state.prefix === "thai" ? (isDoor ? "ป" : "น") : (isDoor ? "D" : "W");
+    var id = isDoor ? "TH.ARCH.DOOR_TAG" : "TH.ARCH.WINDOW_TAG";
+    var inner = isDoor
+      ? '<rect x="' + f(x - 3.6) + '" y="' + f(y - 2.3) + '" width="7.2" height="4.6" rx="2.3" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.25"/>'
+      : '<rect x="' + f(x - 3.6) + '" y="' + f(y - 2.3) + '" width="7.2" height="4.6" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.25"/>';
+    inner += text(x, y + 0.15, pre + n, 2.6, { weight: 600 });
+    return wrap(id, inner, [x - 4.4, y - 3.1, 8.8, 6.2], (isDoor ? "ป้ายรหัสประตู " : "ป้ายรหัสหน้าต่าง ") + pre + n);
+  }
+
+  function hingedDoor(hx, hy, lx, ly, ax, ay, sweep) {
+    var r = Math.hypot(lx - hx, ly - hy);
+    var inner = line(hx, hy, lx, ly, 0.35) +
+      '<path d="M ' + f(ax) + " " + f(ay) + " A " + f(r) + " " + f(r) + " 0 0 " + sweep + " " + f(lx) + " " + f(ly) + '" style="fill:none;stroke:' + S.ink + ';stroke-width:0.18"/>';
+    var bx = Math.min(hx, lx, ax), by = Math.min(hy, ly, ay);
+    return wrap("TH.ARCH.DOOR_HINGED", inner, [bx - 0.5, by - 0.5, Math.max(hx, lx, ax) - bx + 1, Math.max(hy, ly, ay) - by + 1], "ประตูบานเปิด");
+  }
+  function slidingWindowH(x1, x2, y) {
+    var m = (x1 + x2) / 2, inner =
+      '<rect x="' + f(x1) + '" y="' + f(y - 2) + '" width="' + f(x2 - x1) + '" height="4" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.18"/>' +
+      line(x1, y - 0.6, m + 2, y - 0.6, 0.3) + line(m - 2, y + 0.6, x2, y + 0.6, 0.3);
+    return wrap("TH.ARCH.WINDOW_SLIDING", inner, [x1, y - 2.5, x2 - x1, 5], "หน้าต่างบานเลื่อน");
+  }
+  function slidingWindowV(y1, y2, x) {
+    var m = (y1 + y2) / 2, inner =
+      '<rect x="' + f(x - 2) + '" y="' + f(y1) + '" width="4" height="' + f(y2 - y1) + '" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.18"/>' +
+      line(x - 0.6, y1, x - 0.6, m + 2, 0.3) + line(x + 0.6, m - 2, x + 0.6, y2, 0.3);
+    return wrap("TH.ARCH.WINDOW_SLIDING", inner, [x - 2.5, y1, 5, y2 - y1], "หน้าต่างบานเลื่อน");
+  }
+  function awningWindowH(x1, x2, y) {
+    var inner =
+      '<rect x="' + f(x1) + '" y="' + f(y - 2) + '" width="' + f(x2 - x1) + '" height="4" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.18"/>' +
+      line(x1, y, x2, y, 0.3) + line(x1, y, (x1 + x2) / 2, y + 4.5, 0.15, S.ink, "0.8 0.6") + line((x1 + x2) / 2, y + 4.5, x2, y, 0.15, S.ink, "0.8 0.6");
+    return wrap("TH.ARCH.WINDOW_AWNING", inner, [x1, y - 2.5, x2 - x1, 7.5], "หน้าต่างบานกระทุ้ง");
+  }
+
+  function wallRect(id, x, y, w, h, pattern) {
+    var inner = '<rect x="' + f(x) + '" y="' + f(y) + '" width="' + f(w) + '" height="' + f(h) + '" style="fill:url(#' + pattern + ');stroke:' + S.ink + ';stroke-width:0.35"/>';
+    return wrap(id, inner, [x, y, w, h], SYM[id].name.th);
+  }
+
+  function northArrow(x, y) {
+    var inner = '<path d="M ' + f(x - 12) + " " + f(y) + " A 12 12 0 1 0 " + f(x + 12) + " " + f(y) + " A 12 12 0 1 0 " + f(x - 12) + " " + f(y) + ' Z" style="fill:none;stroke:' + S.ink + ';stroke-width:0.25"/>' +
+      '<path d="M ' + f(x - 1.5) + " " + f(y + 12) + " L " + f(x) + " " + f(y - 12) + " L " + f(x + 1.5) + " " + f(y + 12) + ' Z" style="fill:' + S.ink + '"/>' +
+      text(x, y - 15, "N", 3.6, { weight: 700 });
+    return wrap("TH.GENERAL.NORTH_ARROW", inner, [x - 13, y - 18, 26, 31], "ลูกศรทิศเหนือ");
+  }
+
+  function elevationMark(x, y) {
+    var r = 6.5, inner = circle(x, y, r, 0.3) + line(x - r, y, x + r, y, 0.2) + line(x, y - r, x, y + r, 0.2);
+    var q = [["1", 0, -1], ["2", 1, 0], ["3", 0, 1], ["4", -1, 0]];
+    q.forEach(function (d) {
+      var tx = x + d[1] * 9.5, ty = y + d[2] * 9.5;
+      inner += '<polygon points="' + (d[1] === 0
+        ? f(x - 1.6) + "," + f(y + d[2] * r) + " " + f(x + 1.6) + "," + f(y + d[2] * r) + " " + f(x) + "," + f(y + d[2] * (r + 2.6))
+        : f(x + d[1] * r) + "," + f(y - 1.6) + " " + f(x + d[1] * r) + "," + f(y + 1.6) + " " + f(x + d[1] * (r + 2.6)) + "," + f(y)) +
+        '" style="fill:' + S.ink + '"/>';
+      inner += text(tx + d[1] * 1.5, ty + d[2] * 1.2, d[0], 2.6, { weight: 600 });
+    });
+    inner += text(x - 3.2, y - 3.2, "A-05", 1.6) + text(x + 3.2, y + 3.2, "A-05", 1.6);
+    return wrap("TH.ARCH.ELEVATION_MARK", inner, [x - 13, y - 13, 26, 26], "สัญลักษณ์รูปด้าน 1 ถึง 4 แผ่น A-05");
+  }
+
+  /* MEP symbols from catalog geometry */
+  function receptacle(x, y, rot) {
+    var inner = '<g transform="translate(' + f(x) + " " + f(y) + ") rotate(" + (rot || 0) + ')">' +
+      '<path d="' + SYM["TH.ELEC.RECEPTACLE_DUPLEX"].geometry.svg_path + '" style="fill:var(--sheet);stroke:' + S.elec + ';stroke-width:0.3"/></g>';
+    return wrap("TH.ELEC.RECEPTACLE_DUPLEX", inner, [x - 3, y - 3, 6, 6], "เต้ารับคู่");
+  }
+  function switch1(x, y) {
+    return wrap("TH.ELEC.SWITCH_1WAY", text(x, y, "S", 2.8, { color: S.elec, weight: 700 }), [x - 2, y - 2, 4, 4], "สวิตช์ทางเดียว");
+  }
+  function downlight(x, y) {
+    return wrap("TH.ELEC.LUMINAIRE_DOWNLIGHT", circle(x, y, 3, 0.3, S.elec) + circle(x, y, 0.8, 0, S.elec, S.elec), [x - 3.6, y - 3.6, 7.2, 7.2], "โคมดาวน์ไลท์");
+  }
+  function panelDB(x, y) {
+    var inner = '<g transform="translate(' + f(x) + " " + f(y) + ') rotate(90)">' +
+      '<path d="M -5 -2 H 5 V 2 H -5 Z" style="fill:var(--sheet);stroke:' + S.elec + ';stroke-width:0.3"/>' +
+      '<path d="M -5 2 L 5 -2 L 5 2 Z" style="fill:' + S.elec + '"/></g>' + text(x + 4.5, y, "DB", 2.4, { anchor: "start", color: S.elec, weight: 600 });
+    return wrap("TH.ELEC.PANEL_DB", inner, [x - 2.5, y - 5.5, 12, 11], "ตู้ย่อย DB");
+  }
+  function smoke(x, y) {
+    return wrap("TH.FA.SMOKE_DETECTOR", circle(x, y, 3, 0.3, S.elec) + text(x, y + 0.1, "SD", 2.2, { color: S.elec, weight: 600 }), [x - 3.6, y - 3.6, 7.2, 7.2], "อุปกรณ์ตรวจจับควัน");
+  }
+  function floorDrain(x, y) {
+    var inner = '<clipPath id="fdclip"><circle cx="' + f(x) + '" cy="' + f(y) + '" r="3"/></clipPath>' + circle(x, y, 3, 0.3, S.san) + '<g clip-path="url(#fdclip)">';
+    for (var i = -2; i <= 2; i++) inner += line(x + i * 1.2, y - 3, x + i * 1.2, y + 3, 0.15, S.san) + line(x - 3, y + i * 1.2, x + 3, y + i * 1.2, 0.15, S.san);
+    inner += "</g>" + text(x, y + 5, "FD", 2.2, { color: S.san, weight: 600 });
+    return wrap("TH.SAN.FLOOR_DRAIN", inner, [x - 3.6, y - 3.6, 7.2, 10.2], "ท่อระบายน้ำพื้น FD");
+  }
+  function cleanout(x, y) {
+    return wrap("TH.SAN.CLEANOUT", circle(x, y, 2, 0.3, S.san) + text(x, y + 3.9, "CO", 2.2, { color: S.san, weight: 600 }), [x - 2.6, y - 2.6, 5.2, 8.4], "ที่เปิดล้าง CO");
+  }
+
+  /* ---------- the sheet ---------- */
+  var GX = { 1: 70, 2: 150, 3: 230 }, GY = { A: 50, B: 110, C: 170 };
+
+  function drawSheet() {
+    var out = [];
+    out.push('<defs>' +
+      '<pattern id="hatch-full" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.6" height="1.6" style="fill:var(--sheet)"/><line x1="0" y1="0" x2="0" y2="1.6" style="stroke:var(--ink);stroke-width:0.22"/></pattern>' +
+      '<pattern id="hatch-half" width="1.3" height="1.3" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="1.3" height="1.3" style="fill:var(--sheet)"/><line x1="0" y1="0" x2="0" y2="1.3" style="stroke:var(--ink);stroke-width:0.16"/></pattern>' +
+      "</defs>");
+    // Sheet border
+    out.push('<rect x="0" y="0" width="340" height="220" style="fill:var(--sheet)"/>');
+    out.push('<rect x="6" y="6" width="328" height="208" style="fill:none;stroke:var(--ink);stroke-width:0.6"/>');
+
+    var arch = [];
+    // Grid lines
+    [1, 2, 3].forEach(function (k) {
+      arch.push(wrap("TH.GENERAL.GRID_LINE", line(GX[k], 25, GX[k], 182, 0.15, S.grid, "6 1.2 0.8 1.2"), [GX[k] - 1, 26, 2, 155], "เส้นศูนย์กลางพิกัด " + k));
+    });
+    ["A", "B", "C"].forEach(function (k) {
+      arch.push(wrap("TH.GENERAL.GRID_LINE", line(33, GY[k], 240, GY[k], 0.15, S.grid, "6 1.2 0.8 1.2"), [34, GY[k] - 1, 205, 2], "เส้นศูนย์กลางพิกัด " + k));
+    });
+    // Section cut line (thin chain across, thick ends)
+    arch.push(line(18, 140, 245, 140, 0.13, S.grid, "3 1 0.6 1"));
+    arch.push(line(18, 140, 30, 140, 0.7) + line(233, 140, 245, 140, 0.7));
+
+    // Exterior walls (full brick 0.20 m -> 4 mm) with openings
+    var ext = "TH.ARCH.HATCH_WALL_BRICK_FULL", intw = "TH.ARCH.HATCH_WALL_BRICK_HALF";
+    [[68, 94], [126, 232]].forEach(function (s) { arch.push(wallRect(ext, s[0], 48, s[1] - s[0], 4, "hatch-full")); });
+    [[68, 100], [118, 200], [216, 232]].forEach(function (s) { arch.push(wallRect(ext, s[0], 168, s[1] - s[0], 4, "hatch-full")); });
+    arch.push(wallRect(ext, 68, 52, 4, 116, "hatch-full"));
+    [[52, 64], [96, 168]].forEach(function (s) { arch.push(wallRect(ext, 228, s[0], 4, s[1] - s[0], "hatch-full")); });
+    // Interior walls (half brick 0.10 m -> 2 mm)
+    [[52, 86], [102, 140], [156, 168]].forEach(function (s) { arch.push(wallRect(intw, 149, s[0], 2, s[1] - s[0], "hatch-half")); });
+    arch.push(wallRect(intw, 151, 109, 77, 2, "hatch-half"));
+    // Columns 0.20 x 0.20
+    [1, 2, 3].forEach(function (i) { ["A", "B", "C"].forEach(function (j) {
+      arch.push('<rect x="' + (GX[i] - 2) + '" y="' + (GY[j] - 2) + '" width="4" height="4" style="fill:var(--ink)"/>');
+    }); });
+
+    // Openings
+    arch.push(hingedDoor(100, 168, 100, 150, 118, 168, 0));
+    arch.push(hingedDoor(151, 86, 167, 86, 151, 102, 0));
+    arch.push(hingedDoor(151, 156, 167, 156, 151, 140, 1));
+    arch.push(slidingWindowH(94, 126, 50));
+    arch.push(slidingWindowV(64, 96, 230));
+    arch.push(awningWindowH(200, 216, 170));
+
+    // Tags
+    arch.push(openingTag("door", 109, 181, 1));
+    arch.push(openingTag("door", 141, 94, 2));
+    arch.push(openingTag("door", 141, 148, 3));
+    arch.push(openingTag("window", 110, 60, 1));
+    arch.push(openingTag("window", 219, 80, 2));
+    arch.push(openingTag("window", 208, 161, 3));
+    arch.push(roomTag(110, 124, "ห้องนั่งเล่น", "F1,C1", 0.20));
+    arch.push(roomTag(190, 80, "ห้องนอน", "F2,C1", 0.20));
+    arch.push(roomTag(185, 134, "ห้องน้ำ", "F3,C2", 0.15));
+
+    // Grid bubbles and dimensions
+    [1, 2, 3].forEach(function (k) { arch.push(gridBubble(GX[k], 20, String(k))); });
+    ["A", "B", "C"].forEach(function (k) { arch.push(gridBubble(28, GY[k], k)); });
+    arch.push(dimH(70, 150, 36, "4.00", 27));
+    arch.push(dimH(150, 230, 36, "4.00", 27));
+    arch.push(dimV(50, 110, 46, "3.00", 35));
+    arch.push(dimV(110, 170, 46, "3.00", 35));
+
+    // Reference marks
+    arch.push(sectionMark(13, 140, "A", "A-06"));
+    arch.push(sectionMark(252, 140, "A", "A-06"));
+    arch.push(elevationMark(257, 186));
+    arch.push(northArrow(257, 36));
+    arch.push(levelMark(52, 188, 0, "ระดับพื้นดินเดิม"));
+
+    // Drawing title
+    arch.push(wrap("TH.GENERAL.DRAWING_TITLE",
+      text(150, 199, "แปลนพื้นชั้น 1", 4.6, { weight: 700 }) + line(128, 203, 172, 203, 0.4) + text(150, 206.6, "มาตราส่วน 1:50", 2.8),
+      [120, 193, 60, 17], "ชื่อรูป แปลนพื้นชั้น 1 มาตราส่วน 1:50"));
+
+    // Title block
+    arch.push(titleBlock());
+
+    out.push('<g id="L-arch"' + (state.layers.arch ? "" : ' style="display:none"') + ">" + arch.join("") + "</g>");
+
+    var elec = [];
+    elec.push(receptacle(73.5, 100, 90));
+    elec.push(receptacle(84, 166.5, 0));
+    elec.push(receptacle(226.5, 100, 90));
+    elec.push(switch1(123, 162));
+    elec.push(switch1(156, 80));
+    elec.push(switch1(145, 162));
+    elec.push(downlight(110, 84));
+    elec.push(downlight(110, 152));
+    elec.push(downlight(205, 96));
+    elec.push(downlight(170, 150));
+    elec.push(panelDB(76, 150));
+    elec.push(smoke(176, 96));
+    out.push('<g id="L-elec"' + (state.layers.elec ? "" : ' style="display:none"') + ">" + elec.join("") + "</g>");
+
+    var san = [];
+    san.push(floorDrain(203, 146));
+    san.push(cleanout(222, 158));
+    out.push('<g id="L-san"' + (state.layers.san ? "" : ' style="display:none"') + ">" + san.join("") + "</g>");
+
+    document.getElementById("sheet").innerHTML = out.join("");
+    markSelected();
+  }
+
+  function titleBlock() {
+    var x = 278, w = 56, rows = [
+      ["REVISION  ครั้งที่ / รายการ / วันที่", "—"],
+      ["PROJECT  โครงการ", "บ้านพักอาศัย 1 ชั้น (ตัวอย่าง)"],
+      ["LOCATION  สถานที่", "— (สมมติ)"],
+      ["OWNER  เจ้าของ", "— (สมมติ)"],
+      ["ARCHITECT  สถาปนิก", "ภ-สถ XXXXX"],
+      ["STRUCTURAL ENGINEER", "ภย. XXXXX"],
+      ["DRAWN BY  ผู้เขียนแบบ", "TBIM"],
+      ["DRAWING TITLE  ชื่อแบบ", "แปลนพื้นชั้น 1"],
+      ["SCALE  มาตราส่วน", "1:50"],
+      ["DATE  วันที่", "27 ก.ย. 2569"]
+    ];
+    var inner = '<rect x="' + x + '" y="6" width="' + w + '" height="208" style="fill:var(--sheet);stroke:var(--ink);stroke-width:0.4"/>';
+    var y = 6;
+    rows.forEach(function (r, i) {
+      var h = i === 0 ? 22 : 15;
+      inner += text(x + 2, y + 3.4, r[0], 1.9, { anchor: "start", color: "var(--ink-2)" });
+      inner += text(x + 2, y + (i === 0 ? 9 : 9.2), r[1], 2.9, { anchor: "start", weight: i === 7 ? 700 : 400 });
+      y += h;
+      inner += line(x, y, x + w, y, 0.2);
+    });
+    inner += text(x + 2, y + 3.6, "หมายเหตุ: ห้ามวัดระยะจากแบบ", 2.1, { anchor: "start" });
+    inner += text(x + 2, y + 6.6, "ให้ตรวจสอบระยะที่หน้างาน", 2.1, { anchor: "start" });
+    var tb = wrap("TH.GENERAL.TITLE_BLOCK", inner, [x, 6, w, 170], "กรอบชื่อแบบ");
+    var sy = 184;
+    var sheetNo = line(x, sy - 2, x + w, sy - 2, 0.4) +
+      text(x + 2, sy + 2, "DRAWING NO.  แผ่นที่", 1.9, { anchor: "start", color: "var(--ink-2)" }) +
+      text(x + w / 2, sy + 12, "A1-01", 9, { weight: 700 }) +
+      text(x + w - 2, sy + 24, "NO./TOTAL 1/1", 2, { anchor: "end", color: "var(--ink-2)" });
+    return tb + wrap("TH.GENERAL.SHEET_NUMBER", sheetNo, [x, sy - 2, w, 30], "เลขที่แผ่น A1-01");
+  }
+
+  function markSelected() {
+    var nodes = document.querySelectorAll("#sheet .sym");
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].classList.toggle("selected", nodes[i].getAttribute("data-id") === state.selected);
+    }
+    var chips = document.querySelectorAll(".chip");
+    for (var j = 0; j < chips.length; j++) chips[j].setAttribute("aria-pressed", chips[j].getAttribute("data-id") === state.selected ? "true" : "false");
+  }
+
+  /* ---------- inspector ---------- */
+  function statusBadge(st) {
+    return '<span class="badge status ' + st + '">' + esc(STATUS_TH[st] || st) + "</span>";
+  }
+  function renderInspector() {
+    var rec = SYM[state.selected];
+    var el = document.getElementById("inspector");
+    if (!rec) { el.innerHTML = ""; return; }
+    var used = profileFor(rec.id);
+    var h = '<div class="insp-head"><div class="insp-id">' + esc(rec.id) + '</div><div class="insp-name">' + esc(rec.name.th) +
+      '</div><div class="insp-en">' + esc(rec.name.en) + "</div></div>";
+    h += '<div class="badges">' + statusBadge(rec.status) + '<span class="badge">' + esc(DISC_TH[rec.discipline] || rec.discipline) + '</span><span class="badge mono">' + esc(rec.category) + "</span>" +
+      (rec.abbreviations || []).map(function (a) { return '<span class="badge mono">' + esc(a) + "</span>"; }).join("") + "</div>";
+    var sd = DATA.status_definitions[rec.status];
+    if (sd) h += '<p class="status-note">' + esc(sd.th) + "</p>";
+    h += '<div class="kv"><span>คำอธิบาย</span><p>' + esc(rec.description.th) + "</p></div>";
+    var g = rec.geometry || {};
+    if (g.redraw_description) {
+      var size = g.nominal_size_mm ? " · ขนาด " + g.nominal_size_mm.w + "×" + g.nominal_size_mm.h + " มม. บนกระดาษ (" + esc(g.size_basis) + ")" : "";
+      h += '<div class="kv"><span>วิธีวาด' + size + '</span><p>' + esc(g.redraw_description.th) + "</p></div>";
+    }
+    if (g.svg_path) h += '<div class="kv"><span>SVG path (' + esc(g.svg_basis || "") + ')</span><div class="ifc">' + esc(g.svg_path) + "</div></div>";
+
+    h += '<div class="kv"><span>รูปแบบตามภูมิภาค · แผ่นนี้ใช้ ' + esc(used) + '</span><div class="profiles">';
+    rec.region_profiles.forEach(function (p) {
+      var note = p.geometry_notes ? (p.geometry_notes.th || p.geometry_notes.en) : "";
+      var stds = (p.standards || []).map(function (s) { return s.code; }).join(", ");
+      h += '<div class="profile' + (p.region === used ? " active" : "") + '"><div class="row"><span class="region">' + esc(p.region) + " · " + esc(REGION_TH[p.region] || "") +
+        "</span>" + (p.status ? statusBadge(p.status) : "") + "</div>" + (note ? "<div>" + esc(note) + "</div>" : "") +
+        (stds ? '<div class="insp-id">' + esc(stds) + "</div>" : "") + "</div>";
+    });
+    if (state.region !== used) h += '<p class="status-note">ระเบียนนี้ยังไม่มีข้อมูลของ ' + esc(REGION_TH[state.region] || state.region) + " จึงใช้รูปแบบไทยแทน</p>";
+    h += "</div></div>";
+
+    var m = rec.ifc_mapping;
+    if (m) {
+      h += '<div class="kv"><span>ส่งออกเป็น IFC</span><div class="ifc">' +
+        esc(m.entity) + (m.predefined_type ? "\nPredefinedType = " + esc(m.predefined_type) : "") +
+        (m.object_type ? "\nObjectType     = " + esc(m.object_type) : "") +
+        (m.host_relation ? "\nผูกกับชิ้นส่วน  = " + esc(m.host_relation) : "") +
+        (m.host_ifc_classes && m.host_ifc_classes.length ? " → " + esc(m.host_ifc_classes.join(", ")) : "") + "</div></div>";
+    }
+    if (rec.notation_grammar && rec.notation_grammar.length) {
+      h += '<div class="kv"><span>รูปแบบข้อความ (regex)</span><div class="ifc">' + rec.notation_grammar.map(function (n) {
+        return esc(n.name) + "\n" + esc(n.regex) + "\nเช่น " + esc((n.examples || []).join(", "));
+      }).join("\n\n") + "</div></div>";
+    }
+    var srcs = rec.sources && rec.sources.length ? rec.sources : [];
+    rec.region_profiles.forEach(function (p) { if (p.region === "TH") srcs = srcs.concat(p.sources || []); });
+    var seen = {};
+    srcs = srcs.filter(function (s) { if (!s.url || seen[s.url]) return false; seen[s.url] = 1; return true; }).slice(0, 4);
+    if (srcs.length) {
+      h += '<div class="kv"><span>แหล่งอ้างอิง</span><ul class="sources">' + srcs.map(function (s) {
+        return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title || s.url) + "</a> <span class=\"insp-id\">(" + esc(s.evidence || "") + ")</span></li>";
+      }).join("") + "</ul></div>";
+    } else {
+      h += '<div class="kv"><span>แหล่งอ้างอิง</span><p>ยังไม่มี (general practice, unverified)</p></div>';
+    }
+    h += "<details><summary>ดูระเบียน JSON</summary><pre>" + esc(JSON.stringify(rec, null, 2)) + "</pre></details>";
+    el.innerHTML = h;
+  }
+
+  function select(id) {
+    if (!SYM[id]) return;
+    state.selected = id;
+    markSelected();
+    renderInspector();
+  }
+
+  /* ---------- legend chips ---------- */
+  function renderChips() {
+    var ids = Object.keys(SYM).filter(function (id) { return SYM[id].discipline !== "STR"; });
+    var counts = {};
+    ids.forEach(function (id) { counts[SYM[id].status] = (counts[SYM[id].status] || 0) + 1; });
+    document.getElementById("legend-key").innerHTML = ["standard", "agency", "observed_practice", "unverified"].map(function (st) {
+      return '<span><i class="dot ' + st + '"></i>' + STATUS_TH[st] + " " + (counts[st] || 0) + "</span>";
+    }).join("");
+    document.getElementById("chips").innerHTML = ids.map(function (id) {
+      return '<button type="button" class="chip" data-id="' + id + '" aria-pressed="false"><i class="dot ' + SYM[id].status + '"></i>' + esc(SYM[id].name.th) + "</button>";
+    }).join("");
+  }
+
+  /* ---------- rebar parser + beam section ---------- */
+  function grammar(id) { return SYM[id].notation_grammar; }
+  function parseBar(s) {
+    var gs = grammar("TH.STR.REBAR_CALLOUT");
+    for (var i = 0; i < gs.length; i++) {
+      var m = new RegExp(gs[i].regex).exec(s.trim());
+      if (m) return { count: m[1] ? parseInt(m[1], 10) : null, type: m[2], d: parseInt(m[3], 10), spacing: m[4] ? normSpacing(parseFloat(m[4]), m[5]) : null };
+    }
+    return null;
+  }
+  function parseStirrup(s) {
+    var gs = grammar("TH.STR.STIRRUP_CALLOUT");
+    for (var i = 0; i < gs.length; i++) {
+      var m = new RegExp(gs[i].regex).exec(s.trim());
+      if (m) return { type: m[1], d: parseInt(m[2], 10), spacing: normSpacing(parseFloat(m[3]), m[4]) };
+    }
+    return null;
+  }
+  function normSpacing(v, unit) {
+    if (unit && /ซม|cm/.test(unit)) return v / 100;
+    if (!unit && v >= 1) return v / 100;
+    return v;
+  }
+  function rebarInfo(type) {
+    for (var i = 0; i < DATA.rebar.length; i++) if (DATA.rebar[i].code === type) return DATA.rebar[i];
+    return null;
+  }
+  function kgm(d) { return 0.00617 * d * d; }
+
+  function renderRebar() {
+    var tag = document.getElementById("beam-tag").value.trim() || "B1";
+    var size = document.getElementById("beam-size").value.split("x").map(parseFloat);
+    var grade = document.getElementById("db-grade").value;
+    var inputs = [
+      { el: "rb-top", out: "parse-top", kind: "bar", pos: "top" },
+      { el: "rb-bot", out: "parse-bot", kind: "bar", pos: "bottom" },
+      { el: "rb-stir", out: "parse-stir", kind: "stirrup" }
+    ];
+    var res = {}, rows = [];
+    inputs.forEach(function (it) {
+      var input = document.getElementById(it.el), raw = input.value;
+      var p = it.kind === "bar" ? parseBar(raw) : parseStirrup(raw);
+      var out = document.getElementById(it.out);
+      if (it.kind === "bar" && p && !p.count) p = null; // a main bar callout needs a count here
+      if (!p) {
+        input.classList.add("bad");
+        out.className = "parse err";
+        out.textContent = it.kind === "bar" ? "อ่านคำกำกับนี้ไม่ได้ ลองเขียนแบบ 4-DB16" : "อ่านคำกำกับนี้ไม่ได้ ลองเขียนแบบ ป-RB6@0.15";
+        return;
+      }
+      input.classList.remove("bad");
+      res[it.pos || "stir"] = p;
+      var info = rebarInfo(p.type);
+      var std = info && info.standards && info.standards[0] ? info.standards[0].code : "";
+      var gradeTxt = p.type === "DB" ? grade : "SR24";
+      var meaning;
+      if (it.kind === "bar") {
+        meaning = (it.pos === "top" ? "เหล็กบน " : "เหล็กล่าง ") + p.count + " เส้น " + (info ? info.meaning.th : p.type) + " Ø" + p.d + " มม.";
+        rows.push([raw.trim(), meaning, std + " · " + gradeTxt, f(p.count * kgm(p.d)).toFixed(2)]);
+      } else {
+        var perM = Math.ceil(1 / p.spacing);
+        meaning = "เหล็กปลอก " + (info ? info.meaning.th : p.type) + " Ø" + p.d + " มม. ทุก " + p.spacing.toFixed(2) + " ม. (≈" + perM + " ตัว/ม.)";
+        var per = 2 * ((size[0] - 0.06) + (size[1] - 0.06)) + 0.12;
+        rows.push([raw.trim(), meaning, std + " · " + gradeTxt, f(perM * per * kgm(p.d)).toFixed(2)]);
+      }
+      out.className = "parse";
+      out.textContent = "→ " + meaning;
+    });
+    document.getElementById("rebar-table").innerHTML = rows.map(function (r) {
+      return "<tr><td class=\"mono\">" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td><td>" + esc(r[2]) + "</td><td class=\"num\">" + esc(r[3]) + "</td></tr>";
+    }).join("");
+    drawBeam(tag, size, res);
+  }
+
+  function drawBeam(tag, size, res) {
+    // Scale 1:10 in "paper mm" -> 1 m = 100 units; viewBox 120 x 90 sized per beam
+    var k = 100, b = size[0] * k, h = size[1] * k;
+    var vbW = b + 70, vbH = h + 30;
+    var x0 = 12, y0 = 8, c = 3; // cover 3 cm -> 3 units
+    var svg = [];
+    svg.push('<rect x="0" y="0" width="' + vbW + '" height="' + vbH + '" style="fill:var(--sheet)"/>');
+    var beamInner = '<rect x="' + x0 + '" y="' + y0 + '" width="' + b + '" height="' + h + '" style="fill:url(#conc);stroke:var(--ink);stroke-width:0.5"/>';
+    svg.push('<defs><pattern id="conc" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" style="fill:var(--sheet)"/><circle cx="1" cy="1" r="0.25" style="fill:var(--grid)"/><circle cx="3" cy="2.6" r="0.18" style="fill:var(--grid)"/></pattern></defs>');
+    var st = res.stir, sd = st ? st.d / 10 : 0.6;
+    var ix = x0 + c, iy = y0 + c, iw = b - 2 * c, ih = h - 2 * c;
+    var stirrup = '<rect x="' + f(ix + sd / 2) + '" y="' + f(iy + sd / 2) + '" width="' + f(iw - sd) + '" height="' + f(ih - sd) + '" rx="' + f(sd * 1.5) + '" style="fill:none;stroke:var(--ink);stroke-width:' + f(sd) + '"/>' +
+      line(ix + sd + 1, iy + sd, ix + sd + 5, iy + sd + 4, sd);
+    svg.push(wrap("TH.STR.BEAM_TAG", beamInner, [x0, y0, b, h], "คาน " + tag));
+    svg.push(wrap("TH.STR.STIRRUP_CALLOUT", stirrup, [ix, iy, iw, ih], "เหล็กปลอก"));
+
+    function bars(p, top) {
+      if (!p) return "";
+      var d = p.d / 10, r = d / 2, n = Math.max(1, p.count);
+      var left = ix + sd + r, right = ix + iw - sd - r, y = top ? iy + sd + r : iy + ih - sd - r;
+      var s = "";
+      for (var i = 0; i < n; i++) {
+        var x = n === 1 ? (left + right) / 2 : left + (right - left) * i / (n - 1);
+        s += '<circle cx="' + f(x) + '" cy="' + f(y) + '" r="' + f(r) + '" style="fill:var(--ink)"/>';
+      }
+      return s;
+    }
+    if (res.top) svg.push(wrap("TH.STR.REBAR_CALLOUT", bars(res.top, true), [ix, iy, iw, 6], "เหล็กบน"));
+    if (res.bottom) svg.push(wrap("TH.STR.REBAR_CALLOUT", bars(res.bottom, false), [ix, iy + ih - 6, iw, 6], "เหล็กล่าง"));
+
+    // Callout leaders
+    var lx = x0 + b + 6, tx = lx + 3;
+    function callout(y, fromX, fromY, label) {
+      return line(fromX, fromY, lx, y, 0.2) + line(lx, y, lx + 2, y, 0.2) + text(tx, y, label, 3.4, { anchor: "start", weight: 600 });
+    }
+    if (res.top) svg.push(callout(y0 + 4, ix + iw - 3, iy + 3, document.getElementById("rb-top").value.trim()));
+    if (st) svg.push(callout(y0 + h / 2, ix + iw - sd / 2, y0 + h / 2, document.getElementById("rb-stir").value.trim()));
+    if (res.bottom) svg.push(callout(y0 + h - 4, ix + iw - 3, iy + ih - 3, document.getElementById("rb-bot").value.trim()));
+    // Dimensions
+    svg.push(line(x0, y0 + h + 5, x0 + b, y0 + h + 5, 0.2) + line(x0 - 1, y0 + h + 6, x0 + 1, y0 + h + 4, 0.45) + line(x0 + b - 1, y0 + h + 6, x0 + b + 1, y0 + h + 4, 0.45) +
+      text(x0 + b / 2, y0 + h + 8.4, size[0].toFixed(2), 3));
+    svg.push(line(x0 - 5, y0, x0 - 5, y0 + h, 0.2) + line(x0 - 6, y0 + 1, x0 - 4, y0 - 1, 0.45) + line(x0 - 6, y0 + h + 1, x0 - 4, y0 + h - 1, 0.45) +
+      text(x0 - 8, y0 + h / 2, size[1].toFixed(2), 3, { rotate: -90 }));
+    // Title
+    svg.push(wrap("TH.STR.BEAM_TAG", text(x0, y0 + h + 15.5, "รูปตัดคาน " + tag, 4.2, { anchor: "start", weight: 700 }) +
+      text(x0, y0 + h + 20.5, "มาตราส่วน 1:10 · ระยะหุ้ม 3 ซม.", 2.8, { anchor: "start", color: "var(--ink-2)" }), [x0, y0 + h + 12, 60, 11], "ป้ายรหัสคาน " + tag));
+    var beam = document.getElementById("beam");
+    beam.setAttribute("viewBox", "0 0 " + f(vbW + 30) + " " + f(vbH));
+    beam.innerHTML = svg.join("");
+  }
+
+  /* ---------- clash table ---------- */
+  function renderClash() {
+    var rows = DATA.clashes.slice().sort(function (a, b) { return a.code === b.code ? 0 : (a.code < b.code ? -1 : 1); });
+    var order = ["F", "C", "W"];
+    rows.sort(function (a, b) { return order.indexOf(a.code) - order.indexOf(b.code); });
+    document.getElementById("clash-table").innerHTML = rows.map(function (e) {
+      return '<tr><td class="mono"><b>' + esc(e.code) + '</b></td><td class="mono">' + esc(e.id) + "</td><td>" + esc(DISC_TH[e.discipline] || e.discipline) +
+        "</td><td>" + esc(e.meaning.th) + "</td><td>" + statusBadge(e.status) + "</td></tr>";
+    }).join("");
+  }
+
+  /* ---------- wiring ---------- */
+  function setPressed(groupId, attr, value) {
+    var btns = document.querySelectorAll("#" + groupId + " button");
+    for (var i = 0; i < btns.length; i++) btns[i].setAttribute("aria-pressed", btns[i].getAttribute(attr) === value ? "true" : "false");
+  }
+  document.getElementById("region-seg").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    state.region = b.getAttribute("data-region");
+    setPressed("region-seg", "data-region", state.region);
+    updateRegionNote();
+    drawSheet(); renderInspector();
+  });
+  document.getElementById("prefix-seg").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    state.prefix = b.getAttribute("data-prefix");
+    setPressed("prefix-seg", "data-prefix", state.prefix);
+    drawSheet();
+  });
+  ["arch", "elec", "san"].forEach(function (k) {
+    document.getElementById("layer-" + k).addEventListener("change", function (e) {
+      state.layers[k] = e.target.checked;
+      var g = document.getElementById("L-" + k);
+      if (g) g.style.display = e.target.checked ? "" : "none";
+    });
+  });
+  document.getElementById("zoom-btn").addEventListener("click", function (e) {
+    var fr = document.getElementById("sheet-frame");
+    var on = !fr.classList.contains("zoomed");
+    fr.classList.toggle("zoomed", on);
+    e.currentTarget.setAttribute("aria-pressed", on ? "true" : "false");
+    e.currentTarget.textContent = on ? "พอดีจอ" : "ขยายแผ่น";
+  });
+  function onPick(e) {
+    var g = e.target.closest("[data-id]");
+    if (g) select(g.getAttribute("data-id"));
+  }
+  document.getElementById("sheet").addEventListener("click", onPick);
+  document.getElementById("beam").addEventListener("click", onPick);
+  document.getElementById("chips").addEventListener("click", onPick);
+  [document.getElementById("sheet"), document.getElementById("beam")].forEach(function (svg) {
+    svg.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { var g = e.target.closest("[data-id]"); if (g) { e.preventDefault(); select(g.getAttribute("data-id")); } }
+    });
+  });
+  ["beam-tag", "rb-top", "rb-bot", "rb-stir"].forEach(function (id) { document.getElementById(id).addEventListener("input", renderRebar); });
+  ["beam-size", "db-grade"].forEach(function (id) { document.getElementById(id).addEventListener("change", renderRebar); });
+
+  function updateRegionNote() {
+    var n = document.getElementById("active-region-note");
+    n.textContent = state.region === "TH" ? "รูปแบบไทย: ขนาดฟอง Ø10 มม. เป็นค่าที่ TBIM เสนอ" : "สัญลักษณ์ที่ไม่มีข้อมูล " + (REGION_TH[state.region] || state.region) + " แสดงเป็นแบบไทย";
+  }
+
+  // Grade options from the catalog's rebar vocabulary
+  (function () {
+    var db = rebarInfo("DB"), sel = document.getElementById("db-grade");
+    var grades = db && db.attributes && db.attributes.grades ? db.attributes.grades : ["SD40"];
+    sel.innerHTML = grades.map(function (g) { return '<option value="' + g + '"' + (g === "SD40" ? " selected" : "") + ">" + g + "</option>"; }).join("");
+  })();
+
+  document.getElementById("footer-cat").textContent = "ข้อมูลจาก " + DATA.catalog.catalog_id + " เวอร์ชัน " + DATA.catalog.catalog_version +
+    " · หน้านี้ใช้ " + Object.keys(SYM).length + " จาก " + DATA.catalog.total_symbols + " ระเบียน · สร้างด้วย TBIM/examples/build_example.py";
+
+  renderChips();
+  updateRegionNote();
+  drawSheet();
+  renderInspector();
+  renderRebar();
+  renderClash();
+})();
+</script>
