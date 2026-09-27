@@ -160,3 +160,16 @@ The vocabularies are code lists, each scoped by discipline and region:
   - a TH/SG/GB/JIS/US region switch
   - a rebar-callout parser
   - Published privately at https://claude.ai/artifact/Ez2acHisGiP3QYwDTeReJ4.
+
+## 9. 2D drafting tools (separate report)
+
+`reports/เครื่องมือเขียนแบบ 2D สำหรับ TBIM.md` (Thai) lists the 2D drafting tools TBIM should ship, based on AutoCAD, Revit and Archicad. Use it when designing or building the drawing/editing tools, not the symbol catalog.
+
+- 14 tool groups: precision aids (object snap, ortho, polar, coordinate input), draw, selection, modify, dimension, text/annotation, symbols, blocks/detail components, styles, BIM-specific 2D, measure, sheets/print, import/export, UX.
+- Every tool has a priority: **P0** = MVP, **P1** = professional use, **P2** = nice to have. A three-phase roadmap groups them.
+- Decisions that match this folder:
+  - Every 2D element belongs to a view (`ownerViewId`; null = model element).
+  - Annotation sizes are paper mm, scaled by the view (same as section 4 item 3).
+  - Dimensions, tags and hatches keep references to host elements, not fixed coordinates.
+  - Keep an AutoCAD-style command line and shortcuts, and first-class DWG/DXF import and export.
+- The report ends with a suggested `Element2D` class tree and geometry-kernel notes (intersection, offset, region booleans, spatial index, Thai text shaping).
