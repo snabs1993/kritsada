@@ -14,6 +14,7 @@
 | คำอธิบายชุดข้อมูล (ภาษาไทย) | [`data/README.md`](data/README.md) |
 | ตรวจความถูกต้องของข้อมูล + สร้าง CSV ใหม่ | `python3 data/validate.py` |
 | รายงานไทยและสากล | [`reports/สัญลักษณ์งานเขียนแบบสำหรับ TBIM.md`](reports/สัญลักษณ์งานเขียนแบบสำหรับ%20TBIM.md) |
+| เครื่องมือเขียนแบบ 2D ที่ TBIM ต้องมี (Draw, Modify, Dimension, Snap ฯลฯ + Priority + Roadmap) | [`reports/เครื่องมือเขียนแบบ 2D สำหรับ TBIM.md`](reports/เครื่องมือเขียนแบบ%202D%20สำหรับ%20TBIM.md) |
 | รายงานมาตรฐานสิงคโปร์ | [`reports/มาตรฐานสิงคโปร์สำหรับ TBIM.md`](reports/มาตรฐานสิงคโปร์สำหรับ%20TBIM.md) |
 | บันทึกค้นคว้าพร้อม URL ทุกข้อ | [`research_notes/`](research_notes/) |
 | ชุดแบบตัวอย่าง 10 แผ่น (เปิดในเบราว์เซอร์) | [`examples/tbim_example.html`](examples/tbim_example.html) |
