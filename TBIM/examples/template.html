@@ -1,25 +1,17 @@
-<title>แผ่นตัวอย่าง TBIM</title>
+<title>ชุดแบบตัวอย่าง TBIM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Sarabun:wght@400;600;700&display=swap">
 <style>
 :root {
-  --page: #EEF0EC;
-  --sheet: #FDFDFA;
-  --panel: #FFFFFF;
-  --ink: #1C2327;
-  --ink-2: #56626A;
-  --rule: #CBD1CC;
-  --grid: #7C8A93;
-  --accent: #2F5BD3;
-  --accent-soft: #E3E9FB;
-  --elec: #B0306E;
-  --san: #137A70;
-  --st-standard: #2E7D4F;
-  --st-agency: #5B4BB7;
-  --st-observed: #8F6400;
-  --st-unverified: #B3261E;
-  --hl: rgba(47, 91, 211, 0.16);
+  --page: #EEF0EC; --sheet: #FDFDFA; --panel: #FFFFFF;
+  --ink: #1C2327; --ink-2: #56626A; --rule: #CBD1CC; --grid: #7C8A93;
+  --under: #B9C0BC; --under-fill: #E6E9E5; --under-text: #9AA39F; --water: #DCEBF3;
+  --accent: #2F5BD3; --accent-soft: #E3E9FB; --hl: rgba(47, 91, 211, 0.16);
+  --d-ARCH: #1C2327; --d-GENERAL: #1C2327; --d-STR: #3B5A8C; --d-ELEC: #B0306E; --d-ELV: #6F48B0; --d-FA: #C2410C;
+  --d-FP: #C81E1E; --d-PLB: #1F6FB2; --d-SAN: #137A70; --d-HVAC: #0E7490; --d-GAS: #9A6400; --d-CIVIL: #4D7C0F; --d-SURVEY: #7A5230;
+  --sg-new: #C026D3; --sg-exist: #0891B2; --sg-demo: #B7950B;
+  --st-standard: #2E7D4F; --st-agency: #5B4BB7; --st-observed: #8F6400; --st-unverified: #B3261E;
   --font-body: "IBM Plex Sans Thai", "Sarabun", "Noto Sans Thai", system-ui, sans-serif;
   --font-draw: "Sarabun", "IBM Plex Sans Thai", "Noto Sans Thai", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -27,98 +19,77 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --page: #0F1316;
-    --sheet: #161D22;
-    --panel: #1A2228;
-    --ink: #DCE4E8;
-    --ink-2: #98A6AE;
-    --rule: #2F3C45;
-    --grid: #7F909B;
-    --accent: #86A6FF;
-    --accent-soft: #22304F;
-    --elec: #EE86B9;
-    --san: #5CCABE;
-    --st-standard: #6CC592;
-    --st-agency: #A99BFF;
-    --st-observed: #E1B24A;
-    --st-unverified: #FF8A80;
-    --hl: rgba(134, 166, 255, 0.2);
+    --page: #0F1316; --sheet: #161D22; --panel: #1A2228;
+    --ink: #DCE4E8; --ink-2: #98A6AE; --rule: #2F3C45; --grid: #7F909B;
+    --under: #45525A; --under-fill: #20292F; --under-text: #5F6E77; --water: #16303D;
+    --accent: #86A6FF; --accent-soft: #22304F; --hl: rgba(134, 166, 255, 0.2);
+    --d-ARCH: #DCE4E8; --d-GENERAL: #DCE4E8; --d-STR: #8FB0E6; --d-ELEC: #EE86B9; --d-ELV: #B99BEF; --d-FA: #FB9A5B;
+    --d-FP: #FF7B7B; --d-PLB: #6CB6F2; --d-SAN: #5CCABE; --d-HVAC: #4FC3DB; --d-GAS: #E3B34F; --d-CIVIL: #9ACD5A; --d-SURVEY: #D1A67A;
+    --sg-new: #E879F9; --sg-exist: #22D3EE; --sg-demo: #FACC15;
+    --st-standard: #6CC592; --st-agency: #A99BFF; --st-observed: #E1B24A; --st-unverified: #FF8A80;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page: #0F1316;
-  --sheet: #161D22;
-  --panel: #1A2228;
-  --ink: #DCE4E8;
-  --ink-2: #98A6AE;
-  --rule: #2F3C45;
-  --grid: #7F909B;
-  --accent: #86A6FF;
-  --accent-soft: #22304F;
-  --elec: #EE86B9;
-  --san: #5CCABE;
-  --st-standard: #6CC592;
-  --st-agency: #A99BFF;
-  --st-observed: #E1B24A;
-  --st-unverified: #FF8A80;
-  --hl: rgba(134, 166, 255, 0.2);
+  --page: #0F1316; --sheet: #161D22; --panel: #1A2228;
+  --ink: #DCE4E8; --ink-2: #98A6AE; --rule: #2F3C45; --grid: #7F909B;
+  --under: #45525A; --under-fill: #20292F; --under-text: #5F6E77; --water: #16303D;
+  --accent: #86A6FF; --accent-soft: #22304F; --hl: rgba(134, 166, 255, 0.2);
+  --d-ARCH: #DCE4E8; --d-GENERAL: #DCE4E8; --d-STR: #8FB0E6; --d-ELEC: #EE86B9; --d-ELV: #B99BEF; --d-FA: #FB9A5B;
+  --d-FP: #FF7B7B; --d-PLB: #6CB6F2; --d-SAN: #5CCABE; --d-HVAC: #4FC3DB; --d-GAS: #E3B34F; --d-CIVIL: #9ACD5A; --d-SURVEY: #D1A67A;
+  --sg-new: #E879F9; --sg-exist: #22D3EE; --sg-demo: #FACC15;
+  --st-standard: #6CC592; --st-agency: #A99BFF; --st-observed: #E1B24A; --st-unverified: #FF8A80;
 }
 
 * { box-sizing: border-box; }
-body {
-  background: var(--page);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.6;
-  padding-inline: 16px;
-  padding-block: 20px 48px;
-}
-.wrap { max-width: 1320px; margin: 0 auto; display: grid; gap: 28px; }
-
-header.top { display: grid; gap: 8px; max-width: 78ch; }
-.eyebrow {
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--ink-2);
-}
-h1 {
-  font-family: var(--font-draw); font-weight: 700; font-size: clamp(26px, 3.4vw, 36px);
-  line-height: 1.2; margin: 0; text-wrap: balance;
-}
+body { background: var(--page); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.6; padding-inline: 16px; padding-block: 20px 48px; }
+.wrap { max-width: 1400px; margin: 0 auto; display: grid; gap: 22px; }
+header.top { display: grid; gap: 8px; max-width: 80ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+h1 { font-family: var(--font-draw); font-weight: 700; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.2; margin: 0; text-wrap: balance; }
 h2 { font-family: var(--font-draw); font-weight: 700; font-size: 22px; margin: 0; text-wrap: balance; }
 h3 { font-size: 15px; font-weight: 600; margin: 0; }
 p { margin: 0; }
 .lede { color: var(--ink-2); }
 code, .mono { font-family: var(--font-mono); font-size: 0.92em; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13.5px; color: var(--ink-2); }
+.stats span { display: inline-flex; gap: 6px; align-items: center; }
+.stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
 
 /* Toolbar */
 .toolbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
-.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; background: var(--panel); }
-.seg button {
-  font: inherit; font-size: 13.5px; border: 0; background: transparent; color: var(--ink);
-  padding: 6px 12px; cursor: pointer; border-right: 1px solid var(--rule);
-}
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; background: var(--panel); }
+.seg button { font: inherit; font-size: 13.5px; border: 0; background: transparent; color: var(--ink); padding: 6px 12px; cursor: pointer; border-right: 1px solid var(--rule); }
 .seg button:last-child { border-right: 0; }
 .seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
-.seg button:focus-visible, .chip:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 2px solid var(--accent); outline-offset: 2px;
-}
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .group-label { font-size: 12.5px; color: var(--ink-2); margin-right: 6px; }
-.toggles { display: inline-flex; gap: 12px; flex-wrap: wrap; }
-.toggles label { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; cursor: pointer; }
-.swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.region-note { font-size: 13px; color: var(--ink-2); max-width: 90ch; }
 
-/* Sheet + inspector */
+/* Sheet index tabs */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--rule); }
+.tabs button { font: inherit; font-size: 13.5px; display: grid; gap: 0; text-align: left; white-space: nowrap; background: transparent; color: var(--ink-2);
+  border: 1px solid transparent; border-bottom: 0; border-radius: 6px 6px 0 0; padding: 6px 12px 7px; cursor: pointer; }
+.tabs button .tab-no { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; }
+.tabs button[aria-selected="true"] { background: var(--panel); color: var(--ink); border-color: var(--rule); font-weight: 600; }
+
 .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start; }
-@media (max-width: 1020px) { .workspace { grid-template-columns: minmax(0, 1fr); } }
-.sheet-frame {
-  background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px;
-  overflow-x: auto; overflow-y: hidden;
-}
-.sheet-frame svg { display: block; width: 100%; height: auto; min-width: 640px; }
-.sheet-frame.zoomed svg { width: 190%; }
+@media (max-width: 1080px) { .workspace { grid-template-columns: minmax(0, 1fr); } }
+.sheet-frame { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; overflow-y: hidden; }
+.sheet-frame svg { display: block; width: 100%; height: auto; min-width: 720px; }
+.sheet-frame.zoomed svg { width: 200%; }
 .sheet-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-2); padding-top: 8px; }
+
+/* glyph classes (paper mm) */
+.gl .s, .gl .st, .gl .sk { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+.gl .s:not([stroke-width]) { stroke-width: 0.25; }
+.gl .st:not([stroke-width]) { stroke-width: 0.18; }
+.gl .sk:not([stroke-width]) { stroke-width: 0.5; }
+.gl .f { fill: currentColor; stroke: none; }
+.gl .bg { fill: var(--sheet); stroke: currentColor; }
+.gl .bg:not([stroke-width]) { stroke-width: 0.25; }
+.gl .tx { fill: currentColor; stroke: none; font-family: var(--font-draw); dominant-baseline: central; }
+.gl .tx:not([text-anchor]) { text-anchor: middle; }
 
 svg .sym { cursor: pointer; }
 svg .sym:focus { outline: none; }
@@ -126,26 +97,20 @@ svg .sym .hit { fill: transparent; stroke: none; }
 svg .sym:hover .hit, svg .sym:focus-visible .hit { fill: var(--hl); }
 svg .sym.selected .hit { fill: var(--hl); stroke: var(--accent); stroke-width: 0.35; stroke-dasharray: 1 0.8; }
 
-.inspector {
-  background: var(--panel); border: 1px solid var(--rule); border-radius: 6px;
-  padding: 18px; display: grid; gap: 14px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px);
-  max-height: calc(100vh - 24px); overflow-y: auto;
-}
-@media (max-width: 1020px) { .inspector { position: static; max-height: none; } }
+.inspector { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 18px; display: grid; gap: 14px;
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); max-height: calc(100vh - 24px); overflow-y: auto; }
+@media (max-width: 1080px) { .inspector { position: static; max-height: none; } }
 .insp-head { display: grid; gap: 4px; }
 .insp-id { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-2); word-break: break-all; }
 .insp-name { font-family: var(--font-draw); font-size: 22px; font-weight: 700; line-height: 1.25; }
 .insp-en { color: var(--ink-2); font-size: 14px; }
+.insp-glyph { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.insp-glyph svg { display: block; width: 100%; height: auto; }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.badge {
-  font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--rule);
-  color: var(--ink-2); background: transparent; white-space: nowrap;
-}
+.badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-2); white-space: nowrap; }
 .status { font-weight: 600; border-color: currentColor; }
-.status.standard { color: var(--st-standard); }
-.status.agency { color: var(--st-agency); }
-.status.observed_practice { color: var(--st-observed); }
-.status.unverified { color: var(--st-unverified); }
+.status.standard { color: var(--st-standard); } .status.agency { color: var(--st-agency); }
+.status.observed_practice { color: var(--st-observed); } .status.unverified { color: var(--st-unverified); }
 .status-note { font-size: 13px; color: var(--ink-2); }
 .kv { display: grid; gap: 4px; }
 .kv > span:first-child { font-size: 12px; letter-spacing: 0.04em; color: var(--ink-2); text-transform: uppercase; font-family: var(--font-mono); }
@@ -155,32 +120,31 @@ svg .sym.selected .hit { fill: var(--hl); stroke: var(--accent); stroke-width: 0
 .profile.active { border-color: var(--accent); background: var(--accent-soft); }
 .profile .row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
 .profile .region { font-family: var(--font-mono); font-weight: 500; }
-.ifc { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7; background: var(--page); border-radius: 6px; padding: 8px 10px; overflow-x: auto; white-space: pre; }
+.code { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7; background: var(--page); border-radius: 6px; padding: 8px 10px; overflow-x: auto; white-space: pre; }
 .sources { display: grid; gap: 4px; font-size: 13px; padding-left: 18px; margin: 0; }
 .sources a { color: var(--accent); word-break: break-word; }
 details summary { cursor: pointer; font-size: 13.5px; color: var(--accent); }
 details pre { font-family: var(--font-mono); font-size: 11.5px; line-height: 1.5; background: var(--page); padding: 10px; border-radius: 6px; overflow: auto; max-height: 360px; margin: 8px 0 0; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; }
+.dot.standard { background: var(--st-standard); } .dot.agency { background: var(--st-agency); }
+.dot.observed_practice { background: var(--st-observed); } .dot.unverified { background: var(--st-unverified); }
 
-/* Legend chips */
-.legend { display: grid; gap: 10px; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip {
-  font: inherit; font-size: 13px; display: inline-flex; gap: 6px; align-items: center;
-  border: 1px solid var(--rule); background: var(--panel); color: var(--ink); border-radius: 6px;
-  padding: 4px 10px; cursor: pointer;
-}
-.chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
-.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
-.dot.standard { background: var(--st-standard); }
-.dot.agency { background: var(--st-agency); }
-.dot.observed_practice { background: var(--st-observed); }
-.dot.unverified { background: var(--st-unverified); }
-.legend-key { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--ink-2); }
-.legend-key span { display: inline-flex; gap: 6px; align-items: center; }
+/* All-symbols grid */
+.filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.filters select, .filters input { font: inherit; font-size: 14px; color: var(--ink); background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 6px 10px; }
+.filters input { min-width: 0; flex: 1 1 200px; }
+.grid-h { margin-top: 12px; display: flex; gap: 8px; align-items: baseline; }
+.grid-h .mono { color: var(--ink-2); font-weight: 400; font-size: 12px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
+.card { font: inherit; text-align: left; display: grid; gap: 4px; align-content: start; background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; padding: 6px; cursor: pointer; }
+.card svg { width: 100%; height: auto; display: block; border-radius: 4px; }
+.card[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.card-name { font-size: 13px; line-height: 1.35; display: flex; gap: 6px; align-items: baseline; }
+.card-id { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-2); word-break: break-all; }
 
-/* Sections below */
+/* Beam tool */
 section.block { display: grid; gap: 16px; border-top: 1px solid var(--rule); padding-top: 24px; }
-.block-intro { max-width: 76ch; color: var(--ink-2); }
+.block-intro { max-width: 78ch; color: var(--ink-2); }
 .rebar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 @media (max-width: 860px) { .rebar { grid-template-columns: minmax(0, 1fr); } }
 .form { display: grid; gap: 12px; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; }
@@ -188,10 +152,7 @@ section.block { display: grid; gap: 16px; border-top: 1px solid var(--rule); pad
 .field label { font-size: 13px; color: var(--ink-2); }
 .field-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .field-row .field { flex: 1 1 120px; }
-input[type="text"], select {
-  font: inherit; font-family: var(--font-mono); font-size: 15px; color: var(--ink);
-  background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 10px; width: 100%;
-}
+input[type="text"], .form select { font: inherit; font-family: var(--font-mono); font-size: 15px; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 10px; width: 100%; }
 input.bad { border-color: var(--st-unverified); }
 .parse { font-size: 13px; color: var(--ink-2); min-height: 1.4em; }
 .parse.err { color: var(--st-unverified); }
@@ -204,25 +165,25 @@ td.num { text-align: right; font-family: var(--font-mono); }
 .beam-frame svg { display: block; width: 100%; height: auto; max-height: 460px; }
 .note { font-size: 13px; color: var(--ink-2); }
 footer { font-size: 13px; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 16px; display: grid; gap: 6px; }
-
-@media (prefers-reduced-motion: no-preference) {
-  svg .sym .hit { transition: fill 120ms ease; }
-}
+@media (prefers-reduced-motion: no-preference) { svg .sym .hit { transition: fill 120ms ease; } }
 </style>
 
+<svg id="defs" width="0" height="0" style="position:absolute" aria-hidden="true"></svg>
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">TBIM · Drawing annotation · ตัวอย่าง</div>
-    <h1>แปลนบ้านชั้นเดียว วาดจากคลังสัญลักษณ์ TBIM</h1>
-    <p class="lede">ทุกสัญลักษณ์บนแผ่นนี้ดึงมาจากไฟล์ <code>tbim_symbols.json</code> กดที่สัญลักษณ์ใดก็ได้ แผงด้านข้างจะแสดงข้อมูลที่ TBIM เก็บไว้ ได้แก่ ชื่อไทย-อังกฤษ สถานะความเป็นมาตรฐาน รูปแบบของแต่ละภูมิภาค การแปลงเป็น IFC และแหล่งอ้างอิง ลองสลับภูมิภาคเพื่อดูว่าหัวรูปตัด เส้นบอกระยะ และค่าระดับเปลี่ยนไปตามมาตรฐานอย่างไร</p>
+    <div class="eyebrow">TBIM · Drawing annotation · ชุดแบบตัวอย่าง</div>
+    <h1>บ้านพักอาศัย 1 ชั้น ครบทุกระบบ วาดจากคลังสัญลักษณ์ TBIM</h1>
+    <p class="lede">ชุดแบบนี้มีผังบริเวณ สถาปัตย์ โครงสร้าง ไฟฟ้า กระแสอ่อน แจ้งเหตุ ล่อฟ้า ประปา สุขาภิบาล ดับเพลิง ก๊าซ และปรับอากาศ ทุกแผ่นมีตารางสัญลักษณ์ของสาขานั้นครบทุกรายการในชุดข้อมูล กดที่สัญลักษณ์บนแผ่นหรือในตารางเพื่อดูข้อมูลที่ TBIM เก็บไว้ สลับเป็นแบบสิงคโปร์เพื่อดูระดับ SHD สีงานต่อเติม และกรอบชื่อแบบของ QP</p>
+    <div class="stats" id="stats"></div>
   </header>
 
   <div class="toolbar" role="group" aria-label="ตัวเลือกการแสดงผล">
     <div>
-      <span class="group-label">ภูมิภาค</span>
+      <span class="group-label">มาตรฐาน</span>
       <span class="seg" id="region-seg">
-        <button type="button" data-region="TH" aria-pressed="true">ไทย (TH)</button>
-        <button type="button" data-region="GB" aria-pressed="false">จีน GB/T 50001</button>
+        <button type="button" data-region="TH" aria-pressed="true">ไทย</button>
+        <button type="button" data-region="SG" aria-pressed="false">สิงคโปร์</button>
+        <button type="button" data-region="GB" aria-pressed="false">จีน GB/T</button>
         <button type="button" data-region="JIS" aria-pressed="false">ญี่ปุ่น JIS</button>
         <button type="button" data-region="US_NCS" aria-pressed="false">สหรัฐฯ NCS</button>
       </span>
@@ -234,764 +195,79 @@ footer { font-size: 13px; color: var(--ink-2); border-top: 1px solid var(--rule)
         <button type="button" data-prefix="thai" aria-pressed="false">ป1 / น1</button>
       </span>
     </div>
-    <div class="toggles" aria-label="ชั้นข้อมูล">
-      <label><input type="checkbox" id="layer-arch" checked> <span class="swatch" style="background: var(--ink)"></span>สถาปัตยกรรม</label>
-      <label><input type="checkbox" id="layer-elec" checked> <span class="swatch" style="background: var(--elec)"></span>ไฟฟ้า/แจ้งเหตุ</label>
-      <label><input type="checkbox" id="layer-san" checked> <span class="swatch" style="background: var(--san)"></span>สุขาภิบาล</label>
-    </div>
-    <div>
-      <span class="seg"><button type="button" id="zoom-btn" aria-pressed="false">ขยายแผ่น</button></span>
-    </div>
+    <span class="seg"><button type="button" id="zoom-btn" aria-pressed="false">ขยายแผ่น</button></span>
   </div>
+  <p class="region-note" id="region-note"></p>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="สารบัญแบบ"></nav>
 
   <div class="workspace">
     <div>
-      <div class="sheet-frame" id="sheet-frame">
-        <svg id="sheet" viewBox="0 0 340 220" role="img" aria-label="แผ่นแบบ A1-01 แปลนพื้นชั้น 1 มาตราส่วน 1:50"></svg>
+      <div id="sheet-view">
+        <div class="sheet-frame" id="sheet-frame">
+          <svg id="sheet" viewBox="0 0 420 297" role="img" aria-label="แผ่นแบบ"></svg>
+        </div>
+        <div class="sheet-meta"><span id="sheet-caption"></span><span>กระดาษ A3 420 × 297 มม. · ขนาดสัญลักษณ์เป็นมิลลิเมตรบนกระดาษ</span></div>
       </div>
-      <div class="sheet-meta">
-        <span>กระดาษ 340 × 220 มม. · หน่วยสัญลักษณ์เป็นมิลลิเมตรบนกระดาษ · แปลนมาตราส่วน 1:50</span>
-        <span id="active-region-note"></span>
+
+      <div id="legend-view" hidden>
+        <div class="filters">
+          <select id="f-disc" aria-label="สาขา"></select>
+          <select id="f-status" aria-label="สถานะ"></select>
+          <input type="search" id="f-q" placeholder="ค้นหา เช่น FCU, เต้ารับ, DB" aria-label="ค้นหาสัญลักษณ์">
+          <span class="note" id="legend-count"></span>
+        </div>
+        <div id="legend-grid"></div>
+      </div>
+
+      <div id="beam-view" hidden>
+        <section class="block" aria-labelledby="rebar-h" style="border-top:0;padding-top:0">
+          <h2 id="rebar-h">อ่านคำกำกับเหล็กเสริมแล้ววาดรูปตัดคาน</h2>
+          <p class="block-intro">พิมพ์คำกำกับแบบไทย (<code>4-DB16</code>, <code>ป-RB6@0.15</code>) หรือแบบสิงคโปร์ตาม BS 8666 (<code>4H16</code>, <code>H10-150</code>) TBIM จะแยกเป็นจำนวน ชนิด ขนาด ระยะห่าง บอกมาตรฐานวัสดุ แล้ววาดรูปตัดคานใหม่ รูปแบบไทยใช้ regex จากระเบียน <code>TH.STR.REBAR_CALLOUT</code></p>
+          <div class="rebar">
+            <div class="form">
+              <div class="field-row">
+                <div class="field"><label for="beam-tag">ป้ายคาน</label><input type="text" id="beam-tag" value="B1" autocomplete="off" spellcheck="false"></div>
+                <div class="field"><label for="beam-size">ขนาดคาน (ม.)</label>
+                  <select id="beam-size"><option value="0.15x0.30">0.15 × 0.30</option><option value="0.20x0.40" selected>0.20 × 0.40</option><option value="0.20x0.50">0.20 × 0.50</option><option value="0.25x0.60">0.25 × 0.60</option></select></div>
+                <div class="field"><label for="db-grade">ชั้นคุณภาพ</label><select id="db-grade"></select></div>
+              </div>
+              <div class="field"><label for="rb-top">เหล็กบน</label><input type="text" id="rb-top" value="2-DB12" autocomplete="off" spellcheck="false"><div class="parse" id="parse-top"></div></div>
+              <div class="field"><label for="rb-bot">เหล็กล่าง</label><input type="text" id="rb-bot" value="4-DB16" autocomplete="off" spellcheck="false"><div class="parse" id="parse-bot"></div></div>
+              <div class="field"><label for="rb-stir">เหล็กปลอก</label><input type="text" id="rb-stir" value="ป-RB6@0.15" autocomplete="off" spellcheck="false"><div class="parse" id="parse-stir"></div></div>
+              <div class="table-wrap"><table><thead><tr><th>คำกำกับ</th><th>อ่านได้ว่า</th><th>มาตรฐานวัสดุ</th><th style="text-align:right">กก./ม.</th></tr></thead><tbody id="rebar-table"></tbody></table></div>
+              <p class="note">น้ำหนัก 0.00617 × d² กก./ม. ระยะหุ้มคาน 3 ซม. เป็นค่าที่อ้างกันทั่วไปในไทย (ตารางบังคับอยู่ใน มยผ. 1101-64) รูปแบบสิงคโปร์ H/R ตาม BS 8666 และเกรดตาม SS 560 ยังไม่ได้ยืนยันกับต้นฉบับ</p>
+            </div>
+            <div class="beam-frame"><svg id="beam" viewBox="0 0 120 90" role="img" aria-label="รูปตัดคาน"></svg></div>
+          </div>
+        </section>
       </div>
     </div>
-
     <aside class="inspector" id="inspector" aria-live="polite"></aside>
   </div>
 
-  <div class="legend">
-    <h3>สัญลักษณ์บนแผ่นนี้</h3>
-    <div class="legend-key" id="legend-key"></div>
-    <div class="chips" id="chips"></div>
-  </div>
-
-  <section class="block" aria-labelledby="rebar-h">
-    <h2 id="rebar-h">อ่านคำกำกับเหล็กเสริมแล้ววาดรูปตัดคาน</h2>
-    <p class="block-intro">TBIM ใช้รูปแบบข้อความ (regex) ที่เก็บในระเบียน <code>TH.STR.REBAR_CALLOUT</code> และ <code>TH.STR.STIRRUP_CALLOUT</code> แยกคำกำกับแบบไทยเป็นจำนวน ชนิด ขนาด และระยะห่าง แล้ววาดรูปตัดคานใหม่ทันที ลองแก้ข้อความ เช่น <code>3-DB20</code> หรือ <code>ป-RB9@0.20</code></p>
-    <div class="rebar">
-      <div class="form">
-        <div class="field-row">
-          <div class="field">
-            <label for="beam-tag">ป้ายคาน</label>
-            <input type="text" id="beam-tag" value="B1" autocomplete="off" spellcheck="false">
-          </div>
-          <div class="field">
-            <label for="beam-size">ขนาดคาน (ม.)</label>
-            <select id="beam-size">
-              <option value="0.15x0.30">0.15 × 0.30</option>
-              <option value="0.20x0.40" selected>0.20 × 0.40</option>
-              <option value="0.20x0.50">0.20 × 0.50</option>
-              <option value="0.25x0.60">0.25 × 0.60</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="db-grade">ชั้นคุณภาพ DB</label>
-            <select id="db-grade"></select>
-          </div>
-        </div>
-        <div class="field">
-          <label for="rb-top">เหล็กบน</label>
-          <input type="text" id="rb-top" value="2-DB12" autocomplete="off" spellcheck="false">
-          <div class="parse" id="parse-top"></div>
-        </div>
-        <div class="field">
-          <label for="rb-bot">เหล็กล่าง</label>
-          <input type="text" id="rb-bot" value="4-DB16" autocomplete="off" spellcheck="false">
-          <div class="parse" id="parse-bot"></div>
-        </div>
-        <div class="field">
-          <label for="rb-stir">เหล็กปลอก</label>
-          <input type="text" id="rb-stir" value="ป-RB6@0.15" autocomplete="off" spellcheck="false">
-          <div class="parse" id="parse-stir"></div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>คำกำกับ</th><th>อ่านได้ว่า</th><th>มาตรฐานวัสดุ</th><th style="text-align:right">น้ำหนัก กก./ม.</th></tr></thead>
-            <tbody id="rebar-table"></tbody>
-          </table>
-        </div>
-        <p class="note">น้ำหนักคำนวณจาก 0.00617 × d² กก./ม. (d เป็นมม.) ตรงกับตัวอย่างในชุดข้อมูล เช่น DB20 ยาว 10 ม. หนัก 24.66 กก. ระยะหุ้มคอนกรีตคาน 3 ซม. เป็นค่าที่อ้างกันทั่วไป ตารางที่มีผลบังคับอยู่ใน มยผ. 1101-64 ซึ่งยังไม่ได้เปิดอ่าน</p>
-      </div>
-      <div class="beam-frame">
-        <svg id="beam" viewBox="0 0 120 90" role="img" aria-label="รูปตัดคาน"></svg>
-      </div>
-    </div>
-  </section>
-
   <section class="block" aria-labelledby="clash-h">
     <h2 id="clash-h">รหัสเดียวกัน ความหมายต่างกันตามสาขา</h2>
-    <p class="block-intro">ในชุดแบบไทยชุดเดียว F1 บนแผ่น A หมายถึงวัสดุพื้น แต่บนแผ่น S หมายถึงฐานราก TBIM จึงเก็บรหัสป้ายเป็น <code>สาขา:รหัส</code> เสมอ และให้โปรแกรมเลือกความหมายจากชุดแผ่นที่ป้ายนั้นวางอยู่</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>รหัส</th><th>ID ในชุดข้อมูล</th><th>สาขา</th><th>ความหมาย</th><th>สถานะ</th></tr></thead>
-        <tbody id="clash-table"></tbody>
-      </table>
-    </div>
+    <p class="block-intro">F1 บนแผ่น A คือวัสดุพื้น แต่บนแผ่น S คือฐานราก TBIM จึงเก็บรหัสป้ายเป็น <code>สาขา:รหัส</code> และเลือกความหมายจากชุดแผ่นที่ป้ายวางอยู่</p>
+    <div class="table-wrap"><table><thead><tr><th>รหัส</th><th>ID ในชุดข้อมูล</th><th>สาขา</th><th>ความหมาย</th><th>สถานะ</th></tr></thead><tbody id="clash-table"></tbody></table></div>
   </section>
 
   <footer>
     <p id="footer-cat"></p>
-    <p>โครงการในแผ่นนี้สมมติขึ้นเพื่อสาธิตเท่านั้น ใช้ก่อสร้างไม่ได้ รูปทรงที่ติดสถานะ “ยังไม่ยืนยัน” เป็นค่าที่เสนอไว้ ต้องตรวจกับคู่มือ ASA และแผ่นสัญลักษณ์ของหน่วยงานราชการก่อนใช้จริง</p>
+    <p>โครงการ สถานที่ และเลขทะเบียนผู้ออกแบบในชุดแบบนี้สมมติขึ้นเพื่อสาธิต ใช้ก่อสร้างไม่ได้ รูปทรงสัญลักษณ์ส่วนใหญ่ยังเป็นค่าที่เสนอ (ดูสถานะของแต่ละรายการ) ต้องตรวจกับคู่มือ ASA แผ่นสัญลักษณ์ของหน่วยงาน และ CP 83-2 ของสิงคโปร์ก่อนใช้จริง</p>
   </footer>
 </div>
 
 <script type="application/json" id="tbim-data">__TBIM_DATA__</script>
 <script>
-(function () {
-  "use strict";
-  var DATA = JSON.parse(document.getElementById("tbim-data").textContent);
-  var SYM = DATA.symbols;
-  var STATUS_TH = { standard: "มาตรฐาน", agency: "มาตรฐานหน่วยงาน", observed_practice: "พบในแบบจริง", unverified: "ยังไม่ยืนยัน" };
-  var REGION_TH = { TH: "ไทย", GB: "จีน GB/T", JIS: "ญี่ปุ่น JIS", US_NCS: "สหรัฐฯ NCS", US_NECA: "สหรัฐฯ NECA", IEC: "IEC", ISO: "ISO", NFPA: "NFPA", DIN: "เยอรมนี DIN", AS: "ออสเตรเลีย AS", KS: "เกาหลี KS" };
-  var DISC_TH = { ARCH: "สถาปัตยกรรม", GENERAL: "ทั่วไป", STR: "โครงสร้าง", ELEC: "ไฟฟ้า", FA: "แจ้งเหตุเพลิงไหม้", SAN: "สุขาภิบาล", PLB: "ประปา", ELV: "ไฟฟ้ากระแสอ่อน", FP: "ดับเพลิง", HVAC: "ปรับอากาศ", CIVIL: "โยธา", SURVEY: "สำรวจ", GAS: "แก๊ส" };
-
-  var state = { region: "TH", prefix: "latin", selected: "TH.ARCH.SECTION_MARK", layers: { arch: true, elec: true, san: true } };
-
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-    });
-  }
-  function f(n) { return Math.round(n * 100) / 100; }
-
-  // Which region profile a symbol renders with: the chosen one if the record has it, else TH.
-  function profileFor(id) {
-    var rec = SYM[id];
-    if (!rec) return "TH";
-    for (var i = 0; i < rec.region_profiles.length; i++) {
-      if (rec.region_profiles[i].region === state.region) return state.region;
-    }
-    return "TH";
-  }
-
-  /* ---------- drawing helpers (all units = paper mm) ---------- */
-  var S = { ink: "var(--ink)", grid: "var(--grid)", elec: "var(--elec)", san: "var(--san)" };
-
-  function wrap(id, inner, box, label) {
-    var hit = '<rect class="hit" x="' + f(box[0]) + '" y="' + f(box[1]) + '" width="' + f(box[2]) + '" height="' + f(box[3]) + '" rx="1"/>';
-    var name = SYM[id] ? SYM[id].name.th : id;
-    return '<g class="sym" tabindex="0" role="button" data-id="' + id + '" aria-label="' + esc(label || name) + '">' + hit + inner + "</g>";
-  }
-  function text(x, y, s, size, opts) {
-    opts = opts || {};
-    return '<text x="' + f(x) + '" y="' + f(y) + '" font-size="' + size + '" text-anchor="' + (opts.anchor || "middle") +
-      '" dominant-baseline="central" style="fill:' + (opts.color || S.ink) + ';font-family:var(--font-draw);font-weight:' + (opts.weight || 400) + '"' +
-      (opts.rotate ? ' transform="rotate(' + opts.rotate + " " + f(x) + " " + f(y) + ')"' : "") + ">" + esc(s) + "</text>";
-  }
-  function line(x1, y1, x2, y2, w, color, dash) {
-    return '<line x1="' + f(x1) + '" y1="' + f(y1) + '" x2="' + f(x2) + '" y2="' + f(y2) + '" style="stroke:' + (color || S.ink) +
-      ";stroke-width:" + w + (dash ? ";stroke-dasharray:" + dash : "") + '"/>';
-  }
-  function circle(x, y, r, w, color, fill) {
-    return '<circle cx="' + f(x) + '" cy="' + f(y) + '" r="' + r + '" style="stroke:' + (color || S.ink) + ";stroke-width:" + w + ";fill:" + (fill || "var(--sheet)") + '"/>';
-  }
-
-  /* Grid bubble: TBIM default Ø10 (catalog geometry). */
-  function gridBubble(x, y, label) {
-    var inner = circle(x, y, 5, 0.3, S.ink) + text(x, y + 0.2, label, 4.2, { weight: 600 });
-    return wrap("TH.GENERAL.GRID_BUBBLE", inner, [x - 6, y - 6, 12, 12], "หัวเส้นพิกัด " + label);
-  }
-
-  /* Dimension terminator per region: oblique tick (TH default, GB) or arrow (JIS). */
-  function terminator(x, y, horizontal, dir) {
-    var reg = profileFor("TH.GENERAL.DIMENSION_CENTRE_CENTRE");
-    if (reg === "JIS") {
-      var L = 2.5, W = 0.8, p;
-      if (horizontal) p = [[x, y], [x - dir * L, y - W / 2], [x - dir * L, y + W / 2]];
-      else p = [[x, y], [x - W / 2, y - dir * L], [x + W / 2, y - dir * L]];
-      return '<polygon points="' + p.map(function (q) { return f(q[0]) + "," + f(q[1]); }).join(" ") + '" style="fill:' + S.ink + '"/>';
-    }
-    var d = 1.1;
-    return line(x - d, y + d, x + d, y - d, 0.45);
-  }
-  function dimH(x1, x2, y, label, extFrom) {
-    var inner = line(x1 - 2, y, x2 + 2, y, 0.18) +
-      line(x1, extFrom, x1, y - 1.5, 0.13) + line(x2, extFrom, x2, y - 1.5, 0.13) +
-      terminator(x1, y, true, -1) + terminator(x2, y, true, 1) +
-      text((x1 + x2) / 2, y - 2.2, label, 2.8);
-    return wrap("TH.GENERAL.DIMENSION_CENTRE_CENTRE", inner, [x1, y - 4.5, x2 - x1, 6], "ระยะกึ่งกลางถึงกึ่งกลาง " + label + " ม.");
-  }
-  function dimV(y1, y2, x, label, extFrom) {
-    var inner = line(x, y1 - 2, x, y2 + 2, 0.18) +
-      line(extFrom, y1, x - 1.5, y1, 0.13) + line(extFrom, y2, x - 1.5, y2, 0.13) +
-      terminator(x, y1, false, -1) + terminator(x, y2, false, 1) +
-      text(x - 2.2, (y1 + y2) / 2, label, 2.8, { rotate: -90 });
-    return wrap("TH.GENERAL.DIMENSION_CENTRE_CENTRE", inner, [x - 4.5, y1, 6, y2 - y1], "ระยะกึ่งกลางถึงกึ่งกลาง " + label + " ม.");
-  }
-
-  /* Section mark at one end of the cut; view direction = up (north). */
-  function sectionMark(x, y, id, sheet) {
-    var reg = profileFor("TH.ARCH.SECTION_MARK");
-    var inner = "";
-    if (reg === "US_NCS") {
-      var r = 6.35, tipY = y - 11, a = Math.acos(r / 11), sx = r * Math.sin(a), sy = r * Math.cos(a);
-      inner += '<path d="M ' + f(x) + " " + f(tipY) + " L " + f(x - sx) + " " + f(y - sy) + " A " + r + " " + r + " 0 0 1 " + f(x + sx) + " " + f(y - sy) + ' Z" style="fill:' + S.ink + '"/>';
-      inner += circle(x, y, r, 0.35) + line(x - r, y, x + r, y, 0.25);
-      inner += text(x, y - 2.8, id, 3.6, { weight: 700 }) + text(x, y + 3, sheet, 2.6);
-      return wrap("TH.ARCH.SECTION_MARK", inner, [x - 7.5, y - 12, 15, 19.5], "สัญลักษณ์รูปตัด " + id + " แผ่น " + sheet);
-    }
-    if (reg === "GB") {
-      inner += circle(x, y, 5, 0.25) + line(x - 5, y, x + 5, y, 0.25);
-      inner += line(x - 6.5, y + 5, x + 6.5, y + 5, 0.7);
-      inner += text(x, y - 2.3, id, 3.2, { weight: 700 }) + text(x, y + 2.4, sheet, 2.2);
-      return wrap("TH.ARCH.SECTION_MARK", inner, [x - 7.5, y - 6.5, 15, 13], "สัญลักษณ์รูปตัด " + id + " แผ่น " + sheet);
-    }
-    inner += '<polygon points="' + f(x) + "," + f(y - 9.5) + " " + f(x - 3.2) + "," + f(y - 3.9) + " " + f(x + 3.2) + "," + f(y - 3.9) + '" style="fill:' + S.ink + '"/>';
-    inner += circle(x, y, 5, 0.3) + line(x - 5, y, x + 5, y, 0.25);
-    inner += text(x, y - 2.3, id, 3.2, { weight: 700 }) + text(x, y + 2.4, sheet, 2.2);
-    return wrap("TH.ARCH.SECTION_MARK", inner, [x - 6.5, y - 10.5, 13, 17], "สัญลักษณ์รูปตัด " + id + " แผ่น " + sheet);
-  }
-
-  /* Level mark: TH = prefix + signed metres, 2 d.p.; GB = open triangle + 3 d.p. */
-  function levelMark(x, y, value, caption) {
-    var reg = profileFor("TH.ARCH.LEVEL_MARK");
-    var inner;
-    if (reg === "GB") {
-      var v = (value >= 0 ? (value === 0 ? "±" : "+") : "-") + Math.abs(value).toFixed(3);
-      inner = '<polygon points="' + f(x) + "," + f(y) + " " + f(x - 1.6) + "," + f(y - 1.6) + " " + f(x + 1.6) + "," + f(y - 1.6) + '" style="fill:none;stroke:' + S.ink + ';stroke-width:0.25"/>' +
-        line(x - 1.6, y - 1.6, x + 14, y - 1.6, 0.25) + text(x + 1.2, y - 3.6, v, 2.6, { anchor: "start" });
-      return wrap("TH.ARCH.LEVEL_MARK", inner, [x - 2.5, y - 6, 18, 7], "ค่าระดับ " + v);
-    }
-    var t = "EL. " + (value >= 0 ? "+" : "-") + Math.abs(value).toFixed(2);
-    inner = text(x, y - 5.4, caption, 2.4, { anchor: "start", color: "var(--ink-2)" }) +
-      text(x, y - 2.2, t, 2.8, { anchor: "start", weight: 600 }) + line(x, y - 0.4, x + 15, y - 0.4, 0.2);
-    return wrap("TH.ARCH.LEVEL_MARK", inner, [x - 1, y - 7.4, 26, 8], caption + " " + t);
-  }
-
-  function roomTag(x, y, name, finish, level) {
-    var inner = text(x, y - 3.4, name, 3.4, { weight: 600 }) + text(x, y + 0.6, finish, 2.5) +
-      text(x, y + 3.8, (level >= 0 ? "+" : "-") + Math.abs(level).toFixed(2), 2.5);
-    return wrap("TH.ARCH.ROOM_TAG", inner, [x - 10, y - 6.2, 20, 11.8], "ป้ายชื่อห้อง " + name);
-  }
-
-  function openingTag(kind, x, y, n) {
-    var isDoor = kind === "door";
-    var pre = state.prefix === "thai" ? (isDoor ? "ป" : "น") : (isDoor ? "D" : "W");
-    var id = isDoor ? "TH.ARCH.DOOR_TAG" : "TH.ARCH.WINDOW_TAG";
-    var inner = isDoor
-      ? '<rect x="' + f(x - 3.6) + '" y="' + f(y - 2.3) + '" width="7.2" height="4.6" rx="2.3" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.25"/>'
-      : '<rect x="' + f(x - 3.6) + '" y="' + f(y - 2.3) + '" width="7.2" height="4.6" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.25"/>';
-    inner += text(x, y + 0.15, pre + n, 2.6, { weight: 600 });
-    return wrap(id, inner, [x - 4.4, y - 3.1, 8.8, 6.2], (isDoor ? "ป้ายรหัสประตู " : "ป้ายรหัสหน้าต่าง ") + pre + n);
-  }
-
-  function hingedDoor(hx, hy, lx, ly, ax, ay, sweep) {
-    var r = Math.hypot(lx - hx, ly - hy);
-    var inner = line(hx, hy, lx, ly, 0.35) +
-      '<path d="M ' + f(ax) + " " + f(ay) + " A " + f(r) + " " + f(r) + " 0 0 " + sweep + " " + f(lx) + " " + f(ly) + '" style="fill:none;stroke:' + S.ink + ';stroke-width:0.18"/>';
-    var bx = Math.min(hx, lx, ax), by = Math.min(hy, ly, ay);
-    return wrap("TH.ARCH.DOOR_HINGED", inner, [bx - 0.5, by - 0.5, Math.max(hx, lx, ax) - bx + 1, Math.max(hy, ly, ay) - by + 1], "ประตูบานเปิด");
-  }
-  function slidingWindowH(x1, x2, y) {
-    var m = (x1 + x2) / 2, inner =
-      '<rect x="' + f(x1) + '" y="' + f(y - 2) + '" width="' + f(x2 - x1) + '" height="4" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.18"/>' +
-      line(x1, y - 0.6, m + 2, y - 0.6, 0.3) + line(m - 2, y + 0.6, x2, y + 0.6, 0.3);
-    return wrap("TH.ARCH.WINDOW_SLIDING", inner, [x1, y - 2.5, x2 - x1, 5], "หน้าต่างบานเลื่อน");
-  }
-  function slidingWindowV(y1, y2, x) {
-    var m = (y1 + y2) / 2, inner =
-      '<rect x="' + f(x - 2) + '" y="' + f(y1) + '" width="4" height="' + f(y2 - y1) + '" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.18"/>' +
-      line(x - 0.6, y1, x - 0.6, m + 2, 0.3) + line(x + 0.6, m - 2, x + 0.6, y2, 0.3);
-    return wrap("TH.ARCH.WINDOW_SLIDING", inner, [x - 2.5, y1, 5, y2 - y1], "หน้าต่างบานเลื่อน");
-  }
-  function awningWindowH(x1, x2, y) {
-    var inner =
-      '<rect x="' + f(x1) + '" y="' + f(y - 2) + '" width="' + f(x2 - x1) + '" height="4" style="fill:var(--sheet);stroke:' + S.ink + ';stroke-width:0.18"/>' +
-      line(x1, y, x2, y, 0.3) + line(x1, y, (x1 + x2) / 2, y + 4.5, 0.15, S.ink, "0.8 0.6") + line((x1 + x2) / 2, y + 4.5, x2, y, 0.15, S.ink, "0.8 0.6");
-    return wrap("TH.ARCH.WINDOW_AWNING", inner, [x1, y - 2.5, x2 - x1, 7.5], "หน้าต่างบานกระทุ้ง");
-  }
-
-  function wallRect(id, x, y, w, h, pattern) {
-    var inner = '<rect x="' + f(x) + '" y="' + f(y) + '" width="' + f(w) + '" height="' + f(h) + '" style="fill:url(#' + pattern + ');stroke:' + S.ink + ';stroke-width:0.35"/>';
-    return wrap(id, inner, [x, y, w, h], SYM[id].name.th);
-  }
-
-  function northArrow(x, y) {
-    var inner = '<path d="M ' + f(x - 12) + " " + f(y) + " A 12 12 0 1 0 " + f(x + 12) + " " + f(y) + " A 12 12 0 1 0 " + f(x - 12) + " " + f(y) + ' Z" style="fill:none;stroke:' + S.ink + ';stroke-width:0.25"/>' +
-      '<path d="M ' + f(x - 1.5) + " " + f(y + 12) + " L " + f(x) + " " + f(y - 12) + " L " + f(x + 1.5) + " " + f(y + 12) + ' Z" style="fill:' + S.ink + '"/>' +
-      text(x, y - 15, "N", 3.6, { weight: 700 });
-    return wrap("TH.GENERAL.NORTH_ARROW", inner, [x - 13, y - 18, 26, 31], "ลูกศรทิศเหนือ");
-  }
-
-  function elevationMark(x, y) {
-    var r = 6.5, inner = circle(x, y, r, 0.3) + line(x - r, y, x + r, y, 0.2) + line(x, y - r, x, y + r, 0.2);
-    var q = [["1", 0, -1], ["2", 1, 0], ["3", 0, 1], ["4", -1, 0]];
-    q.forEach(function (d) {
-      var tx = x + d[1] * 9.5, ty = y + d[2] * 9.5;
-      inner += '<polygon points="' + (d[1] === 0
-        ? f(x - 1.6) + "," + f(y + d[2] * r) + " " + f(x + 1.6) + "," + f(y + d[2] * r) + " " + f(x) + "," + f(y + d[2] * (r + 2.6))
-        : f(x + d[1] * r) + "," + f(y - 1.6) + " " + f(x + d[1] * r) + "," + f(y + 1.6) + " " + f(x + d[1] * (r + 2.6)) + "," + f(y)) +
-        '" style="fill:' + S.ink + '"/>';
-      inner += text(tx + d[1] * 1.5, ty + d[2] * 1.2, d[0], 2.6, { weight: 600 });
-    });
-    inner += text(x - 3.2, y - 3.2, "A-05", 1.6) + text(x + 3.2, y + 3.2, "A-05", 1.6);
-    return wrap("TH.ARCH.ELEVATION_MARK", inner, [x - 13, y - 13, 26, 26], "สัญลักษณ์รูปด้าน 1 ถึง 4 แผ่น A-05");
-  }
-
-  /* MEP symbols from catalog geometry */
-  function receptacle(x, y, rot) {
-    var inner = '<g transform="translate(' + f(x) + " " + f(y) + ") rotate(" + (rot || 0) + ')">' +
-      '<path d="' + SYM["TH.ELEC.RECEPTACLE_DUPLEX"].geometry.svg_path + '" style="fill:var(--sheet);stroke:' + S.elec + ';stroke-width:0.3"/></g>';
-    return wrap("TH.ELEC.RECEPTACLE_DUPLEX", inner, [x - 3, y - 3, 6, 6], "เต้ารับคู่");
-  }
-  function switch1(x, y) {
-    return wrap("TH.ELEC.SWITCH_1WAY", text(x, y, "S", 2.8, { color: S.elec, weight: 700 }), [x - 2, y - 2, 4, 4], "สวิตช์ทางเดียว");
-  }
-  function downlight(x, y) {
-    return wrap("TH.ELEC.LUMINAIRE_DOWNLIGHT", circle(x, y, 3, 0.3, S.elec) + circle(x, y, 0.8, 0, S.elec, S.elec), [x - 3.6, y - 3.6, 7.2, 7.2], "โคมดาวน์ไลท์");
-  }
-  function panelDB(x, y) {
-    var inner = '<g transform="translate(' + f(x) + " " + f(y) + ') rotate(90)">' +
-      '<path d="M -5 -2 H 5 V 2 H -5 Z" style="fill:var(--sheet);stroke:' + S.elec + ';stroke-width:0.3"/>' +
-      '<path d="M -5 2 L 5 -2 L 5 2 Z" style="fill:' + S.elec + '"/></g>' + text(x + 4.5, y, "DB", 2.4, { anchor: "start", color: S.elec, weight: 600 });
-    return wrap("TH.ELEC.PANEL_DB", inner, [x - 2.5, y - 5.5, 12, 11], "ตู้ย่อย DB");
-  }
-  function smoke(x, y) {
-    return wrap("TH.FA.SMOKE_DETECTOR", circle(x, y, 3, 0.3, S.elec) + text(x, y + 0.1, "SD", 2.2, { color: S.elec, weight: 600 }), [x - 3.6, y - 3.6, 7.2, 7.2], "อุปกรณ์ตรวจจับควัน");
-  }
-  function floorDrain(x, y) {
-    var inner = '<clipPath id="fdclip"><circle cx="' + f(x) + '" cy="' + f(y) + '" r="3"/></clipPath>' + circle(x, y, 3, 0.3, S.san) + '<g clip-path="url(#fdclip)">';
-    for (var i = -2; i <= 2; i++) inner += line(x + i * 1.2, y - 3, x + i * 1.2, y + 3, 0.15, S.san) + line(x - 3, y + i * 1.2, x + 3, y + i * 1.2, 0.15, S.san);
-    inner += "</g>" + text(x, y + 5, "FD", 2.2, { color: S.san, weight: 600 });
-    return wrap("TH.SAN.FLOOR_DRAIN", inner, [x - 3.6, y - 3.6, 7.2, 10.2], "ท่อระบายน้ำพื้น FD");
-  }
-  function cleanout(x, y) {
-    return wrap("TH.SAN.CLEANOUT", circle(x, y, 2, 0.3, S.san) + text(x, y + 3.9, "CO", 2.2, { color: S.san, weight: 600 }), [x - 2.6, y - 2.6, 5.2, 8.4], "ที่เปิดล้าง CO");
-  }
-
-  /* ---------- the sheet ---------- */
-  var GX = { 1: 70, 2: 150, 3: 230 }, GY = { A: 50, B: 110, C: 170 };
-
-  function drawSheet() {
-    var out = [];
-    out.push('<defs>' +
-      '<pattern id="hatch-full" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.6" height="1.6" style="fill:var(--sheet)"/><line x1="0" y1="0" x2="0" y2="1.6" style="stroke:var(--ink);stroke-width:0.22"/></pattern>' +
-      '<pattern id="hatch-half" width="1.3" height="1.3" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="1.3" height="1.3" style="fill:var(--sheet)"/><line x1="0" y1="0" x2="0" y2="1.3" style="stroke:var(--ink);stroke-width:0.16"/></pattern>' +
-      "</defs>");
-    // Sheet border
-    out.push('<rect x="0" y="0" width="340" height="220" style="fill:var(--sheet)"/>');
-    out.push('<rect x="6" y="6" width="328" height="208" style="fill:none;stroke:var(--ink);stroke-width:0.6"/>');
-
-    var arch = [];
-    // Grid lines
-    [1, 2, 3].forEach(function (k) {
-      arch.push(wrap("TH.GENERAL.GRID_LINE", line(GX[k], 25, GX[k], 182, 0.15, S.grid, "6 1.2 0.8 1.2"), [GX[k] - 1, 26, 2, 155], "เส้นศูนย์กลางพิกัด " + k));
-    });
-    ["A", "B", "C"].forEach(function (k) {
-      arch.push(wrap("TH.GENERAL.GRID_LINE", line(33, GY[k], 240, GY[k], 0.15, S.grid, "6 1.2 0.8 1.2"), [34, GY[k] - 1, 205, 2], "เส้นศูนย์กลางพิกัด " + k));
-    });
-    // Section cut line (thin chain across, thick ends)
-    arch.push(line(18, 140, 245, 140, 0.13, S.grid, "3 1 0.6 1"));
-    arch.push(line(18, 140, 30, 140, 0.7) + line(233, 140, 245, 140, 0.7));
-
-    // Exterior walls (full brick 0.20 m -> 4 mm) with openings
-    var ext = "TH.ARCH.HATCH_WALL_BRICK_FULL", intw = "TH.ARCH.HATCH_WALL_BRICK_HALF";
-    [[68, 94], [126, 232]].forEach(function (s) { arch.push(wallRect(ext, s[0], 48, s[1] - s[0], 4, "hatch-full")); });
-    [[68, 100], [118, 200], [216, 232]].forEach(function (s) { arch.push(wallRect(ext, s[0], 168, s[1] - s[0], 4, "hatch-full")); });
-    arch.push(wallRect(ext, 68, 52, 4, 116, "hatch-full"));
-    [[52, 64], [96, 168]].forEach(function (s) { arch.push(wallRect(ext, 228, s[0], 4, s[1] - s[0], "hatch-full")); });
-    // Interior walls (half brick 0.10 m -> 2 mm)
-    [[52, 86], [102, 140], [156, 168]].forEach(function (s) { arch.push(wallRect(intw, 149, s[0], 2, s[1] - s[0], "hatch-half")); });
-    arch.push(wallRect(intw, 151, 109, 77, 2, "hatch-half"));
-    // Columns 0.20 x 0.20
-    [1, 2, 3].forEach(function (i) { ["A", "B", "C"].forEach(function (j) {
-      arch.push('<rect x="' + (GX[i] - 2) + '" y="' + (GY[j] - 2) + '" width="4" height="4" style="fill:var(--ink)"/>');
-    }); });
-
-    // Openings
-    arch.push(hingedDoor(100, 168, 100, 150, 118, 168, 0));
-    arch.push(hingedDoor(151, 86, 167, 86, 151, 102, 0));
-    arch.push(hingedDoor(151, 156, 167, 156, 151, 140, 1));
-    arch.push(slidingWindowH(94, 126, 50));
-    arch.push(slidingWindowV(64, 96, 230));
-    arch.push(awningWindowH(200, 216, 170));
-
-    // Tags
-    arch.push(openingTag("door", 109, 181, 1));
-    arch.push(openingTag("door", 141, 94, 2));
-    arch.push(openingTag("door", 141, 148, 3));
-    arch.push(openingTag("window", 110, 60, 1));
-    arch.push(openingTag("window", 219, 80, 2));
-    arch.push(openingTag("window", 208, 161, 3));
-    arch.push(roomTag(110, 124, "ห้องนั่งเล่น", "F1,C1", 0.20));
-    arch.push(roomTag(190, 80, "ห้องนอน", "F2,C1", 0.20));
-    arch.push(roomTag(185, 134, "ห้องน้ำ", "F3,C2", 0.15));
-
-    // Grid bubbles and dimensions
-    [1, 2, 3].forEach(function (k) { arch.push(gridBubble(GX[k], 20, String(k))); });
-    ["A", "B", "C"].forEach(function (k) { arch.push(gridBubble(28, GY[k], k)); });
-    arch.push(dimH(70, 150, 36, "4.00", 27));
-    arch.push(dimH(150, 230, 36, "4.00", 27));
-    arch.push(dimV(50, 110, 46, "3.00", 35));
-    arch.push(dimV(110, 170, 46, "3.00", 35));
-
-    // Reference marks
-    arch.push(sectionMark(13, 140, "A", "A-06"));
-    arch.push(sectionMark(252, 140, "A", "A-06"));
-    arch.push(elevationMark(257, 186));
-    arch.push(northArrow(257, 36));
-    arch.push(levelMark(52, 188, 0, "ระดับพื้นดินเดิม"));
-
-    // Drawing title
-    arch.push(wrap("TH.GENERAL.DRAWING_TITLE",
-      text(150, 199, "แปลนพื้นชั้น 1", 4.6, { weight: 700 }) + line(128, 203, 172, 203, 0.4) + text(150, 206.6, "มาตราส่วน 1:50", 2.8),
-      [120, 193, 60, 17], "ชื่อรูป แปลนพื้นชั้น 1 มาตราส่วน 1:50"));
-
-    // Title block
-    arch.push(titleBlock());
-
-    out.push('<g id="L-arch"' + (state.layers.arch ? "" : ' style="display:none"') + ">" + arch.join("") + "</g>");
-
-    var elec = [];
-    elec.push(receptacle(73.5, 100, 90));
-    elec.push(receptacle(84, 166.5, 0));
-    elec.push(receptacle(226.5, 100, 90));
-    elec.push(switch1(123, 162));
-    elec.push(switch1(156, 80));
-    elec.push(switch1(145, 162));
-    elec.push(downlight(110, 84));
-    elec.push(downlight(110, 152));
-    elec.push(downlight(205, 96));
-    elec.push(downlight(170, 150));
-    elec.push(panelDB(76, 150));
-    elec.push(smoke(176, 96));
-    out.push('<g id="L-elec"' + (state.layers.elec ? "" : ' style="display:none"') + ">" + elec.join("") + "</g>");
-
-    var san = [];
-    san.push(floorDrain(203, 146));
-    san.push(cleanout(222, 158));
-    out.push('<g id="L-san"' + (state.layers.san ? "" : ' style="display:none"') + ">" + san.join("") + "</g>");
-
-    document.getElementById("sheet").innerHTML = out.join("");
-    markSelected();
-  }
-
-  function titleBlock() {
-    var x = 278, w = 56, rows = [
-      ["REVISION  ครั้งที่ / รายการ / วันที่", "—"],
-      ["PROJECT  โครงการ", "บ้านพักอาศัย 1 ชั้น (ตัวอย่าง)"],
-      ["LOCATION  สถานที่", "— (สมมติ)"],
-      ["OWNER  เจ้าของ", "— (สมมติ)"],
-      ["ARCHITECT  สถาปนิก", "ภ-สถ XXXXX"],
-      ["STRUCTURAL ENGINEER", "ภย. XXXXX"],
-      ["DRAWN BY  ผู้เขียนแบบ", "TBIM"],
-      ["DRAWING TITLE  ชื่อแบบ", "แปลนพื้นชั้น 1"],
-      ["SCALE  มาตราส่วน", "1:50"],
-      ["DATE  วันที่", "27 ก.ย. 2569"]
-    ];
-    var inner = '<rect x="' + x + '" y="6" width="' + w + '" height="208" style="fill:var(--sheet);stroke:var(--ink);stroke-width:0.4"/>';
-    var y = 6;
-    rows.forEach(function (r, i) {
-      var h = i === 0 ? 22 : 15;
-      inner += text(x + 2, y + 3.4, r[0], 1.9, { anchor: "start", color: "var(--ink-2)" });
-      inner += text(x + 2, y + (i === 0 ? 9 : 9.2), r[1], 2.9, { anchor: "start", weight: i === 7 ? 700 : 400 });
-      y += h;
-      inner += line(x, y, x + w, y, 0.2);
-    });
-    inner += text(x + 2, y + 3.6, "หมายเหตุ: ห้ามวัดระยะจากแบบ", 2.1, { anchor: "start" });
-    inner += text(x + 2, y + 6.6, "ให้ตรวจสอบระยะที่หน้างาน", 2.1, { anchor: "start" });
-    var tb = wrap("TH.GENERAL.TITLE_BLOCK", inner, [x, 6, w, 170], "กรอบชื่อแบบ");
-    var sy = 184;
-    var sheetNo = line(x, sy - 2, x + w, sy - 2, 0.4) +
-      text(x + 2, sy + 2, "DRAWING NO.  แผ่นที่", 1.9, { anchor: "start", color: "var(--ink-2)" }) +
-      text(x + w / 2, sy + 12, "A1-01", 9, { weight: 700 }) +
-      text(x + w - 2, sy + 24, "NO./TOTAL 1/1", 2, { anchor: "end", color: "var(--ink-2)" });
-    return tb + wrap("TH.GENERAL.SHEET_NUMBER", sheetNo, [x, sy - 2, w, 30], "เลขที่แผ่น A1-01");
-  }
-
-  function markSelected() {
-    var nodes = document.querySelectorAll("#sheet .sym");
-    for (var i = 0; i < nodes.length; i++) {
-      nodes[i].classList.toggle("selected", nodes[i].getAttribute("data-id") === state.selected);
-    }
-    var chips = document.querySelectorAll(".chip");
-    for (var j = 0; j < chips.length; j++) chips[j].setAttribute("aria-pressed", chips[j].getAttribute("data-id") === state.selected ? "true" : "false");
-  }
-
-  /* ---------- inspector ---------- */
-  function statusBadge(st) {
-    return '<span class="badge status ' + st + '">' + esc(STATUS_TH[st] || st) + "</span>";
-  }
-  function renderInspector() {
-    var rec = SYM[state.selected];
-    var el = document.getElementById("inspector");
-    if (!rec) { el.innerHTML = ""; return; }
-    var used = profileFor(rec.id);
-    var h = '<div class="insp-head"><div class="insp-id">' + esc(rec.id) + '</div><div class="insp-name">' + esc(rec.name.th) +
-      '</div><div class="insp-en">' + esc(rec.name.en) + "</div></div>";
-    h += '<div class="badges">' + statusBadge(rec.status) + '<span class="badge">' + esc(DISC_TH[rec.discipline] || rec.discipline) + '</span><span class="badge mono">' + esc(rec.category) + "</span>" +
-      (rec.abbreviations || []).map(function (a) { return '<span class="badge mono">' + esc(a) + "</span>"; }).join("") + "</div>";
-    var sd = DATA.status_definitions[rec.status];
-    if (sd) h += '<p class="status-note">' + esc(sd.th) + "</p>";
-    h += '<div class="kv"><span>คำอธิบาย</span><p>' + esc(rec.description.th) + "</p></div>";
-    var g = rec.geometry || {};
-    if (g.redraw_description) {
-      var size = g.nominal_size_mm ? " · ขนาด " + g.nominal_size_mm.w + "×" + g.nominal_size_mm.h + " มม. บนกระดาษ (" + esc(g.size_basis) + ")" : "";
-      h += '<div class="kv"><span>วิธีวาด' + size + '</span><p>' + esc(g.redraw_description.th) + "</p></div>";
-    }
-    if (g.svg_path) h += '<div class="kv"><span>SVG path (' + esc(g.svg_basis || "") + ')</span><div class="ifc">' + esc(g.svg_path) + "</div></div>";
-
-    h += '<div class="kv"><span>รูปแบบตามภูมิภาค · แผ่นนี้ใช้ ' + esc(used) + '</span><div class="profiles">';
-    rec.region_profiles.forEach(function (p) {
-      var note = p.geometry_notes ? (p.geometry_notes.th || p.geometry_notes.en) : "";
-      var stds = (p.standards || []).map(function (s) { return s.code; }).join(", ");
-      h += '<div class="profile' + (p.region === used ? " active" : "") + '"><div class="row"><span class="region">' + esc(p.region) + " · " + esc(REGION_TH[p.region] || "") +
-        "</span>" + (p.status ? statusBadge(p.status) : "") + "</div>" + (note ? "<div>" + esc(note) + "</div>" : "") +
-        (stds ? '<div class="insp-id">' + esc(stds) + "</div>" : "") + "</div>";
-    });
-    if (state.region !== used) h += '<p class="status-note">ระเบียนนี้ยังไม่มีข้อมูลของ ' + esc(REGION_TH[state.region] || state.region) + " จึงใช้รูปแบบไทยแทน</p>";
-    h += "</div></div>";
-
-    var m = rec.ifc_mapping;
-    if (m) {
-      h += '<div class="kv"><span>ส่งออกเป็น IFC</span><div class="ifc">' +
-        esc(m.entity) + (m.predefined_type ? "\nPredefinedType = " + esc(m.predefined_type) : "") +
-        (m.object_type ? "\nObjectType     = " + esc(m.object_type) : "") +
-        (m.host_relation ? "\nผูกกับชิ้นส่วน  = " + esc(m.host_relation) : "") +
-        (m.host_ifc_classes && m.host_ifc_classes.length ? " → " + esc(m.host_ifc_classes.join(", ")) : "") + "</div></div>";
-    }
-    if (rec.notation_grammar && rec.notation_grammar.length) {
-      h += '<div class="kv"><span>รูปแบบข้อความ (regex)</span><div class="ifc">' + rec.notation_grammar.map(function (n) {
-        return esc(n.name) + "\n" + esc(n.regex) + "\nเช่น " + esc((n.examples || []).join(", "));
-      }).join("\n\n") + "</div></div>";
-    }
-    var srcs = rec.sources && rec.sources.length ? rec.sources : [];
-    rec.region_profiles.forEach(function (p) { if (p.region === "TH") srcs = srcs.concat(p.sources || []); });
-    var seen = {};
-    srcs = srcs.filter(function (s) { if (!s.url || seen[s.url]) return false; seen[s.url] = 1; return true; }).slice(0, 4);
-    if (srcs.length) {
-      h += '<div class="kv"><span>แหล่งอ้างอิง</span><ul class="sources">' + srcs.map(function (s) {
-        return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title || s.url) + "</a> <span class=\"insp-id\">(" + esc(s.evidence || "") + ")</span></li>";
-      }).join("") + "</ul></div>";
-    } else {
-      h += '<div class="kv"><span>แหล่งอ้างอิง</span><p>ยังไม่มี (general practice, unverified)</p></div>';
-    }
-    h += "<details><summary>ดูระเบียน JSON</summary><pre>" + esc(JSON.stringify(rec, null, 2)) + "</pre></details>";
-    el.innerHTML = h;
-  }
-
-  function select(id) {
-    if (!SYM[id]) return;
-    state.selected = id;
-    markSelected();
-    renderInspector();
-  }
-
-  /* ---------- legend chips ---------- */
-  function renderChips() {
-    var ids = Object.keys(SYM).filter(function (id) { return SYM[id].discipline !== "STR"; });
-    var counts = {};
-    ids.forEach(function (id) { counts[SYM[id].status] = (counts[SYM[id].status] || 0) + 1; });
-    document.getElementById("legend-key").innerHTML = ["standard", "agency", "observed_practice", "unverified"].map(function (st) {
-      return '<span><i class="dot ' + st + '"></i>' + STATUS_TH[st] + " " + (counts[st] || 0) + "</span>";
-    }).join("");
-    document.getElementById("chips").innerHTML = ids.map(function (id) {
-      return '<button type="button" class="chip" data-id="' + id + '" aria-pressed="false"><i class="dot ' + SYM[id].status + '"></i>' + esc(SYM[id].name.th) + "</button>";
-    }).join("");
-  }
-
-  /* ---------- rebar parser + beam section ---------- */
-  function grammar(id) { return SYM[id].notation_grammar; }
-  function parseBar(s) {
-    var gs = grammar("TH.STR.REBAR_CALLOUT");
-    for (var i = 0; i < gs.length; i++) {
-      var m = new RegExp(gs[i].regex).exec(s.trim());
-      if (m) return { count: m[1] ? parseInt(m[1], 10) : null, type: m[2], d: parseInt(m[3], 10), spacing: m[4] ? normSpacing(parseFloat(m[4]), m[5]) : null };
-    }
-    return null;
-  }
-  function parseStirrup(s) {
-    var gs = grammar("TH.STR.STIRRUP_CALLOUT");
-    for (var i = 0; i < gs.length; i++) {
-      var m = new RegExp(gs[i].regex).exec(s.trim());
-      if (m) return { type: m[1], d: parseInt(m[2], 10), spacing: normSpacing(parseFloat(m[3]), m[4]) };
-    }
-    return null;
-  }
-  function normSpacing(v, unit) {
-    if (unit && /ซม|cm/.test(unit)) return v / 100;
-    if (!unit && v >= 1) return v / 100;
-    return v;
-  }
-  function rebarInfo(type) {
-    for (var i = 0; i < DATA.rebar.length; i++) if (DATA.rebar[i].code === type) return DATA.rebar[i];
-    return null;
-  }
-  function kgm(d) { return 0.00617 * d * d; }
-
-  function renderRebar() {
-    var tag = document.getElementById("beam-tag").value.trim() || "B1";
-    var size = document.getElementById("beam-size").value.split("x").map(parseFloat);
-    var grade = document.getElementById("db-grade").value;
-    var inputs = [
-      { el: "rb-top", out: "parse-top", kind: "bar", pos: "top" },
-      { el: "rb-bot", out: "parse-bot", kind: "bar", pos: "bottom" },
-      { el: "rb-stir", out: "parse-stir", kind: "stirrup" }
-    ];
-    var res = {}, rows = [];
-    inputs.forEach(function (it) {
-      var input = document.getElementById(it.el), raw = input.value;
-      var p = it.kind === "bar" ? parseBar(raw) : parseStirrup(raw);
-      var out = document.getElementById(it.out);
-      if (it.kind === "bar" && p && !p.count) p = null; // a main bar callout needs a count here
-      if (!p) {
-        input.classList.add("bad");
-        out.className = "parse err";
-        out.textContent = it.kind === "bar" ? "อ่านคำกำกับนี้ไม่ได้ ลองเขียนแบบ 4-DB16" : "อ่านคำกำกับนี้ไม่ได้ ลองเขียนแบบ ป-RB6@0.15";
-        return;
-      }
-      input.classList.remove("bad");
-      res[it.pos || "stir"] = p;
-      var info = rebarInfo(p.type);
-      var std = info && info.standards && info.standards[0] ? info.standards[0].code : "";
-      var gradeTxt = p.type === "DB" ? grade : "SR24";
-      var meaning;
-      if (it.kind === "bar") {
-        meaning = (it.pos === "top" ? "เหล็กบน " : "เหล็กล่าง ") + p.count + " เส้น " + (info ? info.meaning.th : p.type) + " Ø" + p.d + " มม.";
-        rows.push([raw.trim(), meaning, std + " · " + gradeTxt, f(p.count * kgm(p.d)).toFixed(2)]);
-      } else {
-        var perM = Math.ceil(1 / p.spacing);
-        meaning = "เหล็กปลอก " + (info ? info.meaning.th : p.type) + " Ø" + p.d + " มม. ทุก " + p.spacing.toFixed(2) + " ม. (≈" + perM + " ตัว/ม.)";
-        var per = 2 * ((size[0] - 0.06) + (size[1] - 0.06)) + 0.12;
-        rows.push([raw.trim(), meaning, std + " · " + gradeTxt, f(perM * per * kgm(p.d)).toFixed(2)]);
-      }
-      out.className = "parse";
-      out.textContent = "→ " + meaning;
-    });
-    document.getElementById("rebar-table").innerHTML = rows.map(function (r) {
-      return "<tr><td class=\"mono\">" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td><td>" + esc(r[2]) + "</td><td class=\"num\">" + esc(r[3]) + "</td></tr>";
-    }).join("");
-    drawBeam(tag, size, res);
-  }
-
-  function drawBeam(tag, size, res) {
-    // Scale 1:10 in "paper mm" -> 1 m = 100 units; viewBox 120 x 90 sized per beam
-    var k = 100, b = size[0] * k, h = size[1] * k;
-    var vbW = b + 70, vbH = h + 30;
-    var x0 = 12, y0 = 8, c = 3; // cover 3 cm -> 3 units
-    var svg = [];
-    svg.push('<rect x="0" y="0" width="' + vbW + '" height="' + vbH + '" style="fill:var(--sheet)"/>');
-    var beamInner = '<rect x="' + x0 + '" y="' + y0 + '" width="' + b + '" height="' + h + '" style="fill:url(#conc);stroke:var(--ink);stroke-width:0.5"/>';
-    svg.push('<defs><pattern id="conc" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" style="fill:var(--sheet)"/><circle cx="1" cy="1" r="0.25" style="fill:var(--grid)"/><circle cx="3" cy="2.6" r="0.18" style="fill:var(--grid)"/></pattern></defs>');
-    var st = res.stir, sd = st ? st.d / 10 : 0.6;
-    var ix = x0 + c, iy = y0 + c, iw = b - 2 * c, ih = h - 2 * c;
-    var stirrup = '<rect x="' + f(ix + sd / 2) + '" y="' + f(iy + sd / 2) + '" width="' + f(iw - sd) + '" height="' + f(ih - sd) + '" rx="' + f(sd * 1.5) + '" style="fill:none;stroke:var(--ink);stroke-width:' + f(sd) + '"/>' +
-      line(ix + sd + 1, iy + sd, ix + sd + 5, iy + sd + 4, sd);
-    svg.push(wrap("TH.STR.BEAM_TAG", beamInner, [x0, y0, b, h], "คาน " + tag));
-    svg.push(wrap("TH.STR.STIRRUP_CALLOUT", stirrup, [ix, iy, iw, ih], "เหล็กปลอก"));
-
-    function bars(p, top) {
-      if (!p) return "";
-      var d = p.d / 10, r = d / 2, n = Math.max(1, p.count);
-      var left = ix + sd + r, right = ix + iw - sd - r, y = top ? iy + sd + r : iy + ih - sd - r;
-      var s = "";
-      for (var i = 0; i < n; i++) {
-        var x = n === 1 ? (left + right) / 2 : left + (right - left) * i / (n - 1);
-        s += '<circle cx="' + f(x) + '" cy="' + f(y) + '" r="' + f(r) + '" style="fill:var(--ink)"/>';
-      }
-      return s;
-    }
-    if (res.top) svg.push(wrap("TH.STR.REBAR_CALLOUT", bars(res.top, true), [ix, iy, iw, 6], "เหล็กบน"));
-    if (res.bottom) svg.push(wrap("TH.STR.REBAR_CALLOUT", bars(res.bottom, false), [ix, iy + ih - 6, iw, 6], "เหล็กล่าง"));
-
-    // Callout leaders
-    var lx = x0 + b + 6, tx = lx + 3;
-    function callout(y, fromX, fromY, label) {
-      return line(fromX, fromY, lx, y, 0.2) + line(lx, y, lx + 2, y, 0.2) + text(tx, y, label, 3.4, { anchor: "start", weight: 600 });
-    }
-    if (res.top) svg.push(callout(y0 + 4, ix + iw - 3, iy + 3, document.getElementById("rb-top").value.trim()));
-    if (st) svg.push(callout(y0 + h / 2, ix + iw - sd / 2, y0 + h / 2, document.getElementById("rb-stir").value.trim()));
-    if (res.bottom) svg.push(callout(y0 + h - 4, ix + iw - 3, iy + ih - 3, document.getElementById("rb-bot").value.trim()));
-    // Dimensions
-    svg.push(line(x0, y0 + h + 5, x0 + b, y0 + h + 5, 0.2) + line(x0 - 1, y0 + h + 6, x0 + 1, y0 + h + 4, 0.45) + line(x0 + b - 1, y0 + h + 6, x0 + b + 1, y0 + h + 4, 0.45) +
-      text(x0 + b / 2, y0 + h + 8.4, size[0].toFixed(2), 3));
-    svg.push(line(x0 - 5, y0, x0 - 5, y0 + h, 0.2) + line(x0 - 6, y0 + 1, x0 - 4, y0 - 1, 0.45) + line(x0 - 6, y0 + h + 1, x0 - 4, y0 + h - 1, 0.45) +
-      text(x0 - 8, y0 + h / 2, size[1].toFixed(2), 3, { rotate: -90 }));
-    // Title
-    svg.push(wrap("TH.STR.BEAM_TAG", text(x0, y0 + h + 15.5, "รูปตัดคาน " + tag, 4.2, { anchor: "start", weight: 700 }) +
-      text(x0, y0 + h + 20.5, "มาตราส่วน 1:10 · ระยะหุ้ม 3 ซม.", 2.8, { anchor: "start", color: "var(--ink-2)" }), [x0, y0 + h + 12, 60, 11], "ป้ายรหัสคาน " + tag));
-    var beam = document.getElementById("beam");
-    beam.setAttribute("viewBox", "0 0 " + f(vbW + 30) + " " + f(vbH));
-    beam.innerHTML = svg.join("");
-  }
-
-  /* ---------- clash table ---------- */
-  function renderClash() {
-    var rows = DATA.clashes.slice().sort(function (a, b) { return a.code === b.code ? 0 : (a.code < b.code ? -1 : 1); });
-    var order = ["F", "C", "W"];
-    rows.sort(function (a, b) { return order.indexOf(a.code) - order.indexOf(b.code); });
-    document.getElementById("clash-table").innerHTML = rows.map(function (e) {
-      return '<tr><td class="mono"><b>' + esc(e.code) + '</b></td><td class="mono">' + esc(e.id) + "</td><td>" + esc(DISC_TH[e.discipline] || e.discipline) +
-        "</td><td>" + esc(e.meaning.th) + "</td><td>" + statusBadge(e.status) + "</td></tr>";
-    }).join("");
-  }
-
-  /* ---------- wiring ---------- */
-  function setPressed(groupId, attr, value) {
-    var btns = document.querySelectorAll("#" + groupId + " button");
-    for (var i = 0; i < btns.length; i++) btns[i].setAttribute("aria-pressed", btns[i].getAttribute(attr) === value ? "true" : "false");
-  }
-  document.getElementById("region-seg").addEventListener("click", function (e) {
-    var b = e.target.closest("button"); if (!b) return;
-    state.region = b.getAttribute("data-region");
-    setPressed("region-seg", "data-region", state.region);
-    updateRegionNote();
-    drawSheet(); renderInspector();
-  });
-  document.getElementById("prefix-seg").addEventListener("click", function (e) {
-    var b = e.target.closest("button"); if (!b) return;
-    state.prefix = b.getAttribute("data-prefix");
-    setPressed("prefix-seg", "data-prefix", state.prefix);
-    drawSheet();
-  });
-  ["arch", "elec", "san"].forEach(function (k) {
-    document.getElementById("layer-" + k).addEventListener("change", function (e) {
-      state.layers[k] = e.target.checked;
-      var g = document.getElementById("L-" + k);
-      if (g) g.style.display = e.target.checked ? "" : "none";
-    });
-  });
-  document.getElementById("zoom-btn").addEventListener("click", function (e) {
-    var fr = document.getElementById("sheet-frame");
-    var on = !fr.classList.contains("zoomed");
-    fr.classList.toggle("zoomed", on);
-    e.currentTarget.setAttribute("aria-pressed", on ? "true" : "false");
-    e.currentTarget.textContent = on ? "พอดีจอ" : "ขยายแผ่น";
-  });
-  function onPick(e) {
-    var g = e.target.closest("[data-id]");
-    if (g) select(g.getAttribute("data-id"));
-  }
-  document.getElementById("sheet").addEventListener("click", onPick);
-  document.getElementById("beam").addEventListener("click", onPick);
-  document.getElementById("chips").addEventListener("click", onPick);
-  [document.getElementById("sheet"), document.getElementById("beam")].forEach(function (svg) {
-    svg.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === " ") { var g = e.target.closest("[data-id]"); if (g) { e.preventDefault(); select(g.getAttribute("data-id")); } }
-    });
-  });
-  ["beam-tag", "rb-top", "rb-bot", "rb-stir"].forEach(function (id) { document.getElementById(id).addEventListener("input", renderRebar); });
-  ["beam-size", "db-grade"].forEach(function (id) { document.getElementById(id).addEventListener("change", renderRebar); });
-
-  function updateRegionNote() {
-    var n = document.getElementById("active-region-note");
-    n.textContent = state.region === "TH" ? "รูปแบบไทย: ขนาดฟอง Ø10 มม. เป็นค่าที่ TBIM เสนอ" : "สัญลักษณ์ที่ไม่มีข้อมูล " + (REGION_TH[state.region] || state.region) + " แสดงเป็นแบบไทย";
-  }
-
-  // Grade options from the catalog's rebar vocabulary
-  (function () {
-    var db = rebarInfo("DB"), sel = document.getElementById("db-grade");
-    var grades = db && db.attributes && db.attributes.grades ? db.attributes.grades : ["SD40"];
-    sel.innerHTML = grades.map(function (g) { return '<option value="' + g + '"' + (g === "SD40" ? " selected" : "") + ">" + g + "</option>"; }).join("");
-  })();
-
-  document.getElementById("footer-cat").textContent = "ข้อมูลจาก " + DATA.catalog.catalog_id + " เวอร์ชัน " + DATA.catalog.catalog_version +
-    " · หน้านี้ใช้ " + Object.keys(SYM).length + " จาก " + DATA.catalog.total_symbols + " ระเบียน · สร้างด้วย TBIM/examples/build_example.py";
-
-  renderChips();
-  updateRegionNote();
-  drawSheet();
-  renderInspector();
-  renderRebar();
-  renderClash();
-})();
+__TBIM_GLYPHS__
+</script>
+<script>
+__TBIM_ENGINE__
+</script>
+<script>
+__TBIM_SHEETS__
+</script>
+<script>
+__TBIM_TOOLS__
 </script>

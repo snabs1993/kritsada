@@ -1,7 +1,8 @@
-"""Build tbim_example.html from template.html + ../data/tbim_symbols.json.
+"""Build tbim_example.html from template.html, src/*.js, glyphs/*.js and
+../data/tbim_symbols.json.
 
-The example page embeds only the records it draws, trimmed to the fields the
-page shows, so the page stays small and always matches the catalog.
+The page embeds every catalog record (trimmed to the fields the page shows)
+and every glyph, so it always matches the catalog.
 
 Usage: python3 build_example.py
 """
@@ -12,28 +13,8 @@ HERE = Path(__file__).resolve().parent
 CATALOG = HERE.parent / "data" / "tbim_symbols.json"
 TEMPLATE = HERE / "template.html"
 OUT = HERE / "tbim_example.html"
-
-USED_IDS = [
-    # Architectural sheet A1-01
-    "TH.GENERAL.GRID_BUBBLE", "TH.GENERAL.GRID_LINE",
-    "TH.GENERAL.DIMENSION_CENTRE_CENTRE",
-    "TH.ARCH.SECTION_MARK", "TH.ARCH.ELEVATION_MARK",
-    "TH.ARCH.ROOM_TAG", "TH.ARCH.LEVEL_MARK",
-    "TH.ARCH.DOOR_TAG", "TH.ARCH.WINDOW_TAG",
-    "TH.ARCH.DOOR_HINGED", "TH.ARCH.WINDOW_SLIDING", "TH.ARCH.WINDOW_AWNING",
-    "TH.ARCH.HATCH_WALL_BRICK_FULL", "TH.ARCH.HATCH_WALL_BRICK_HALF",
-    "TH.GENERAL.NORTH_ARROW", "TH.GENERAL.DRAWING_TITLE",
-    "TH.GENERAL.TITLE_BLOCK", "TH.GENERAL.SHEET_NUMBER",
-    "TH.GENERAL.NOTE_DO_NOT_SCALE",
-    # Electrical / fire alarm / sanitary overlays
-    "TH.ELEC.RECEPTACLE_DUPLEX", "TH.ELEC.SWITCH_1WAY",
-    "TH.ELEC.LUMINAIRE_DOWNLIGHT", "TH.ELEC.PANEL_DB",
-    "TH.FA.SMOKE_DETECTOR", "TH.SAN.FLOOR_DRAIN", "TH.SAN.CLEANOUT",
-    # Structural beam section
-    "TH.STR.BEAM_TAG", "TH.STR.REBAR_CALLOUT", "TH.STR.STIRRUP_CALLOUT",
-    "TH.STR.REBAR_GRADE_NOTE", "TH.STR.CONCRETE_COVER_NOTE",
-]
-
+GLYPH_FILES = ["g1_elec.js", "g2_fire.js", "g3_plumb_hvac.js", "g4_arch_str.js", "g5_general_civil.js"]
+SRC_FILES = {"__TBIM_ENGINE__": "engine.js", "__TBIM_SHEETS__": "sheets.js", "__TBIM_TOOLS__": "tools.js"}
 CLASH_CODES = ["F", "C", "W"]
 
 
@@ -73,53 +54,70 @@ def slim(rec):
         ],
         "geometry": {
             k: geom.get(k)
-            for k in ("redraw_description", "nominal_size_mm", "size_basis",
-                      "svg_path", "svg_basis", "insertion_point")
+            for k in ("redraw_description", "nominal_size_mm", "size_basis", "svg_basis")
             if geom.get(k) is not None
         },
-        "text_fields": rec.get("text_fields", []),
-        "notation_grammar": rec.get("notation_grammar", []),
-        "ifc_mapping": rec.get("ifc_mapping"),
-        "standards": slim_standards(rec.get("standards")),
+        "notation_grammar": [
+            {k: g.get(k) for k in ("name", "regex", "examples", "status") if g.get(k) is not None}
+            for g in rec.get("notation_grammar", [])
+        ],
+        "ifc_mapping": {
+            k: v for k, v in (rec.get("ifc_mapping") or {}).items()
+            if k in ("entity", "predefined_type", "object_type", "host_relation", "host_ifc_classes")
+        },
         "sources": slim_sources(rec.get("sources")),
     }
 
 
 def main():
     cat = json.loads(CATALOG.read_text(encoding="utf-8"))
-    by_id = {r["id"]: r for r in cat["symbols"]}
-    missing = [i for i in USED_IDS if i not in by_id]
-    if missing:
-        raise SystemExit(f"missing ids in catalog: {missing}")
-
     vocab = cat["vocabularies"]
     clashes = [
-        {k: e.get(k) for k in ("id", "code", "discipline", "meaning", "status", "used_by")}
+        {k: e.get(k) for k in ("id", "code", "discipline", "meaning", "status")}
         for e in vocab["tag_prefixes"]["entries"]
         if e.get("code") in CLASH_CODES
     ]
     rebar = [
         {k: e.get(k) for k in ("code", "meaning", "status", "standards", "attributes")}
         for e in vocab["rebar_designations"]["entries"]
-        if e.get("code") in ("DB", "RB")
+        if e.get("code") in ("DB", "RB") and e.get("region", "TH") == "TH"
     ]
-
     payload = {
         "catalog": {
             "catalog_id": cat.get("catalog_id"),
             "catalog_version": cat.get("catalog_version"),
-            "total_symbols": len(cat["symbols"]),
         },
         "status_definitions": cat["status_definitions"],
-        "symbols": {i: slim(by_id[i]) for i in USED_IDS},
+        "symbols": {r["id"]: slim(r) for r in cat["symbols"]},
         "clashes": clashes,
         "rebar": rebar,
     }
-    data = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-    data = data.replace("</", "<\\/")
-    html = TEMPLATE.read_text(encoding="utf-8").replace("__TBIM_DATA__", data)
+    data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+
+    glyphs = []
+    for name in GLYPH_FILES:
+        p = HERE / "glyphs" / name
+        if p.exists():
+            glyphs.append(p.read_text(encoding="utf-8"))
+        else:
+            print(f"warning: missing glyph file {name}")
+    html = TEMPLATE.read_text(encoding="utf-8")
+    html = html.replace("__TBIM_DATA__", data)
+    html = html.replace("__TBIM_GLYPHS__", "\n".join(glyphs).replace("</script", "<\\/script"))
+    for key, name in SRC_FILES.items():
+        html = html.replace(key, (HERE / "src" / name).read_text(encoding="utf-8"))
     OUT.write_text(html, encoding="utf-8")
-    print(f"wrote {OUT.name}: {len(USED_IDS)} symbols, {len(html) // 1024} KB")
+
+    # Report glyph coverage so a missing drawing is noticed at build time.
+    import re
+    glyph_ids = set()
+    for g in glyphs:
+        glyph_ids.update(re.findall(r'G\["([^"]+)"\]\s*=', g))
+    missing = [r["id"] for r in cat["symbols"] if r["id"] not in glyph_ids]
+    print(f"wrote {OUT.name}: {len(cat['symbols'])} symbols, {len(glyph_ids)} glyphs, "
+          f"{len(missing)} without glyph, {len(html) // 1024} KB")
+    if missing:
+        print("  no glyph:", ", ".join(missing))
 
 
 if __name__ == "__main__":
