@@ -476,6 +476,30 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .mist-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
 .mist-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 .mist-item .ok-ans{color:var(--green);font-weight:600;margin-top:4px}
+/* games, badges, study calendar */
+.mg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;max-width:680px}
+.mg-col{display:flex;flex-direction:column;gap:8px}
+.mg{padding:14px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);font-size:17px;font-weight:500;cursor:pointer;color:var(--ink);min-height:56px}
+.mg:hover:not([disabled]){border-color:var(--accent)}
+.mg.sel{border-color:var(--accent);background:var(--accent-soft)}
+.mg.bad{border-color:var(--red);background:var(--red-soft)}
+.mg.done{opacity:.35;border-style:dashed;cursor:default}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.badge{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px dashed var(--line);border-radius:12px;background:var(--surface);color:var(--ink-3)}
+.badge b{font-size:15px;font-weight:600}
+.badge small{font-size:12.5px;line-height:1.45}
+.badge .bd-icon{font-size:22px;line-height:1}
+.badge.on{border-style:solid;border-color:var(--star);color:var(--ink)}
+.badge.on .bd-icon{color:var(--star)}
+.badge.on small{color:var(--ink-2)}
+.cal-wrap{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.cal-days{display:grid;grid-template-rows:repeat(7,16px);gap:4px;font-size:11px;color:var(--ink-3);line-height:16px}
+.cal{display:grid;grid-template-rows:repeat(7,16px);grid-auto-columns:16px;gap:4px}
+.cd{display:inline-block;width:16px;height:16px;border-radius:4px;background:var(--line)}
+.cd.on{background:var(--green)}
+.cd.fut{background:transparent;border:1px dashed var(--line)}
+.cal-legend{display:flex;gap:16px;font-size:13px;color:var(--ink-3);margin-top:8px}
+.cal-legend span{display:inline-flex;align-items:center;gap:6px}
 /* touch screens: bigger speaker buttons, hide the tab bar while the keyboard is up */
 @media (pointer:coarse){.say,.mic{width:42px;height:42px}.mic svg{width:19px;height:19px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
 @media (max-width:1100px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
@@ -486,7 +510,7 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
   <div class="topbar-in">
     <button class="brand" data-act="go" data-to="home" aria-label="หน้าแรก">
       <span class="brand-mark" aria-hidden="true">Aa</span>
-      <span><span class="brand-name">ห้องเรียนอังกฤษ</span><span class="brand-sub">PRIVATE CLASS · A1–B1</span></span>
+      <span><span class="brand-name">ห้องเรียนอังกฤษ</span><span class="brand-sub">PRIVATE CLASS · A1–B2</span></span>
     </button>
     <nav class="nav" aria-label="เมนูหลัก">
       <button data-act="go" data-to="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>หน้าแรก</button>
@@ -519,7 +543,8 @@ const ord=(a,hint,w)=>({t:"order",a,hint,w});
 const LEVELS=[
   {n:1,code:"A1",name:"Starter",th:"ระดับเริ่มต้น"},
   {n:2,code:"A2",name:"Elementary",th:"ระดับพื้นฐาน"},
-  {n:3,code:"B1",name:"Pre-Intermediate",th:"ระดับกลางตอนต้น"}
+  {n:3,code:"B1",name:"Pre-Intermediate",th:"ระดับกลางตอนต้น"},
+  {n:4,code:"B2",name:"Upper-Intermediate",th:"ระดับกลางตอนปลาย"}
 ];
 
 const COURSE=[
@@ -991,7 +1016,162 @@ const COURSE=[
  quiz:[fill("He has a toothache. He ___ see a dentist.","should"),mc("I have a ___ throat.",["sore","pain","hurt"],0),mc("You shouldn't ___ so much coffee.",["drink","to drink","drinking"],0)],
  role:{th:"บอกอาการไม่สบายของคุณ ครูรับบทหมอที่ถามอาการและให้คำแนะนำ",opener:"Hello, please sit down. What seems to be the problem today?",
   shadow:["I have a headache.","I've had a cough for three days.","You should get some rest.","You shouldn't drink cold water."]},
- writing:{th:"เพื่อนเป็นหวัด เขียนคำแนะนำให้เพื่อน 3 ข้อ",model:"You should drink warm water. You should get a lot of rest. You shouldn't go out in the rain."}}
+ writing:{th:"เพื่อนเป็นหวัด เขียนคำแนะนำให้เพื่อน 3 ข้อ",model:"You should drink warm water. You should get a lot of rest. You shouldn't go out in the rain."}},
+{id:"u13",lv:4,en:"Telling stories",th:"เล่าเรื่องราวในอดีต",
+ vocab:[
+  v("suddenly","ทันใดนั้น","adv.","Suddenly, the lights went out.","ทันใดนั้น ไฟก็ดับ"),
+  v("meanwhile","ในขณะเดียวกัน","adv.","Meanwhile, the others were waiting outside.","ในขณะเดียวกัน คนอื่นๆ รออยู่ข้างนอก"),
+  v("eventually","ในที่สุด","adv.","Eventually, we found the hotel.","ในที่สุดเราก็หาโรงแรมเจอ"),
+  v("realise","ตระหนัก รู้ตัว","v.","I realised I had left my keys at home.","ฉันรู้ตัวว่าลืมกุญแจไว้ที่บ้าน"),
+  v("manage to","ทำ…ได้สำเร็จ","phr.","We managed to catch the last train.","เราขึ้นรถไฟเที่ยวสุดท้ายได้ทัน"),
+  v("unexpected","ไม่คาดคิด","adj.","We had an unexpected visitor.","เรามีแขกที่ไม่ได้คาดคิดมาเยี่ยม"),
+  v("witness","พยาน ผู้เห็นเหตุการณ์","n.","A witness called the police.","พยานคนหนึ่งโทรแจ้งตำรวจ"),
+  v("apparently","ดูเหมือนว่า ได้ยินมาว่า","adv.","Apparently, the shop closed last year.","ได้ยินมาว่าร้านปิดไปตั้งแต่ปีที่แล้ว")
+ ],
+ grammar:{title:"Narrative tenses: past simple, past continuous, past perfect",
+  intro:["เวลาเล่าเรื่องในอดีต ภาษาอังกฤษใช้ 3 tense ทำงานร่วมกัน:",
+   "<mark>past continuous</mark> (was/were + V-ing) เป็นฉากหลังที่กำลังดำเนินอยู่ ส่วน <mark>past simple</mark> เป็นเหตุการณ์ที่แทรกเข้ามา: I was walking home when it started to rain.",
+   "<mark>past perfect</mark> (had + V3) ใช้กับเหตุการณ์ที่เกิดก่อนอีกเหตุการณ์หนึ่งในอดีต: When I arrived, the train had left."],
+  head:["Tense","รูป","หน้าที่ในเรื่องเล่า"],
+  rows:[["Past continuous","was/were + V-ing","ฉากหลัง: I was driving to work…"],["Past simple","V2","เหตุการณ์หลัก: …when my car stopped."],["Past perfect","had + V3","เกิดก่อน: I had forgotten to fill the tank."]],
+  ex:[["I was cooking dinner when the phone rang.","ฉันกำลังทำอาหารเย็นอยู่ตอนที่โทรศัพท์ดัง"],["By the time we arrived, the film had already started.","พอเราไปถึง หนังก็เริ่มไปแล้ว"],["While she was waiting for the bus, she met an old friend.","ระหว่างที่รอรถเมล์ เธอเจอเพื่อนเก่า"]],
+  mist:[["When I arrived, the train already left.","When I arrived, the train had already left.","เกิดก่อนอีกเหตุการณ์ในอดีตใช้ had + V3"],["I was knowing the answer.","I knew the answer.","know เป็นกริยาแสดงสภาพ ไม่ใช้รูป -ing"],["While I walked home, it was starting to rain.","While I was walking home, it started to rain.","ฉากหลังใช้ continuous เหตุการณ์แทรกใช้ past simple"]]},
+ dialogue:{cast:{A:"Jane",B:"Beam"},lines:[
+  ["A","You look tired. Is everything OK?","ดูเหนื่อยนะ ทุกอย่างโอเคไหม"],
+  ["B","I had a crazy morning. I was driving to work when my car suddenly stopped in the middle of the road.","เช้านี้วุ่นมากครับ ผมกำลังขับรถไปทำงาน แล้วรถก็ดับกลางถนน"],
+  ["A","Oh no! What happened?","ตายแล้ว เกิดอะไรขึ้น"],
+  ["B","I had forgotten to fill up the tank. I had been so busy all week that I didn't notice.","ผมลืมเติมน้ำมัน ทั้งสัปดาห์ยุ่งมากจนไม่ทันสังเกต"],
+  ["A","So how did you get to work?","แล้วมาทำงานได้ยังไง"],
+  ["B","A kind man who was walking past helped me push the car to a petrol station. Eventually, I arrived an hour late.","มีผู้ชายใจดีที่เดินผ่านมาช่วยเข็นรถไปปั๊ม สุดท้ายผมมาสายหนึ่งชั่วโมง"]],
+  q:[mc("Why did Beam's car stop?",["It had run out of fuel.","It had a flat tyre.","Another car hit it."],0),mc("Who helped Beam?",["a mechanic","a man who was walking past","a police officer"],1)]},
+ practice:[
+  mc("I ___ TV when the lights went out.",["watched","was watching","had watched"],1,"ฉากหลังที่กำลังดำเนินอยู่ใช้ past continuous"),
+  mc("When we got to the cinema, the film ___.",["already started","had already started","was already starting"],1,"หนังเริ่มก่อนที่เราจะไปถึง ใช้ had + V3"),
+  fill("While she ___ for the bus, it started to rain. (wait)","was waiting","ฉากหลังใช้ was + V-ing"),
+  mc("She ___ the answer, so she put up her hand.",["knew","was knowing","had been knowing"],0,"know ไม่ใช้รูป -ing"),
+  fill("By the time I arrived, everyone ___ home. (go)","had gone","เกิดก่อนที่ฉันจะไปถึง"),
+  ord("I was walking home when I saw an accident","ฉันกำลังเดินกลับบ้านตอนที่เห็นอุบัติเหตุ")],
+ quiz:[mc("They ___ dinner when I called them.",["had","were having","have had"],1),fill("He realised he ___ his keys at the office. (leave)","had left"),mc("___ I was studying, my brother was playing games.",["When","While","By the time"],1)],
+ role:{th:"เล่าเรื่องที่เคยเกิดขึ้นกับคุณ เช่น เหตุการณ์ไม่คาดคิดหรือวันที่วุ่นวาย ครูจะถามรายละเอียด ใช้ past continuous และ past perfect",opener:"I love a good story! Can you tell me about something unexpected that happened to you?",
+  shadow:["I was walking to work when it started to rain.","By the time I got there, the shop had closed.","Suddenly, I realised I had left my phone at home.","Eventually, everything turned out fine."]},
+ writing:{th:"เล่าเหตุการณ์ไม่คาดคิดที่เคยเกิดขึ้น 4–5 ประโยค ใช้ past continuous และ past perfect",model:"Last month I was waiting for a train at Siam station when I heard someone call my name. It was my old teacher, whom I hadn't seen for ten years. She had moved to Japan after I graduated, and she had just come back to Thailand. We talked until my train had left, but I didn't mind at all."}},
+
+{id:"u14",lv:4,en:"In the news",th:"ข่าวและการเล่าต่อ",
+ vocab:[
+  v("announce","ประกาศ","v.","The company announced a new product.","บริษัทประกาศเปิดตัวสินค้าใหม่"),
+  v("claim","อ้างว่า","v.","He claims that he saw a ghost.","เขาอ้างว่าเห็นผี"),
+  v("according to","ตามที่…กล่าว","prep.","According to the report, prices will rise.","ตามรายงาน ราคาจะสูงขึ้น"),
+  v("headline","พาดหัวข่าว","n.","Did you read today's headlines?","อ่านพาดหัวข่าววันนี้หรือยัง"),
+  v("reporter","นักข่าว","n.","A reporter interviewed the mayor.","นักข่าวสัมภาษณ์นายกเทศมนตรี"),
+  v("official","เจ้าหน้าที่ทางการ","n.","Officials said the road would reopen soon.","เจ้าหน้าที่กล่าวว่าถนนจะเปิดใช้เร็วๆ นี้"),
+  v("confirm","ยืนยัน","v.","Can you confirm your booking?","ช่วยยืนยันการจองได้ไหม"),
+  v("deny","ปฏิเสธ (ข้อกล่าวหา)","v.","He denied taking the money.","เขาปฏิเสธว่าไม่ได้เอาเงินไป")
+ ],
+ grammar:{title:"Reported speech: said, told, asked",
+  intro:["เวลาเล่าต่อคำพูดของคนอื่น มัก <mark>ถอยเวลาไปหนึ่งขั้น</mark>: am/is → was, will → would, can → could, have done → had done",
+   "<mark>say</mark> ไม่ต้องมีคนตามหลัง (She said that…) ส่วน <mark>tell</mark> ต้องมีคนตามหลัง (She told me that…)",
+   "คำถามใช้ asked + if/whether หรือคำขึ้นต้น wh- แล้ว <mark>เรียงประโยคแบบบอกเล่า</mark>: She asked where I lived."],
+  head:["คำพูดตรง","คำพูดอ้อม"],
+  rows:[["\"I am tired.\"","She said (that) she was tired."],["\"I will call you.\"","He said he would call me."],["\"I have finished.\"","She said she had finished."],["\"Are you ready?\"","He asked if I was ready."],["\"Where do you live?\"","She asked where I lived."]],
+  ex:[["The minister said that prices would fall next year.","รัฐมนตรีกล่าวว่าราคาจะลดลงปีหน้า"],["She told me she was leaving the company.","เธอบอกฉันว่าจะลาออกจากบริษัท"],["He asked me whether I had seen the news.","เขาถามฉันว่าเห็นข่าวหรือยัง"]],
+  mist:[["She said me that she was busy.","She told me that she was busy.","มีคนตามหลังใช้ tell"],["He asked where did I live.","He asked where I lived.","คำถามอ้อมเรียงแบบประโยคบอกเล่า"],["She said she will come.","She said she would come.","ถอยเวลา will → would"]]},
+ dialogue:{cast:{A:"Mint",B:"Tom"},lines:[
+  ["A","Did you see the news this morning?","เห็นข่าวเมื่อเช้าไหม"],
+  ["B","No, what happened?","ยังเลย เกิดอะไรขึ้น"],
+  ["A","The government announced that the new train line would open next month.","รัฐบาลประกาศว่ารถไฟสายใหม่จะเปิดเดือนหน้า"],
+  ["B","Really? Last year they said it would be ready much earlier.","จริงเหรอ ปีที่แล้วเขาบอกว่าจะเสร็จเร็วกว่านี้มาก"],
+  ["A","I know. A reporter asked the minister why it had taken so long, and he said there had been problems with the budget.","ใช่ นักข่าวถามรัฐมนตรีว่าทำไมใช้เวลานาน เขาบอกว่ามีปัญหาเรื่องงบประมาณ"],
+  ["B","Well, according to my brother, who works for the railway, they are still testing the trains.","แต่พี่ชายฉันที่ทำงานการรถไฟบอกว่ายังทดสอบรถกันอยู่เลย"]],
+  q:[mc("What did the government announce?",["A new train line would open next month.","Train tickets would be cheaper.","A station had closed."],0),mc("According to the minister, why was there a delay?",["bad weather","problems with the budget","a shortage of trains"],1)]},
+ practice:[
+  mc("She ___ me that she was tired.",["said","told","asked"],1,"มีคน (me) ตามหลังใช้ told"),
+  mc("\"I will help you.\" → He said he ___ help me.",["will","would","can"],1,"ถอยเวลา will → would"),
+  fill("\"I am busy.\" → She said she ___ busy.","was","ถอยเวลา am → was"),
+  mc("\"Do you like coffee?\" → He asked me ___ I liked coffee.",["that","if","what"],1,"คำถาม Yes/No ใช้ if หรือ whether"),
+  mc("\"Where is the station?\" → She asked where ___.",["is the station","the station was","was the station"],1,"คำถามอ้อมเรียงแบบบอกเล่า"),
+  ord("He said that he had lost his wallet","เขาบอกว่าทำกระเป๋าสตางค์หาย")],
+ quiz:[fill("\"I have finished.\" → He said he ___ finished.","had"),mc("They ___ that the flight had been cancelled.",["told","said","asked"],1),mc("The officer asked us where ___ from.",["were we","we were","are we"],1)],
+ role:{th:"ครูจะชวนคุยเรื่องข่าว ลองเล่าต่อข่าวหรือเรื่องที่ได้ยินมา โดยใช้ said, told และ asked",opener:"Did you hear any interesting news this week? Tell me what happened!",
+  shadow:["She said that she would be late.","He told me he had lost his job.","According to the news, prices will rise.","They asked if we were ready."]},
+ writing:{th:"เล่าต่อบทสนทนาหรือข่าวที่ได้ยินมา 4–5 ประโยค ใช้ reported speech",model:"Yesterday my manager told me that our team had done a great job this year. She said that the company would give everyone a bonus. My colleague asked whether we could also have an extra day off, and she said she would think about it."}},
+
+{id:"u15",lv:4,en:"Regrets and wishes",th:"ความเสียดายและความปรารถนา",
+ vocab:[
+  v("regret","เสียใจ เสียดาย","v.","I regret not studying harder.","ฉันเสียดายที่ไม่ได้ตั้งใจเรียนกว่านี้"),
+  v("opportunity","โอกาส","n.","This is a great opportunity for you.","นี่เป็นโอกาสที่ดีมากสำหรับคุณ"),
+  v("decision","การตัดสินใจ","n.","It was a difficult decision.","มันเป็นการตัดสินใจที่ยาก"),
+  v("afford","มีเงินพอจ่าย","v.","I can't afford a new car.","ฉันไม่มีเงินพอซื้อรถใหม่"),
+  v("career","อาชีพการงาน","n.","She has had a successful career.","เธอประสบความสำเร็จในหน้าที่การงาน"),
+  v("apply","สมัคร","v.","I applied for three jobs last week.","สัปดาห์ที่แล้วฉันสมัครงานไปสามที่"),
+  v("lucky","โชคดี","adj.","You're lucky to have such good friends.","คุณโชคดีที่มีเพื่อนดีๆ แบบนี้"),
+  v("wish","อยากให้ ปรารถนา","v.","I wish I could speak French.","ฉันอยากพูดภาษาฝรั่งเศสได้")
+ ],
+ grammar:{title:"Third conditional and wish",
+  intro:["<mark>Third conditional</mark> ใช้สมมติสิ่งที่ไม่ได้เกิดขึ้นในอดีต: If + had + V3, would have + V3 เช่น If I had studied harder, I would have passed.",
+   "<mark>wish + past simple</mark> ใช้กับสิ่งที่อยากให้ต่างไปจากตอนนี้: I wish I lived near the sea.",
+   "<mark>wish + past perfect</mark> ใช้เสียดายสิ่งที่ผ่านไปแล้ว: I wish I had gone to the party."],
+  head:["รูปแบบ","ใช้เมื่อ","ตัวอย่าง"],
+  rows:[["If + had V3, would have V3","สมมติอดีตที่ไม่ได้เกิด","If I had left earlier, I wouldn't have missed the bus."],["wish + past","อยากให้ตอนนี้ต่างไป","I wish I had more time."],["wish + past perfect","เสียดายเรื่องที่ผ่านไปแล้ว","I wish I had studied harder."]],
+  ex:[["If we had booked earlier, we would have got a cheaper ticket.","ถ้าเราจองเร็วกว่านี้ คงได้ตั๋วถูกกว่านี้"],["I wish I could speak Japanese.","ฉันอยากพูดภาษาญี่ปุ่นได้"],["She wishes she hadn't said that.","เธอเสียดายที่พูดแบบนั้นออกไป"]],
+  mist:[["If I would have known, ...","If I had known, ...","ห้ามใช้ would ในส่วน if"],["I wish I have a car.","I wish I had a car.","wish ตามด้วยรูปอดีต"],["If I had seen you, I would say hello.","If I had seen you, I would have said hello.","สมมติอดีตต้องใช้ would have + V3"]]},
+ dialogue:{cast:{A:"Jane",B:"Ploy"},lines:[
+  ["A","You look a bit down. What's wrong?","ดูหงอยๆ นะ เป็นอะไรหรือเปล่า"],
+  ["B","I just found out that my friend got the job I wanted. I wish I had applied earlier.","เพิ่งรู้ว่าเพื่อนได้งานที่ฉันอยากได้ เสียดายที่ไม่ได้สมัครให้เร็วกว่านี้"],
+  ["A","Why didn't you?","ทำไมไม่สมัครล่ะ"],
+  ["B","I wasn't sure I was good enough. If I had sent my application on time, I might have got an interview.","ไม่แน่ใจว่าตัวเองเก่งพอ ถ้าส่งใบสมัครทันเวลา อาจจะได้สัมภาษณ์ก็ได้"],
+  ["A","I understand, but there will be other opportunities. Next time, don't wait!","เข้าใจนะ แต่ยังมีโอกาสอื่นอีก คราวหน้าอย่ารอนะ"],
+  ["B","You're right. I just wish I were more confident.","จริงค่ะ แค่อยากมั่นใจในตัวเองมากกว่านี้"]],
+  q:[mc("What does Ploy regret?",["not applying for a job earlier","leaving her old job","arguing with her friend"],0),mc("Why didn't she apply?",["She was too busy.","She wasn't sure she was good enough.","She didn't see the advertisement."],1)]},
+ practice:[
+  mc("If I ___ harder, I would have passed the exam.",["studied","had studied","would study"],1,"third conditional: If + had + V3"),
+  mc("I wish I ___ more free time.",["have","had","will have"],1,"อยากให้ตอนนี้ต่างไป wish + past"),
+  fill("If she had left earlier, she ___ the train. (not miss)","wouldn't have missed|would not have missed","would have + V3 รูปปฏิเสธ"),
+  mc("I wish I ___ to the party last night. Everyone says it was great.",["went","had gone","would go"],1,"เสียดายเรื่องที่ผ่านไปแล้ว wish + had V3"),
+  mc("If we had known about the traffic, we ___ the train.",["would take","would have taken","had taken"],1),
+  ord("I wish I had brought my umbrella","เสียดายจังที่ไม่ได้เอาร่มมา")],
+ quiz:[fill("I wish I ___ speak French. (can)","could"),mc("If he had asked me, I ___ him.",["would help","would have helped","had helped"],1),mc("She wishes she ___ so much yesterday.",["didn't eat","hadn't eaten","doesn't eat"],1)],
+ role:{th:"คุยกับครูเรื่องสิ่งที่เคยเสียดาย และสิ่งที่อยากให้เป็น ใช้ I wish… และ If I had…",opener:"Everyone has a few regrets. Is there anything you wish you had done differently?",
+  shadow:["I wish I had studied English earlier.","If I had known, I would have told you.","I wish I could travel more.","If we had left earlier, we wouldn't have been late."]},
+ writing:{th:"เขียนเรื่องที่เสียดาย และสิ่งที่อยากให้เป็น 4–5 ประโยค",model:"When I was at university, I had a chance to study in Australia for a year, but I didn't go because I was afraid. If I had gone, my English would have improved much faster. I wish I had been braver. Now I wish I had more time to travel, so I'm saving money for a trip next year."}},
+
+{id:"u16",lv:4,en:"Solving mysteries",th:"การคาดเดาและสรุปเหตุผล",
+ vocab:[
+  v("clue","เบาะแส","n.","The police found an important clue.","ตำรวจพบเบาะแสสำคัญ"),
+  v("suspect","ผู้ต้องสงสัย","n.","The suspect was seen near the bank.","มีคนเห็นผู้ต้องสงสัยใกล้ธนาคาร"),
+  v("mystery","ปริศนา เรื่องลึกลับ","n.","It's still a mystery who sent the letter.","ยังเป็นปริศนาว่าใครส่งจดหมายมา"),
+  v("obviously","เห็นได้ชัด","adv.","Obviously, he was not happy.","เห็นได้ชัดว่าเขาไม่พอใจ"),
+  v("possibly","อาจจะ เป็นไปได้","adv.","It will possibly rain tomorrow.","พรุ่งนี้ฝนอาจจะตก"),
+  v("definitely","แน่นอน","adv.","I'll definitely come to your party.","ฉันไปงานเลี้ยงของคุณแน่นอน"),
+  v("explanation","คำอธิบาย","n.","There must be a simple explanation.","ต้องมีคำอธิบายง่ายๆ แน่ๆ"),
+  v("footprint","รอยเท้า","n.","There were footprints in the snow.","มีรอยเท้าอยู่บนหิมะ")
+ ],
+ grammar:{title:"Modals of deduction: must, might, can't",
+  intro:["ใช้เดาอย่างมีเหตุผลจากหลักฐานที่เห็น: <mark>must</mark> = มั่นใจเกือบ 100% ว่าใช่, <mark>might / may / could</mark> = อาจจะ, <mark>can't</mark> = มั่นใจว่าไม่ใช่",
+   "เดาเรื่องในอดีตใช้ modal + <mark>have + V3</mark>: She must have forgotten. / He can't have seen us.",
+   "ระวัง: mustn't แปลว่า \"ห้าม\" ไม่ได้แปลว่า \"คงไม่ใช่\""],
+  head:["คำ","ความมั่นใจ","ตัวอย่าง (ปัจจุบัน / อดีต)"],
+  rows:[["must","มั่นใจว่าใช่","He must be tired. / He must have left."],["might / may / could","อาจจะ","She might be at home. / She might have missed the bus."],["can't","มั่นใจว่าไม่ใช่","It can't be true. / He can't have seen us."]],
+  ex:[["The lights are off. They must be asleep.","ไฟปิดหมดแล้ว พวกเขาคงหลับแล้ว"],["She isn't answering. She might have left her phone at home.","เธอไม่รับสาย อาจจะลืมโทรศัพท์ไว้ที่บ้าน"],["He can't have finished already. He only started ten minutes ago.","เขาไม่น่าจะทำเสร็จแล้ว เพิ่งเริ่มไปสิบนาทีเอง"]],
+  mist:[["He must to be tired.","He must be tired.","หลัง modal ไม่มี to"],["She mustn't be at home.","She can't be at home.","เดาว่าไม่ใช่ใช้ can't (mustn't = ห้าม)"],["He must forgot.","He must have forgotten.","เดาเรื่องในอดีตใช้ must have + V3"]]},
+ dialogue:{cast:{A:"Tom",B:"Mint"},lines:[
+  ["A","That's strange. My laptop isn't on my desk.","แปลกจัง แล็ปท็อปไม่อยู่บนโต๊ะ"],
+  ["B","You must have left it in the meeting room. You were there all morning.","คุณคงลืมไว้ในห้องประชุมแน่ๆ อยู่ที่นั่นทั้งเช้าเลยนี่"],
+  ["A","No, I can't have left it there. I remember bringing it back.","ไม่น่าใช่ ผมจำได้ว่าถือกลับมาแล้ว"],
+  ["B","Then someone might have borrowed it. Have you asked Nok?","งั้นอาจมีคนยืมไป ถามนกหรือยัง"],
+  ["A","Not yet. Oh, wait, look. There's a note: took your laptop to IT for the update, back at three, Nok.","ยังเลย อ้าว ดูสิ มีโน้ต: เอาแล็ปท็อปไปให้ไอทีอัปเดต จะเอามาคืนตอนบ่ายสาม นก"],
+  ["B","Well, that explains it!","งั้นก็เข้าใจแล้ว"]],
+  q:[mc("Where did Mint first think the laptop was?",["in the meeting room","on Nok's desk","in the IT department"],0),mc("Where was the laptop really?",["in the meeting room","with the IT department","in Tom's bag"],1)]},
+ practice:[
+  mc("He's been working for twelve hours. He ___ be exhausted.",["must","can't","might not"],0,"มีหลักฐานชัด มั่นใจว่าเหนื่อย"),
+  mc("That ___ be Anna. She's on holiday in Japan.",["must","can't","might"],1,"มั่นใจว่าไม่ใช่"),
+  mc("I'm not sure where Tom is. He ___ be in the canteen.",["must","might","can't"],1,"ไม่แน่ใจ ใช้ might"),
+  fill("The ground is wet. It must ___ rained last night.","have","เดาเรื่องในอดีต must have + V3"),
+  mc("She passed the exam easily. She ___ studied hard.",["must have","can't have","mustn't"],0),
+  ord("You must have left it at home","คุณคงลืมไว้ที่บ้านแน่ๆ")],
+ quiz:[mc("He didn't answer my call. He ___ asleep.",["might be","can't be","must to be"],0),fill("They can't ___ us. It was too dark. (see)","have seen"),mc("This watch ___ very expensive. It's made of gold.",["can't be","must be","mustn't be"],1)],
+ role:{th:"ครูเล่าปริศนาเล็กๆ ให้ฟัง ลองช่วยเดาว่าเกิดอะไรขึ้น ใช้ must, might และ can't",opener:"Here's a little mystery: I came home yesterday and my front door was open, but nothing was missing. What do you think happened?",
+  shadow:["He must be at work by now.","She might have missed the bus.","It can't be true.","They must have forgotten about the meeting."]},
+ writing:{th:"เขียนคาดเดาเหตุการณ์ปริศนา 4–5 ประโยค ใช้ must, might, can't (have)",model:"My neighbour's car has been in front of his house all week, and his lights haven't been on. He must be away on holiday. He can't have gone by car, so he might have taken a flight. Or perhaps he is staying with his daughter, who lives in Chiang Mai."}}
 ];
 
 const PLACEMENT=[
@@ -2607,6 +2787,10 @@ function viewPractice(){
   if(id==="grammar") return viewGrammarList();
   if(id.indexOf("gram.")===0) return viewGram(id.slice(5));
   if(id==="scenes") return viewScenes();
+  if(id==="games") return viewGames();
+  if(id==="game.match") return viewMatch();
+  if(id==="game.spell") return viewSpell();
+  if(id==="game.scramble") return viewScramble();
   if(id.indexOf("scene.")===0) return viewScene(id.slice(6));
   return viewPracticeHub();
 }
@@ -2617,13 +2801,14 @@ function viewPracticeHub(){
   return '<h1 class="h1">ฝึกฝน</h1><p class="lede">แบบฝึกเสริมนอกบทเรียน ฝึกทีละทักษะ ทำวันละนิดสม่ำเสมอได้ผลกว่าทำทีเดียวเยอะๆ</p>'
    +'<div style="margin-top:18px">'+dailyCard()+'</div>'
    +'<div class="p-grid">'
-   +card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน 30 ประโยค A1–B1","ทำแล้ว "+dict+" ประโยค")
+   +card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน 40 ประโยค A1–B2","ทำแล้ว "+dict+" ประโยค")
    +card("pgo","sounds","ฝึกหูแยกเสียง","เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W, เสียงท้ายคำ, TH และ -teen/-ty",snd+" / "+SOUNDS.length+" ชุดเสียง")
    +card("pgo","reading","ห้องสมุดบทอ่าน","เรื่องสั้นตามระดับ แตะคำเพื่อดูความหมาย ฟังอ่านออกเสียง แล้วตอบคำถาม","อ่านแล้ว "+read+" / "+STORIES.length+" เรื่อง")
    +card("pgo","mistakes","สมุดคำผิด","ข้อที่เคยตอบผิดจากบทเรียน สอบวัดระดับ และข้อสอบ TOEIC ฝึกซ้ำจนถูก",mis?mis+" ข้อรอฝึก":"ยังไม่มีข้อผิด",mis?" hot":"")
    +card("pgo","grammar","คลังไวยากรณ์","ไวยากรณ์ "+(COURSE.length+GRAM_X.length)+" เรื่อง มีตาราง ตัวอย่าง จุดที่คนไทยพูดผิดบ่อย และแบบทดสอบ","ทำแบบทดสอบแล้ว "+gram+" เรื่อง")
    +card("pgo","scenes","สถานการณ์จำลองกับครู AI","คุยกับครู AI ใน "+SCENES.length+" สถานการณ์จริง เช่น สัมภาษณ์งาน สนามบิน หาหมอ","ครูแก้ภาษาให้ทุกประโยค"," ai-only")
-   +card("go","review","ชุดคำศัพท์เพิ่มเติม","TOEIC ธุรกิจ, IELTS วิชาการ, Phrasal verbs และ Collocations รวมถึงเพิ่มคำของตัวเองได้","อยู่ในคลังแล้ว "+deckN+" / "+deckT+" คำ")
+   +card("pgo","games","เกมฝึกภาษา","จับคู่คำศัพท์แข่งเวลา สะกดคำจากเสียง และเรียงประโยค ใช้คำศัพท์ในคลังของคุณ","3 เกม")
+   +card("go","review","ชุดคำศัพท์เพิ่มเติม","8 ชุด: TOEIC, IELTS, Phrasal verbs, Collocations, ท่องเที่ยว, สุขภาพ, เทคโนโลยี และอารมณ์ รวมถึงเพิ่มคำของตัวเองได้","อยู่ในคลังแล้ว "+deckN+" / "+deckT+" คำ")
    +'</div>';
 }
 
@@ -2804,6 +2989,299 @@ function decksHTML(){
    +'<section class="section"><h2 class="h3">เพิ่มคำศัพท์ของฉันเอง</h2><p class="muted" style="margin-top:4px">เจอคำใหม่จากหนัง เพลง หรือที่ทำงาน จดไว้ที่นี่แล้วระบบจะนัดให้ทบทวน</p><form class="addword" data-form="addword"><label class="sr" for="aw-en">คำภาษาอังกฤษ</label><input id="aw-en" placeholder="คำภาษาอังกฤษ" lang="en" autocomplete="off" autocapitalize="off"><label class="sr" for="aw-th">ความหมายภาษาไทย</label><input id="aw-th" placeholder="ความหมายภาษาไทย" autocomplete="off"><label class="sr" for="aw-ex">ประโยคตัวอย่าง</label><input id="aw-ex" placeholder="ประโยคตัวอย่าง (ไม่บังคับ)" lang="en" autocomplete="off"><button class="btn btn-primary" type="submit">เพิ่มคำ</button></form></section>';
 }
 
+
+/* ---------- more practice content ---------- */
+DICT.push({lv:"B2",items:[
+ ["I had never seen such a beautiful sunset before that trip.","ก่อนทริปนั้น ฉันไม่เคยเห็นพระอาทิตย์ตกที่สวยขนาดนี้มาก่อน"],
+ ["She told me that she had already booked the tickets.","เธอบอกฉันว่าจองตั๋วไว้แล้ว"],
+ ["If I had known about the traffic, I would have left earlier.","ถ้ารู้ว่ารถติด ฉันคงออกเร็วกว่านี้"],
+ ["He must have forgotten about our meeting this morning.","เขาคงลืมเรื่องประชุมเมื่อเช้านี้แน่ๆ"],
+ ["While we were having dinner, the power suddenly went out.","ระหว่างที่เรากินข้าวเย็น ไฟก็ดับกะทันหัน"],
+ ["The manager asked whether we could finish the project by Friday.","ผู้จัดการถามว่าเราทำโครงการเสร็จภายในวันศุกร์ได้ไหม"],
+ ["I wish I had taken more photos during the holiday.","เสียดายที่ไม่ได้ถ่ายรูปตอนเที่ยวให้มากกว่านี้"],
+ ["The new policy is expected to reduce traffic in the city centre.","นโยบายใหม่คาดว่าจะช่วยลดรถติดในใจกลางเมือง"],
+ ["Despite the heavy rain, thousands of people attended the concert.","แม้ฝนจะตกหนัก คนหลายพันคนก็ยังไปดูคอนเสิร์ต"],
+ ["It can't have been easy to move to a new country alone.","คงไม่ง่ายเลยที่ต้องย้ายไปอยู่ประเทศใหม่คนเดียว"]]});
+
+STORIES.push(
+ {id:"b2a",lv:"B2",title:"The Four-Day Week",th:"ทำงานสัปดาห์ละสี่วัน",
+  paras:["In recent years, a growing number of companies around the world have experimented with a four-day working week. The idea is simple: employees work thirty-two hours instead of forty, but receive the same salary. Supporters claim that people who have more time to rest become more focused and productive at work.","One of the largest trials took place in the United Kingdom, where around sixty companies took part for six months. According to the researchers who organised it, most of the companies reported that productivity had stayed the same or improved. Staff said they felt less stressed, and fewer people took sick days. At the end of the trial, the majority of the companies decided to keep the new schedule.","Critics, however, point out that the model does not suit every industry. Hospitals, schools and shops need to be open when people need them, so reducing hours can mean hiring more staff. Others argue that some employees may feel pressure to fit five days of work into four. Even so, the results have encouraged many managers to rethink the traditional working week."],
+  gloss:[["experimented","ทดลอง"],["salary","เงินเดือน"],["productive","ทำงานได้มีประสิทธิภาพ"],["trials","การทดลอง"],["majority","ส่วนใหญ่"],["industry","อุตสาหกรรม"],["pressure","แรงกดดัน"],["rethink","คิดทบทวนใหม่"]],
+  qs:[{q:"What is the main idea of a four-day week?",o:["Employees work fewer hours for the same pay.","Employees work longer days.","Companies close at weekends."],a:0},{q:"What did most companies in the UK trial decide?",o:["to stop the trial early","to keep the new schedule","to reduce salaries"],a:1},{q:"Why might the model not suit hospitals?",o:["They need to be open whenever people need them.","Their staff are too stressed.","They are not productive."],a:0}]},
+ {id:"b2b",lv:"B2",title:"The Missing Painting",th:"ภาพวาดที่หายไป",
+  paras:["When the museum guard arrived on Monday morning, he could tell that something was wrong. The alarm had been switched off, and the small painting that usually hung beside the main entrance had disappeared. Nothing else had been touched.","The police quickly discovered some strange details. There were no signs that anyone had broken in, which meant the thief must have had a key. The security camera had stopped recording at midnight, around the time the painting had gone missing. Only three people knew the code for the cameras: the director, the guard and a technician who had repaired the system the week before.","Two days later, the painting was found, carefully wrapped, in the technician's garage. He admitted that he had taken it, but insisted that he had never intended to sell it. His grandfather had painted it, he explained, and the family had sold it to the museum many years earlier when they had needed money. He had simply wanted it back."],
+  gloss:[["disappeared","หายไป"],["discovered","ค้นพบ"],["broken in","บุกรุกเข้ามา"],["thief","ขโมย"],["technician","ช่างเทคนิค"],["wrapped","ห่อไว้"],["admitted","ยอมรับ"],["insisted","ยืนยันหนักแน่น"]],
+  qs:[{q:"What did the guard find on Monday morning?",o:["A painting was missing.","A window was broken.","The museum was on fire."],a:0},{q:"Why did the police think the thief had a key?",o:["There were no signs of a break-in.","A key was missing.","The guard saw someone."],a:0},{q:"Why did the technician take the painting?",o:["to sell it","because his grandfather had painted it","because it was damaged"],a:1}]}
+);
+
+SCENES.push(
+ {id:"bank",title:"เปิดบัญชีธนาคาร",th:"คุณไปเปิดบัญชีธนาคารที่ต่างประเทศ ถามเรื่องเอกสาร ค่าธรรมเนียม และบัตรเดบิต",role:"a bank clerk",student:"a customer opening a new account",opener:"Good morning, how can I help you today?"},
+ {id:"taxi",title:"บอกทางคนขับแท็กซี่",th:"คุณนั่งแท็กซี่ไปโรงแรม บอกทาง ถามว่าจะถึงเมื่อไหร่ และขอใบเสร็จ",role:"a friendly taxi driver",student:"a passenger going to a hotel",opener:"Hello! Where would you like to go?"},
+ {id:"repair",title:"แจ้งซ่อมกับเจ้าของห้อง",th:"แอร์ในห้องเช่าเสีย โทรแจ้งเจ้าของห้อง อธิบายปัญหา และนัดวันให้ช่างมาซ่อม",role:"a landlord who rents an apartment",student:"a tenant reporting a problem",opener:"Hello, this is Mark speaking. Is everything all right with the apartment?"},
+ {id:"present",title:"นำเสนองานในที่ประชุม",th:"คุณนำเสนอผลงานของทีมในที่ประชุม ครูรับบทหัวหน้าที่ถามคำถามต่อ",role:"a manager listening to a presentation and asking follow-up questions",student:"an employee presenting the team's results",opener:"Thanks for joining. Whenever you're ready, please tell us how the project went this quarter."},
+ {id:"complain",title:"แจ้งปัญหาอาหารในร้าน",th:"อาหารที่สั่งเย็นชืดและไม่ตรงกับที่สั่ง แจ้งพนักงานอย่างสุภาพและขอให้แก้ไข",role:"a waiter at a restaurant",student:"a customer with a problem with their meal",opener:"Hi there, how is everything with your meal?"},
+ {id:"parcel",title:"โทรตามพัสดุหาย",th:"พัสดุที่สั่งไว้ยังไม่มาส่งทั้งที่ระบบบอกว่าส่งแล้ว โทรไปฝ่ายบริการลูกค้าเพื่อตามเรื่อง",role:"a customer service agent at a delivery company",student:"a customer whose parcel has not arrived",opener:"Thank you for calling QuickShip customer service. My name is Sam. How can I help you today?"}
+);
+
+DECKS.push(
+ {id:"travel",title:"ท่องเที่ยว",th:"คำศัพท์สำหรับเดินทาง สนามบิน โรงแรม",words:[
+  ["boarding pass","บัตรขึ้นเครื่อง","n.","Please show your boarding pass at the gate.","กรุณาแสดงบัตรขึ้นเครื่องที่ประตู"],
+  ["departure","การออกเดินทาง","n.","The departure time is 9:45.","เวลาออกเดินทางคือ 9.45 น."],
+  ["arrival","การมาถึง","n.","Check the arrival board for your flight.","ดูเที่ยวบินของคุณที่กระดานผู้โดยสารขาเข้า"],
+  ["delay","ความล่าช้า","n.","There is a two-hour delay.","มีความล่าช้าสองชั่วโมง"],
+  ["itinerary","กำหนดการเดินทาง","n.","Here is our itinerary for the trip.","นี่คือกำหนดการเดินทางของเรา"],
+  ["accommodation","ที่พัก","n.","Accommodation in the city is expensive.","ที่พักในเมืองราคาแพง"],
+  ["souvenir","ของที่ระลึก","n.","I bought a souvenir for my mother.","ฉันซื้อของที่ระลึกให้แม่"],
+  ["sightseeing","การเที่ยวชมสถานที่","n.","We went sightseeing in the old town.","เราไปเที่ยวชมเมืองเก่า"],
+  ["currency","สกุลเงิน","n.","What currency do they use in Japan?","ญี่ปุ่นใช้สกุลเงินอะไร"],
+  ["exchange rate","อัตราแลกเปลี่ยน","n.","The exchange rate is good today.","วันนี้อัตราแลกเปลี่ยนดี"],
+  ["round trip","ไปกลับ","n.","A round trip ticket is cheaper.","ตั๋วไปกลับถูกกว่า"],
+  ["reservation","การจอง","n.","I have a reservation under the name Somchai.","ฉันจองไว้ในชื่อสมชาย"],
+  ["destination","จุดหมายปลายทาง","n.","Bali is a popular destination.","บาหลีเป็นจุดหมายยอดนิยม"],
+  ["customs","ด่านศุลกากร","n.","We went through customs quickly.","เราผ่านด่านศุลกากรได้เร็ว"],
+  ["jet lag","อาการเจ็ตแล็ก","n.","I still have jet lag after the long flight.","ฉันยังมีอาการเจ็ตแล็กหลังบินไกล"],
+  ["landmark","สถานที่สำคัญ","n.","The temple is a famous landmark.","วัดนี้เป็นสถานที่สำคัญที่มีชื่อเสียง"],
+  ["guided tour","ทัวร์ที่มีไกด์นำ","n.","We joined a guided tour of the palace.","เราเข้าร่วมทัวร์ชมพระราชวังที่มีไกด์นำ"],
+  ["travel insurance","ประกันการเดินทาง","n.","Don't travel without travel insurance.","อย่าเดินทางโดยไม่มีประกันการเดินทาง"],
+  ["local cuisine","อาหารท้องถิ่น","n.","I love trying the local cuisine.","ฉันชอบลองอาหารท้องถิ่น"],
+  ["peak season","ช่วงไฮซีซั่น","n.","Hotels are full during peak season.","โรงแรมเต็มในช่วงไฮซีซั่น"]]},
+ {id:"health",title:"สุขภาพ",th:"คำศัพท์ไปหาหมอ ร้านขายยา และการดูแลตัวเอง",words:[
+  ["symptom","อาการ","n.","What are your symptoms?","คุณมีอาการอะไรบ้าง"],
+  ["prescription","ใบสั่งยา","n.","You need a prescription for this medicine.","ยานี้ต้องมีใบสั่งแพทย์"],
+  ["pharmacy","ร้านขายยา","n.","Is there a pharmacy near here?","แถวนี้มีร้านขายยาไหม"],
+  ["allergy","อาการแพ้","n.","I have an allergy to peanuts.","ฉันแพ้ถั่วลิสง"],
+  ["injury","การบาดเจ็บ","n.","He had a knee injury.","เขาบาดเจ็บที่เข่า"],
+  ["appointment","การนัดหมาย","n.","I have a doctor's appointment at ten.","ฉันมีนัดหมอตอนสิบโมง"],
+  ["recover","ฟื้นตัว หายป่วย","v.","She recovered quickly after the operation.","เธอฟื้นตัวเร็วหลังผ่าตัด"],
+  ["blood pressure","ความดันโลหิต","n.","The nurse checked my blood pressure.","พยาบาลวัดความดันให้ฉัน"],
+  ["balanced diet","อาหารที่สมดุล","n.","Try to eat a balanced diet.","พยายามกินอาหารให้สมดุล"],
+  ["nutrition","โภชนาการ","n.","Good nutrition is important for children.","โภชนาการที่ดีสำคัญสำหรับเด็ก"],
+  ["stress","ความเครียด","n.","Exercise helps reduce stress.","การออกกำลังกายช่วยลดความเครียด"],
+  ["workout","การออกกำลังกาย","n.","I do a short workout every morning.","ฉันออกกำลังกายสั้นๆ ทุกเช้า"],
+  ["vitamin","วิตามิน","n.","Oranges are full of vitamin C.","ส้มมีวิตามินซีสูง"],
+  ["surgery","การผ่าตัด","n.","He needs surgery on his shoulder.","เขาต้องผ่าตัดไหล่"],
+  ["patient","ผู้ป่วย","n.","The doctor sees thirty patients a day.","หมอตรวจผู้ป่วยวันละสามสิบคน"],
+  ["sprain","ข้อแพลง","v.","I sprained my ankle playing football.","ข้อเท้าฉันแพลงตอนเล่นฟุตบอล"],
+  ["painkiller","ยาแก้ปวด","n.","Take a painkiller if your head hurts.","กินยาแก้ปวดถ้าปวดหัว"],
+  ["check-up","การตรวจสุขภาพ","n.","I have a check-up once a year.","ฉันตรวจสุขภาพปีละครั้ง"],
+  ["stay hydrated","ดื่มน้ำให้เพียงพอ","phr.","Stay hydrated when it's hot.","ดื่มน้ำให้เพียงพอเวลาอากาศร้อน"],
+  ["immune system","ระบบภูมิคุ้มกัน","n.","Sleep helps your immune system.","การนอนช่วยระบบภูมิคุ้มกัน"]]},
+ {id:"tech",title:"เทคโนโลยี",th:"คำศัพท์เกี่ยวกับโทรศัพท์ คอมพิวเตอร์ และอินเทอร์เน็ต",words:[
+  ["download","ดาวน์โหลด","v.","You can download the app for free.","ดาวน์โหลดแอปได้ฟรี"],
+  ["upload","อัปโหลด","v.","I uploaded the photos to the cloud.","ฉันอัปโหลดรูปขึ้นคลาวด์"],
+  ["password","รหัสผ่าน","n.","Don't share your password with anyone.","อย่าบอกรหัสผ่านกับใคร"],
+  ["update","อัปเดต","v.","Please update your software.","กรุณาอัปเดตซอฟต์แวร์"],
+  ["device","อุปกรณ์","n.","You can log in on any device.","เข้าสู่ระบบได้จากทุกอุปกรณ์"],
+  ["battery","แบตเตอรี่","n.","My phone battery is almost dead.","แบตโทรศัพท์ใกล้หมดแล้ว"],
+  ["charger","ที่ชาร์จ","n.","Can I borrow your charger?","ขอยืมที่ชาร์จหน่อยได้ไหม"],
+  ["screen","หน้าจอ","n.","The screen is cracked.","หน้าจอแตก"],
+  ["account","บัญชี (ผู้ใช้)","n.","I created a new account.","ฉันสร้างบัญชีใหม่"],
+  ["log in","เข้าสู่ระบบ","phr. v.","I can't log in to my email.","ฉันเข้าอีเมลไม่ได้"],
+  ["backup","ข้อมูลสำรอง","n.","Always keep a backup of your files.","สำรองไฟล์ไว้เสมอ"],
+  ["storage","พื้นที่เก็บข้อมูล","n.","My phone is running out of storage.","พื้นที่ในโทรศัพท์ใกล้เต็ม"],
+  ["notification","การแจ้งเตือน","n.","I turned off notifications at night.","ฉันปิดการแจ้งเตือนตอนกลางคืน"],
+  ["browser","เบราว์เซอร์","n.","Open the link in your browser.","เปิดลิงก์ในเบราว์เซอร์"],
+  ["attachment","ไฟล์แนบ","n.","Please check the attachment.","กรุณาดูไฟล์แนบ"],
+  ["software","ซอฟต์แวร์","n.","The company uses new accounting software.","บริษัทใช้ซอฟต์แวร์บัญชีตัวใหม่"],
+  ["virus","ไวรัส","n.","My computer has a virus.","คอมพิวเตอร์ฉันติดไวรัส"],
+  ["screenshot","ภาพหน้าจอ","n.","Send me a screenshot of the error.","ส่งภาพหน้าจอข้อผิดพลาดมาให้หน่อย"],
+  ["wireless","ไร้สาย","adj.","I bought wireless headphones.","ฉันซื้อหูฟังไร้สาย"],
+  ["online","ออนไลน์","adj.","I prefer online shopping.","ฉันชอบซื้อของออนไลน์มากกว่า"]]},
+ {id:"feel",title:"อารมณ์และนิสัย",th:"คำบอกความรู้สึกและบุคลิกภาพ ใช้พูดถึงตัวเองและคนอื่น",words:[
+  ["anxious","กังวล","adj.","I feel anxious before exams.","ฉันรู้สึกกังวลก่อนสอบ"],
+  ["grateful","รู้สึกขอบคุณ","adj.","I'm grateful for your help.","ฉันซาบซึ้งในความช่วยเหลือของคุณ"],
+  ["frustrated","หงุดหงิด ท้อ","adj.","He was frustrated with the slow internet.","เขาหงุดหงิดกับเน็ตที่ช้า"],
+  ["embarrassed","อาย ขายหน้า","adj.","I was embarrassed when I fell over.","ฉันอายมากตอนล้ม"],
+  ["relieved","โล่งใจ","adj.","I was relieved to hear the news.","ฉันโล่งใจที่ได้ยินข่าว"],
+  ["disappointed","ผิดหวัง","adj.","She was disappointed with the result.","เธอผิดหวังกับผลลัพธ์"],
+  ["jealous","อิจฉา หึงหวง","adj.","He's jealous of his brother's success.","เขาอิจฉาความสำเร็จของพี่ชาย"],
+  ["confident","มั่นใจ","adj.","She is confident when she speaks English.","เธอมั่นใจเวลาพูดภาษาอังกฤษ"],
+  ["overwhelmed","ท่วมท้น รับมือไม่ไหว","adj.","I feel overwhelmed by all this work.","ฉันรู้สึกว่างานเยอะจนรับไม่ไหว"],
+  ["generous","ใจกว้าง ใจดี","adj.","My uncle is very generous.","ลุงของฉันใจกว้างมาก"],
+  ["honest","ซื่อสัตย์","adj.","Please give me an honest answer.","ขอคำตอบที่ตรงไปตรงมาหน่อย"],
+  ["easygoing","สบายๆ ไม่เรื่องมาก","adj.","My boss is very easygoing.","หัวหน้าฉันเป็นคนสบายๆ"],
+  ["reliable","ไว้ใจได้","adj.","He is a reliable colleague.","เขาเป็นเพื่อนร่วมงานที่ไว้ใจได้"],
+  ["stubborn","ดื้อ หัวแข็ง","adj.","My little brother is so stubborn.","น้องชายฉันดื้อมาก"],
+  ["shy","ขี้อาย","adj.","She was shy as a child.","ตอนเด็กเธอเป็นคนขี้อาย"],
+  ["ambitious","มีความทะเยอทะยาน","adj.","He is ambitious and works very hard.","เขาทะเยอทะยานและทำงานหนักมาก"],
+  ["curious","อยากรู้อยากเห็น","adj.","Children are naturally curious.","เด็กๆ อยากรู้อยากเห็นโดยธรรมชาติ"],
+  ["sensitive","อ่อนไหว ใส่ใจความรู้สึก","adj.","She is sensitive to other people's feelings.","เธอใส่ใจความรู้สึกของคนอื่น"],
+  ["cheerful","ร่าเริง","adj.","He is always cheerful in the morning.","เขาร่าเริงทุกเช้า"],
+  ["thoughtful","เอาใจใส่ รอบคอบ","adj.","Thank you for the thoughtful gift.","ขอบคุณสำหรับของขวัญที่ใส่ใจเลือกมา"]]}
+);
+
+PHRASES.push(
+ ["Mind your step.","ระวังก้าวเดิน","Mind your step. The floor is wet."],
+ ["I'm just looking, thanks.","แค่ดูเฉยๆ ขอบคุณ (ตอบพนักงานในร้าน)","\"Can I help you?\" \"I'm just looking, thanks.\""],
+ ["Could you say that again?","ช่วยพูดอีกครั้งได้ไหม","Sorry, could you say that again more slowly?"],
+ ["It's not a big deal.","ไม่ใช่เรื่องใหญ่","Don't worry about it. It's not a big deal."],
+ ["I'll get back to you.","เดี๋ยวจะติดต่อกลับ","Let me check my schedule and I'll get back to you."],
+ ["Sounds good to me.","ฟังดูดี ตกลง","\"Shall we meet at six?\" \"Sounds good to me.\""],
+ ["What do you do for a living?","คุณทำงานอะไร","So, what do you do for a living?"],
+ ["I didn't catch that.","ฟังไม่ทัน ไม่ได้ยิน","Sorry, I didn't catch that. What was your name?"],
+ ["Let's split the bill.","หารค่าอาหารกันเถอะ","Let's split the bill this time."],
+ ["It depends.","แล้วแต่ ขึ้นอยู่กับ","\"Will you come?\" \"It depends on the weather.\""],
+ ["I'm fed up with it.","เบื่อเต็มทน","I'm fed up with this traffic every day."],
+ ["Go for it!","ลุยเลย","You want to learn Japanese? Go for it!"],
+ ["I can't make it.","ไปไม่ได้ ไม่ทัน","Sorry, I can't make it to the party tonight."],
+ ["Take your time.","ไม่ต้องรีบ","Take your time. There's no hurry."],
+ ["I've got a lot on my plate.","มีเรื่องต้องทำเยอะมาก","I can't help this week. I've got a lot on my plate."],
+ ["It slipped my mind.","ลืมไปเลย","Sorry, I forgot to call you. It slipped my mind."],
+ ["That rings a bell.","คุ้นๆ นะ","His name rings a bell, but I can't remember his face."],
+ ["I'm in two minds.","ยังตัดสินใจไม่ได้","I'm in two minds about taking the job."],
+ ["Better safe than sorry.","กันไว้ดีกว่าแก้","Take an umbrella. Better safe than sorry."],
+ ["Every cloud has a silver lining.","ทุกเรื่องร้ายมีเรื่องดีซ่อนอยู่","I lost my job, but every cloud has a silver lining."],
+ ["It's on the tip of my tongue.","นึกออกอยู่แล้วแต่พูดไม่ออก","What's her name? It's on the tip of my tongue."],
+ ["Don't get me wrong.","อย่าเข้าใจผิดนะ","Don't get me wrong, I like my job, but it's stressful."],
+ ["I'm not really into it.","ไม่ค่อยชอบเท่าไหร่","I'm not really into horror films."],
+ ["You made my day.","คุณทำให้วันนี้เป็นวันที่ดี","Thanks for the flowers. You made my day!"],
+ ["I'm starving.","หิวมาก","Let's eat. I'm starving."],
+ ["Just in case.","เผื่อไว้","Bring a jacket, just in case it gets cold."],
+ ["No way!","ไม่จริงน่า","\"I won the lottery.\" \"No way!\""],
+ ["Couldn't agree more.","เห็นด้วยที่สุด","\"English is useful.\" \"Couldn't agree more.\""],
+ ["Let's keep in touch.","ติดต่อกันไว้นะ","It was great to meet you. Let's keep in touch."],
+ ["Easier said than done.","พูดง่ายแต่ทำยาก","Wake up at five every day? Easier said than done."]
+);
+
+/* ---------- achievements ---------- */
+const BADGES=[
+ {id:"first",t:"ก้าวแรก",d:"ผ่านสอบท้ายบทครั้งแรก",ok:()=>COURSE.some((_,i)=>isDone(i))},
+ {id:"a1",t:"จบ A1",d:"ผ่านทุกบทระดับ Starter",ok:()=>lvDone(1)},
+ {id:"a2",t:"จบ A2",d:"ผ่านทุกบทระดับ Elementary",ok:()=>lvDone(2)},
+ {id:"b1",t:"จบ B1",d:"ผ่านทุกบทระดับ Pre-Intermediate",ok:()=>lvDone(3)},
+ {id:"b2",t:"จบ B2",d:"ผ่านทุกบทระดับ Upper-Intermediate",ok:()=>lvDone(4)},
+ {id:"s3",t:"เรียนติดกัน 3 วัน",d:"เข้าเรียนต่อเนื่อง 3 วัน",ok:()=>maxStreak()>=3},
+ {id:"s7",t:"หนึ่งสัปดาห์เต็ม",d:"เข้าเรียนต่อเนื่อง 7 วัน",ok:()=>maxStreak()>=7},
+ {id:"s30",t:"นักเรียนตัวจริง",d:"เข้าเรียนต่อเนื่อง 30 วัน",ok:()=>maxStreak()>=30},
+ {id:"w100",t:"คลังคำ 100",d:"มีคำศัพท์ในคลัง 100 คำ",ok:()=>Object.keys(S.words).length>=100},
+ {id:"m50",t:"จำแม่น 50 คำ",d:"จำคำศัพท์ได้แม่น 50 คำ",ok:()=>Object.keys(S.words).filter(k=>S.words[k].b>=4).length>=50},
+ {id:"d50",t:"หูไว",d:"ทำฟังแล้วพิมพ์ครบ 50 ประโยค",ok:()=>(stat("dict").n||0)>=50},
+ {id:"snd",t:"แยกเสียงเก่ง",d:"ได้ 80% ขึ้นไปครบทุกชุดเสียง",ok:()=>SOUNDS.every(g=>(stat("sounds")[g.id]||0)>=80)},
+ {id:"read",t:"นักอ่าน",d:"อ่านบทอ่านครบทุกเรื่อง",ok:()=>STORIES.every(s=>stat("read")[s.id]!=null)},
+ {id:"fix",t:"แก้ไขตัวเอง",d:"ฝึกข้อผิดจนถูกครบ 20 ข้อ",ok:()=>(stat("mist").cleared||0)>=20},
+ {id:"exam",t:"ลงสนามสอบ",d:"ทำข้อสอบ TOEIC หรือ IELTS ครั้งแรก",ok:()=>examLog().length>0},
+ {id:"t700",t:"TOEIC 700+",d:"คะแนน TOEIC รวมโดยประมาณ 700 ขึ้นไป",ok:()=>{const l=examLast("toeic-listening"),r=examLast("toeic-reading"); return !!(l&&r&&l.score+r.score>=700)}},
+ {id:"i6",t:"IELTS 6.0+",d:"Overall band โดยประมาณ 6.0 ขึ้นไป",ok:()=>(ieltsOverall()||0)>=6},
+ {id:"xp",t:"คะแนน 2,000",d:"สะสมคะแนนครบ 2,000",ok:()=>S.xp>=2000}
+];
+function lvDone(n){const us=COURSE.filter(u=>u.lv===n); return us.length>0&&us.every(u=>S.lessons[u.id]&&S.lessons[u.id].done)}
+function maxStreak(){const s=stat("streak"); const now=streak(); if(now>(s.max||0)) s.max=now; return s.max||0}
+function checkBadges(){
+  if(!Array.isArray(S.badges)) S.badges=[];
+  const fresh=BADGES.filter(b=>S.badges.indexOf(b.id)<0&&b.ok());
+  if(!fresh.length) return;
+  S.badges=S.badges.concat(fresh.map(b=>b.id)); save();
+  toast("ได้รับเหรียญ: "+fresh.map(b=>b.t).join(", "));
+}
+function xpLevel(){const lv=Math.floor(S.xp/300)+1; return {lv,into:S.xp%300}}
+function badgesHTML(){
+  const got=Array.isArray(S.badges)?S.badges:[];
+  return '<section class="section"><div class="section-head"><h2 class="h3">เหรียญความสำเร็จ</h2><span class="muted">ได้แล้ว '+got.length+'/'+BADGES.length+'</span></div><div class="badges">'
+   +BADGES.map(b=>{const on=got.indexOf(b.id)>=0; return '<div class="badge'+(on?' on':'')+'"><span class="bd-icon" aria-hidden="true">'+(on?'★':'☆')+'</span><b>'+esc(b.t)+'</b><small>'+esc(b.d)+'</small></div>'}).join("")+'</div></section>';
+}
+function calendarHTML(){
+  const set=new Set(S.days), weeks=12, today=new Date(); today.setHours(0,0,0,0);
+  const start=new Date(today.getTime()-((weeks-1)*7+today.getDay())*DAY);
+  let cells="", n=0;
+  for(let w=0;w<weeks;w++){
+    for(let d=0;d<7;d++){
+      const day=new Date(start.getTime()+(w*7+d)*DAY), k=dayKey(day), future=day>today, on=set.has(k);
+      if(on) n++;
+      cells+='<i class="cd'+(on?' on':'')+(future?' fut':'')+'" style="grid-column:'+(w+1)+';grid-row:'+(d+1)+'" title="'+esc(day.toLocaleDateString("th-TH",{day:"numeric",month:"short"}))+(on?" · เข้าเรียน":"")+'"></i>';
+    }
+  }
+  const days=["อา","จ","อ","พ","พฤ","ศ","ส"];
+  return '<section class="section"><div class="section-head"><h2 class="h3">ปฏิทินการเรียน 12 สัปดาห์</h2><span class="muted">เข้าเรียน '+n+' วัน · ต่อเนื่องสูงสุด '+maxStreak()+' วัน</span></div>'
+   +'<div class="cal-wrap"><div class="cal-days">'+days.map(d=>'<span>'+d+'</span>').join("")+'</div><div class="cal" role="img" aria-label="เข้าเรียน '+n+' วันใน 12 สัปดาห์ล่าสุด">'+cells+'</div></div>'
+   +'<p class="cal-legend"><span><i class="cd on"></i>เข้าเรียน</span><span><i class="cd"></i>ไม่ได้เข้าเรียน</span></p></section>';
+}
+
+/* ---------- games ---------- */
+let MG=null, SB=null;
+function gamePool(){
+  let keys=Object.keys(S.words).filter(k=>WORDS[k]&&WORDS[k].th);
+  if(keys.length<6) keys=keys.concat(COURSE.slice(0,2).reduce((a,u)=>a.concat(u.vocab.map(v=>v.en)),[]));
+  return shuffle(Array.from(new Set(keys)));
+}
+function matchNew(){
+  const pick=gamePool().slice(0,6);
+  MG={words:pick,left:shuffle(pick),right:shuffle(pick),sel:null,done:[],miss:0,start:Date.now(),end:null,bad:null};
+}
+function viewMatch(){
+  if(!MG) matchNew();
+  const best=stat("games").match;
+  let h=pBack("games","เกม")+'<h1 class="h2" style="margin-top:8px">จับคู่คำศัพท์</h1><p class="lede">แตะคำภาษาอังกฤษ แล้วแตะความหมายที่ตรงกัน จับคู่ให้ครบ 6 คู่ให้เร็วที่สุด ถ้าจับผิดจะบวกเวลา 3 วินาที คำศัพท์สุ่มมาจากคลังของคุณ</p>'
+   +'<div class="xbar" style="position:static"><span>จับคู่แล้ว <b>'+MG.done.length+'</b>/6</span><span class="xtimer" id="mtimer">'+(MG.end?mmss((MG.end-MG.start)/1000+MG.miss*3):mmss((Date.now()-MG.start)/1000+MG.miss*3))+'</span><span class="muted">'+(best?'สถิติดีที่สุด '+mmss(best):'')+'</span></div>';
+  if(MG.end){
+    const t=Math.round((MG.end-MG.start)/1000+MG.miss*3);
+    return h+'<div class="card" style="margin-top:16px;max-width:620px"><h2 class="h2">ครบ 6 คู่ใน '+mmss(t)+'</h2><p class="lede">จับผิด '+MG.miss+' ครั้ง'+(best&&t<=best?' · ทำลายสถิติใหม่':'')+'</p><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="mgnew">เล่นอีกรอบ</button></div></div>';
+  }
+  const col=(list,side)=>'<div class="mg-col">'+list.map(k=>{const done=MG.done.indexOf(k)>=0, sel=MG.sel&&MG.sel[0]===side&&MG.sel[1]===k, bad=MG.bad&&MG.bad.indexOf(side+":"+k)>=0;
+    return '<button class="mg'+(done?' done':'')+(sel?' sel':'')+(bad?' bad':'')+'" data-act="mgpick" data-s="'+side+'" data-k="'+esc(k)+'"'+(done?' disabled':'')+(side==="en"?' lang="en"':'')+'>'+esc(side==="en"?WORDS[k].en:WORDS[k].th)+'</button>'}).join("")+'</div>';
+  return h+'<div class="mg-grid">'+col(MG.left,"en")+col(MG.right,"th")+'</div>';
+}
+function spellNew(){
+  const pool=gamePool().filter(k=>/^[a-z-]+$/i.test(WORDS[k].en)).slice(0,10);
+  SB={list:pool,i:0,typed:"",res:null,correct:0};
+}
+function viewSpell(){
+  if(!SB) spellNew();
+  let h=pBack("games","เกม")+'<h1 class="h2" style="margin-top:8px">สะกดคำจากเสียง</h1><p class="lede">ฟังคำศัพท์แล้วพิมพ์ให้สะกดถูกต้อง ฟังซ้ำได้ ความหมายภาษาไทยช่วยใบ้ให้ได้ถ้าฟังไม่ออก</p>';
+  if(SB.i>=SB.list.length){
+    return h+'<div class="card" style="margin-top:16px;max-width:620px"><h2 class="h2">สะกดถูก '+SB.correct+'/'+SB.list.length+'</h2><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="sbnew">เล่นอีกรอบ</button></div></div>';
+  }
+  const w=WORDS[SB.list[SB.i]], r=SB.res;
+  h+='<div class="card dict" style="margin-top:16px"><div class="row" style="justify-content:space-between"><span class="mono">คำที่ '+(SB.i+1)+'/'+SB.list.length+' · ถูก '+SB.correct+'</span><div class="row"><button class="btn btn-sm btn-primary" data-act="sbplay">'+ICON.say+'ฟัง</button><button class="btn btn-sm" data-act="sbplay" data-slow="1">ฟังช้าๆ</button><button class="btn btn-sm btn-ghost" data-act="sbhint">'+(SB.hint?esc(w.th):'ขอคำใบ้')+'</button></div></div>'
+   +'<label class="sr" for="sb-in">พิมพ์คำที่ได้ยิน</label><input id="sb-in" class="dict-in" lang="en" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="พิมพ์คำที่ได้ยิน…" value="'+esc(r?SB.typed:"")+'"'+(r?" disabled":"")+'>';
+  if(!r) h+='<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="sbcheck">ตรวจ</button><span class="muted" style="font-size:14px">กด Enter เพื่อตรวจได้</span></div>';
+  else h+='<div class="feedback '+(r==="ok"?"ok":"no")+'"><b>'+(r==="ok"?"สะกดถูกต้อง!":"ยังไม่ถูก")+'</b><span>คำที่ถูก: <b lang="en">'+esc(w.en)+'</b> · '+esc(w.th)+'</span></div><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="sbnext">'+(SB.i+1<SB.list.length?"คำต่อไป":"ดูผล")+'</button></div>';
+  return h+'</div>';
+}
+function scrambleItems(){
+  const all=[].concat.apply([],DICT.map(d=>d.items));
+  return shuffle(all).slice(0,8).map(x=>({t:"order",a:x[0].replace(/[.,!?]/g,"").replace(/\s+/g," ").trim(),hint:x[1]}));
+}
+function viewScramble(){
+  let h=pBack("games","เกม")+'<h1 class="h2" style="margin-top:8px">เรียงประโยค</h1><p class="lede">เรียงคำให้เป็นประโยคที่ถูกต้อง 8 ข้อ มีความหมายภาษาไทยช่วย ช่วยฝึกลำดับคำในประโยคภาษาอังกฤษ</p>';
+  if(!PRUN||!PRUN_META||PRUN_META.id!=="scr") return h+'<div class="row" style="margin-top:14px"><button class="btn btn-primary" data-act="scrstart">เริ่มเกม</button></div>';
+  if(PRUN.done){const c=PRUN.results.filter(Boolean).length; return h+'<div class="card" style="margin-top:16px;max-width:620px"><h2 class="h2">ถูก '+c+'/'+PRUN.items.length+'</h2><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="scrstart">เล่นอีกรอบ</button></div></div>'}
+  return h+'<div style="margin-top:16px">'+runnerHTML(PRUN)+'</div>';
+}
+function viewGames(){
+  const g=stat("games");
+  const card=(id,title,desc,meta)=>'<button class="p-card" data-act="pgo" data-id="'+id+'"><span class="p-title">'+title+'</span><span class="p-desc">'+desc+'</span><span class="p-meta">'+meta+'</span></button>';
+  return pBack()+'<h1 class="h2" style="margin-top:8px">เกมฝึกภาษา</h1><p class="lede">เกมสั้นๆ 2–3 นาที ใช้คำศัพท์ในคลังของคุณ เล่นตอนว่างเพื่อทบทวนแบบสนุกๆ</p><div class="p-grid">'
+   +card("game.match","จับคู่คำศัพท์","จับคู่คำภาษาอังกฤษกับความหมายให้ครบ 6 คู่ แข่งกับเวลา",g.match?"สถิติดีที่สุด "+mmss(g.match):"ยังไม่เคยเล่น")
+   +card("game.spell","สะกดคำจากเสียง","ฟังคำแล้วพิมพ์ให้สะกดถูก 10 คำ",g.spell!=null?"ดีที่สุด "+g.spell+"/10":"ยังไม่เคยเล่น")
+   +card("game.scramble","เรียงประโยค","เรียงคำให้เป็นประโยค 8 ข้อ ฝึกโครงสร้างประโยค",g.scr!=null?"ดีที่สุด "+g.scr+"/8":"ยังไม่เคยเล่น")
+   +'</div>';
+}
+const GACT={
+  mgnew:()=>{matchNew(); render()},
+  mgpick:t=>{
+    if(!MG||MG.end) return;
+    const side=t.dataset.s, k=t.dataset.k;
+    if(!MG.sel||MG.sel[0]===side){MG.sel=[side,k]; MG.bad=null; if(side==="en") Speech.say(WORDS[k].en); render(); return}
+    if(MG.sel[1]===k){MG.done.push(k); MG.sel=null; MG.bad=null;
+      if(MG.done.length===MG.words.length){MG.end=Date.now(); const t2=Math.round((MG.end-MG.start)/1000+MG.miss*3), g=stat("games"); if(!g.match||t2<g.match) g.match=t2; bump("prac"); S.xp+=10; markDay(); save()}}
+    else {MG.miss++; MG.bad=[MG.sel[0]+":"+MG.sel[1],side+":"+k]; MG.sel=null}
+    render();
+  },
+  sbnew:()=>{spellNew(); render(); if(SB.list.length) Speech.say(WORDS[SB.list[0]].en)},
+  sbplay:t=>{if(SB&&SB.i<SB.list.length){Speech.stop(); Speech.say(WORDS[SB.list[SB.i]].en,{slow:!!t.dataset.slow})}},
+  sbhint:()=>{if(SB){SB.hint=true; render()}},
+  sbcheck:()=>{
+    if(!SB||SB.res) return; const v=($("#sb-in")||{}).value||""; if(!v.trim()){toast("พิมพ์คำที่ได้ยินก่อน");return}
+    const w=WORDS[SB.list[SB.i]]; SB.typed=v; SB.res=v.trim().toLowerCase()===w.en.toLowerCase()?"ok":"no"; if(SB.res==="ok") SB.correct++; render();
+  },
+  sbnext:()=>{
+    if(!SB) return; SB.i++; SB.res=null; SB.typed=""; SB.hint=false;
+    if(SB.i>=SB.list.length){const g=stat("games"); g.spell=Math.max(g.spell||0,SB.correct); bump("prac"); S.xp+=SB.correct; markDay(); save(); render(); return}
+    render(); Speech.say(WORDS[SB.list[SB.i]].en); const f=$("#sb-in"); if(f&&window.matchMedia("(pointer:fine)").matches) f.focus();
+  },
+  scrstart:()=>{PRUN_META={id:"scr",title:"เรียงประโยค"}; PRUN=newRunner(scrambleItems(),"scr"); render()}
+};
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -2846,6 +3324,7 @@ function render(){
   });
   updateChrome();
   document.querySelectorAll("[data-chat]").forEach(mountChat);
+  checkBadges();
   const tb=$(".topbar"); if(tb) document.documentElement.style.setProperty("--topbar-h",tb.offsetHeight+"px");
 }
 function updateChrome(){
@@ -2876,7 +3355,7 @@ function viewHome(){
      +'<div class="row"><button class="btn btn-primary" data-act="open" data-id="'+u.id+'">'+(r.reached>0&&!r.done?"เรียนต่อจากเดิม":"เข้าห้องเรียน")+'</button><span class="muted">ใช้เวลาประมาณ 20–30 นาที</span></div>'
    +'</article>'
    +'<div class="side-stack">'
-     +'<div class="stats"><div><b>'+doneN+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+learned+'</b><span>คำศัพท์ที่เรียน</span></div><div><b>'+S.xp+'</b><span>คะแนนสะสม</span></div></div>'
+     +'<div class="stats"><div><b>'+doneN+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+learned+'</b><span>คำศัพท์ที่เรียน</span></div><div><b>Lv.'+xpLevel().lv+'</b><span>'+S.xp+' คะแนน · อีก '+(300-xpLevel().into)+' เลื่อนเลเวล</span></div></div>'
      +'<button class="tile" data-act="go" data-to="review"><span class="big">'+due+'</span><span><b>การบ้านทบทวนคำศัพท์</b><small>'+(learned?(due?"มี "+due+" คำที่ถึงรอบทบทวนวันนี้":"วันนี้ทบทวนครบแล้ว คำถัดไปจะวนกลับมาตามรอบ"):"คำศัพท์จะเข้ามาที่นี่หลังเริ่มเรียนบทแรก")+'</small></span></button>'
      +'<button class="tile" data-act="go" data-to="exam"><span class="big" aria-hidden="true">'+ICON_EXAM.replace('<svg','<svg width="32" height="32"')+'</span><span><b>ห้องสอบ TOEIC · IELTS</b><small>ข้อสอบจำลองพร้อมเฉลยภาษาไทย ประเมินคะแนนและ band โดยประมาณ</small></span></button>'
      +'<button class="tile ai-only" data-act="go" data-to="teacher"><span class="big" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span><span><b>คุยกับครู AI</b><small>ฝึกสนทนา ถามไวยากรณ์ หรือส่งประโยคให้ครูตรวจ ครูจะแก้ให้ด้วยปากกาแดง</small></span></button>'
@@ -2899,7 +3378,7 @@ function lessonRow(i){
 
 /* ---------- views: course ---------- */
 function viewCourse(){
-  return '<h1 class="h1">หลักสูตรภาษาอังกฤษ</h1><p class="lede">3 ระดับ 12 บท เรียงจากง่ายไปยาก แต่ละบทปลดล็อกเมื่อสอบท้ายบทก่อนหน้าผ่าน 70% ถ้ามีพื้นฐานแล้ว <button class="btn btn-sm btn-ghost" style="padding:0 4px;min-height:0;color:var(--accent)" data-act="go" data-to="placement">ทำแบบทดสอบวัดระดับ</button> เพื่อข้ามบทได้</p>'
+  return '<h1 class="h1">หลักสูตรภาษาอังกฤษ</h1><p class="lede">4 ระดับ 16 บท เรียงจากง่ายไปยาก แต่ละบทปลดล็อกเมื่อสอบท้ายบทก่อนหน้าผ่าน 70% ถ้ามีพื้นฐานแล้ว <button class="btn btn-sm btn-ghost" style="padding:0 4px;min-height:0;color:var(--accent)" data-act="go" data-to="placement">ทำแบบทดสอบวัดระดับ</button> เพื่อข้ามบทได้</p>'
    +LEVELS.map(lv=>{
      const us=COURSE.filter(u=>u.lv===lv.n), d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;
      return '<section class="level"><div class="level-head"><span class="level-code">'+lv.code+'</span><div><h2 class="h3" lang="en">'+esc(lv.name)+'</h2><p class="muted">'+esc(lv.th)+' · ผ่าน '+d+'/'+us.length+' บท</p></div><div class="bar" role="img" aria-label="ความคืบหน้า '+d+' จาก '+us.length+'"><i style="width:'+(d/us.length*100)+'%"></i></div></div>'
@@ -3075,7 +3554,7 @@ function answer(r,ok,given){
   r.answered=true; r.ok=ok; r.given=given; r.results[r.i]=ok;
   const it=r.items[r.i];
   if(!ok&&r.kind!=="mist"){addMistake(mistSrc(r),it); save()}
-  if(ok&&r.kind==="mist"&&it._mid){S.mistakes=(S.mistakes||[]).filter(m=>m.id!==it._mid); save()}
+  if(ok&&r.kind==="mist"&&it._mid){S.mistakes=(S.mistakes||[]).filter(m=>m.id!==it._mid); const ms=stat("mist"); ms.cleared=(ms.cleared||0)+1; save()}
   if(it.t==="order") Speech.say(it.a);
   render();
   const nb=$("#r-next"); if(nb) nb.focus({preventScroll:true});
@@ -3099,6 +3578,7 @@ function runnerDone(r){
     L.quizDone={pct,correct:c,total:tot,stars};
     if(first) toast("ผ่านบทที่ "+u.n+" แล้ว +50 คะแนน");
   }
+  if(r.kind==="scr"){const g=stat("games"); g.scr=Math.max(g.scr||0,c); S.xp+=c*2; bump("prac"); markDay(); save()}
   if(r.kind==="gq"||r.kind==="mist"){
     if(r.kind==="gq"&&PRUN_META){const gs=stat("gram"); gs[PRUN_META.id]=Math.max(gs[PRUN_META.id]||0,Math.round(c/tot*100))}
     S.xp+=c*2; bump("prac"); markDay(); save();
@@ -3193,6 +3673,7 @@ function viewReport(){
     }).join("")+'</div>'
     :'<div class="card"><p>ผ่านทุกบทในระดับเดียวกันครบ 4 บท เพื่อรับประกาศนียบัตรระดับนั้น</p><div class="stack" style="margin-top:14px;gap:10px">'+LEVELS.map(lv=>{const us=COURSE.filter(u=>u.lv===lv.n),d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;return '<div><div class="row" style="justify-content:space-between"><span>'+lv.code+' <span lang="en">'+esc(lv.name)+'</span></span><span class="muted">'+d+'/4</span></div><div class="bar"><i style="width:'+(d/4*100)+'%"></i></div></div>'}).join("")+'</div></div>')
    +'</section>'
+   +calendarHTML()+badgesHTML()
    +otaSection()
    +'<section class="section"><h2 class="h3">เริ่มเรียนใหม่ทั้งหมด</h2><p class="muted" style="margin-top:4px">ลบคะแนน คำศัพท์ และประวัติการเรียนทั้งหมด</p>'
    +(resetAsk?'<div class="row" style="margin-top:10px"><span class="pen">ลบจริงหรือไม่ ย้อนกลับไม่ได้</span><button class="btn btn-danger" data-act="reset-yes">ลบทั้งหมด</button><button class="btn btn-ghost" data-act="reset-no">ยกเลิก</button></div>'
@@ -3280,7 +3761,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT);
+Object.assign(ACT,XACT,PACT,GACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
@@ -3312,7 +3793,12 @@ document.addEventListener("input",e=>{
     if(wc) wc.textContent=wcText(wordCount(t.value),task?task.min:0)+(/-s2$/.test(k)?" · พูด 2 นาทีประมาณ 200–250 คำ":"");
   }
 });
-document.addEventListener("keydown",e=>{if(e.target.id==="dict-in"&&e.key==="Enter"&&!e.isComposing){e.preventDefault(); ACT.dcheck()}});
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Enter"||e.isComposing) return;
+  if(e.target.id==="dict-in"){e.preventDefault(); ACT.dcheck()}
+  if(e.target.id==="sb-in"){e.preventDefault(); ACT.sbcheck()}
+});
+setInterval(()=>{if(route.name==="practice"&&route.id==="game.match"&&MG&&!MG.end){const el=$("#mtimer"); if(el) el.textContent=mmss((Date.now()-MG.start)/1000+MG.miss*3)}},1000);
 document.addEventListener("change",e=>{if(e.target.id==="cert-name") render()});
 
 /* ---------- boot ---------- */
