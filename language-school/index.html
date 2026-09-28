@@ -579,7 +579,7 @@ const ord=(a,hint,w)=>({t:"order",a,hint,w});
 const LEVELS=[
   {n:1,code:"A1",name:"Starter",th:"ระดับเริ่มต้น"},
   {n:2,code:"A2",name:"Elementary",th:"ระดับพื้นฐาน"},
-  {n:3,code:"B1",name:"Pre-Intermediate",th:"ระดับกลางตอนต้น"},
+  {n:3,code:"B1",name:"Intermediate",th:"ระดับกลาง"},
   {n:4,code:"B2",name:"Upper-Intermediate",th:"ระดับกลางตอนปลาย"},
   {n:5,code:"C1",name:"Advanced",th:"ระดับสูง"}
 ];
@@ -602,7 +602,7 @@ const COURSE=[
   head:["ประธาน","be","ตัวอย่าง"],
   rows:[["I","am","I am (I'm) a student."],["He / She / It","is","She is (She's) from Japan."],["You / We / They","are","They are (They're) my friends."]],
   ex:[["I'm not a teacher.","ฉันไม่ได้เป็นครู (ปฏิเสธ: เติม not)"],["Are you a student? — Yes, I am.","คุณเป็นนักเรียนใช่ไหม — ใช่"],["Where are you from?","คุณมาจากไหน"]],
-  mist:[["I student.","I am a student.","ขาด be และอย่าลืม a หน้าอาชีพ"],["She are my friend.","She is my friend.","She ใช้ is"],["Yes, I'm.","Yes, I am.","คำตอบสั้นห้ามย่อ"]]},
+  mist:[["I student.","I am a student.","ขาด be และอย่าลืม a หน้าอาชีพ"],["She are my friend.","She is my friend.","She ใช้ is"],["Yes, I'm.","Yes, I am.","คำตอบสั้นแบบ Yes ห้ามย่อ"]]},
  dialogue:{cast:{A:"Jane",B:"Nok"},lines:[
   ["A","Hello! I'm Jane. What's your name?","สวัสดี ฉันชื่อเจน คุณชื่ออะไร"],
   ["B","Hi, Jane. My name is Nok.","สวัสดีค่ะเจน ฉันชื่อนก"],
@@ -750,7 +750,7 @@ const COURSE=[
   v("would like","ต้องการ (สุภาพ)","phr.","I'd like a glass of water.","ขอน้ำเปล่าหนึ่งแก้ว"),
   v("spicy","เผ็ด","adj.","Not too spicy, please.","ไม่เผ็ดมากนะคะ"),
   v("bill","บิล / ใบเสร็จ","n.","Could I have the bill, please?","ขอบิลด้วยค่ะ"),
-  v("some","บ้าง / จำนวนหนึ่ง","det.","Would you like some rice?","รับข้าวเพิ่มไหมคะ"),
+  v("some","บ้าง / จำนวนหนึ่ง","det.","Would you like some rice?","รับข้าวไหมคะ"),
   v("any","ใดๆ (คำถาม/ปฏิเสธ)","det.","We don't have any milk.","เราไม่มีนมเลย"),
   v("dessert","ของหวาน","n.","What's for dessert?","ของหวานมีอะไรบ้าง")
  ],
@@ -772,11 +772,11 @@ const COURSE=[
   q:[mc("What does Ploy order?",["pad thai","green curry","fried rice"],1),mc("What does she drink?",["coffee","juice","water"],2)]},
  practice:[
   mc("I'd like ___ apple, please.",["a","an","some"],1,"apple ขึ้นต้นด้วยเสียงสระ ใช้ an"),
-  mc("Is there ___ milk in the fridge?",["some","any","a"],1,"คำถามใช้ any"),
+  mc("There isn't ___ milk in the fridge.",["some","any","a"],1,"ประโยคปฏิเสธใช้ any"),
   mc("We need ___ eggs for the cake.",["any","some","a"],1),
   fill("___ you like something to drink?","would"),
   mc("How ___ water do you drink every day?",["many","much"],1,"water นับไม่ได้ ใช้ much"),
-  ord("Could I have the bill please","ขอบิลด้วยค่ะ")],
+  Object.assign({alts:["Please could I have the bill","Could I please have the bill"]},ord("Could I have the bill please","ขอบิลด้วยค่ะ"))],
  quiz:[mc("There isn't ___ sugar.",["some","any","a"],1),mc("How ___ bananas do you want?",["much","many"],1),fill("I'd ___ a cup of tea, please.","like")],
  role:{th:"คุณอยู่ในร้านอาหาร ครูรับบทพนักงานเสิร์ฟ ลองสั่งอาหาร เครื่องดื่ม และขอบิลอย่างสุภาพ",opener:"Good evening! Here's the menu. What would you like?",
   shadow:["I'd like the fried rice, please.","Not too spicy, please.","Could I have some water?","Could I have the bill, please?"]},
@@ -816,7 +816,7 @@ const COURSE=[
   fill("The café is ___ the bank and the school.","between","ระหว่าง A และ B = between A and B"),
   mc("เลือกประโยคที่ถูกต้อง",["It has a market near my house.","There is a market near my house.","There are a market near my house."],1),
   ord("Turn right at the traffic lights","เลี้ยวขวาที่ไฟแดง")],
- quiz:[fill("There ___ a big park in my city.","is"),mc("The pharmacy is ___ to the post office.",["near","next","opposite"],1),fill("___ there any restaurants near here?","are")],
+ quiz:[fill("There ___ a big park in my city.","is"),mc("The pharmacy is ___ to the post office.",["between","next","opposite"],1),fill("___ there any restaurants near here?","are")],
  role:{th:"ครูรับบทนักท่องเที่ยวที่หลงทาง คุณเป็นคนท้องถิ่น ช่วยบอกทางไปสถานีรถไฟฟ้า",opener:"Excuse me! I'm a bit lost. Is there a BTS station near here?",
   shadow:["Excuse me, where is the station?","Go straight and turn right.","It's next to the bank.","It's about ten minutes on foot."]},
  writing:{th:"เขียนบอกทางจากบ้านคุณไปร้านสะดวกซื้อที่ใกล้ที่สุด",model:"Go out of my house and turn left. Go straight for two minutes. The shop is on the corner, opposite the school."}},
@@ -873,7 +873,7 @@ const COURSE=[
  ],
  grammar:{title:"การเปรียบเทียบ: -er than / more … than",
   intro:["คำคุณศัพท์สั้น (1 พยางค์) เติม <mark>-er</mark>: cheap → cheaper, big → bigger (สระเดียวตามด้วยพยัญชนะเดียว ให้เพิ่มตัวสะกดซ้ำ)",
-   "คำยาว (2–3 พยางค์ขึ้นไป) ใช้ <mark>more</mark> + คำคุณศัพท์: more expensive, more beautiful และตามด้วย than เมื่อเทียบกับสิ่งอื่น",
+   "คำ 2 พยางค์ที่ลงท้ายด้วย -y เปลี่ยน y เป็น -ier: easy → easier, happy → happier ส่วนคำ 2 พยางค์อื่นๆ และคำที่ยาวกว่านั้นใช้ <mark>more</mark> + คำคุณศัพท์: more expensive, more beautiful และตามด้วย than เมื่อเทียบกับสิ่งอื่น",
    "คำพิเศษต้องจำ: good → better, bad → worse"],
   head:["คำคุณศัพท์","เปรียบเทียบ"],
   rows:[["cheap","cheaper than"],["big","bigger than"],["easy","easier than"],["expensive","more expensive than"],["good / bad","better / worse than"]],
@@ -928,9 +928,9 @@ const COURSE=[
   q:[mc("Who is going to Japan with Beam?",["a friend","Beam's sister","Jane"],1),mc("How long will they stay in Osaka?",["three days","five days","two weeks"],1)]},
  practice:[
   mc("Look at those dark clouds! It ___ rain.",["is going to","will to","going to"],0,"เห็นหลักฐานชัดเจนตรงหน้า ใช้ going to"),
-  mc("The phone is ringing. — I ___ answer it.",["am going to","'ll","will to"],1,"ตัดสินใจตอนนั้นใช้ will"),
+  mc("The phone is ringing. — I ___ answer it.",["am going to","will","will to"],1,"ตัดสินใจตอนนั้นใช้ will"),
   mc("We ___ visit Grandma next weekend. We already bought the tickets.",["will","are going to","going to"],1),
-  fill("I think she ___ pass the exam. She studies hard.","will"),
+  fill("I think she ___ pass the exam. She studies hard.","will|is going to"),
   mc("luggage แปลว่า",["กระเป๋าเดินทาง","หนังสือเดินทาง","เที่ยวบิน"],0),
   ord("What are you going to do tomorrow","พรุ่งนี้คุณจะทำอะไร")],
  quiz:[fill("I'm ___ to study abroad next year.","going"),mc("Don't worry. I ___ help you.",["will","am going","going"],0),mc("She ___ going to buy a new car.",["is","will","does"],0)],
@@ -1008,7 +1008,7 @@ const COURSE=[
   mc("Could you ___ me the file?",["to send","send","sending"],1),
   mc("Would you mind ___ the door?",["close","to close","closing"],2,"mind ตามด้วย V-ing"),
   mc("ประโยคไหนสุภาพที่สุด",["Give me the report.","Can you give me the report?","Would you mind giving me the report?"],2),
-  fill("___ I help you with that? (เสนอช่วย)","shall"),
+  fill("___ I help you with that? (เสนอช่วย)","shall|can|may"),
   mc("colleague แปลว่า",["ผู้จัดการ","เพื่อนร่วมงาน","ลูกค้า"],1),
   ord("Could you speak more slowly","ช่วยพูดช้าลงหน่อยได้ไหม")],
  quiz:[fill("Would you mind ___ off the air-con? (turn)","turning"),mc("Would you mind helping me? — ___",["Yes, I mind.","No, not at all.","No, I won't."],1),mc("___ you tell me the deadline, please?",["Could","Should","Must"],0)],
@@ -1028,7 +1028,7 @@ const COURSE=[
   v("feel better","รู้สึกดีขึ้น","v.","I hope you feel better soon.","หวังว่าจะหายเร็วๆ นะ")
  ],
  grammar:{title:"should / shouldn't และการบอกอาการ",
-  intro:["ให้คำแนะนำใช้ <mark>should + กริยารูปธรรมดา</mark> และห้ามใช้ shouldn't + กริยา (ไม่มี to ตามหลัง)",
+  intro:["ให้คำแนะนำใช้ <mark>should + กริยารูปธรรมดา</mark> ส่วนแนะนำว่าไม่ควรทำใช้ shouldn't + กริยา (ทั้งสองแบบไม่มี to ตามหลัง)",
    "บอกอาการป่วยใช้ <mark>I have a …</mark> เช่น I have a headache / a cold / a fever ไม่ใช้ I am headache",
    "ถามอาการ: What's the matter? / What's wrong? และบอกว่าไม่สบายใช้ I don't feel well."],
   head:["","รูปประโยค","ตัวอย่าง"],
@@ -1088,10 +1088,10 @@ const COURSE=[
   mc("She ___ the answer, so she put up her hand.",["knew","was knowing","had been knowing"],0,"know ไม่ใช้รูป -ing"),
   fill("By the time I arrived, everyone ___ home. (go)","had gone","เกิดก่อนที่ฉันจะไปถึง"),
   ord("I was walking home when I saw an accident","ฉันกำลังเดินกลับบ้านตอนที่เห็นอุบัติเหตุ")],
- quiz:[mc("They ___ dinner when I called them.",["had","were having","have had"],1),fill("He realised he ___ his keys at the office. (leave)","had left"),mc("___ I was studying, my brother was playing games.",["When","While","By the time"],1)],
+ quiz:[mc("They ___ dinner when I called them.",["had","were having","have had"],1),fill("He realised he ___ his keys at the office. (leave)","had left"),mc("___ I was studying, my brother was playing games.",["During","While","By the time"],1)],
  role:{th:"เล่าเรื่องที่เคยเกิดขึ้นกับคุณ เช่น เหตุการณ์ไม่คาดคิดหรือวันที่วุ่นวาย ครูจะถามรายละเอียด ใช้ past continuous และ past perfect",opener:"I love a good story! Can you tell me about something unexpected that happened to you?",
   shadow:["I was walking to work when it started to rain.","By the time I got there, the shop had closed.","Suddenly, I realised I had left my phone at home.","Eventually, everything turned out fine."]},
- writing:{th:"เล่าเหตุการณ์ไม่คาดคิดที่เคยเกิดขึ้น 4–5 ประโยค ใช้ past continuous และ past perfect",model:"Last month I was waiting for a train at Siam station when I heard someone call my name. It was my old teacher, whom I hadn't seen for ten years. She had moved to Japan after I graduated, and she had just come back to Thailand. We talked until my train had left, but I didn't mind at all."}},
+ writing:{th:"เล่าเหตุการณ์ไม่คาดคิดที่เคยเกิดขึ้น 4–5 ประโยค ใช้ past continuous และ past perfect",model:"Last month I was waiting for a train at Siam station when I heard someone call my name. It was my old teacher, whom I hadn't seen for ten years. She had moved to Japan after I graduated, and she had just come back to Thailand. We talked for so long that I missed my train, but I didn't mind at all."}},
 
 {id:"u14",lv:4,en:"In the news",th:"ข่าวและการเล่าต่อ",
  vocab:[
@@ -1177,7 +1177,7 @@ const COURSE=[
   v("suspect","ผู้ต้องสงสัย","n.","The suspect was seen near the bank.","มีคนเห็นผู้ต้องสงสัยใกล้ธนาคาร"),
   v("mystery","ปริศนา เรื่องลึกลับ","n.","It's still a mystery who sent the letter.","ยังเป็นปริศนาว่าใครส่งจดหมายมา"),
   v("obviously","เห็นได้ชัด","adv.","Obviously, he was not happy.","เห็นได้ชัดว่าเขาไม่พอใจ"),
-  v("possibly","อาจจะ เป็นไปได้","adv.","It will possibly rain tomorrow.","พรุ่งนี้ฝนอาจจะตก"),
+  v("possibly","อาจจะ เป็นไปได้","adv.","It could possibly rain tomorrow.","พรุ่งนี้ฝนอาจจะตก"),
   v("definitely","แน่นอน","adv.","I'll definitely come to your party.","ฉันไปงานเลี้ยงของคุณแน่นอน"),
   v("explanation","คำอธิบาย","n.","There must be a simple explanation.","ต้องมีคำอธิบายง่ายๆ แน่ๆ"),
   v("footprint","รอยเท้า","n.","There were footprints in the snow.","มีรอยเท้าอยู่บนหิมะ")
@@ -1240,9 +1240,9 @@ const COURSE=[
   mc("If I had taken that job, I ___ in London now.",["will live","would be living","had lived"],1,"เงื่อนไขอดีต ผลตอนนี้ (now) ใช้ would + V"),
   mc("If she ___ such a shy person, she would have spoken at yesterday's meeting.",["isn't","weren't","won't be"],1,"นิสัยที่ยังเป็นอยู่ (ปัจจุบัน) ส่งผลต่อเรื่องเมื่อวาน"),
   fill("If I ___ breakfast, I wouldn't be so hungry now. (have)","had had","เงื่อนไขในอดีต had + V3 (had had)"),
-  mc("If we had left earlier, we ___ there by now.",["would be","would have been","will be"],0,"by now = ตอนนี้"),
+  mc("If we had left earlier, we ___ there right now.",["would be","would have been","will be"],0,"right now = ตอนนี้ ผลอยู่ในปัจจุบัน ใช้ would + V"),
   mc("If he spoke better English, he ___ the job last year.",["would get","would have got","will get"],1,"ความสามารถปัจจุบัน ส่งผลต่อเรื่องปีที่แล้ว"),
-  ord("If I had saved more money I would be travelling now","ถ้าเก็บเงินได้มากกว่านี้ ตอนนี้คงได้เที่ยวอยู่")],
+  Object.assign({alts:["I would be travelling now if I had saved more money"]},ord("If I had saved more money I would be travelling now","ถ้าเก็บเงินได้มากกว่านี้ ตอนนี้คงได้เที่ยวอยู่"))],
  quiz:[fill("If I ___ my passport, I would be on the plane now. (not lose)","hadn't lost|had not lost"),mc("If she were taller, she ___ the basketball team last year.",["would join","would have joined","had joined"],1),mc("In ___, I should have asked for help.",["hindsight","dilemma","outcome"],0)],
  role:{th:"คุยกับครูเรื่องจุดเปลี่ยนในชีวิต และจินตนาการว่าถ้าตัดสินใจต่างไป ตอนนี้ชีวิตจะเป็นอย่างไร ใช้ mixed conditionals",opener:"Let's talk about turning points. Was there a moment in your life when a different decision would have changed everything?",
   shadow:["If I had chosen a different major, I would be working in another field now.","If I were more patient, I wouldn't have argued with him.","In hindsight, it was the right decision.","That was a real turning point in my life."]},
@@ -1266,14 +1266,14 @@ const COURSE=[
   head:["รูปแบบ","ตัวอย่าง"],
   rows:[["It is said that + ประโยค","It is said that he is very rich."],["S + is said to + V (ปัจจุบัน)","He is said to be very rich."],["S + is said to have + V3 (อดีต)","He is said to have made his money in property."]],
   ex:[["It is estimated that ten million people visit the city every year.","คาดว่ามีคนมาเที่ยวเมืองนี้ปีละสิบล้านคน"],["The company is reported to be planning job cuts.","มีรายงานว่าบริษัทกำลังวางแผนลดพนักงาน"],["The painting is thought to have been stolen in 1990.","เชื่อกันว่าภาพวาดถูกขโมยไปเมื่อปี 1990"]],
-  mist:[["He is said that he is rich.","He is said to be rich.","ขึ้นต้นด้วยคน ต้องตามด้วย to V (หรือใช้ It is said that…)"],["She is believed to leave yesterday.","She is believed to have left yesterday.","เหตุการณ์ในอดีตใช้ to have + V3"],["It says that the museum is closed.","It is said that the museum is closed.","ต้องใช้ passive (is said)"]]},
+  mist:[["He is said that he is rich.","He is said to be rich.","ขึ้นต้นด้วยคน ต้องตามด้วย to V (หรือใช้ It is said that…)"],["She is believed to leave yesterday.","She is believed to have left yesterday.","เหตุการณ์ในอดีตใช้ to have + V3"],["It is saying that the museum is closed.","It is said that the museum is closed.","ภาษารายงานข่าวใช้ passive: It is said that… (ห้ามใช้ is saying)"]]},
  dialogue:{cast:{A:"Mint",B:"Ploy"},lines:[
   ["A","Have you read about the new airport project?","อ่านข่าวโครงการสนามบินใหม่หรือยัง"],
   ["B","Yes. It's reported to be the most expensive project in the country's history.","อ่านแล้ว มีรายงานว่าเป็นโครงการที่แพงที่สุดในประวัติศาสตร์ประเทศ"],
   ["A","And it's controversial, too. Some people are worried about the environment.","แถมยังเป็นที่ถกเถียงด้วย บางคนกังวลเรื่องสิ่งแวดล้อม"],
   ["B","Apparently, thousands of trees are expected to be cut down.","ได้ยินว่าต้นไม้หลายพันต้นจะถูกตัด"],
   ["A","A spokesperson said they would plant new forests elsewhere, but not everyone believes that.","โฆษกบอกว่าจะปลูกป่าใหม่ที่อื่น แต่ไม่ใช่ทุกคนจะเชื่อ"],
-  ["B","Well, the project is thought to create around twenty thousand jobs, so many people support it.","แต่เชื่อกันว่าโครงการจะสร้างงานราวสองหมื่นตำแหน่ง คนจำนวนมากเลยสนับสนุน"]],
+  ["B","Well, the project is expected to create around twenty thousand jobs, so many people support it.","แต่เชื่อกันว่าโครงการจะสร้างงานราวสองหมื่นตำแหน่ง คนจำนวนมากเลยสนับสนุน"]],
   q:[mc("What is said about the airport project's cost?",["It is the most expensive in the country's history.","It is cheaper than expected.","It has not been decided."],0),mc("Why do many people support the project?",["It will protect forests.","It is expected to create jobs.","It will reduce traffic."],1)]},
  practice:[
   mc("It ___ that the new law will reduce crime.",["is believed","believes","is believing"],0),
@@ -1360,7 +1360,7 @@ const COURSE=[
   fill("The factory closed. ___, many people lost their jobs. (ผลลัพธ์ ขึ้นต้นด้วย C)","consequently"),
   mc("___ it was raining, they played football.",["Despite","Although","Because of"],1,"although + ประโยค"),
   ord("Overall the advantages outweigh the disadvantages","โดยรวมแล้วข้อดีมากกว่าข้อเสีย")],
- quiz:[mc("Cycling is cheap. ___, it is good for your health.",["Furthermore","Whereas","Despite"],0),fill("___ its drawbacks, the plan was accepted. (แม้จะมี)","despite"),mc("The flight was delayed ___ bad weather.",["because","due to","therefore"],1)],
+ quiz:[mc("Cycling is cheap. ___, it is good for your health.",["Furthermore","Whereas","Despite"],0),fill("___ its drawbacks, the plan was accepted. (แม้จะมี)","despite|in spite of"),mc("The flight was delayed ___ bad weather.",["because","due to","therefore"],1)],
  role:{th:"ฝึกโต้แย้งแบบสอบ IELTS Speaking Part 3 ครูจะถามความเห็นในประเด็นต่างๆ ตอบให้มีเหตุผลและใช้คำเชื่อม",opener:"Some people say that social media does more harm than good. What's your view?",
   shadow:["From my perspective, the benefits are clear.","Furthermore, it saves a great deal of time.","Nevertheless, there are some drawbacks.","Overall, I would argue that a balance is best."]},
  writing:{th:"เขียนย่อหน้าแสดงความคิดเห็น 5–6 ประโยค เรื่องการทำงานที่บ้าน ใช้คำเชื่อมอย่างน้อย 4 คำ",model:"Working from home has become common in recent years. From my perspective, it offers several benefits. Firstly, employees save time and money on commuting. Furthermore, many people find that they can concentrate better at home. Nevertheless, there are some drawbacks, such as loneliness and weaker teamwork. Overall, I would argue that a combination of home and office work is the most effective approach."}}
@@ -1371,7 +1371,7 @@ const PLACEMENT=[
   mc("She ___ two brothers.",["have","has","having"],1),
   mc("He ___ to work every day.",["go","goes","going"],1),
   mc("How ___ are you? — I'm 20.",["old","many","much"],0),
-  mc("Is there ___ milk in the fridge?",["some","any","a"],1),
+  mc("There isn't ___ milk in the fridge.",["some","any","a"],1),
   mc("Yesterday we ___ a movie.",["watch","watched","watching"],1),
   mc("This phone is ___ than that one.",["cheap","cheaper","more cheaper"],1),
   mc("___ there two banks near here?",["Is","Are","Has"],1),
@@ -1606,7 +1606,7 @@ function fillBubble(m,body,role,text,withSay){
 
 /* ---------- pronunciation practice (native app only) ---------- */
 const PR={}; let prActive=null;
-const CONTR={"i'm":"i am","you're":"you are","we're":"we are","they're":"they are","he's":"he is","she's":"she is","it's":"it is","that's":"that is","what's":"what is","there's":"there is","where's":"where is","here's":"here is","i'll":"i will","you'll":"you will","we'll":"we will","i've":"i have","you've":"you have","we've":"we have","i'd":"i would","don't":"do not","doesn't":"does not","didn't":"did not","isn't":"is not","aren't":"are not","haven't":"have not","hasn't":"has not","can't":"cannot","won't":"will not","shouldn't":"should not","let's":"let us"};
+const CONTR={"i'm":"i am","you're":"you are","we're":"we are","they're":"they are","he's":"he is","she's":"she is","it's":"it is","that's":"that is","what's":"what is","there's":"there is","where's":"where is","here's":"here is","i'll":"i will","you'll":"you will","we'll":"we will","i've":"i have","you've":"you have","we've":"we have","i'd":"i would","don't":"do not","doesn't":"does not","didn't":"did not","isn't":"is not","aren't":"are not","haven't":"have not","hasn't":"has not","can't":"can not","cannot":"can not","wasn't":"was not","weren't":"were not","couldn't":"could not","wouldn't":"would not","it'll":"it will","he'll":"he will","she'll":"she will","they'll":"they will","they've":"they have","he'd":"he would","she'd":"she would","we'd":"we would","they'd":"they would","you'd":"you would","who's":"who is","mustn't":"must not","needn't":"need not","won't":"will not","shouldn't":"should not","let's":"let us"};
 const ONES=["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
 const TENS=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
 function pronWords(s){
@@ -2859,7 +2859,7 @@ const DICT=[
   ["The meeting was postponed because the manager was sick.","การประชุมถูกเลื่อนเพราะผู้จัดการป่วย"],
   ["You should drink more water and get some rest.","คุณควรดื่มน้ำมากขึ้นและพักผ่อนบ้าง"],
   ["Many people believe that technology makes life easier.","หลายคนเชื่อว่าเทคโนโลยีทำให้ชีวิตง่ายขึ้น"],
-  ["The new shopping center will be opened next month.","ศูนย์การค้าแห่งใหม่จะเปิดเดือนหน้า"],
+  ["The new shopping centre will open next month.","ศูนย์การค้าแห่งใหม่จะเปิดเดือนหน้า"],
   ["She asked me whether I could help her with the project.","เธอถามฉันว่าช่วยงานโครงการได้ไหม"],
   ["Although it was expensive, the trip was worth the money.","ถึงจะแพง แต่ทริปนี้ก็คุ้มค่า"],
   ["I'm looking forward to hearing from you soon.","หวังว่าจะได้รับข่าวจากคุณเร็วๆ นี้"]]}
@@ -2875,9 +2875,9 @@ const SOUNDS=[
  {id:"final",title:"เสียงท้ายคำ",tip:"คนไทยมักไม่ออกเสียงท้ายคำ ถ้าท้ายคำเป็นเสียงก้อง (b, d, g, z) สระจะยาวขึ้นเล็กน้อย ถ้าเป็น p, t, k, s สระจะสั้นและตัดเสียงเร็ว",
   pairs:[["bag","back"],["need","neat"],["prize","price"],["eyes","ice"],["cab","cap"],["dog","dock"]]},
  {id:"vowel",title:"สระสั้น-ยาว",tip:"ship, full, live เป็นสระสั้นและผ่อนคลาย · sheep, fool, leave เป็นสระยาวและเกร็งปาก เช่น ยิ้มกว้างสำหรับ \"อี\"",
-  pairs:[["ship","sheep"],["full","fool"],["live","leave"],["sit","seat"],["pull","pool"],["fill","feel"]]},
+  pairs:[["ship","sheep"],["full","fool"],["fit","feet"],["sit","seat"],["pull","pool"],["fill","feel"]]},
  {id:"th",title:"TH",tip:"TH: วางปลายลิ้นระหว่างฟันบนและล่างแล้วเป่าลมออก ไม่ใช่ \"ท\" หรือ \"ต\" · ใน they, those เสียงจะก้อง",
-  pairs:[["three","tree"],["thank","tank"],["thin","tin"],["bath","bat"],["they","day"],["those","doze"]]},
+  pairs:[["three","tree"],["thank","tank"],["thin","tin"],["faith","fate"],["they","day"],["those","doze"]]},
  {id:"teen",title:"-teen กับ -ty",tip:"-teen ลงเสียงหนักพยางค์หลังและลากยาว (thir-TEEN) · -ty ลงเสียงหนักพยางค์แรก (THIR-ty)",
   pairs:[["thirteen","thirty"],["fourteen","forty"],["fifteen","fifty"],["sixteen","sixty"],["seventeen","seventy"],["eighteen","eighty"]]}
 ];
@@ -2937,7 +2937,7 @@ const GRAM_X=[
    head:["Tense","Active","Passive"],rows:[["Present","They clean the room.","The room is cleaned."],["Past","They cleaned the room.","The room was cleaned."],["Future","They will clean the room.","The room will be cleaned."],["Present perfect","They have cleaned the room.","The room has been cleaned."]],
    ex:[["This bridge was built in 1932.","สะพานนี้สร้างเมื่อปี 1932"],["The results will be announced tomorrow.","ผลจะประกาศพรุ่งนี้"],["Rice is grown in many parts of Thailand.","ข้าวปลูกในหลายพื้นที่ของไทย"]],
    mist:[["The letter was send yesterday.","The letter was sent yesterday.","passive ต้องใช้ V3"],["The house built in 1990.","The house was built in 1990.","ขาด be"],["It was happened last night.","It happened last night.","happen ใช้ passive ไม่ได้"]]},
-  quiz:[{t:"mc",q:"English ___ in many countries.",o:["speaks","is spoken","is speaking"],a:1},{t:"mc",q:"The package ___ tomorrow morning.",o:["will deliver","will be delivered","delivered"],a:1},{t:"mc",q:"My phone ___ last night.",o:["was stolen","stole","was stole"],a:0},{t:"mc",q:"The new hospital ___ by the city last year.",o:["opened","was opened","has opening"],a:1},{t:"mc",q:"All the tickets ___ already.",o:["have sold","have been sold","sold"],a:1}]},
+  quiz:[{t:"mc",q:"English ___ in many countries.",o:["speaks","is spoken","is speaking"],a:1},{t:"mc",q:"The package ___ tomorrow morning.",o:["will deliver","will be delivered","delivered"],a:1},{t:"mc",q:"My phone ___ last night.",o:["was stolen","stole","was stole"],a:0},{t:"mc",q:"The new hospital ___ by the city last year.",o:["opened","was opened","has opening"],a:1},{t:"mc",q:"All the rooms ___ already. (book)",o:["have booked","have been booked","booked"],a:1}]},
  {id:"rel",title:"who / which / that / where",th:"คำเชื่อมขยายคำนาม",
   g:{title:"Relative clauses: who, which, that, where, whose",
    intro:["ใช้ขยายคำนาม ทำหน้าที่เหมือนคำว่า \"ที่\" ในภาษาไทย","<mark>who</mark> ใช้กับคน, <mark>which</mark> ใช้กับสิ่งของหรือสัตว์, <mark>that</mark> ใช้แทนได้ทั้งสองแบบ","<mark>where</mark> ใช้กับสถานที่ และ <mark>whose</mark> แสดงความเป็นเจ้าของ"],
@@ -3054,7 +3054,7 @@ const SCENES=[
 
 const PHRASES=[
  ["It's a piece of cake.","ง่ายมาก","Don't worry about the test. It's a piece of cake."],
- ["Break a leg!","ขอให้โชคดี (ก่อนแสดงหรือสอบ)","You have your interview today? Break a leg!"],
+ ["Break a leg!","ขอให้โชคดี (ก่อนขึ้นแสดงหรือสัมภาษณ์)","You have your interview today? Break a leg!"],
  ["I'm all ears.","ฟังอยู่เต็มที่ เล่ามาเลย","Tell me what happened. I'm all ears."],
  ["Better late than never.","มาช้ายังดีกว่าไม่มา","You finally started learning English? Better late than never!"],
  ["Take it easy.","ใจเย็นๆ พักผ่อนบ้าง","You've worked hard all week. Take it easy this weekend."],
@@ -3119,7 +3119,7 @@ function pBack(id,label){return '<button class="back" data-act="pgo"'+(id?' data
 /* mistakes notebook */
 function addMistake(src,it){
   if(!it||!src) return;
-  const item={t:it.t,q:it.q,o:it.o,a:it.a,w:it.w||it.why||"",hint:it.hint};
+  const item={t:it.t,q:it.q,o:it.o,a:it.a,w:it.w||it.why||"",hint:it.hint}; if(it.alts) item.alts=it.alts;
   if(item.t==="mc"&&!Array.isArray(item.o)) return;
   const id=(src+"|"+(item.q||"")+"|"+(item.t==="order"?item.a:"")).slice(0,240);
   S.mistakes=(Array.isArray(S.mistakes)?S.mistakes:[]).filter(m=>m.id!==id).concat([{id,src,it:item,at:Date.now()}]).slice(-150);
@@ -3558,7 +3558,7 @@ const BADGES=[
  {id:"first",t:"ก้าวแรก",d:"ผ่านสอบท้ายบทครั้งแรก",ok:()=>COURSE.some((_,i)=>isDone(i))},
  {id:"a1",t:"จบ A1",d:"ผ่านทุกบทระดับ Starter",ok:()=>lvDone(1)},
  {id:"a2",t:"จบ A2",d:"ผ่านทุกบทระดับ Elementary",ok:()=>lvDone(2)},
- {id:"b1",t:"จบ B1",d:"ผ่านทุกบทระดับ Pre-Intermediate",ok:()=>lvDone(3)},
+ {id:"b1",t:"จบ B1",d:"ผ่านทุกบทระดับ Intermediate",ok:()=>lvDone(3)},
  {id:"b2",t:"จบ B2",d:"ผ่านทุกบทระดับ Upper-Intermediate",ok:()=>lvDone(4)},
  {id:"s3",t:"เรียนติดกัน 3 วัน",d:"เข้าเรียนต่อเนื่อง 3 วัน",ok:()=>maxStreak()>=3},
  {id:"s7",t:"หนึ่งสัปดาห์เต็ม",d:"เข้าเรียนต่อเนื่อง 7 วัน",ok:()=>maxStreak()>=7},
@@ -4821,7 +4821,7 @@ const ACT={
   "r-opt":t=>{const r=curRunner(); if(!r||r.answered) return; const k=+t.dataset.o; answer(r,k===r.items[r.i].a,k)},
   "r-tile":t=>{const r=curRunner(); if(!r||r.answered) return; const k=+t.dataset.k, j=r.pool.findIndex(x=>x.k===k); if(j<0) return; r.built.push(r.pool.splice(j,1)[0]); render()},
   "r-unt":t=>{const r=curRunner(); if(!r||r.answered) return; const k=+t.dataset.k, j=r.built.findIndex(x=>x.k===k); if(j<0) return; r.pool.push(r.built.splice(j,1)[0]); render()},
-  "r-order":()=>{const r=curRunner(); if(!r||r.answered||r.pool.length) return; const s=r.built.map(x=>x.w).join(" "); answer(r,norm(s)===norm(r.items[r.i].a),s)},
+  "r-order":()=>{const r=curRunner(); if(!r||r.answered||r.pool.length) return; const s=r.built.map(x=>x.w).join(" "); answer(r,[r.items[r.i].a].concat(r.items[r.i].alts||[]).some(a=>norm(s)===norm(a)),s)},
   "r-next":()=>{const r=curRunner(); if(r&&r.answered) runnerNext(r)},
   "start-placement":()=>{P.runner=newRunner(PLACEMENT,"placement");render()},
   "rv-start":()=>{const q=shuffle(dueWords());R={queue:q,revealed:false,count:0};render()},

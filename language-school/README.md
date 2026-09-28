@@ -10,7 +10,7 @@
 |---|---|
 | A1 Starter | 1 ทักทายและแนะนำตัว (am/is/are) · 2 ตัวเลข อายุ เบอร์โทร · 3 ครอบครัว (my/his/her, have/has) · 4 กิจวัตรประจำวัน (Present Simple) |
 | A2 Elementary | 5 สั่งอาหาร (would like, some/any) · 6 ถามทาง (There is/are) · 7 เล่าวันหยุด (Past Simple) · 8 ซื้อของ (Comparatives) |
-| B1 Pre-Intermediate | 9 วางแผนเที่ยว (going to / will) · 10 ประสบการณ์ (Present Perfect) · 11 ภาษาในที่ทำงาน (Could you / Would you mind) · 12 สุขภาพ (should) |
+| B1 Intermediate | 9 วางแผนเที่ยว (going to / will) · 10 ประสบการณ์ (Present Perfect) · 11 ภาษาในที่ทำงาน (Could you / Would you mind) · 12 สุขภาพ (should) |
 | B2 Upper-Intermediate | 13 เล่าเรื่องในอดีต (narrative tenses) · 14 ข่าวและการเล่าต่อ (reported speech) · 15 ความเสียดาย (third conditional, wish) · 16 การคาดเดา (must / might / can't have) |
 | C1 Advanced | 17 จุดเปลี่ยน (mixed conditionals) · 18 ข่าวทางการ (passive reporting) · 19 การเน้นประเด็น (cleft sentences) · 20 การสร้างข้อโต้แย้ง (linking words) |
 
