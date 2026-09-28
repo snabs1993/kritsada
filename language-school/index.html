@@ -523,6 +523,19 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .xpc-v{position:absolute;left:50%;transform:translateX(-50%);font-size:12px;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
 .xpc-x{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;border-top:1px solid var(--line);padding-top:4px;font-size:11px;color:var(--ink-3);text-align:center;font-variant-numeric:tabular-nums}
 .xpc-x b{color:var(--ink)}
+/* round 6: grouped hub, verbs, phrasebook */
+.p-group{margin-top:26px}
+.p-group .p-grid{margin-top:10px}
+.vb-tbl .vb-row{cursor:pointer}
+.vb-tbl .vb-row:hover td{background:var(--accent-soft)}
+.vb-in{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.vb-in label{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--ink-2)}
+.vb-in input{font-size:18px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);min-width:0;color:var(--ink)}
+.vb-in input.ok{border-color:var(--green);background:var(--green-soft)}
+.vb-in input.no{border-color:var(--red);background:var(--red-soft)}
+@media (max-width:520px){.vb-in{grid-template-columns:1fr}}
+.pb-item{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.pb-item.playing{border-color:var(--accent);background:var(--accent-soft)}
 /* touch screens: bigger speaker buttons, hide the tab bar while the keyboard is up */
 @media (pointer:coarse){.say,.mic{width:42px;height:42px}.mic svg{width:19px;height:19px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
 @media (max-width:1100px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
@@ -2236,6 +2249,141 @@ reading:{title:"Reading",th:"การอ่าน",time:20*60,est:"20 นาท
      {q:"The British established huge ___ in Assam and Darjeeling.",a:"plantations|tea plantations",show:"plantations",why:"ย่อหน้า E"}]}]}]}
 },IELTS_MORE[1]);
 
+/* ---- TOEIC Test 4 ---- */
+TOEIC_MORE.push({listening:{title:"Listening",th:"การฟัง",time:0,est:"ประมาณ 12 นาที",intro:TL_INTRO,parts:[
+ Object.assign({kind:"respond",title:"Part 2: Question–Response",items:[
+  {q:"Where should I send the signed contract?",o:["By Thursday at the latest.","Yes, I signed it yesterday.","To the legal department on the fourth floor."],a:2,why:"Where ถามสถานที่ จึงตอบว่าส่งไปแผนกกฎหมาย ข้อ A ตอบเรื่องเวลา ส่วนข้อ B ตอบ Yes ซึ่งใช้กับคำถาม Wh- ไม่ได้"},
+  {q:"When does the new software update go live?",o:["Tonight after midnight.","It's a very useful update.","In the IT office."],a:0,why:"When ถามเวลา จึงตอบว่าคืนนี้หลังเที่ยงคืน ข้อ C ตอบเป็นสถานที่ ส่วนข้อ B แค่หยิบคำว่า update มาหลอก"},
+  {q:"Would you like me to print the agenda for the conference?",o:["The printer is on sale.","Yes, twenty copies, please.","It was a long conference."],a:1,why:"Would you like me to...? เป็นการเสนอความช่วยเหลือ จึงตอบรับพร้อมบอกจำนวนชุด ข้อ A และ C หยิบคำ printer/conference มาหลอก"},
+  {q:"Why was the shipment from Hanoi delayed?",o:["About three days late.","Ship it by express mail.","There was a storm at the port."],a:2,why:"Why ถามสาเหตุ คำตอบคือมีพายุที่ท่าเรือ ข้อ A บอกแค่ว่าช้าไปกี่วัน ไม่ได้บอกสาเหตุ ส่วนข้อ B ใช้เสียงคล้าย shipment"},
+  {q:"Aren't you going to the gym after work?",o:["It's a large gym.","Not tonight. I have a dinner appointment.","I work in accounting."],a:1,why:"คำถามปฏิเสธถามเพื่อยืนยัน ตอบว่าคืนนี้ไม่ไปพร้อมให้เหตุผล ข้อ A และ C ซ้ำคำ gym/work แต่ไม่ได้ตอบคำถาม"},
+  {q:"Who's in charge of hiring the new sales staff?",o:["Ms. Tanaka is handling that.","Higher than last year.","The sales were excellent."],a:0,why:"Who ถามบุคคล จึงตอบชื่อคนที่ดูแลเรื่องนี้ ข้อ B ใช้เสียง higher คล้าย hiring ส่วนข้อ C ซ้ำคำ sales"}]},P2DIR),
+ Object.assign({kind:"sets",title:"Part 3: Conversations",sets:[
+  {audio:[["M","Hi, I'd like to ask about my membership. My company is sending me to Singapore for two months, so I won't be able to use the gym."],["W","I see. Instead of canceling, you can freeze your membership for up to three months. There's a small fee of ten dollars per month."],["M","That sounds better than canceling. Do I need to fill out a form?"],["W","Yes, here it is. And please bring your membership card when you come back, so we can reactivate your account."]],
+   qs:[{q:"Why will the man be unable to use the gym?",o:["He has injured his leg.","He is going to work abroad for a while.","He is moving to a new apartment.","The gym is closing for repairs."],a:1,why:"My company is sending me to Singapore for two months บริษัทส่งไปทำงานต่างประเทศชั่วคราว ไม่ได้ย้ายบ้าน"},
+       {q:"What does the woman suggest?",o:["Transferring the membership","Joining a gym in Singapore","Upgrading to a premium plan","Freezing the membership"],a:3,why:"Instead of canceling, you can freeze your membership คือแนะนำให้พักสมาชิกไว้แทนการยกเลิก"},
+       {q:"What should the man bring when he returns?",o:["His membership card","A photo ID","A payment receipt","A signed form"],a:0,why:"please bring your membership card when you come back ส่วนแบบฟอร์มนั้นกรอกวันนี้เลย ไม่ต้องนำมาตอนกลับ"}]},
+  {audio:[["W","Hi, this is Karen from Brightway Furniture. We were expecting a delivery of forty office chairs this morning, but nothing has arrived."],["M","I'm very sorry, Karen. Our truck broke down on the highway last night. The chairs are being moved to another truck right now."],["W","We have a customer picking up twenty of those chairs tomorrow morning. Will they get here before then?"],["M","They should be there by five p.m. today. And to make up for the delay, we'll take fifteen percent off your invoice."]],
+   qs:[{q:"What is the woman calling about?",o:["A billing mistake","A damaged product","A late delivery","A new order"],a:2,why:"We were expecting a delivery ... but nothing has arrived ของที่ควรมาถึงแล้วยังไม่มา คือการส่งของล่าช้า"},
+       {q:"Why was the delivery delayed?",o:["A truck broke down.","The chairs were out of stock.","The address was wrong.","The weather was bad."],a:0,why:"Our truck broke down on the highway รถบรรทุกเสียกลางทาง"},
+       {q:"What does the man offer?",o:["Free delivery next time","Extra chairs","A full refund","A discount on the invoice"],a:3,why:"we'll take fifteen percent off your invoice คือลดราคาในใบแจ้งหนี้ 15% ไม่ใช่คืนเงินทั้งหมด"}]}]},P3DIR),
+ Object.assign({kind:"sets",title:"Part 4: Talks",sets:[
+  {audio:[["N","Hello, this message is for Daniel Cho. This is Priya from the Asia Retail Summit registration office. We received your online registration form, but unfortunately your payment didn't go through because the credit card has expired. Please update your card details on our website or call us back at 555-0192. Just a reminder that the early registration rate of two hundred fifty dollars ends this Friday. After that, the fee rises to three hundred twenty dollars. Also, there are still a few places left in Thursday afternoon's workshop on online marketing, if you'd like to add it to your registration."]],
+   qs:[{q:"Why is the speaker calling?",o:["To confirm a hotel booking","To report a problem with a payment","To change the date of an event","To invite the listener to speak"],a:1,why:"your payment didn't go through because the credit card has expired ชำระเงินไม่สำเร็จเพราะบัตรหมดอายุ"},
+       {q:"What will happen after Friday?",o:["The registration fee will increase.","The website will be closed.","The workshop will be canceled.","The summit will move to a new venue."],a:0,why:"the early registration rate ... ends this Friday. After that, the fee rises ค่าลงทะเบียนจะขึ้นเป็น 320 ดอลลาร์"},
+       {q:"What does the speaker say about Thursday's workshop?",o:["It is fully booked.","It has moved to the morning.","It is free for all participants.","Some places are still available."],a:3,why:"there are still a few places left ยังมีที่ว่างเหลืออยู่ ข้อ A จึงตรงข้ามกับที่พูด"}]},
+  {audio:[["N","This Saturday, Saffron Garden opens its doors on Lake Road, right next to the Central Library. Our head chef, Arun Mehta, spent fifteen years cooking in Bangkok and New Delhi, and our menu brings together the best of Thai and Indian food, made with fresh vegetables from local farms. To celebrate our opening, every table will receive a free dessert during our first week. We're open for lunch and dinner every day except Monday. Weekends are expected to be busy, so we recommend booking a table on our website."]],
+   qs:[{q:"Where is the restaurant located?",o:["Inside a shopping mall","On Central Avenue","Next to a library","Near a train station"],a:2,why:"on Lake Road, right next to the Central Library ข้อ B หยิบคำว่า Central มาหลอก"},
+       {q:"What is offered during the first week?",o:["Half-price drinks","A free dessert","A cooking class","A discount on lunch"],a:1,why:"every table will receive a free dessert during our first week"},
+       {q:"When is the restaurant closed?",o:["On Mondays","On Saturdays","On weekends","In the evenings"],a:0,why:"open ... every day except Monday เปิดทุกวันยกเว้นวันจันทร์ ส่วนวันหยุดสุดสัปดาห์เปิดและคนแน่นด้วย"}]}]},P4DIR)
+]},
+ reading:{title:"Reading",th:"การอ่าน",time:15*60,est:"15 นาที",intro:TR_INTRO,parts:[
+ Object.assign({kind:"mc",title:"Part 5: Incomplete Sentences",items:[
+  {q:"The software update will be installed ___ the weekend to avoid disrupting work.",o:["between","among","along","over"],a:3,why:"over the weekend = ในช่วงสุดสัปดาห์ ส่วน between และ among ใช้กับของตั้งแต่สองสิ่งขึ้นไป"},
+  {q:"Neither the manager ___ her assistant was available to answer questions.",o:["nor","or","and","but"],a:0,why:"neither ต้องคู่กับ nor เสมอ (neither A nor B = ทั้ง A และ B ต่างก็ไม่...)"},
+  {q:"When the shipment was delayed, the sales team contacted customers ___.",o:["immediate","immediacy","immediately","more immediate"],a:2,why:"ขยายกริยา contacted ต้องใช้ adverb คือ immediately (ทันที) ส่วน immediate เป็น adjective"},
+  {q:"Ms. Rao has worked at the law firm ___ 2019.",o:["for","since","from","during"],a:1,why:"since + จุดเริ่มต้นของเวลา ใช้คู่กับ present perfect ส่วน for ใช้กับช่วงเวลา เช่น for five years"},
+  {q:"The gym offers a free trial class to anyone ___ is interested in joining.",o:["whose","whom","which","who"],a:3,why:"anyone เป็นคน และช่องว่างทำหน้าที่ประธานของ is จึงใช้ who ส่วน whom เป็นกรรม และ which ใช้กับสิ่งของ"},
+  {q:"If the order ___ by noon, it will be delivered the next day.",o:["places","is placed","placing","will place"],a:1,why:"คำสั่งซื้อถูกสั่ง ต้องเป็น passive และประโยค if ของเงื่อนไขแบบที่ 1 ใช้ present simple ไม่ใช้ will"},
+  {q:"The conference room is too small ___ all the participants.",o:["to hold","holding","for hold","hold"],a:0,why:"too + adjective + to V = ...เกินกว่าจะ... (ห้องเล็กเกินกว่าจะจุผู้เข้าร่วมทั้งหมด)"},
+  {q:"Please keep your receipt ___ you need to return the item.",o:["so that","although","in case","unless"],a:2,why:"in case = เผื่อว่า (เก็บใบเสร็จไว้เผื่อต้องคืนของ) ส่วน unless = เว้นแต่ ความหมายไม่เข้า"},
+  {q:"The new restaurant has received very ___ reviews since it opened.",o:["favor","favorably","favorite","favorable"],a:3,why:"หน้าคำนาม reviews ต้องเป็น adjective คือ favorable (ในทางที่ดี) ส่วน favorite แปลว่าชอบที่สุด ความหมายไม่เข้ากับบทวิจารณ์"},
+  {q:"Mr. Lee suggested ___ the product launch until testing is complete.",o:["to postpone","postpone","postponing","postponed"],a:2,why:"suggest + V-ing ห้ามใช้ suggest + to V ซึ่งเป็นตัวหลอกที่คนไทยมักพลาด"}]},P5DIR),
+ Object.assign({kind:"textfill",title:"Part 6: Text Completion",head:["To: All Staff","From: IT Department","Subject: New timesheet system"],
+  text:["Starting Monday, March 3, the company will {1} a new online system for recording working hours. Paper timesheets will no longer be accepted after that date. {2}","Employees who cannot attend may watch a recording of the session on the company intranet. If you have any questions, please contact the IT help desk at extension 204. Thank you for your {3} during this change. We hope the new system will make recording your hours much {4}."],
+  items:[
+   {o:["introduce","introduced","introducing","introduction"],a:0,why:"หลัง will ต้องเป็นกริยาช่องที่ 1 (introduce)"},
+   {o:["The cafeteria will be closed for cleaning.","Please remember to lock your computer screen.","A training session will be held on Friday, February 28, in Room 5B.","Our new website has received positive feedback."],a:2,why:"ประโยคถัดไปพูดถึงคนที่ cannot attend และ the session จึงต้องมีการประกาศการอบรมก่อน ข้ออื่นไม่เกี่ยวกับระบบลงเวลา"},
+   {o:["patient","patience","patiently","patients"],a:1,why:"หลัง your ต้องเป็นคำนาม patience (ความอดทน) ส่วน patients แปลว่าผู้ป่วย เป็นคำที่เสียงคล้ายกันใช้หลอก"},
+   {o:["easy","easily","ease","easier"],a:3,why:"much ใช้เน้นขั้นกว่า จึงต้องเป็น easier (make + สิ่งของ + adjective)"}]},P6DIR),
+ Object.assign({kind:"sets",title:"Part 7: Reading Comprehension",sets:[
+  {doc:{title:"E-mail",lines:["<b>From:</b> Olivia Grant, Human Resources, Harbor Logistics","<b>To:</b> Nattaya Srisuk","<b>Subject:</b> Job offer – Customer Service Supervisor","Dear Ms. Srisuk,","Thank you for meeting with our team last week. We are pleased to offer you the position of Customer Service Supervisor at our Laem Chabang office. Your starting salary will be 45,000 baht per month, and you will be eligible for a performance bonus after six months.","Your first day would be Monday, June 2. During your first two weeks, you will train at our head office in Bangkok, and the company will pay for your accommodation there.","Please reply to this e-mail by May 16 to let us know whether you accept this offer. If you have any questions about the contract, feel free to call me at 02-555-0148.","Sincerely,","Olivia Grant"]},
+   qs:[{q:"What is the purpose of the e-mail?",o:["To schedule an interview","To describe a training course","To request a reference","To offer a position"],a:3,why:"We are pleased to offer you the position ข้อ A หลอกเพราะการสัมภาษณ์เกิดขึ้นไปแล้วเมื่อสัปดาห์ก่อน"},
+       {q:"What will Ms. Srisuk do during her first two weeks?",o:["Train at the head office","Work from home","Visit customers in Laem Chabang","Take a vacation"],a:0,why:"During your first two weeks, you will train at our head office in Bangkok"},
+       {q:"What is Ms. Srisuk asked to do by May 16?",o:["Sign a contract in person","Reply to say whether she accepts the offer","Call the head office","Book a hotel room"],a:1,why:"Please reply ... by May 16 to let us know whether you accept ข้อ D ผิดเพราะบริษัทออกค่าที่พักให้แล้ว ส่วนการโทรหาเป็นแค่ทางเลือกถ้ามีคำถาม"}]},
+  {doc:{title:"Advertisement",lines:["<b>Workspace Hub – Now Open in Sathorn</b>","Need a quiet place to work outside the office? Workspace Hub offers desks, private offices and meeting rooms on the 12th floor of Riverside Tower, just a two-minute walk from Surasak BTS station.","Members enjoy high-speed Internet, free coffee and tea, and printing services. Meeting rooms can be reserved by the hour through our mobile app.","Monthly membership: 3,500 baht (flexible desk) or 9,000 baht (private office for up to three people). Sign up before the end of this month and get your first week free.","Visit us for a free tour any weekday between 9 A.M. and 6 P.M."]},
+   qs:[{q:"Where is Workspace Hub located?",o:["Inside a train station","Next to a hotel","In an office tower","In a shopping mall"],a:2,why:"on the 12th floor of Riverside Tower อยู่ในอาคารสำนักงาน ข้อ A หลอกเพราะสถานีรถไฟฟ้าอยู่แค่ใกล้ ๆ (เดินสองนาที) ไม่ได้อยู่ข้างใน"},
+       {q:"What is NOT mentioned as a benefit for members?",o:["Free drinks","Printing services","Internet access","Free parking"],a:3,why:"โฆษณาพูดถึงอินเทอร์เน็ต กาแฟและชาฟรี และบริการพิมพ์งาน แต่ไม่ได้พูดถึงที่จอดรถเลย"},
+       {q:"The word \"reserved\" in the advertisement is closest in meaning to",o:["booked","kept quiet","saved","delayed"],a:0,why:"reserve a room = จองห้อง จึงตรงกับ booked ส่วน saved เป็นความหมายอื่นของ reserve (เก็บสำรองไว้) ซึ่งไม่เข้ากับบริบทนี้"}]}]},P7DIR)
+]}});
+/* ---- IELTS Test 4 ---- */
+IELTS_MORE.push({
+listening:{title:"Listening",th:"การฟัง",time:0,est:"ประมาณ 12 นาที",
+ intro:["Part 1 เติมแบบฟอร์มจองคอร์สทำอาหาร, Part 3 นักศึกษาคุยกันเรื่องรายงานทัศนศึกษา และ Part 4 บรรยายเรื่องการนอนของสัตว์","ข้อเติมคำต้องเขียนไม่เกินจำนวนคำที่กำหนด ถ้าเกินนับว่าผิด","โหมดสอบจริง: ฟังได้ครั้งเดียว"],
+ parts:[
+ {kind:"form",title:"Part 1",max:2,dir:"Complete the form below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",dirTh:"ฟังบทสนทนาจองคอร์สทำอาหาร แล้วเติมแบบฟอร์ม ระวังข้อมูลหลอก",
+  audio:[["W","Good morning, Riverside Cookery School. How can I help?"],["M","Hello. I'd like to book a place on one of your evening courses."],["W","Certainly. Can I start with your name?"],["M","Yes, it's Daniel Hartley. That's H, A, R, T, L, E, Y."],["W","Thank you, Mr Hartley. Which course are you interested in?"],["M","I was hoping to do the Italian course, but I saw on the website that it's full."],["W","I'm afraid it is. We do still have places on our Thai cooking course, though. It's very popular."],["M","Oh, I love Thai food. Let's do that one."],["W","Great. The Thai course runs on Tuesday and Thursday evenings, but the Tuesday group is already full, so it would be Thursdays."],["M","Thursdays are fine. When does it start?"],["W","The first class is on the twelfth of May. Oh, sorry, I'm looking at last year's timetable. It's the fourteenth of May this year."],["M","The fourteenth. And how much does it cost?"],["W","It used to be a hundred and seventy-five pounds, but the price has gone up to a hundred and ninety-five. That includes all the ingredients."],["M","That's fine. I should mention that I'm allergic to nuts."],["W","Thanks for telling me. I'll make a note of that, and the teacher will give you a different recipe when a dish contains nuts. Anything else, like dairy?"],["M","No, just nuts."],["W","Lastly, we provide all the knives and equipment, but students need to bring an apron."],["M","An apron. No problem."]],
+  formTitle:"RIVERSIDE COOKERY SCHOOL: Course booking",
+  rows:[
+   {label:"Surname",a:"hartley",show:"Hartley",why:"ผู้พูดสะกด H, A, R, T, L, E, Y"},
+   {label:"Course",post:"cooking",a:"thai",show:"Thai",why:"คอร์สอิตาเลียนเต็มแล้ว (ตัวหลอก) จึงเลือกคอร์สอาหารไทย Thai cooking"},
+   {label:"Day",post:"evenings",a:"thursday|thursdays",show:"Thursday",why:"กลุ่มวันอังคารเต็มแล้ว จึงเรียนวันพฤหัสบดี"},
+   {label:"Start date",post:"May",a:"14|14th|fourteenth|the fourteenth",show:"14",why:"ตอนแรกบอก 12 แต่แก้ว่าเป็นตารางปีที่แล้ว ปีนี้เริ่ม 14 พฤษภาคม"},
+   {label:"Course fee",pre:"£",a:"195",show:"195",why:"ราคาเดิม 175 ปอนด์ (ตัวหลอก) ขึ้นเป็น 195 ปอนด์ รวมวัตถุดิบแล้ว"},
+   {label:"Allergy",a:"nuts|nut",show:"nuts",why:"I'm allergic to nuts (ไม่แพ้นม dairy)"},
+   {label:"Students must bring",pre:"an",a:"apron",show:"apron",why:"โรงเรียนมีมีดและอุปกรณ์ให้ แต่ผู้เรียนต้องนำ apron (ผ้ากันเปื้อน) มาเอง"}]},
+ {kind:"sets",listen:true,title:"Part 3",dir:"Choose the correct letter, A, B or C.",dirTh:"ฟังนักศึกษาสองคนคุยกันเรื่องรายงานทัศนศึกษาที่พื้นที่ชุ่มน้ำ แล้วเลือกคำตอบ",
+  sets:[{audio:[["W","Hi, Tom. Have you had a chance to read the draft of our field trip report on the wetland visit?"],["M","Yes, I read it last night. The introduction's fine, but I think the section on water quality is a bit weak. We only have results from two sites."],["W","Well, we actually collected samples from three sites, but one of the bottles broke on the way back, so we lost that sample. I think we just need to explain that in the limitations section."],["M","Good point. Now, the bird survey. Our numbers were much lower than the reserve's own counts. I assumed it was because of the rain."],["W","It only rained for about ten minutes, though. The ranger told us that the real reason was the time of day. We were there around midday, when most birds are resting in the reeds. Early morning is much better for counting."],["M","Ah, I'd forgotten that. We should mention it. What about the photos? We've got about sixty."],["W","The tutor said no more than ten. There are some nice ones of the group, and a couple of a heron, but I think we should choose the ones that show the different habitats, like the reed beds and the open water."],["M","Agreed. So how shall we divide the rest of the work? I could write the conclusion."],["W","Actually, I'd rather you did the graphs, since you're so much better with the spreadsheet than I am. I'll write the conclusion and the recommendations."],["M","OK, fair enough."]],
+   qs:[{q:"What problem was there with the water samples?",o:["They were collected at the wrong time.","One of them was lost.","The equipment was not accurate."],a:1,why:"one of the bottles broke ... so we lost that sample"},
+       {q:"According to the ranger, why was the bird count low?",o:["the weather","the time of day","the noise from the group"],a:1,why:"Tom คิดว่าเป็นเพราะฝน (ตัวหลอก) แต่ ranger บอกว่าเหตุผลจริงคือ the time of day ช่วงเที่ยงนกพักอยู่"},
+       {q:"Which photos will the students include in the report?",o:["photos of the different habitats","photos of the group members","photos of a heron"],a:0,why:"choose the ones that show the different habitats (รูปกลุ่มและนกกระสาเป็นตัวหลอก)"},
+       {q:"What will Tom do next?",o:["write the conclusion","make the graphs","write the recommendations"],a:1,why:"Tom เสนอเขียนบทสรุป แต่เพื่อนขอให้ทำ graphs ส่วนเพื่อนเขียนบทสรุปและข้อเสนอแนะเอง"}]}]},
+ {kind:"form",title:"Part 4",max:1,dir:"Complete the notes below. Write ONE WORD ONLY for each answer.",dirTh:"ฟังการบรรยายเรื่องการนอนของสัตว์ แล้วเติมโน้ต 1 คำเท่านั้น",
+  audio:[["N","In today's lecture, I'm going to look at sleep in the animal kingdom. Scientists used to think that only animals with large brains needed to sleep. However, every animal that has been carefully studied so far shows some form of sleep, including very simple creatures such as jellyfish, which have no brain at all. Some animals sleep in remarkable ways. Dolphins, for example, need to stay partly alert all the time, so only one half of the brain sleeps at a time. The other half remains awake, which allows the dolphin to keep swimming and to rise to the surface to breathe. Some birds do something similar. Ducks sleeping at the edge of a group often keep one eye open, facing outwards, so that they can watch for predators. The amount of sleep animals need also varies enormously. Some bats sleep for up to twenty hours a day, whereas giraffes may sleep for less than five. In general, large grazing animals sleep less, partly because their food is low in nutrients, so they must spend many hours eating. So why do animals sleep at all? There is no single answer, but one leading theory is that sleep gives the brain a chance to clear away waste products that build up during the day."]],
+  formTitle:"SLEEP IN ANIMALS",
+  rows:[
+   {label:"Which animals sleep?",pre:"even simple creatures such as",post:"show some form of sleep",a:"jellyfish",why:"very simple creatures such as jellyfish"},
+   {label:"Dolphins",pre:"only one",post:"of the brain sleeps at a time",a:"half",why:"only one half of the brain sleeps at a time"},
+   {label:"Reason",pre:"this allows them to rise to the surface to",a:"breathe",why:"rise to the surface to breathe"},
+   {label:"Ducks",pre:"keep one eye open to watch for",a:"predators",why:"so that they can watch for predators"},
+   {label:"Grazing animals",pre:"sleep less because their food is low in",a:"nutrients",why:"their food is low in nutrients (ตัวเลข 20 และ 5 ชั่วโมงเป็นข้อมูลของค้างคาวและยีราฟ ไม่ได้ถาม)"},
+   {label:"Why sleep?",pre:"the brain clears away",post:"products",a:"waste",why:"clear away waste products that build up during the day"}]}]},
+reading:{title:"Reading",th:"การอ่าน",time:20*60,est:"20 นาที",
+ intro:["บทความ 1 เรื่อง 13 ข้อ: True/False/Not Given, หาย่อหน้าที่มีข้อมูล และเติมประโยค","จับเวลา 20 นาทีต่อบทความเท่ากับข้อสอบจริง"],
+ parts:[
+ {kind:"passage",title:"Reading Passage 1",dir:"You should spend about 20 minutes on Questions 1–13, which are based on Reading Passage 1 below.",dirTh:"อ่านบทความแล้วตอบคำถาม 13 ข้อ",
+  passage:{title:"Saving Seeds for the Future",paras:[
+   ["A","For thousands of years, farmers saved seeds from their best plants and sowed them the following season. As a result, every region developed its own local varieties of wheat, rice, maize and beans, each suited to the local soil and climate. During the twentieth century, however, most farmers replaced these traditional varieties with a small number of modern, high-yield crops. According to some estimates, around three-quarters of the genetic diversity of crops was lost in this way. This matters because a forgotten local variety may carry genes that allow it to survive drought or resist a particular disease, qualities that plant breeders may urgently need in the future."],
+   ["B","Seed banks were created to prevent further losses. Their basic method is surprisingly simple. Seeds are cleaned, dried until they contain very little water, sealed in foil packets and stored in freezers at about minus 18 degrees Celsius. Under these conditions, the seeds of many species remain alive for decades, and some for much longer. Every few years, a small number of seeds from each sample are tested to see whether they will still grow. If the germination rate starts to fall, the seeds are planted and a fresh supply is collected, a process known as regeneration."],
+   ["C","The best-known facility is the Svalbard Global Seed Vault, which opened in 2008 on a remote Norwegian island about 1,300 kilometres from the North Pole. The vault is cut deep into a mountain, where the surrounding frozen ground would keep the seeds cold even if the electricity supply failed. Svalbard is not an ordinary seed bank but a backup. National and regional seed banks send it duplicate copies of their collections, which now total more than a million samples. The arrangement works rather like a safety deposit box at a bank: the depositors still own their seeds, and only they can take them out."],
+   ["D","For several years, nobody needed to. Then, in 2015, an agricultural research centre in Aleppo, Syria, became the first organisation to make a withdrawal. The civil war had made it impossible for its scientists to reach their own collection of wheat, barley and lentils. Using the copies stored at Svalbard, they planted the seeds at new research stations in Lebanon and Morocco, and later sent freshly harvested seeds back to the vault to replace those they had taken."],
+   ["E","Seed banks do have limitations. Not all seeds can survive being dried. The seeds of avocado, cocoa and mango, for instance, die if they lose too much water. For such species, scientists must remove the embryo and freeze it in liquid nitrogen at around minus 196 degrees, a technique that is expensive and requires highly skilled staff. A second problem is that a frozen seed stops changing. Crops growing in fields continue to adapt to changing temperatures and new pests, but seeds in a freezer cannot."],
+   ["F","For this reason, many experts argue that seed banks should be combined with conservation on farms. In the mountains of Peru, for example, local communities in an area known as the Potato Park grow hundreds of traditional potato varieties, sharing seeds and knowledge between villages. Supporters of this approach believe that seed banks are best seen as an insurance policy, not as a replacement for the farmers who keep crop diversity alive."]]},
+  groups:[
+   {type:"tfng",dir:"Do the following statements agree with the information given in Reading Passage 1? Write TRUE, FALSE or NOT GIVEN.",dirTh:"TRUE = ตรงกับบทความ, FALSE = ขัดกับบทความ, NOT GIVEN = ไม่ได้พูดถึง",
+    items:[{q:"Most farmers continued to grow traditional crop varieties throughout the twentieth century.",a:"F",why:"ย่อหน้า A: most farmers replaced these traditional varieties ตรงข้ามกับข้อความ"},
+     {q:"Seed bank staff check stored seeds from time to time to find out whether they can still grow.",a:"T",why:"ย่อหน้า B: Every few years ... tested to see whether they will still grow"},
+     {q:"The seeds at Svalbard would stay cold even without electricity.",a:"T",why:"ย่อหน้า C: frozen ground would keep the seeds cold even if the electricity supply failed"},
+     {q:"Any country is allowed to withdraw seeds that another country has deposited at Svalbard.",a:"F",why:"ย่อหน้า C: only they (ผู้ฝากเอง) can take them out"},
+     {q:"The withdrawal made by the Aleppo research centre is the largest in the vault's history.",a:"NG",why:"ย่อหน้า D บอกว่าเป็นการเบิกครั้งแรก (first) แต่ไม่ได้บอกว่าใหญ่ที่สุด"}]},
+   {type:"select",opts:PARA6,dir:"Reading Passage 1 has six paragraphs, A–F. Which paragraph contains the following information? You may use any letter more than once.",dirTh:"หาว่าข้อมูลแต่ละข้ออยู่ในย่อหน้าไหน ตัวอักษรเดียวกันใช้ซ้ำได้",
+    items:[{q:"a comparison between a seed store and a service offered by banks",a:"C",why:"rather like a safety deposit box at a bank"},
+     {q:"the reason why scientists could not use their own seed collection",a:"D",why:"The civil war had made it impossible for its scientists to reach their own collection"},
+     {q:"examples of seeds that cannot survive being dried",a:"E",why:"The seeds of avocado, cocoa and mango ... die if they lose too much water"},
+     {q:"an example of communities protecting crop diversity themselves",a:"F",why:"local communities in ... the Potato Park grow hundreds of traditional potato varieties"}]},
+   {type:"gap",max:2,dir:"Complete the sentences below. Choose NO MORE THAN TWO WORDS from the passage for each answer.",dirTh:"เติมคำจากบทความ ไม่เกิน 2 คำ",
+    items:[{q:"After being cleaned and dried, seeds are sealed in ___ and frozen.",a:"foil packets|packets",show:"foil packets",why:"ย่อหน้า B: sealed in foil packets"},
+     {q:"Planting old seeds to collect a fresh supply is called ___.",a:"regeneration",why:"ย่อหน้า B: a process known as regeneration"},
+     {q:"The embryos of some species are frozen in ___.",a:"liquid nitrogen",why:"ย่อหน้า E: freeze it in liquid nitrogen"},
+     {q:"Some experts see seed banks as an ___ rather than a replacement for farmers.",a:"insurance policy",why:"ย่อหน้า F: an insurance policy, not as a replacement (คำว่า an มีให้แล้ว)"}]}]}]},
+writing:{title:"Writing",th:"การเขียน",time:60*60,est:"60 นาที",kind:"writing",
+  intro:["Task 1 อธิบายกราฟแท่ง อย่างน้อย 150 คำ และ Task 2 เรียงความแสดงความคิดเห็นแบบ Agree/Disagree อย่างน้อย 250 คำ","ตัวเลขในกราฟเป็นข้อมูลสมมติสำหรับฝึกเขียน","ส่งให้ครู AI ประเมินได้ทีละ Task"],
+  tasks:[
+   {n:1,min:150,mins:20,prompt:"The chart below shows the percentage of shoppers in one country who mainly used cash, cards or mobile phones to pay for purchases in 2012, 2017 and 2022. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+    chart:{title:"Main payment method used by shoppers (%)",years:["2012","2017","2022"],series:[{name:"Cash",v:[62,38,14]},{name:"Card",v:[31,45,36]},{name:"Mobile phone",v:[7,17,50]}]},
+    model:"The bar chart shows the proportion of shoppers in one country who mainly paid for their purchases with cash, cards or mobile phones in 2012, 2017 and 2022.\n\nOverall, cash declined dramatically over the decade, while mobile payment grew rapidly and had become the most popular method by 2022. Card use rose at first but then fell back.\n\nIn 2012, cash was by far the dominant method, used by 62% of shoppers, roughly double the figure for cards (31%). Only 7% paid mainly by mobile phone. Five years later, the picture had changed considerably: cards had overtaken cash, rising to 45%, while cash fell to 38% and mobile payment more than doubled to 17%.\n\nThe most striking change occurred between 2017 and 2022. Mobile payment soared to 50%, making it the preferred choice of half of all shoppers. Card use dropped back to 36%, and cash continued its steep decline, reaching just 14%, less than a quarter of its 2012 level."},
+   {n:2,min:250,mins:40,prompt:"Some people believe that all employees should have the right to work from home for at least part of the week. To what extent do you agree or disagree?",
+    model:"Since the pandemic, working from home has become normal for millions of office workers, and some people now argue that it should be a legal right. I largely agree that employees should be allowed to work from home for part of the week, although this right cannot apply to every job.\n\nThe strongest argument in favour is that remote work improves employees' quality of life. Many people in large cities spend two or three hours a day commuting, which is tiring and expensive. Working from home even two days a week gives this time back to them, allowing them to exercise, rest or spend time with their families. In addition, many employees find that they can concentrate better at home, away from the noise and interruptions of an open-plan office, so their productivity may actually increase.\n\nSecondly, a right to flexible work would make the job market fairer. Parents of young children, people with disabilities and those who live far from city centres often struggle to work full-time in an office. If they could work remotely for part of the week, employers would have access to a much wider pool of talent.\n\nNevertheless, I do not believe this right should be universal. Nurses, factory workers, shop assistants and bus drivers obviously cannot do their jobs from their living rooms. The law should therefore apply only to roles that can realistically be done remotely.\n\nIn conclusion, I agree that employees whose work can be done from home should have the right to do so for part of the week, as this benefits both workers and society. However, the rule must be flexible enough to reflect the needs of different jobs."}]},
+speaking:{title:"Speaking",th:"การพูด",time:0,est:"ประมาณ 12 นาที",kind:"speaking",
+  intro:["ผู้คุมสอบอ่านคำถามให้ฟังครบ 3 Part หัวข้อ: สภาพอากาศ, การอ่าน, ทักษะที่คุณภูมิใจ และการเรียนรู้ทักษะใหม่","พูดคำตอบออกเสียงก่อน แล้วพิมพ์สิ่งที่พูด ส่งให้ครู AI ประเมินได้ทุกเกณฑ์ยกเว้นการออกเสียง"],
+  sp:[
+   {part:1,title:"Part 1: Introduction and interview",th:"คำถามทั่วไป ตอบ 2–3 ประโยค ขยายด้วยเหตุผลหรือตัวอย่าง",qs:["Let's talk about the weather. What's the weather usually like where you live?","What kind of weather do you like best? Why?","Does the weather ever change your plans?","Now let's talk about reading. Do you enjoy reading?","What kinds of things do you usually read?","Do you prefer reading on paper or on a screen? Why?"]},
+   {part:2,title:"Part 2: Long turn",th:"เตรียม 1 นาที แล้วพูดต่อเนื่อง 1–2 นาที ให้ครบทุกข้อในบัตร",
+    card:{topic:"Describe a skill you learned that you are proud of.",points:["what the skill is","when and how you learned it","how difficult it was to learn"],end:"and explain why you are proud of it."},
+    model:"The skill I'd like to talk about is swimming, which might sound quite ordinary, but for me it was a real achievement. When I was a child, I had a frightening experience at the beach, and after that I was scared of deep water. So, although most of my friends could swim, I never learned. About three years ago, when I was twenty-five, I decided I'd had enough of sitting by the pool while everyone else was having fun. I signed up for adult lessons at a sports centre near my office and went twice a week after work. To be honest, it was much harder than I expected. For the first few weeks, I couldn't even put my face in the water without panicking. My teacher was very patient, though, and she broke everything down into small steps, like floating and breathing, before we moved on to proper strokes. After about four months, I swam a full length of the pool without stopping. I'm proud of this skill not because I'm a fast swimmer, because I'm definitely not, but because I faced a fear I'd had for most of my life. It taught me that it's never too late to learn something new, and now I go swimming every weekend."},
+   {part:3,title:"Part 3: Discussion",th:"คำถามเชิงความคิดเห็น ตอบยาวขึ้น ให้เหตุผล เปรียบเทียบ และยกตัวอย่าง",qs:["What skills do you think children should learn at school that they do not learn now?","Is it easier for children or adults to learn new skills? Why?","Some people say practical skills are more useful than academic knowledge. Do you agree?","How has the internet changed the way people learn new skills?","Do you think employers should pay for their staff to learn new skills? Why or why not?"]}]}
+});
+
 const XS={};   // attempts by section id ("toeic-listening-1"), kept while the page is open
 let X=null;    // the attempt on screen
 let xTok=0;    // bumps to cancel audio playback
@@ -2324,7 +2472,7 @@ window.addEventListener("pagehide",()=>{flushDrafts(); if(typeof saveEmailDrafts
 
 /* hub */
 function setTabs(ek){
-  return '<div class="tabs x-tabs" role="group" aria-label="เลือกชุดข้อสอบ '+EXAMS[ek].name+'">'+EXAMS[ek].sets.map((st,i)=>'<button data-act="xset" data-e="'+ek+'" data-n="'+(i+1)+'" aria-pressed="'+(HUBSET[ek]===i+1)+'">ชุดที่ '+(i+1)+(st.listening?'':' · W+S')+'</button>').join("")+'</div>';
+  return '<div class="tabs x-tabs" role="group" aria-label="เลือกชุดข้อสอบ '+EXAMS[ek].name+'">'+EXAMS[ek].sets.map((st,i)=>'<button data-act="xset" data-e="'+ek+'" data-n="'+(i+1)+'" aria-pressed="'+(HUBSET[ek]===i+1)+'">ชุดที่ '+(i+1)+(st.listening?(st.writing?'':' · L+R'):' · W+S')+'</button>').join("")+'</div>';
 }
 function secRows(ek){
   const set=EXAMS[ek].sets[HUBSET[ek]-1]||EXAMS[ek].sets[0];
@@ -2980,6 +3128,7 @@ function mistSrc(r){
   if(r.kind==="placement") return "สอบวัดระดับ";
   if((r.kind==="practice"||r.kind==="quiz")&&L) return "บทที่ "+COURSE[L.idx].n+" · "+(r.kind==="quiz"?"สอบท้ายบท":"ฝึกทำ");
   if(r.kind==="gq"&&PRUN_META) return "ไวยากรณ์ · "+PRUN_META.title;
+  if((r.kind==="lvt"||r.kind==="pb")&&PRUN_META) return PRUN_META.title;
   return "";
 }
 function mistAnswer(it){return it.t==="mc"?it.o[it.a]:it.t==="fill"?String(it.a).split("|")[0]:it.a}
@@ -3036,27 +3185,41 @@ function viewPractice(){
   if(id==="email") return viewEmailList();
   if(id.indexOf("email.")===0) return viewEmail(id.slice(6));
   if(id==="lookup") return viewLookup();
+  if(id==="verbs") return viewVerbs();
+  if(id==="numbers") return viewNumbers();
+  if(id==="phrasebook") return viewPhrasebook();
+  if(id.indexOf("pb.")===0) return viewPbSit(id.slice(3));
+  if(id==="lvtest") return viewLvTests();
+  if(id.indexOf("lvtest.")===0) return viewLvTest(+id.slice(7));
   if(id.indexOf("scene.")===0) return viewScene(id.slice(6));
   return viewPracticeHub();
 }
 function viewPracticeHub(){
   const mis=(S.mistakes||[]).length, read=Object.keys(stat("read")).length, dict=stat("dict").n||0, snd=Object.keys(stat("sounds")).filter(k=>k!=="mix").length, gram=Object.keys(stat("gram")).length;
   const deckN=DECKS.reduce((n,d)=>n+d.words.filter(w=>S.words[w[0]]).length,0), deckT=DECKS.reduce((n,d)=>n+d.words.length,0);
+  const lvt=stat("lvtest"), lvPass=LEVELS.filter(lv=>(lvt[lv.n]||0)>=80).length, nums=NUM_MODES.filter(m=>stat("nums")[m[0]]!=null).length, pbN=Object.keys(stat("pb")).length;
   const card=(act,id,title,desc,meta,cls)=>'<button class="p-card'+(cls||"")+'" data-act="'+act+'" '+(act==="go"?'data-to="'+id+'"':'data-id="'+id+'"')+'><span class="p-title">'+title+'</span><span class="p-desc">'+desc+'</span><span class="p-meta">'+meta+'</span></button>';
+  const group=(title,cards)=>'<section class="section p-group"><h2 class="h3">'+title+'</h2><div class="p-grid">'+cards+'</div></section>';
   return '<h1 class="h1">ฝึกฝน</h1><p class="lede">แบบฝึกเสริมนอกบทเรียน ฝึกทีละทักษะ ทำวันละนิดสม่ำเสมอได้ผลกว่าทำทีเดียวเยอะๆ</p>'
    +'<div style="margin-top:18px">'+dailyCard()+'</div>'
-   +'<div class="p-grid">'
-   +card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน "+DICT.reduce((n,d)=>n+d.items.length,0)+" ประโยค A1–C1","ทำแล้ว "+dict+" ประโยค")
-   +card("pgo","sounds","ฝึกหูแยกเสียง","เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W, เสียงท้ายคำ, TH และ -teen/-ty",snd+" / "+SOUNDS.length+" ชุดเสียง")
-   +card("pgo","reading","ห้องสมุดบทอ่าน","เรื่องสั้นตามระดับ แตะคำเพื่อดูความหมาย ฟังอ่านออกเสียง แล้วตอบคำถาม","อ่านแล้ว "+read+" / "+STORIES.length+" เรื่อง")
-   +card("pgo","mistakes","สมุดคำผิด","ข้อที่เคยตอบผิดจากบทเรียน สอบวัดระดับ และข้อสอบ TOEIC ฝึกซ้ำจนถูก",mis?mis+" ข้อรอฝึก":"ยังไม่มีข้อผิด",mis?" hot":"")
-   +card("pgo","grammar","คลังไวยากรณ์","ไวยากรณ์ "+(COURSE.length+GRAM_X.length)+" เรื่อง มีตาราง ตัวอย่าง จุดที่คนไทยพูดผิดบ่อย และแบบทดสอบ","ทำแบบทดสอบแล้ว "+gram+" เรื่อง")
-   +card("pgo","scenes","สถานการณ์จำลองกับครู AI","คุยกับครู AI ใน "+SCENES.length+" สถานการณ์จริง เช่น สัมภาษณ์งาน สนามบิน หาหมอ","ครูแก้ภาษาให้ทุกประโยค"," ai-only")
-   +card("pgo","games","เกมฝึกภาษา","จับคู่คำศัพท์แข่งเวลา สะกดคำจากเสียง เรียงประโยค และเลือกความหมาย 60 วินาที","4 เกม")
-   +card("pgo","email","เวิร์กช็อปเขียนอีเมล","อีเมลงาน 6 แบบ: ขอข้อมูล ติดตามงาน ขอโทษ ร้องเรียน ขอบคุณ นัดประชุม มีวลีสำเร็จรูปและตัวอย่าง",Object.keys(emailDone()).length+" / "+EMAILS.length+" แบบ")
-   +card("pgo","lookup","พจนานุกรมของฉัน","ค้นหาคำศัพท์ไทยหรืออังกฤษจากทุกบทเรียน ฟังเสียง แล้วเพิ่มเข้าคลังทบทวน",Object.keys(WORDS).length+" คำ")
-   +card("go","review","ชุดคำศัพท์เพิ่มเติม",DECKS.length+" ชุด: TOEIC, IELTS, Phrasal verbs, Collocations, คำเชื่อม, สำนวน, ท่องเที่ยว, สุขภาพ และอื่นๆ รวมถึงเพิ่มคำของตัวเองได้","อยู่ในคลังแล้ว "+deckN+" / "+deckT+" คำ")
-   +'</div>';
+   +group("ฟังและพูด",
+     card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน "+DICT.reduce((n,d)=>n+d.items.length,0)+" ประโยค A1–C1","ทำแล้ว "+dict+" ประโยค")
+    +card("pgo","sounds","ฝึกหูแยกเสียง","เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W, S/Z, เสียงท้ายคำ -s -ed, TH และ -teen/-ty",snd+" / "+SOUNDS.length+" ชุดเสียง")
+    +card("pgo","numbers","ฟังตัวเลขและการสะกด","ราคา เวลา ปี เบอร์โทร และสะกดชื่อ จุดที่พลาดบ่อยในชีวิตจริงและข้อสอบ",nums+" / "+NUM_MODES.length+" ประเภท")
+    +card("pgo","phrasebook","ประโยคพร้อมใช้ตามสถานการณ์","สนามบิน โรงแรม ร้านอาหาร ช้อปปิ้ง ถามทาง ที่ทำงาน หาหมอ โทรศัพท์",pbN+" / "+PHRASEBOOK.length+" หมวดทดสอบแล้ว")
+    +card("pgo","scenes","สถานการณ์จำลองกับครู AI","คุยกับครู AI ใน "+SCENES.length+" สถานการณ์จริง เช่น สัมภาษณ์งาน สนามบิน หาหมอ ขอขึ้นเงินเดือน","ครูแก้ภาษาให้ทุกประโยค"," ai-only"))
+   +group("อ่านและเขียน",
+     card("pgo","reading","ห้องสมุดบทอ่าน","เรื่องสั้นตามระดับ แตะคำเพื่อดูความหมาย ฟังอ่านออกเสียง แล้วตอบคำถาม","อ่านแล้ว "+read+" / "+STORIES.length+" เรื่อง")
+    +card("pgo","email","เวิร์กช็อปเขียนอีเมล","อีเมลงาน 6 แบบ: ขอข้อมูล ติดตามงาน ขอโทษ ร้องเรียน ขอบคุณ นัดประชุม มีวลีสำเร็จรูปและตัวอย่าง",Object.keys(emailDone()).length+" / "+EMAILS.length+" แบบ"))
+   +group("คำศัพท์และไวยากรณ์",
+     card("pgo","grammar","คลังไวยากรณ์","ไวยากรณ์ "+(COURSE.length+GRAM_X.length)+" เรื่อง มีตาราง ตัวอย่าง จุดที่คนไทยพูดผิดบ่อย และแบบทดสอบ","ทำแบบทดสอบแล้ว "+gram+" เรื่อง")
+    +card("pgo","verbs","กริยา 3 ช่อง","ตารางกริยาอปกติ "+IRREG.length+" คำ พร้อมเสียงอ่าน และทดสอบพิมพ์ช่อง 2 ช่อง 3",stat("verbs").best!=null?"ดีที่สุด "+stat("verbs").best+"/10":"ยังไม่เคยทดสอบ")
+    +card("pgo","lookup","พจนานุกรมของฉัน","ค้นหาคำศัพท์ไทยหรืออังกฤษจากทุกบทเรียน ฟังเสียง แล้วเพิ่มเข้าคลังทบทวน",Object.keys(WORDS).length+" คำ")
+    +card("go","review","ชุดคำศัพท์เพิ่มเติม",DECKS.length+" ชุด: TOEIC, IELTS, Phrasal verbs, Collocations, คำเชื่อม, สำนวน, ท่องเที่ยว, สุขภาพ และอื่นๆ รวมถึงเพิ่มคำของตัวเองได้","อยู่ในคลังแล้ว "+deckN+" / "+deckT+" คำ"))
+   +group("ทบทวนและทดสอบ",
+     card("pgo","mistakes","สมุดคำผิด","ข้อที่เคยตอบผิดจากบทเรียน สอบวัดระดับ และข้อสอบ TOEIC ฝึกซ้ำจนถูก",mis?mis+" ข้อรอฝึก":"ยังไม่มีข้อผิด",mis?" hot":"")
+    +card("pgo","lvtest","สอบรวมระดับ","ข้อสอบ 20 ข้อสุ่มจากทุกบทในระดับ A1–C1 เช็กว่ายังจำเนื้อหาได้ครบไหม","ผ่านแล้ว "+lvPass+" / "+LEVELS.length+" ระดับ")
+    +card("pgo","games","เกมฝึกภาษา","จับคู่คำศัพท์แข่งเวลา สะกดคำจากเสียง เรียงประโยค และเลือกความหมาย 60 วินาที","4 เกม"));
 }
 
 /* dictation */
@@ -3899,6 +4062,311 @@ const RACT={
   bkno:()=>{BK.pending=null; render()}
 };
 
+
+/* ---------- round 6 content: sounds, stories, scenes, phrases ---------- */
+SOUNDS.push(
+ {id:"sz",title:"S กับ Z",tip:"S: เสียงลมฟู่ไม่สั่น · Z: เสียงเดียวกันแต่ให้เส้นเสียงสั่น ลองแตะคอดูจะรู้สึกสั่นตอนออกเสียง Z",
+  pairs:[["sue","zoo"],["bus","buzz"],["price","prize"],["rice","rise"],["place","plays"],["niece","knees"]]},
+ {id:"bv",title:"B กับ V",tip:"B: ปิดริมฝีปากทั้งสองแล้วเปิดออก · V: ฟันบนแตะริมฝีปากล่าง แล้วเปล่งเสียงให้สั่น ไม่ปิดปาก",
+  pairs:[["berry","very"],["ban","van"],["best","vest"],["boat","vote"],["bet","vet"],["bowel","vowel"]]},
+ {id:"ed",title:"-ed ท้ายคำ",tip:"เสียง -ed ท้ายกริยาอดีตเบามาก (walked = วอล์คท์, played = เพลด) คนไทยมักไม่ได้ยินและไม่ออกเสียง ฟังท้ายคำให้ดี",
+  pairs:[["walk","walked"],["play","played"],["miss","missed"],["rain","rained"],["watch","watched"],["clean","cleaned"]]},
+ {id:"plural",title:"-s ท้ายคำ",tip:"คำนามพหูพจน์และกริยาที่เติม s มีเสียง ส หรือ ซ ท้ายคำ ถ้าไม่ออกเสียงความหมายจะเปลี่ยน (book = หนึ่งเล่ม, books = หลายเล่ม)",
+  pairs:[["book","books"],["car","cars"],["cup","cups"],["friend","friends"],["price","prices"],["class","classes"]]}
+);
+STORIES.push(
+ {id:"a1c",lv:"A1",title:"At the Market",th:"ไปตลาด",
+  paras:["It is Saturday morning. Mai goes to the market with her mother. The market is near their house, so they walk there.","There are a lot of fruits and vegetables. Mai's mother buys tomatoes, onions and a big fish. Mai wants some mangoes. They are sweet and cheap, only forty baht a kilo.","At the end of the market, there is a small shop. It sells ice cream. Mai's mother buys two coconut ice creams. They sit under a tree and eat them. Mai is very happy."],
+  gloss:[["market","ตลาด"],["near","ใกล้"],["vegetables","ผัก"],["onions","หัวหอม"],["sweet","หวาน"],["cheap","ถูก (ราคา)"],["sells","ขาย"],["happy","มีความสุข"]],
+  qs:[{q:"How do Mai and her mother go to the market?",o:["by car","on foot","by bus"],a:1},{q:"How much are the mangoes?",o:["forty baht a kilo","fourteen baht a kilo","four hundred baht a kilo"],a:0},{q:"What do they eat under the tree?",o:["mangoes","fish","ice cream"],a:2}]},
+ {id:"a2c",lv:"A2",title:"A Rainy Holiday",th:"วันหยุดที่ฝนตก",
+  paras:["Last summer, Tom and his sister Anna went to the beach for a week. They booked a small hotel near the sea and planned to swim every day.","Unfortunately, it rained on the first three days. Tom was bored and wanted to go home, but Anna had a better idea. They visited a museum, took a cooking class and played board games with the other guests at the hotel.","On the fourth day, the sun finally came out. They swam, rode bicycles along the coast and ate fresh seafood. In the end, Tom said it was one of his best holidays, because he made new friends while it was raining."],
+  gloss:[["booked","จอง"],["planned","วางแผน"],["unfortunately","น่าเสียดายที่"],["bored","เบื่อ"],["museum","พิพิธภัณฑ์"],["guests","แขก"],["coast","ชายฝั่ง"],["seafood","อาหารทะเล"]],
+  qs:[{q:"How long did they stay at the beach?",o:["three days","four days","a week"],a:2},{q:"What did they do when it rained?",o:["They went home.","They took a cooking class.","They swam in the sea."],a:1},{q:"Why did Tom enjoy the holiday?",o:["The hotel was cheap.","He made new friends.","It was sunny every day."],a:1}]},
+ {id:"b1c",lv:"B1",title:"Street Food Goes Global",th:"สตรีทฟู้ดไทยไปทั่วโลก",
+  paras:["Thai street food has become famous around the world. Dishes such as pad thai, som tam and mango sticky rice are now served in restaurants from London to New York, and many tourists visit Thailand mainly to try the food.","Street food is popular because it is fast, cheap and full of flavour. Many vendors have been cooking the same dish for decades, and some have even been recognised by international food guides. One small stall in Bangkok became world-famous after it received an award, and customers now wait for hours to eat there.","However, street food faces some challenges. Some cities have introduced rules to keep pavements clear, and rising rents have forced several vendors to move or close. Supporters say that street food is an important part of the country's culture and should be protected, while others believe that cleaner, more organised food markets would be better for everyone."],
+  gloss:[["famous","มีชื่อเสียง"],["dishes","อาหาร (เป็นจาน)"],["flavour","รสชาติ"],["vendors","พ่อค้าแม่ค้า"],["decades","หลายสิบปี"],["award","รางวัล"],["pavements","ทางเท้า"],["protected","ปกป้อง"]],
+  qs:[{q:"Why is street food popular, according to the article?",o:["It is fast, cheap and tasty.","It is only sold at night.","It is healthier than restaurant food."],a:0},{q:"What happened after one stall received an award?",o:["It closed.","Customers started waiting for hours.","It moved to London."],a:1},{q:"What problem do some vendors face?",o:["They cannot find ingredients.","Rents are rising.","Tourists do not like the food."],a:1}]},
+ {id:"b2c",lv:"B2",title:"Can Robots Care for the Elderly?",th:"หุ่นยนต์ดูแลผู้สูงอายุได้ไหม",
+  paras:["Populations in many countries are ageing rapidly. In Japan, almost thirty per cent of people are over sixty-five, and there are not enough care workers to look after them. As a result, engineers have been developing robots that can help elderly people with everyday tasks.","Some of these machines are practical: they lift patients out of bed, remind them to take medicine or call for help if someone falls. Others are designed for companionship. A small robot shaped like a baby seal, for example, responds to touch and sound, and studies suggest that it can reduce stress and loneliness among people with dementia.","Critics, however, worry that robots might replace human contact rather than support it. They argue that care is not only about physical help but also about conversation, patience and understanding, which machines cannot truly provide. Most experts agree that the best solution will probably combine the two: robots taking over repetitive or heavy tasks, so that human carers have more time for the personal side of their work."],
+  gloss:[["ageing","กำลังสูงวัย"],["elderly","ผู้สูงอายุ"],["practical","ใช้งานได้จริง"],["companionship","การเป็นเพื่อน"],["loneliness","ความเหงา"],["replace","แทนที่"],["repetitive","ซ้ำๆ"],["carers","ผู้ดูแล"]],
+  qs:[{q:"Why are engineers developing care robots?",o:["There are not enough care workers.","Robots are cheaper than medicine.","Elderly people prefer robots."],a:0},{q:"What can the seal-shaped robot do?",o:["lift patients out of bed","reduce stress and loneliness","cook meals"],a:1},{q:"What do most experts think?",o:["Robots should replace carers.","Robots are too dangerous.","Robots and humans should work together."],a:2}]}
+);
+SCENES.push(
+ {id:"pharmacy",title:"ซื้อยาที่ร้านขายยา",th:"คุณเจ็บคอและมีไข้ต่ำๆ ขอคำแนะนำจากเภสัชกรเรื่องยาและวิธีกิน",role:"a pharmacist",student:"a customer with a sore throat and a slight fever",opener:"Hello, what can I do for you today?"},
+ {id:"flat",title:"ดูห้องเช่า",th:"คุณไปดูอพาร์ตเมนต์ให้เช่า ถามเรื่องค่าเช่า เงินมัดจำ ค่าน้ำค่าไฟ และสัญญาเช่า",role:"a landlord showing an apartment",student:"someone looking for a flat to rent",opener:"Hi, you must be here to see the flat. Come in! What would you like to know?"},
+ {id:"gym",title:"สมัครฟิตเนส",th:"คุณสนใจสมัครสมาชิกฟิตเนส ถามเรื่องราคา เวลาเปิดปิด คลาสออกกำลังกาย และการทดลองใช้ฟรี",role:"a receptionist at a gym",student:"someone interested in joining the gym",opener:"Welcome to FitLife! Are you interested in becoming a member?"},
+ {id:"booking",title:"โทรจองร้านอาหาร",th:"โทรจองโต๊ะสำหรับ 6 คนคืนวันเสาร์ ขอโต๊ะริมหน้าต่าง และแจ้งว่ามีคนแพ้ถั่ว",role:"a restaurant host answering the phone",student:"a customer booking a table",opener:"Good afternoon, Bella Cucina. How can I help you?"},
+ {id:"luggage",title:"กระเป๋าเดินทางหาย",th:"กระเป๋าของคุณไม่ออกมาที่สายพานหลังเครื่องลง แจ้งเจ้าหน้าที่ บรรยายลักษณะกระเป๋า และให้ที่อยู่โรงแรม",role:"an airline baggage services agent at the airport",student:"a passenger whose suitcase did not arrive",opener:"Hello, this is baggage services. How can I help you?"},
+ {id:"raise",title:"ขอขึ้นเงินเดือน",th:"คุณนัดคุยกับหัวหน้าเพื่อขอขึ้นเงินเดือน อธิบายผลงานที่ผ่านมาอย่างสุภาพและมั่นใจ",role:"a manager meeting an employee",student:"an employee asking for a pay rise",opener:"Hi, come in and take a seat. You wanted to talk to me about something?"}
+);
+PHRASES.push(
+ ["Could you give me a hand?","ช่วยหน่อยได้ไหม","Could you give me a hand with these boxes?"],
+ ["I'm afraid I can't.","เกรงว่าจะไม่ได้","I'm afraid I can't come to the party on Friday."],
+ ["What's the matter?","เป็นอะไรไป","You look worried. What's the matter?"],
+ ["Never mind.","ช่างเถอะ ไม่เป็นไร","Never mind, I'll ask someone else."],
+ ["Here you are.","นี่ครับ/ค่ะ (ตอนยื่นของให้)","\"Can I see your passport?\" \"Here you are.\""],
+ ["After you.","เชิญก่อนเลย","\"After you.\" \"Oh, thank you!\""],
+ ["I'll take it.","เอาอันนี้","This jacket fits perfectly. I'll take it."],
+ ["Help yourself.","ตามสบายเลย หยิบได้เลย","There's coffee in the kitchen. Help yourself."],
+ ["It's my pleasure.","ยินดีครับ/ค่ะ","\"Thanks for the lift.\" \"It's my pleasure.\""],
+ ["I'm looking forward to it.","ตั้งตารอเลย","Our trip to Japan is next week. I'm looking forward to it."],
+ ["How's it going?","เป็นไงบ้าง","Hi Tom! How's it going?"],
+ ["Not bad.","ก็ดีนะ","\"How was your weekend?\" \"Not bad.\""],
+ ["I'm sorry to hear that.","เสียใจด้วยนะ","\"I failed my driving test.\" \"I'm sorry to hear that.\""],
+ ["Good for you!","ดีใจด้วย เยี่ยมไปเลย","\"I got the job!\" \"Good for you!\""],
+ ["Can I have the bill, please?","เช็กบิลด้วย","Excuse me, can I have the bill, please?"],
+ ["Is this seat taken?","ที่นั่งนี้มีคนนั่งไหม","Excuse me, is this seat taken?"],
+ ["What do you mean?","หมายความว่ายังไง","What do you mean? I don't understand."],
+ ["I see what you mean.","เข้าใจที่คุณพูด","I see what you mean, but I still disagree."],
+ ["That's a good point.","ประเด็นดีนะ","That's a good point. I hadn't thought of that."],
+ ["Let me think about it.","ขอคิดดูก่อน","It sounds interesting. Let me think about it."],
+ ["I'll let you know.","แล้วจะบอกนะ","I'm not sure yet. I'll let you know tomorrow."],
+ ["It's worth it.","คุ้มค่า","The tickets are expensive, but it's worth it."],
+ ["Don't mention it.","ไม่เป็นไร (ตอบคำขอบคุณ)","\"Thanks for your help.\" \"Don't mention it.\""],
+ ["Sorry to bother you.","ขอโทษที่รบกวน","Sorry to bother you, but could you help me?"],
+ ["I'm on it.","กำลังจัดการให้","\"Can you send the report?\" \"I'm on it.\""],
+ ["Just a moment, please.","รอสักครู่นะ","Just a moment, please. I'll check for you."],
+ ["Could you speak more slowly?","ช่วยพูดช้าลงหน่อย","Sorry, could you speak more slowly, please?"],
+ ["How do you spell that?","สะกดยังไง","\"My name is Siriporn.\" \"How do you spell that?\""],
+ ["What does this word mean?","คำนี้แปลว่าอะไร","Excuse me, what does this word mean?"],
+ ["I have no idea.","ไม่รู้เลย","\"Where's Tom?\" \"I have no idea.\""],
+ ["It's getting late.","ดึกแล้ว","It's getting late. I should go home."],
+ ["Take care.","ดูแลตัวเองนะ","See you next week. Take care!"],
+ ["Have a safe trip.","เดินทางปลอดภัยนะ","You're flying tomorrow? Have a safe trip!"],
+ ["Make yourself at home.","ทำตัวตามสบายเหมือนอยู่บ้าน","Come in and make yourself at home."],
+ ["I'm not sure about that.","ไม่แน่ใจนะ","I'm not sure about that. Let me check."],
+ ["Let's get started.","เริ่มกันเลย","Everyone's here, so let's get started."],
+ ["Can you do me a favour?","ช่วยอะไรหน่อยได้ไหม","Can you do me a favour and water my plants?"],
+ ["That's not what I meant.","ฉันไม่ได้หมายความอย่างนั้น","Sorry, that's not what I meant."],
+ ["I'm with you.","เห็นด้วย","\"We need more time.\" \"I'm with you.\""],
+ ["Same here.","เหมือนกัน","\"I'm so tired.\" \"Same here.\""]
+);
+
+/* irregular verbs: base, past, past participle, Thai */
+const IRREG=[
+ ["be","was|were","been","เป็น อยู่ คือ"],["become","became","become","กลายเป็น"],["begin","began","begun","เริ่ม"],["break","broke","broken","ทำแตก หัก"],
+ ["bring","brought","brought","นำมา"],["build","built","built","สร้าง"],["buy","bought","bought","ซื้อ"],["catch","caught","caught","จับ รับ"],
+ ["choose","chose","chosen","เลือก"],["come","came","come","มา"],["cost","cost","cost","มีราคา"],["cut","cut","cut","ตัด"],
+ ["do","did","done","ทำ"],["draw","drew","drawn","วาด"],["drink","drank","drunk","ดื่ม"],["drive","drove","driven","ขับ"],
+ ["eat","ate","eaten","กิน"],["fall","fell","fallen","ตก ล้ม"],["feel","felt","felt","รู้สึก"],["find","found","found","พบ หาเจอ"],
+ ["fly","flew","flown","บิน"],["forget","forgot","forgotten","ลืม"],["get","got","got|gotten","ได้รับ"],["give","gave","given","ให้"],
+ ["go","went","gone","ไป"],["grow","grew","grown","เติบโต ปลูก"],["have","had","had","มี"],["hear","heard","heard","ได้ยิน"],
+ ["hold","held","held","ถือ จัด (งาน)"],["keep","kept","kept","เก็บ รักษา"],["know","knew","known","รู้"],["leave","left","left","ออกจาก ทิ้งไว้"],
+ ["lend","lent","lent","ให้ยืม"],["lose","lost","lost","ทำหาย แพ้"],["make","made","made","ทำ สร้าง"],["meet","met","met","พบ"],
+ ["pay","paid","paid","จ่าย"],["put","put","put","วาง"],["read","read","read","อ่าน"],["ride","rode","ridden","ขี่"],
+ ["ring","rang","rung","(กริ่ง) ดัง โทร"],["run","ran","run","วิ่ง"],["say","said","said","พูด"],["see","saw","seen","เห็น"],
+ ["sell","sold","sold","ขาย"],["send","sent","sent","ส่ง"],["sing","sang","sung","ร้องเพลง"],["sit","sat","sat","นั่ง"],
+ ["sleep","slept","slept","นอนหลับ"],["speak","spoke","spoken","พูด"],["spend","spent","spent","ใช้ (เงิน เวลา)"],["stand","stood","stood","ยืน"],
+ ["swim","swam","swum","ว่ายน้ำ"],["take","took","taken","เอา ใช้เวลา"],["teach","taught","taught","สอน"],["tell","told","told","บอก"],
+ ["think","thought","thought","คิด"],["understand","understood","understood","เข้าใจ"],["wake","woke","woken","ตื่น"],["wear","wore","worn","สวมใส่"],
+ ["win","won","won","ชนะ"],["write","wrote","written","เขียน"]
+];
+
+/* phrasebook by situation */
+const PHRASEBOOK=[
+ {id:"airport",title:"สนามบิน",items:[["Where is the check-in counter for Thai Airways?","เคาน์เตอร์เช็กอินการบินไทยอยู่ที่ไหน"],["I'd like a window seat, please.","ขอที่นั่งริมหน้าต่าง"],["How many bags can I check in?","โหลดกระเป๋าได้กี่ใบ"],["Is the flight on time?","เที่ยวบินตรงเวลาไหม"],["Which gate does the flight leave from?","เครื่องออกที่ประตูไหน"],["I have nothing to declare.","ไม่มีของต้องสำแดง"],["I'm here on holiday for two weeks.","มาเที่ยวสองสัปดาห์"],["Where can I get a taxi into the city?","ขึ้นแท็กซี่เข้าเมืองได้ที่ไหน"]]},
+ {id:"hotel",title:"โรงแรม",items:[["I have a reservation under the name Somchai.","จองไว้ในชื่อสมชาย"],["What time is check-out?","เช็กเอาต์กี่โมง"],["Is breakfast included?","รวมอาหารเช้าไหม"],["What's the Wi-Fi password?","รหัส Wi-Fi คืออะไร"],["Could I have a late check-out?","ขอเช็กเอาต์ช้าได้ไหม"],["The air conditioning isn't working.","แอร์ไม่ทำงาน"],["Could you call a taxi for me?","ช่วยเรียกแท็กซี่ให้หน่อย"],["Can I leave my luggage here?","ฝากกระเป๋าไว้ที่นี่ได้ไหม"]]},
+ {id:"food",title:"ร้านอาหาร",items:[["A table for two, please.","ขอโต๊ะสำหรับสองคน"],["Could we see the menu, please?","ขอดูเมนูหน่อย"],["What do you recommend?","มีอะไรแนะนำไหม"],["I'm allergic to peanuts.","ฉันแพ้ถั่วลิสง"],["Not too spicy, please.","ไม่เผ็ดมากนะ"],["Could I have some water, please?","ขอน้ำเปล่าหน่อย"],["This isn't what I ordered.","นี่ไม่ใช่ที่สั่ง"],["Can we pay separately?","แยกจ่ายได้ไหม"]]},
+ {id:"shop",title:"ช้อปปิ้ง",items:[["How much is this?","อันนี้ราคาเท่าไร"],["Do you have this in a larger size?","มีไซซ์ใหญ่กว่านี้ไหม"],["Can I try it on?","ขอลองได้ไหม"],["Where are the fitting rooms?","ห้องลองเสื้ออยู่ที่ไหน"],["Can you give me a discount?","ลดราคาได้ไหม"],["Do you accept credit cards?","รับบัตรเครดิตไหม"],["Could I get a receipt, please?","ขอใบเสร็จด้วย"],["I'd like to return this.","ขอคืนสินค้าชิ้นนี้"]]},
+ {id:"travel",title:"ถามทางและเดินทาง",items:[["Excuse me, how do I get to the station?","ขอโทษครับ ไปสถานีรถไฟทางไหน"],["Is it within walking distance?","เดินไปได้ไหม"],["Which bus goes to the city centre?","รถเมล์สายไหนไปใจกลางเมือง"],["A return ticket to Oxford, please.","ขอตั๋วไปกลับอ็อกซ์ฟอร์ด"],["How long does it take?","ใช้เวลานานเท่าไร"],["Could you show me on the map?","ช่วยชี้บนแผนที่หน่อย"],["Please take me to this address.","ช่วยไปส่งที่อยู่นี้"],["Could you stop here, please?","จอดตรงนี้หน่อย"]]},
+ {id:"office",title:"ที่ทำงาน",items:[["Could you send me the file?","ช่วยส่งไฟล์ให้หน่อย"],["I'll be there in five minutes.","อีกห้านาทีถึง"],["Let's schedule a meeting for next week.","นัดประชุมสัปดาห์หน้ากัน"],["Sorry, I'm in a meeting right now.","ขอโทษ ตอนนี้ติดประชุมอยู่"],["Can we move the deadline to Friday?","เลื่อนกำหนดส่งเป็นวันศุกร์ได้ไหม"],["I'll check and get back to you.","ขอเช็กก่อนแล้วจะแจ้งกลับ"],["Could you explain that again?","ช่วยอธิบายอีกครั้งได้ไหม"],["Thanks for your help today.","ขอบคุณที่ช่วยวันนี้"]]},
+ {id:"health",title:"หาหมอและร้านยา",items:[["I'd like to make an appointment.","ขอนัดพบแพทย์"],["I have a headache and a fever.","ปวดหัวและมีไข้"],["It hurts here.","เจ็บตรงนี้"],["I've had this cough for three days.","ไอมาสามวันแล้ว"],["Do I need a prescription?","ต้องมีใบสั่งยาไหม"],["How often should I take this medicine?","ต้องกินยานี้บ่อยแค่ไหน"],["Should I take it before or after meals?","กินก่อนหรือหลังอาหาร"],["I'm allergic to penicillin.","ฉันแพ้เพนิซิลลิน"]]},
+ {id:"phone",title:"คุยโทรศัพท์",items:[["Hello, this is Nida speaking.","สวัสดีค่ะ นิดาพูดสายค่ะ"],["Could I speak to Mr Smith, please?","ขอสายคุณสมิธหน่อย"],["Hold on a moment, please.","รอสักครู่นะ"],["He's not available at the moment.","ตอนนี้เขาไม่สะดวกรับสาย"],["Can I take a message?","ฝากข้อความไว้ไหม"],["Could you ask him to call me back?","ช่วยบอกให้เขาโทรกลับด้วย"],["Sorry, the line is bad.","ขอโทษ สัญญาณไม่ดี"],["I think you have the wrong number.","คิดว่าโทรผิดเบอร์นะ"]]}
+];
+
+/* ---------- irregular verbs trainer ---------- */
+let VB=null, vbTab="table";
+function vbForms(s){return String(s||"").toLowerCase().split(/[\/,|]| or /).map(x=>x.trim()).filter(Boolean)}
+function vbOk(input,key){const g=vbForms(input), ok=key.split("|"); return g.length>0&&g.every(x=>ok.indexOf(x)>=0)}
+function vbNew(){VB={list:shuffle(IRREG.map((_,i)=>i)).slice(0,10),i:0,res:null,t2:"",t3:"",correct:0,wrong:[]}}
+function viewVerbs(){
+  const st=stat("verbs");
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">กริยา 3 ช่อง</h1><p class="lede">กริยาอปกติ '+IRREG.length+' คำที่ใช้บ่อยที่สุด ต้องจำให้ได้ทั้งช่อง 2 (Past Simple) และช่อง 3 (Present Perfect, Passive) แตะแถวเพื่อฟังเสียง</p>'
+   +'<div class="tabs" role="group" aria-label="โหมด"><button data-act="vbtab" data-t="table" aria-pressed="'+(vbTab==="table")+'">ตารางกริยา</button><button data-act="vbtab" data-t="quiz" aria-pressed="'+(vbTab==="quiz")+'">ทดสอบ 10 คำ'+(st.best!=null?' <small>ดีที่สุด '+st.best+'/10</small>':'')+'</button></div>';
+  if(vbTab==="table") return h+'<div class="tbl-wrap" style="margin-top:14px"><table class="vb-tbl"><thead><tr><th>ช่อง 1</th><th>ช่อง 2</th><th>ช่อง 3</th><th>ความหมาย</th></tr></thead><tbody>'
+    +IRREG.map(v=>{const t=[v[0],v[1].replace("|"," / "),v[2].replace("|"," / ")]; return '<tr class="vb-row" data-act="say" data-text="'+esc(t.join(", "))+'"><td lang="en"><b>'+esc(t[0])+'</b></td><td lang="en">'+esc(t[1])+'</td><td lang="en">'+esc(t[2])+'</td><td>'+esc(v[3])+'</td></tr>'}).join("")+'</tbody></table></div>';
+  if(!VB) vbNew();
+  if(VB.i>=VB.list.length){
+    return h+'<div class="card" style="margin-top:16px;max-width:680px"><h2 class="h2">ถูกครบทั้งสองช่อง '+VB.correct+'/'+VB.list.length+'</h2>'
+     +(VB.wrong.length?'<p class="muted" style="margin-top:8px">คำที่ต้องทบทวน</p><ul class="sp-miss">'+VB.wrong.map(i=>{const v=IRREG[i]; return '<li lang="en"><b>'+esc(v[0])+'</b> – '+esc(v[1].replace("|"," / "))+' – '+esc(v[2].replace("|"," / "))+' <span lang="th" class="muted">'+esc(v[3])+'</span></li>'}).join("")+'</ul>':'<p class="lede">ยอดเยี่ยม จำได้ครบทุกคำ</p>')
+     +'<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="vbnew">ทดสอบอีกชุด</button></div></div>';
+  }
+  const v=IRREG[VB.list[VB.i]], r=VB.res;
+  h+='<div class="card" style="margin-top:16px;max-width:680px"><div class="row" style="justify-content:space-between"><span class="mono">ข้อ '+(VB.i+1)+'/'+VB.list.length+' · ถูก '+VB.correct+'</span></div>'
+   +'<div class="sh-row" style="margin-top:8px"><p><b lang="en" style="font:700 30px var(--f-display)">'+esc(v[0])+'</b><br><span class="muted">'+esc(v[3])+'</span></p>'+sayBtn(v[0],"ฟังคำ")+'</div>'
+   +'<div class="vb-in"><label>ช่อง 2 (อดีต)<input id="vb2" lang="en" autocomplete="off" autocapitalize="off" spellcheck="false" value="'+esc(VB.t2)+'"'+(r?' disabled class="'+(r.ok2?"ok":"no")+'"':'')+'></label>'
+   +'<label>ช่อง 3<input id="vb3" lang="en" autocomplete="off" autocapitalize="off" spellcheck="false" value="'+esc(VB.t3)+'"'+(r?' disabled class="'+(r.ok3?"ok":"no")+'"':'')+'></label></div>';
+  if(!r) h+='<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="vbcheck">ตรวจ</button><span class="muted" style="font-size:14px">กด Enter เพื่อไปช่องถัดไป/ตรวจ</span></div>';
+  else h+='<div class="feedback '+(r.ok2&&r.ok3?"ok":"no")+'"><b>'+(r.ok2&&r.ok3?"ถูกต้อง!":"ยังไม่ถูก")+'</b><span lang="en">'+esc(v[0])+' – '+esc(v[1].replace("|"," / "))+' – '+esc(v[2].replace("|"," / "))+'</span></div><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="vbnext">'+(VB.i+1<VB.list.length?"ข้อต่อไป":"ดูผล")+'</button></div>';
+  return h+'</div>';
+}
+
+/* ---------- listening to numbers, times and spelling ---------- */
+const NUM_MODES=[["price","ราคา"],["time","เวลา"],["year","ปี ค.ศ."],["phone","เบอร์โทร"],["big","ตัวเลขหลักพัน"],["spell","สะกดชื่อ"]];
+const SPELL_NAMES=["Pierce","Grant","Wilson","Thompson","Harris","Clarke","Walker","Wright","Hughes","Morgan","Bennett","Fraser","Quinn","Joyce","Vaughan","Rhodes","Kelly","Jarvis","Gibson","Lawrence","Fitzgerald","Carver","Holmes","Baxter"];
+function w2(n){return n<20?ONES[n]:TENS[Math.floor(n/10)]+(n%10?"-"+ONES[n%10]:"")}
+function w3(n){const h=Math.floor(n/100), r=n%100; return (h?ONES[h]+" hundred":"")+(h&&r?" and ":"")+(r||!h?w2(r):"")}
+function numWords(n){const th=Math.floor(n/1000), r=n%1000; return th?w3(th)+" thousand"+(r?(r<100?" and ":", ")+w3(r):""):w3(r)}
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function numGen(mode){
+  if(mode==="price"){
+    const d=rnd(1,299), c=[0,25,49,50,75,95,99,rnd(1,98)][rnd(0,7)], cur=Math.random()<.5?["dollar","cent","$"]:["pound","pence","£"];
+    const say=numWords(d)+" "+cur[0]+(d===1?"":"s")+(c?" "+(cur[0]==="dollar"?"and "+w2(c)+" cent"+(c===1?"":"s"):w2(c)):"");
+    return {say,ans:(d+c/100).toFixed(2),show:cur[2]+d+(c?"."+String(c).padStart(2,"0"):""),hint:"พิมพ์เป็นตัวเลข เช่น 12.50"};
+  }
+  if(mode==="time"){
+    const h=rnd(1,12), m=[0,5,10,15,20,25,30,35,40,45,50,55,rnd(1,59)][rnd(0,12)], nh=h%12+1;
+    const dig=ONES[h]+" "+(m===0?"o'clock":m<10?"oh "+ONES[m]:w2(m));
+    let say=dig;
+    if(Math.random()<.5&&m%5===0){
+      if(m===0) say=ONES[h]+" o'clock"; else if(m===15) say="quarter past "+ONES[h]; else if(m===30) say="half past "+ONES[h]; else if(m===45) say="quarter to "+ONES[nh];
+      else if(m<30) say=w2(m)+" past "+ONES[h]; else say=w2(60-m)+" to "+ONES[nh];
+    }
+    return {say,ans:h+":"+String(m).padStart(2,"0"),show:h+":"+String(m).padStart(2,"0"),hint:"พิมพ์แบบ 7:15"};
+  }
+  if(mode==="year"){
+    const y=rnd(1950,2029), yy=y%100;
+    const say=y<2000?"nineteen "+(yy<10?"oh "+ONES[yy]:w2(yy)):y<2010?"two thousand"+(yy?" and "+ONES[yy]:""):"twenty "+w2(yy);
+    return {say,ans:String(y),show:String(y),hint:"พิมพ์เป็นตัวเลข 4 หลัก"};
+  }
+  if(mode==="phone"){
+    let d="0"+[6,8,9][rnd(0,2)]; while(d.length<10) d+=rnd(0,9);
+    const word=c=>c==="0"?"oh":ONES[+c], grp=[d.slice(0,3),d.slice(3,6),d.slice(6)];
+    return {say:grp.map(g=>g.split("").map(word).join(" ")).join(", "),ans:d,show:grp.join("-"),hint:"พิมพ์ตัวเลข 10 หลัก"};
+  }
+  if(mode==="big"){
+    const n=Math.random()<.5?rnd(1000,9999):rnd(10000,99999);
+    return {say:numWords(n),ans:String(n),show:n.toLocaleString("en-US"),hint:"พิมพ์เป็นตัวเลข"};
+  }
+  const nm=SPELL_NAMES[rnd(0,SPELL_NAMES.length-1)];
+  return {say:nm.toUpperCase().split("").join(", "),ans:nm.toLowerCase(),show:nm,hint:"พิมพ์ชื่อที่สะกด"};
+}
+function numNorm(mode,s){
+  s=String(s||"").trim().toLowerCase();
+  if(mode==="price"){const v=parseFloat(s.replace(/[^0-9.]/g,"")); return isNaN(v)?"":v.toFixed(2)}
+  if(mode==="time"){const m=/(\d{1,2})\D*(\d{2})?/.exec(s); if(!m) return ""; return (+m[1])+":"+(m[2]||"00")}
+  if(mode==="spell") return s.replace(/[^a-z]/g,"");
+  return s.replace(/\D/g,"");
+}
+let NUM=null;
+function numNew(mode){NUM={mode,i:0,n:10,item:numGen(mode),typed:"",res:null,correct:0}}
+function viewNumbers(){
+  if(!NUM) numNew(stat("nums").mode||"price");
+  const st=stat("nums");
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">ฟังตัวเลขและการสะกด</h1><p class="lede">ราคา เวลา ปี เบอร์โทร และการสะกดชื่อ เป็นจุดที่คนไทยพลาดบ่อยทั้งในชีวิตจริงและข้อสอบ IELTS Listening Part 1 และ TOEIC ฟังแล้วพิมพ์คำตอบ ชุดละ 10 ข้อ</p>'
+   +'<div class="tabs" role="group" aria-label="ประเภท">'+NUM_MODES.map(m=>'<button data-act="numode" data-m="'+m[0]+'" aria-pressed="'+(NUM.mode===m[0])+'">'+m[1]+(st[m[0]]!=null?' <small>'+st[m[0]]+'/10</small>':'')+'</button>').join("")+'</div>';
+  if(NUM.i>=NUM.n) return h+'<div class="card" style="margin-top:16px;max-width:620px"><h2 class="h2">ถูก '+NUM.correct+'/'+NUM.n+'</h2><p class="lede">'+(NUM.correct>=9?"หูไวมาก ลองประเภทอื่นต่อได้เลย":NUM.correct>=6?"ดีแล้ว ฝึกอีกรอบจะแม่นขึ้น":"ลองกดฟังช้าๆ แล้วจดทีละส่วน")+'</p><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="numode" data-m="'+NUM.mode+'">เล่นอีกรอบ</button></div></div>';
+  const it=NUM.item, r=NUM.res;
+  h+='<div class="card dict" style="margin-top:16px"><div class="row" style="justify-content:space-between"><span class="mono">ข้อ '+(NUM.i+1)+'/'+NUM.n+' · ถูก '+NUM.correct+'</span><div class="row"><button class="btn btn-sm btn-primary" data-act="nuplay">'+ICON.say+'ฟัง</button><button class="btn btn-sm" data-act="nuplay" data-slow="1">ฟังช้าๆ</button></div></div>'
+   +'<label class="sr" for="num-in">คำตอบ</label><input id="num-in" class="dict-in" lang="en" inputmode="'+(NUM.mode==="spell"?"text":"decimal")+'" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="'+esc(it.hint)+'" value="'+esc(r?NUM.typed:"")+'"'+(r?" disabled":"")+'>';
+  if(!r) h+='<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="nucheck">ตรวจ</button><span class="muted" style="font-size:14px">กด Enter เพื่อตรวจได้</span></div>';
+  else h+='<div class="feedback '+(r==="ok"?"ok":"no")+'"><b>'+(r==="ok"?"ถูกต้อง!":"ยังไม่ถูก")+'</b><span>คำตอบ: <b lang="en">'+esc(it.show)+'</b> · ได้ยินว่า "<span lang="en">'+esc(it.say)+'</span>"</span></div><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="nunext">'+(NUM.i+1<NUM.n?"ข้อต่อไป":"ดูผล")+'</button></div>';
+  return h+'</div>';
+}
+
+/* ---------- phrasebook ---------- */
+let pbTok=0;
+function viewPhrasebook(){
+  const st=stat("pb");
+  return pBack()+'<h1 class="h2" style="margin-top:8px">ประโยคพร้อมใช้ตามสถานการณ์</h1><p class="lede">ประโยคสำเร็จรูปที่ใช้ได้ทันทีเวลาเดินทาง ไปต่างประเทศ หรือทำงาน '+PHRASEBOOK.length+' สถานการณ์ '+PHRASEBOOK.reduce((n,s)=>n+s.items.length,0)+' ประโยค ฟังเสียง พูดตาม แล้วทดสอบว่าจำได้ไหม</p>'
+   +'<div class="p-grid">'+PHRASEBOOK.map(s=>'<button class="p-card" data-act="pgo" data-id="pb.'+s.id+'"><span class="p-title">'+esc(s.title)+'</span><span class="p-desc" lang="en">'+esc(s.items[0][0])+'</span><span class="p-meta">'+s.items.length+' ประโยค'+(st[s.id]!=null?' · ทดสอบได้ '+st[s.id]+'%':'')+'</span></button>').join("")+'</div>';
+}
+function viewPbSit(id){
+  const s=PHRASEBOOK.find(x=>x.id===id); if(!s) return viewPhrasebook();
+  let h=pBack("phrasebook","ประโยคตามสถานการณ์")+'<h1 class="h2" style="margin-top:8px">'+esc(s.title)+'</h1>'
+   +'<div class="row" style="margin-top:12px"><button class="btn btn-sm btn-primary" data-act="pbplay" data-id="'+id+'">'+ICON.say+'ฟังทั้งหมด</button><button class="btn btn-sm" data-act="pbquiz" data-id="'+id+'">ทดสอบ '+s.items.length+' ข้อ</button></div>'
+   +'<div class="stack pb-list" style="gap:8px;margin-top:14px">'+s.items.map((p,i)=>'<div class="sh-row pb-item" id="pb-'+i+'"><p><span lang="en" style="font-weight:600">'+esc(p[0])+'</span><br><span class="muted" style="font-size:14px">'+esc(p[1])+'</span></p>'+sayBtn(p[0],"ฟังประโยค")+'</div>').join("")+'</div>';
+  if(PRUN&&PRUN_META&&PRUN_META.id==="pb."+id){
+    h+='<section class="section"><h2 class="h3">ทดสอบ</h2>';
+    if(PRUN.done){const c=PRUN.results.filter(Boolean).length; h+='<div class="card" style="margin-top:12px;max-width:680px"><h2 class="h2">ถูก '+c+'/'+PRUN.items.length+'</h2><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="pbquiz" data-id="'+id+'">ทำอีกครั้ง</button></div></div>'}
+    else h+='<div style="margin-top:12px">'+runnerHTML(PRUN)+'</div>';
+    h+='</section>';
+  }
+  return h;
+}
+function pbItems(s){
+  return shuffle(s.items).map(p=>{const others=shuffle(s.items.filter(x=>x!==p)).slice(0,3).map(x=>x[0]); const o=shuffle([p[0]].concat(others)); return {t:"mc",q:"ถ้าจะพูดว่า \""+p[1]+"\" ควรพูดว่าอะไร",o,a:o.indexOf(p[0])}});
+}
+async function pbPlayAll(id){
+  const s=PHRASEBOOK.find(x=>x.id===id), tok=++pbTok; Speech.stop();
+  for(let i=0;i<s.items.length;i++){
+    if(tok!==pbTok||route.name!=="practice"||route.id!=="pb."+id) break;
+    document.querySelectorAll(".pb-item").forEach(x=>x.classList.remove("playing")); const el=$("#pb-"+i); if(el) el.classList.add("playing");
+    await Speech.say(s.items[i][0]); await new Promise(r=>setTimeout(r,500));
+  }
+  document.querySelectorAll(".pb-item").forEach(x=>x.classList.remove("playing"));
+}
+
+/* ---------- level tests ---------- */
+function lvItems(n){
+  const us=COURSE.filter(u=>u.lv===n);
+  return shuffle([].concat.apply([],us.map(u=>u.practice.concat(u.quiz)))).slice(0,20);
+}
+function viewLvTests(){
+  const st=stat("lvtest");
+  return pBack()+'<h1 class="h2" style="margin-top:8px">สอบรวมระดับ</h1><p class="lede">ข้อสอบ 20 ข้อสุ่มจากทุกบทในระดับเดียวกัน ใช้ทบทวนก่อนขึ้นระดับใหม่ หรือเช็กว่ายังจำเนื้อหาเก่าได้ไหม ได้ 80% ขึ้นไปถือว่าผ่าน</p>'
+   +'<div class="lessons" style="margin-top:16px">'+LEVELS.map(lv=>{const us=COURSE.filter(u=>u.lv===lv.n), d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length, b=st[lv.n];
+     return '<button class="lrow" data-act="pgo" data-id="lvtest.'+lv.n+'"><span class="lnum">'+lv.code+'</span><span class="ltitle"><b lang="en">'+esc(lv.name)+'</b><small>เรียนผ่านแล้ว '+d+'/'+us.length+' บท</small></span><span class="lstat">'+(b!=null?'<span class="chip'+(b>=80?' ok':'')+'">'+b+'%</span>':'')+'</span></button>'}).join("")+'</div>';
+}
+function viewLvTest(n){
+  const lv=LEVELS[n-1]; if(!lv) return viewLvTests();
+  let h=pBack("lvtest","สอบรวมระดับ")+'<h1 class="h2" style="margin-top:8px">สอบรวมระดับ '+lv.code+' <span lang="en">'+esc(lv.name)+'</span></h1>';
+  if(!PRUN||!PRUN_META||PRUN_META.id!=="lvt"+n){
+    const us=COURSE.filter(u=>u.lv===n), d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;
+    return h+'<p class="lede">20 ข้อ สุ่มจากบทที่ '+us.map(u=>u.n).join(", ")+(d<us.length?' · ยังเรียนไม่ครบทุกบท ลองทำได้แต่อาจเจอเรื่องที่ยังไม่ได้เรียน':'')+'</p><div class="row" style="margin-top:14px"><button class="btn btn-primary" data-act="lvstart" data-n="'+n+'">เริ่มสอบ</button></div>';
+  }
+  if(PRUN.done){
+    const c=PRUN.results.filter(Boolean).length, pct=Math.round(c/PRUN.items.length*100);
+    return h+'<div class="card" style="margin-top:16px;max-width:680px"><div class="result"><div class="score-ring '+(pct>=80?"pass":"fail")+'"><div><b>'+pct+'%</b><span>ถูก '+c+'/'+PRUN.items.length+'</span></div></div><div><h2 class="h2">'+(pct>=80?"ผ่านสอบรวมระดับ "+lv.code:"ยังไม่ถึง 80%")+'</h2><p class="lede">'+(pct>=80?"ความรู้ระดับนี้แน่นแล้ว":"ข้อที่ผิดถูกจดลงสมุดคำผิดแล้ว ทบทวนแล้วลองใหม่")+'</p></div></div><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="lvstart" data-n="'+n+'">สอบอีกครั้ง</button></div></div>';
+  }
+  return h+'<div style="margin-top:16px">'+runnerHTML(PRUN)+'</div>';
+}
+function runnerDoneX(r,c,tot){
+  const pct=Math.round(c/tot*100);
+  if(r.kind==="lvt"&&PRUN_META){const st=stat("lvtest"); st[PRUN_META.lv]=Math.max(st[PRUN_META.lv]||0,pct); S.xp+=c*3}
+  if(r.kind==="pb"&&PRUN_META){const st=stat("pb"); st[PRUN_META.sit]=Math.max(st[PRUN_META.sit]||0,pct); S.xp+=c*2}
+  bump("prac"); markDay(); save();
+}
+
+BADGES.push(
+ {id:"verbs",t:"กริยาแม่นยำ",d:"ทดสอบกริยา 3 ช่องได้ 10/10",ok:()=>(stat("verbs").best||0)>=10},
+ {id:"nums",t:"หูไวตัวเลข",d:"ได้ 8/10 ขึ้นไปในการฟังตัวเลขครบทุกประเภท",ok:()=>NUM_MODES.every(m=>(stat("nums")[m[0]]||0)>=8)},
+ {id:"pb",t:"พร้อมเดินทาง",d:"ทดสอบประโยคตามสถานการณ์ครบทุกหมวด",ok:()=>PHRASEBOOK.every(s=>stat("pb")[s.id]!=null)},
+ {id:"lvall",t:"สอบรวมผ่านทุกระดับ",d:"สอบรวมระดับได้ 80% ขึ้นไปครบ A1–C1",ok:()=>LEVELS.every(lv=>(stat("lvtest")[lv.n]||0)>=80)}
+);
+
+const SACT={
+  vbtab:t=>{vbTab=t.dataset.t; render()},
+  vbnew:()=>{vbNew(); render(); const f=$("#vb2"); if(f) f.focus()},
+  vbcheck:()=>{
+    if(!VB||VB.res) return; const a=($("#vb2")||{}).value||"", b=($("#vb3")||{}).value||"";
+    if(!a.trim()||!b.trim()){toast("พิมพ์ให้ครบทั้งช่อง 2 และช่อง 3");return}
+    const v=IRREG[VB.list[VB.i]]; VB.t2=a; VB.t3=b; VB.res={ok2:vbOk(a,v[1]),ok3:vbOk(b,v[2])};
+    if(VB.res.ok2&&VB.res.ok3) VB.correct++; else VB.wrong.push(VB.list[VB.i]);
+    render(); Speech.say([v[0],v[1].split("|")[0],v[2].split("|")[0]].join(", "));
+  },
+  vbnext:()=>{
+    if(!VB) return; VB.i++; VB.res=null; VB.t2=""; VB.t3="";
+    if(VB.i>=VB.list.length){const st=stat("verbs"); st.best=Math.max(st.best||0,VB.correct); S.xp+=VB.correct*2; bump("prac"); markDay(); save()}
+    render(); const f=$("#vb2"); if(f&&window.matchMedia("(pointer:fine)").matches) f.focus();
+  },
+  numode:t=>{numNew(t.dataset.m); stat("nums").mode=t.dataset.m; render(); Speech.say(NUM.item.say)},
+  nuplay:t=>{if(NUM&&NUM.i<NUM.n){Speech.stop(); Speech.say(NUM.item.say,{slow:!!t.dataset.slow})}},
+  nucheck:()=>{
+    if(!NUM||NUM.res) return; const v=($("#num-in")||{}).value||""; if(!v.trim()){toast("พิมพ์คำตอบก่อน");return}
+    NUM.typed=v; NUM.res=numNorm(NUM.mode,v)===numNorm(NUM.mode,NUM.item.ans)?"ok":"no"; if(NUM.res==="ok") NUM.correct++; render();
+  },
+  nunext:()=>{
+    if(!NUM) return; NUM.i++; NUM.res=null; NUM.typed="";
+    if(NUM.i>=NUM.n){const st=stat("nums"); st[NUM.mode]=Math.max(st[NUM.mode]||0,NUM.correct); S.xp+=NUM.correct; bump("prac"); markDay(); save(); render(); return}
+    NUM.item=numGen(NUM.mode); render(); Speech.say(NUM.item.say); const f=$("#num-in"); if(f&&window.matchMedia("(pointer:fine)").matches) f.focus();
+  },
+  pbplay:t=>pbPlayAll(t.dataset.id),
+  pbquiz:t=>{const s=PHRASEBOOK.find(x=>x.id===t.dataset.id); if(!s) return; pbTok++; Speech.stop(); PRUN_META={id:"pb."+s.id,sit:s.id,title:"ประโยค"+s.title}; PRUN=newRunner(pbItems(s),"pb"); render(); const el=$(".section:last-of-type"); if(el) el.scrollIntoView({block:"start"})},
+  lvstart:t=>{const n=+t.dataset.n; PRUN_META={id:"lvt"+n,lv:n,title:"สอบรวม "+LEVELS[n-1].code}; PRUN=newRunner(lvItems(n),"lvt"); render(); window.scrollTo(0,0)}
+};
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -4200,6 +4668,7 @@ function runnerDone(r){
     if(r.kind==="gq"&&PRUN_META){const gs=stat("gram"); gs[PRUN_META.id]=Math.max(gs[PRUN_META.id]||0,Math.round(c/tot*100))}
     S.xp+=c*2; bump("prac"); markDay(); save();
   }
+  if(r.kind==="lvt"||r.kind==="pb") runnerDoneX(r,c,tot);
   if(r.kind==="placement"){
     const g=[0,4,8].map(s=>r.results.slice(s,s+4).filter(Boolean).length);
     const level=g[0]>=3&&g[1]>=3?3:g[0]>=3?2:1;
@@ -4378,7 +4847,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
@@ -4416,6 +4885,9 @@ document.addEventListener("keydown",e=>{
   if(e.key!=="Enter"||e.isComposing) return;
   if(e.target.id==="dict-in"){e.preventDefault(); ACT.dcheck()}
   if(e.target.id==="sb-in"){e.preventDefault(); ACT.sbcheck()}
+  if(e.target.id==="num-in"){e.preventDefault(); ACT.nucheck()}
+  if(e.target.id==="vb2"){e.preventDefault(); const f=$("#vb3"); if(f) f.focus()}
+  if(e.target.id==="vb3"){e.preventDefault(); ACT.vbcheck()}
 });
 setInterval(()=>{if(route.name!=="practice"||route.id!=="game.speed"||!SPG||SPG.end) return; const l=speedLeft(); if(l<=0){speedFinish(); render(); return} const el=$("#sptimer"); if(el) el.textContent=mmss(l)},250);
 setInterval(()=>{if(route.name==="practice"&&route.id==="game.match"&&MG&&!MG.end){const el=$("#mtimer"); if(el) el.textContent=mmss((Date.now()-MG.start)/1000+MG.miss*3)}},1000);
