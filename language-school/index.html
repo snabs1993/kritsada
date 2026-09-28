@@ -608,6 +608,20 @@ body{margin:0}
 .sh-list li+li button{border-top:.5px solid var(--sep)}
 .sh-list li.cur button{background:var(--sel);color:var(--accent);font-weight:600}
 @media (prefers-reduced-motion:reduce){.sh-bar i{transition:none!important}}
+/* YouTube shadowing */
+.yt-frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;margin-top:14px;border-radius:20px;overflow:hidden;background:#000;box-shadow:var(--shadow)}
+.yt-frame iframe,.yt-frame #yt-player{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-row{display:flex;align-items:center;gap:8px;padding-right:12px}
+.yt-open{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:center;flex:1;min-width:0;background:none;border:0;text-align:left;cursor:pointer;color:var(--ink);padding:0}
+.yt-sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.yt-sugg .chip{text-decoration:none;padding:6px 12px;font-size:14px;color:var(--accent)}
+.yt-marks{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.yt-mark{display:inline-flex;align-items:center;background:var(--fill);border-radius:999px;overflow:hidden}
+.yt-mark button{border:0;background:none;padding:6px 10px;color:var(--ink);cursor:pointer;font:600 14px var(--f-num);min-height:36px}
+.yt-mark button+button{color:var(--ink-3);padding-left:4px}
+.nl-sm{display:none}
+@media (max-width:1100px){.nav .nl-lg{display:none}.nav .nl-sm{display:inline}}
+.yt-entry{margin-top:12px;width:100%}
 /* ================= iOS 26 layer: Liquid Glass surfaces, grouped lists, capsule controls ================= */
 body{font-size:17px;line-height:1.55;letter-spacing:-.01em;background:radial-gradient(900px 520px at 8% -8%,var(--tint-1),transparent 62%),radial-gradient(800px 480px at 100% -4%,var(--tint-2),transparent 60%),var(--paper);background-attachment:fixed;min-height:100%}
 h1,h2,h3{letter-spacing:-.02em}
@@ -788,6 +802,7 @@ th,td{border-bottom:.5px solid var(--sep)}
       <button data-act="go" data-to="course"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20M9 8h7"/></svg>หลักสูตร</button>
       <button data-act="go" data-to="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg>คำศัพท์</button>
       <button data-act="go" data-to="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>ฝึกฝน</button>
+      <button data-act="go" data-to="shadow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10v4M7 7v10M11 4v16M15 8v8M19 6v12M23 10v4"/></svg><span class="nl-lg">Shadowing</span><span class="nl-sm">พูดตาม</span></button>
       <button data-act="go" data-to="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg>ข้อสอบ</button>
       <button class="ai-only" data-act="go" data-to="teacher"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>ครู AI</button>
       <button data-act="go" data-to="report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 20V11M11 20V5M17 20v-6M3 20h18"/></svg>สมุดพก</button>
@@ -3617,6 +3632,8 @@ function viewPractice(){
   if(id==="lvtest") return viewLvTests();
   if(id==="pods") return viewPods();
   if(id==="shadow") return viewShadowList();
+  if(id==="yt") return viewYtList();
+  if(id.indexOf("yt.")===0) return viewYt(id.slice(3));
   if(id.indexOf("shadow.")===0) return viewShadow(id.slice(7));
   if(id.indexOf("pod.")===0) return viewPod(id.slice(4));
   if(id==="thaiglish") return viewThaiglish();
@@ -5418,8 +5435,9 @@ function shGap(en,speed){return Math.round((1300+en.split(/\s+/).length*430)/SH_
 function viewShadowList(){
   const st=shStat(), sets=shSets().filter(x=>x.cat===shCat);
   const row=x=>{const r=st.sets[x.id]; return '<button class="lrow" data-act="pgo" data-id="shadow.'+x.id+'"><span class="lnum">'+(x.lv||"TH")+'</span><span class="ltitle"><b lang="en">'+esc(x.title)+'</b><small>'+esc(x.sub)+' · '+x.items.length+' ประโยค</small></span><span class="lstat">'+(r?'<span class="chip'+(r.avg==null||r.avg>=80?' ok':'')+'">'+(r.avg!=null?r.avg+'%':'ฝึกแล้ว')+'</span>':'')+'</span></button>'};
-  let h=pBack()+'<h1 class="h2" style="margin-top:8px">ห้องฝึก Shadowing</h1><p class="lede">ฟังเจ้าของภาษาแล้วพูดตามทันที เลียนแบบทั้งเสียง จังหวะ การเชื่อมคำ และน้ำเสียง วันละ 10–15 นาทีช่วยให้พูดคล่องและสำเนียงดีขึ้นเร็วที่สุด'+(NB?' แอปจะฟังเสียงคุณและให้คะแนนทุกประโยค':' ในแอป Android แอปจะฟังเสียงคุณและให้คะแนนด้วย')+'</p>'
-   +'<div class="card sh-how"><ol><li><b>ฟังแล้วพูดตาม</b> ฟังจบหนึ่งประโยค แล้วพูดตามในช่วงเว้นจังหวะ เหมาะกับการเริ่มต้น</li><li><b>พูดพร้อมกัน</b> พูดทับเสียงไปพร้อมกัน ห่างแค่ครึ่งจังหวะ นี่คือ shadowing แท้ๆ ฝึกความลื่นไหล</li><li><b>ซ่อนข้อความ</b> เมื่อคล่องแล้ว ลองฟังอย่างเดียวโดยไม่ดูตัวหนังสือ</li></ol><p class="muted" style="font-size:14px">ฝึกไปแล้ว <b>'+(st.n||0)+'</b> ประโยค</p></div>'
+  let h='<h1 class="h1">ห้องฝึก Shadowing</h1><p class="lede">ฟังเจ้าของภาษาแล้วพูดตามทันที เลียนแบบทั้งเสียง จังหวะ การเชื่อมคำ และน้ำเสียง วันละ 10–15 นาทีช่วยให้พูดคล่องและสำเนียงดีขึ้นเร็วที่สุด'+(NB?' แอปจะฟังเสียงคุณและให้คะแนนทุกประโยค':' ในแอป Android แอปจะฟังเสียงคุณและให้คะแนนด้วย')+'</p>'
+   +'<div class="card sh-how"><ol><li><b>ฟังแล้วพูดตาม</b> ฟังจบหนึ่งประโยค แล้วพูดตามในช่วงเว้นจังหวะ เหมาะกับการเริ่มต้น</li><li><b>พูดพร้อมกัน</b> พูดทับเสียงไปพร้อมกัน ห่างแค่ครึ่งจังหวะ นี่คือ shadowing แท้ๆ ฝึกความลื่นไหล</li><li><b>ซ่อนข้อความ</b> เมื่อคล่องแล้ว ลองฟังอย่างเดียวโดยไม่ดูตัวหนังสือ</li></ol><p class="muted" style="font-size:14px">ฝึกไปแล้ว <b>'+(st.n||0)+'</b> ประโยค'+(st.yt?' · จากคลิป YouTube <b>'+st.yt+'</b> ช่วง':'')+'</p></div>'
+   +'<button class="p-card yt-entry" data-act="pgo" data-id="yt"><span class="p-title">Shadowing จากคลิป YouTube</span><span class="p-desc">วางลิงก์คลิปที่ชอบ แอปเล่นทีละช่วงแล้วหยุดให้พูดตาม ตัดช่วงตามประโยคเองได้'+(NB?'':' (ใช้ได้ในแอป Android)')+'</span><span class="p-meta">'+ytList().length+' คลิปของฉัน</span></button>'
    +'<div class="tabs" role="group" aria-label="ประเภท" style="margin-top:18px">'+SH_CATS.map(c=>'<button data-act="shcat" data-c="'+c[0]+'" aria-pressed="'+(shCat===c[0])+'">'+c[1]+'</button>').join("")+'</div>';
   if(shCat==="pb") return h+'<div class="lessons" style="margin-top:14px">'+sets.map(row).join("")+'</div>';
   return h+LEVELS.filter(lv=>sets.some(x=>x.lv===lv.code)).map(lv=>'<section class="section" style="margin-top:20px"><h2 class="h3">'+lv.code+' <span lang="en">'+lv.name+'</span></h2><div class="lessons" style="margin-top:10px">'+sets.filter(x=>x.lv===lv.code).map(row).join("")+'</div></section>').join("");
@@ -5976,6 +5994,140 @@ SCENES.push(
 );
 BADGES.push({id:"c2",t:"จบ C2",d:"ผ่านทุกบทระดับ Proficiency",ok:()=>lvDone(6)});
 
+
+/* ---------- shadowing from YouTube (Android app only: the web page cannot embed other sites) ---------- */
+const YT_SUGGEST=[["BBC Learning English","BBC Learning English 6 Minute English"],["TED-Ed","TED-Ed"],["English with Lucy","English with Lucy"],["Rachel's English","Rachel's English shadowing"],["VOA Learning English","VOA Learning English"],["Friends clips","Friends scene"]];
+let YTS=null, ytPlayer=null, ytApi=null, ytTimer=null, ytTok=0;
+function ytList(){if(!S.yt||!Array.isArray(S.yt.list)) S.yt={list:[]}; return S.yt.list}
+function ytParse(s){
+  s=String(s||"").trim();
+  const m=s.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([A-Za-z0-9_-]{11})/)||s.match(/^([A-Za-z0-9_-]{11})$/);
+  return m?m[1]:null;
+}
+function ytCfg(){const d={mode:"auto",chunk:5,speed:1,reps:1,gap:1.2,mic:true}; if(!S.settings.yt||typeof S.settings.yt!=="object") S.settings.yt={}; return Object.assign(d,S.settings.yt)}
+function ytRec(id){return ytList().find(x=>x.id===id)}
+function viewYtList(){
+  const list=ytList();
+  let h=pBack("shadow","ห้องฝึก Shadowing")+'<h1 class="h2" style="margin-top:8px">Shadowing จาก YouTube</h1><p class="lede">วางลิงก์คลิปภาษาอังกฤษที่ชอบ แอปจะเล่นทีละช่วงแล้วหยุดให้คุณพูดตาม ปรับความเร็ว เล่นซ้ำ และตัดช่วงตามประโยคเองได้</p>';
+  if(!NB) return h+'<div class="card" style="margin-top:16px"><p><b>ใช้ได้ในแอป Android</b></p><p class="muted" style="margin-top:6px">หน้าเว็บใน Claude ฝังวิดีโอจากเว็บอื่นไม่ได้ เปิดเมนูนี้ในแอป Android แทน หรือฝึกแบบเองโดยเปิดคลิปใน YouTube แล้วกดหยุดทุกประโยคเพื่อพูดตาม</p></div>'+ytSuggestHTML();
+  h+='<form class="card yt-add" data-form="ytadd" style="margin-top:16px"><label for="yt-url"><b>ลิงก์คลิป YouTube</b></label><div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="yt-url" class="dict-in" style="margin-top:0" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://youtu.be/..."><button class="btn btn-primary" type="submit">เปิด</button></div><p class="muted" style="font-size:13.5px;margin-top:6px">ในแอป YouTube กด แชร์ → คัดลอกลิงก์ แล้วมาวางที่นี่</p></form>';
+  if(list.length) h+='<section class="section"><h2 class="h3">คลิปของฉัน</h2><div class="lessons" style="margin-top:10px">'+list.map(x=>'<div class="lrow yt-row"><button class="yt-open" data-act="pgo" data-id="yt.'+esc(x.id)+'"><span class="lnum">YT</span><span class="ltitle"><b>'+esc(x.title||"คลิป "+x.id)+'</b><small>'+(x.marks&&x.marks.length?x.marks.length+" จุดตัดประโยค":"ยังไม่ได้ตัดประโยค")+'</small></span></button><button class="btn btn-sm btn-ghost" data-act="ytdel" data-id="'+esc(x.id)+'" aria-label="ลบคลิปนี้">ลบ</button></div>').join("")+'</div></section>';
+  return h+ytSuggestHTML();
+}
+function ytSuggestHTML(){
+  return '<section class="section"><h2 class="h3">หาคลิปดีๆ ได้จาก</h2><p class="muted" style="font-size:14px;margin-top:4px">คลิปที่พูดชัด ช้าพอดี และมีคำบรรยาย เหมาะกับการเริ่มต้น</p><div class="yt-sugg">'
+   +YT_SUGGEST.map(x=>'<a class="chip" href="https://www.youtube.com/results?search_query='+encodeURIComponent(x[1])+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>').join("")+'</div></section>';
+}
+function viewYt(id){
+  if(!NB) return viewYtList();
+  let r=ytRec(id); if(!r){r={id,title:"",marks:[],at:Date.now()}; ytList().unshift(r); if(ytList().length>30) ytList().length=30; save()}
+  if(!YTS||YTS.id!==id) YTS={id,running:false,phase:"idle",segStart:0,segEnd:0,rep:0,ready:false,err:""};
+  const c=ytCfg();
+  const seg=(k,opts)=>'<div class="tabs" role="group">'+opts.map(o=>'<button data-act="ytopt" data-k="'+k+'" data-v="'+o[0]+'" aria-pressed="'+(String(c[k])===String(o[0]))+'">'+o[1]+'</button>').join("")+'</div>';
+  return pBack("yt","คลิป YouTube")+'<h1 class="h2" style="margin-top:8px" id="yt-title">'+esc(r.title||"กำลังโหลดคลิป…")+'</h1>'
+   +'<div class="yt-frame" id="yt-slot" data-vid="'+esc(id)+'"><div id="yt-player"></div></div>'
+   +'<p class="pen" id="yt-err" style="margin-top:8px"'+(YTS.err?'':' hidden')+'>'+esc(YTS.err)+'</p>'
+   +'<div class="card sh-card" id="yt-card"><p class="sh-status" id="yt-status" style="margin-top:0">กด "เริ่มฝึก" แอปจะเล่นทีละช่วงแล้วหยุดให้คุณพูดตาม</p><div class="sh-bar"><i id="yt-bar"></i></div>'
+   +'<p class="muted" id="yt-heard" lang="en" style="min-height:1.4em;margin-top:8px;font-size:15px"></p>'
+   +'<div class="sh-ctrl"><button class="btn btn-primary" data-act="ytgo" id="yt-go">เริ่มฝึก</button><button class="btn" data-act="ytback">ย้อน 3 วิ</button><button class="btn" data-act="ytagain">เล่นช่วงนี้ซ้ำ</button><button class="btn" data-act="ytmark">ตัดประโยคตรงนี้</button></div></div>'
+   +'<details class="card sh-set" open><summary>ตั้งค่า</summary><div class="sh-opts">'
+   +'<div><b>หยุดให้พูดตาม</b>'+seg("mode",[["auto","ทุกช่วงเวลา"],["marks","ตามจุดตัดประโยค"]])+'</div>'
+   +'<div><b>ความยาวช่วง</b>'+seg("chunk",[[3,"3 วิ"],[5,"5 วิ"],[8,"8 วิ"]])+'</div>'
+   +'<div><b>ความเร็ววิดีโอ</b>'+seg("speed",[[0.75,"0.75×"],[1,"1×"],[1.25,"1.25×"]])+'</div>'
+   +'<div><b>เล่นซ้ำต่อช่วง</b>'+seg("reps",[[1,"1 รอบ"],[2,"2 รอบ"],[3,"3 รอบ"]])+'</div>'
+   +'<div><b>ให้แอปฟังเสียงตอนพูดตาม</b>'+seg("mic",[[true,"เปิด"],[false,"ปิด"]])+'</div>'
+   +'</div></details>'
+   +'<section class="section"><div class="section-head"><h2 class="h3">จุดตัดประโยค</h2><span class="muted" id="yt-mcount">'+r.marks.length+' จุด</span></div><p class="muted" style="font-size:14px">ระหว่างดู กด "ตัดประโยคตรงนี้" ตอนที่ประโยคจบ แล้วเปลี่ยนเป็นโหมด "ตามจุดตัดประโยค" แอปจะหยุดตรงจุดจบประโยคพอดี</p><div class="yt-marks" id="yt-marks">'+ytMarksHTML(r)+'</div></section>';
+}
+function ytMarksHTML(r){return r.marks.length?r.marks.map((t,i)=>'<span class="yt-mark"><button data-act="ytseek" data-t="'+t+'">'+mmss(t)+'</button><button data-act="ytunmark" data-i="'+i+'" aria-label="ลบจุดนี้">×</button></span>').join(""):'<span class="muted">ยังไม่มี</span>'}
+function ytKeep(){return route.name==="practice"&&YTS&&route.id==="yt."+YTS.id&&ytPlayer&&!!document.querySelector('#yt-slot[data-vid="'+YTS.id+'"]')}
+function ytLoadApi(){
+  if(ytApi) return ytApi;
+  ytApi=new Promise((res,rej)=>{
+    if(window.YT&&window.YT.Player) return res(window.YT);
+    const prev=window.onYouTubeIframeAPIReady; window.onYouTubeIframeAPIReady=()=>{if(prev) try{prev()}catch(e){} res(window.YT)};
+    const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; s.onerror=()=>{ytApi=null; rej(new Error("load"))}; document.head.appendChild(s);
+  });
+  return ytApi;
+}
+async function ytMount(){
+  const id=YTS&&YTS.id; if(!id||!$("#yt-player")) return;
+  try{await ytLoadApi()}catch(e){ytError("โหลดตัวเล่น YouTube ไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่"); return}
+  if(!YTS||YTS.id!==id||!$("#yt-player")) return;
+  try{if(ytPlayer&&ytPlayer.destroy) ytPlayer.destroy()}catch(e){}
+  ytPlayer=new YT.Player("yt-player",{videoId:id,width:"100%",height:"100%",playerVars:{playsinline:1,rel:0,modestbranding:1,cc_load_policy:1,origin:location.origin},
+    events:{onReady:()=>{YTS.ready=true; try{ytPlayer.setPlaybackRate(ytCfg().speed)}catch(e){} try{const t=ytPlayer.getVideoData().title; const r=ytRec(id); if(t&&r){r.title=t; save(); const h=$("#yt-title"); if(h) h.textContent=t}}catch(e){}},
+      onError:e=>ytError(e.data===101||e.data===150?"เจ้าของคลิปไม่อนุญาตให้เล่นในแอปอื่น ลองคลิปอื่น":e.data===152||e.data===153?"คลิปนี้เล่นในแอปไม่ได้ ลองคลิปอื่นหรือเปิดใน YouTube":"เล่นคลิปนี้ไม่ได้ ตรวจลิงก์อีกครั้ง")}});
+}
+function ytError(msg){if(YTS) YTS.err=msg; const e=$("#yt-err"); if(e){e.textContent=msg; e.hidden=false}}
+function ytSetStatus(t,ms){
+  const el=$("#yt-status"); if(el) el.textContent=t;
+  const bar=$("#yt-bar"); if(bar){bar.style.transition="none"; bar.style.width=ms?"100%":"0"; if(ms){void bar.offsetWidth; bar.style.transition="width "+ms+"ms linear"; bar.style.width="0"}}
+  const card=$("#yt-card"); if(card) card.classList.toggle("you",YTS&&YTS.phase==="you");
+  const go=$("#yt-go"); if(go) go.textContent=YTS&&YTS.running?"หยุด":"เริ่มฝึก";
+}
+function ytNow(){try{return ytPlayer.getCurrentTime()||0}catch(e){return 0}}
+function ytNextEnd(from){
+  const c=ytCfg(), r=ytRec(YTS.id), dur=(()=>{try{return ytPlayer.getDuration()||0}catch(e){return 0}})();
+  if(c.mode==="marks"&&r&&r.marks.length){const nx=r.marks.find(t=>t>from+0.3); return nx!=null?nx:(dur||from+ c.chunk)}
+  return dur?Math.min(dur,from+c.chunk):from+c.chunk;
+}
+function ytStart(from){
+  if(!YTS||!YTS.ready){toast("รอคลิปโหลดสักครู่"); return}
+  const tok=++ytTok; YTS.running=true; YTS.rep=0; YTS.segStart=from!=null?from:ytNow(); YTS.segEnd=ytNextEnd(YTS.segStart);
+  ytPlaySeg(tok);
+}
+function ytPlaySeg(tok){
+  if(tok!==ytTok||!YTS) return;
+  YTS.phase="play"; ytSetStatus("ฟังให้ดี… ("+mmss(YTS.segStart)+"–"+mmss(YTS.segEnd)+")"+(ytCfg().reps>1?" รอบ "+(YTS.rep+1)+"/"+ytCfg().reps:""));
+  try{ytPlayer.seekTo(YTS.segStart,true); ytPlayer.setPlaybackRate(ytCfg().speed); ytPlayer.playVideo()}catch(e){}
+  clearInterval(ytTimer);
+  ytTimer=setInterval(()=>{
+    if(tok!==ytTok||!YTS||!YTS.running){clearInterval(ytTimer); return}
+    if(route.name!=="practice"||route.id!=="yt."+YTS.id){ytStop(); return}
+    let st=-1; try{st=ytPlayer.getPlayerState()}catch(e){}
+    if(ytNow()>=YTS.segEnd-0.08||st===0){clearInterval(ytTimer); ytGap(tok)}
+  },80);
+}
+async function ytGap(tok){
+  try{ytPlayer.pauseVideo()}catch(e){}
+  if(tok!==ytTok||!YTS) return;
+  const c=ytCfg(), len=Math.max(1,YTS.segEnd-YTS.segStart), gap=Math.round(len/c.speed*1000*c.gap+700);
+  YTS.phase="you";
+  const heardEl=$("#yt-heard"); if(heardEl) heardEl.textContent="";
+  if(NB&&c.mic&&NB.listen){
+    ytSetStatus("ถึงตาคุณ พูดตาม แอปกำลังฟัง",gap+800);
+    let ok=false; try{ok=(await NB.sttAvailable())&&(await NB.sttPermission())}catch(e){}
+    if(ok){try{const heard=await NB.listen({maxMs:gap+800,hints:[],onPartial:t=>{const el=$("#yt-heard"); if(el) el.textContent="แอปได้ยินว่า: "+t}}); const el=$("#yt-heard"); if(el) el.textContent=heard?"แอปได้ยินว่า: "+heard:"ไม่ได้ยินเสียง ลองพูดดังขึ้นอีกนิด"}catch(e){}}
+    else await new Promise(r=>setTimeout(r,gap));
+  } else {ytSetStatus("ถึงตาคุณ พูดตามเลย",gap); await new Promise(r=>setTimeout(r,gap))}
+  if(tok!==ytTok||!YTS||!YTS.running) return;
+  if(route.name!=="practice"||route.id!=="yt."+YTS.id){ytStop(); return}
+  YTS.phase="play"; YTS.rep++;
+  const st=stat("shadow"); st.yt=(st.yt||0)+1; if(st.yt%10===0){bump("prac"); S.xp+=5} markDay(); save();
+  if(YTS.rep>=c.reps){
+    YTS.rep=0; const dur=(()=>{try{return ytPlayer.getDuration()||0}catch(e){return 0}})();
+    if(dur&&YTS.segEnd>=dur-0.3){YTS.running=false; YTS.phase="idle"; ytSetStatus("จบคลิปแล้ว เก่งมาก ลองฝึกซ้ำด้วยความเร็วที่เร็วขึ้น"); return}
+    YTS.segStart=YTS.segEnd; YTS.segEnd=ytNextEnd(YTS.segStart);
+  }
+  ytPlaySeg(tok);
+}
+function ytStop(){ytTok++; clearInterval(ytTimer); if(NB&&NB.stopListening) NB.stopListening().catch(()=>{}); try{ytPlayer&&ytPlayer.pauseVideo()}catch(e){} if(YTS){YTS.running=false; YTS.phase="idle"} ytSetStatus("หยุดแล้ว กด เริ่มฝึก เพื่อฝึกต่อจากตรงนี้")}
+
+const YACT={
+  ytdel:t=>{const id=t.dataset.id; S.yt.list=ytList().filter(x=>x.id!==id); save(); render()},
+  ytgo:()=>{if(YTS&&YTS.running) ytStop(); else ytStart()},
+  ytback:()=>{if(!YTS||!YTS.ready) return; const was=YTS.running; ytStop(); const t=Math.max(0,ytNow()-3); try{ytPlayer.seekTo(t,true)}catch(e){} if(was) ytStart(t)},
+  ytagain:()=>{if(!YTS||!YTS.ready) return; const from=YTS.segEnd>YTS.segStart?YTS.segStart:Math.max(0,ytNow()-ytCfg().chunk); ytStop(); ytStart(from)},
+  ytmark:()=>{if(!YTS||!YTS.ready) return; const r=ytRec(YTS.id), t=Math.round(ytNow()*10)/10; if(r.marks.some(x=>Math.abs(x-t)<0.4)) return; r.marks.push(t); r.marks.sort((a,b)=>a-b); if(r.marks.length>400) r.marks.length=400; save();
+    const m=$("#yt-marks"); if(m) m.innerHTML=ytMarksHTML(r); const n=$("#yt-mcount"); if(n) n.textContent=r.marks.length+" จุด"; toast("ตัดประโยคที่ "+mmss(t))},
+  ytunmark:t=>{const r=ytRec(YTS.id); r.marks.splice(+t.dataset.i,1); save(); const m=$("#yt-marks"); if(m) m.innerHTML=ytMarksHTML(r); const n=$("#yt-mcount"); if(n) n.textContent=r.marks.length+" จุด"},
+  ytseek:t=>{if(!YTS||!YTS.ready) return; ytStop(); try{ytPlayer.seekTo(+t.dataset.t,true)}catch(e){}},
+  ytopt:t=>{const k=t.dataset.k, raw=t.dataset.v, v=raw==="true"?true:raw==="false"?false:isNaN(+raw)?raw:+raw; const c=ytCfg(); c[k]=v; S.settings.yt=c; save();
+    t.parentElement.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b===t)));
+    if(k==="speed"){try{ytPlayer.setPlaybackRate(v)}catch(e){}}}
+};
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -5986,9 +6138,11 @@ let resetAsk=false;
 const W={};   // writing drafts/results
 
 function go(name,id){
+  if(name==="shadow"){name="practice"; id=id?"shadow."+id:"shadow"}
   Speech.stop();
   if(NB&&prActive) NB.stopListening();
   if(typeof SH!=="undefined"&&SH&&SH.playing) shStop();
+  if(typeof YTS!=="undefined"&&YTS){if(YTS.running) ytStop(); ytPlayer=null}
   if(NB&&name==="teacher") name="home";
   xTok++; if(X){if(X.playing&&X.mode==="exam"&&!X.submitted&&X.plays[X.playing]>0) X.plays[X.playing]--; X.playing=null}
   if(name==="practice"){storyTok++; if(!id||String(id).indexOf("gram.")!==0&&id!=="mistakes"){PRUN=null;PRUN_META=null} if(!id||String(id).indexOf("story.")!==0) ST=null}
@@ -6010,18 +6164,21 @@ function go(name,id){
 }
 
 function render(){
+  if(typeof ytKeep==="function"&&ytKeep()) return;
   const V={home:viewHome,course:viewCourse,lesson:viewLesson,review:viewReview,teacher:viewTeacher,report:viewReport,placement:viewPlacement,exam:viewExamHub,examrun:viewExamRun,practice:viewPractice}[route.name]||viewHome;
   registerWords();
   $("#app").innerHTML=V();
   const cs=$(".stepper .is-current"); if(cs){const sc=cs.parentElement; sc.scrollLeft+=cs.getBoundingClientRect().left-sc.getBoundingClientRect().left-(sc.clientWidth-cs.offsetWidth)/2}
   document.querySelectorAll(".nav button").forEach(b=>{
-    const cur=b.dataset.to===route.name||(b.dataset.to==="course"&&(route.name==="lesson"||route.name==="placement"))||(b.dataset.to==="exam"&&route.name==="examrun");
+    const sh=route.name==="practice"&&/^(shadow|yt)/.test(route.id||"");
+    const cur=b.dataset.to==="shadow"?sh:b.dataset.to==="practice"?(route.name==="practice"&&!sh):b.dataset.to===route.name||(b.dataset.to==="course"&&(route.name==="lesson"||route.name==="placement"))||(b.dataset.to==="exam"&&route.name==="examrun");
     if(cur) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
   });
   updateChrome();
   document.querySelectorAll("[data-chat]").forEach(mountChat);
   checkBadges();
   const tb=$(".topbar"); if(tb) document.documentElement.style.setProperty("--topbar-h",tb.offsetHeight+"px");
+  if(NB&&route.name==="practice"&&String(route.id||"").indexOf("yt.")===0) ytMount();
 }
 function updateChrome(){
   const n=streak();
@@ -6460,12 +6617,17 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
 });
 document.addEventListener("submit",e=>{
+  if(e.target.matches('[data-form="ytadd"]')){
+    e.preventDefault(); const id=ytParse(($("#yt-url")||{}).value);
+    if(!id){toast("ลิงก์ไม่ถูกต้อง คัดลอกลิงก์จากปุ่มแชร์ของ YouTube แล้ววางใหม่");return}
+    go("practice","yt."+id); return;
+  }
   if(e.target.matches('[data-form="addword"]')){
     e.preventDefault();
     const en=$("#aw-en").value.trim(), th=$("#aw-th").value.trim(), ex=$("#aw-ex").value.trim();
