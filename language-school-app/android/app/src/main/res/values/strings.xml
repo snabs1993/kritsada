@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ห้องเรียนอังกฤษ</string>
+    <string name="title_activity_main">ห้องเรียนอังกฤษ</string>
+    <string name="package_name">app.englishclass.home</string>
+    <string name="custom_url_scheme">app.englishclass.home</string>
+</resources>

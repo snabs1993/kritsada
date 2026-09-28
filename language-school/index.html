@@ -288,8 +288,20 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .sugg button{text-align:left;background:none;border:1px dashed var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;color:var(--ink-2);font-size:14.5px}
 .sugg button:hover{border-color:var(--accent);color:var(--accent)}
 .shadow-list{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:8px}
-.shadow-list li{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
-.shadow-list li p{flex:1;font-size:17px}
+.shadow-list li{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.sh-row{display:flex;align-items:center;gap:10px}
+.sh-row p{flex:1;font-size:17px}
+.is-native .ai-only{display:none!important}
+.mic{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--red);cursor:pointer;flex:none}
+.mic svg{width:17px;height:17px}
+.mic.on{background:var(--red);border-color:var(--red);color:var(--surface);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px var(--red-soft)}}
+.pron{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--paper);border:1px dashed var(--line);display:flex;flex-direction:column;gap:4px;text-align:left}
+.pron-words{font-size:18px;font-weight:500;line-height:1.6}
+.pron-words .ok{color:var(--green)}
+.pron-words .miss{color:var(--red);text-decoration:underline wavy;text-underline-offset:4px}
+.pron .heard{color:var(--ink-2);min-height:1.5em}
+.says{display:flex;gap:6px;align-items:center}
 
 /* review */
 .review-card{max-width:560px;margin:10px auto 0;text-align:center}
@@ -312,7 +324,7 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:12px;font-size:14.5px;z-index:50;max-width:calc(100% - 32px);box-shadow:var(--shadow)}
 @media (max-width:960px){.toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
 /* touch screens: bigger speaker buttons, hide the tab bar while the keyboard is up */
-@media (pointer:coarse){.say{width:42px;height:42px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
+@media (pointer:coarse){.say,.mic{width:42px;height:42px}.mic svg{width:19px;height:19px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
 @media (max-width:960px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -327,7 +339,7 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
       <button data-act="go" data-to="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>หน้าแรก</button>
       <button data-act="go" data-to="course"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20M9 8h7"/></svg>หลักสูตร</button>
       <button data-act="go" data-to="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg>ทบทวนศัพท์</button>
-      <button data-act="go" data-to="teacher"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>ครู AI</button>
+      <button class="ai-only" data-act="go" data-to="teacher"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>ครู AI</button>
       <button data-act="go" data-to="report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 20V11M11 20V5M17 20v-6M3 20h18"/></svg>ผลการเรียน</button>
     </nav>
     <span class="streak" id="streak"></span>
@@ -339,6 +351,9 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 <script>
 (function(){
 "use strict";
+
+const NB=window.EnglishClassNative||null;   // set by the native app shell (Capacitor); null on the web
+if(NB) document.documentElement.classList.add("is-native");
 
 /* ---------- course content ---------- */
 const v=(en,th,pos,ex,exTh)=>({en,th,pos,ex,exTh});
@@ -852,6 +867,7 @@ const dayKey=d=>{d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+
 const norm=s=>String(s).toLowerCase().replace(/[’‘]/g,"'").replace(/[.,!?]/g,"").replace(/\s+/g," ").trim();
 const ICON={
   say:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
   flame:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.2 5 5.6 5 11a5 5 0 0 1-10 0c0-2.6 1.3-4 2.3-5.4.3 1.6 1 2.6 2 3C11 8 11.2 4.6 12 2z"/></svg>'
 };
 const sayBtn=(text,label)=>'<button class="say" data-act="say" data-text="'+esc(text)+'" aria-label="'+esc(label||"ฟังเสียง")+'">'+ICON.say+'</button>';
@@ -871,6 +887,7 @@ function save(){
   S.updatedAt=Date.now();
   try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
   if(cloud.ref){clearTimeout(cloud.timer);cloud.timer=setTimeout(flushCloud,1200)}
+  if(NB){clearTimeout(save.nt);save.nt=setTimeout(()=>{NB.save(JSON.stringify(S)).catch(()=>{})},300)}
 }
 async function flushCloud(){
   if(!cloud.ref) return;
@@ -917,12 +934,13 @@ const INT=[0,1,2,4,7,15,30];
 
 /* ---------- speech ---------- */
 const Speech={
-  ok:"speechSynthesis" in window, voices:[],
-  init(){if(!this.ok) return; const load=()=>{try{this.voices=speechSynthesis.getVoices().filter(x=>/^en[-_]/i.test(x.lang))}catch(e){}}; load(); try{speechSynthesis.addEventListener("voiceschanged",load)}catch(e){}},
+  ok:!!NB||"speechSynthesis" in window, voices:[],
+  init(){if(NB||!this.ok) return; const load=()=>{try{this.voices=speechSynthesis.getVoices().filter(x=>/^en[-_]/i.test(x.lang))}catch(e){}}; load(); try{speechSynthesis.addEventListener("voiceschanged",load)}catch(e){}},
   pick(i){const pref=this.voices.filter(x=>/en[-_](US|GB)/i.test(x.lang)); const l=pref.length?pref:this.voices; return l.length?l[i%l.length]:null},
-  stop(){if(this.ok) try{speechSynthesis.cancel()}catch(e){}},
+  stop(){if(NB){NB.stopSpeak();return} if(this.ok) try{speechSynthesis.cancel()}catch(e){}},
   say(text,o){
     o=o||{};
+    if(NB) return NB.speak(text,{rate:o.slow||S.settings.slow?0.7:0.95,pitch:o.pitch||1}).catch(()=>{});
     return new Promise(res=>{
       if(!this.ok){toast("เบราว์เซอร์นี้ยังอ่านออกเสียงไม่ได้");return res()}
       try{
@@ -1051,6 +1069,95 @@ function fillBubble(m,body,role,text,withSay){
     if(withSay&&main&&/[a-z]/i.test(main)){who.insertAdjacentHTML("beforeend",sayBtn(main,"ฟังครูพูด"))}}
 }
 
+/* ---------- pronunciation practice (native app only) ---------- */
+const PR={}; let prActive=null;
+const CONTR={"i'm":"i am","you're":"you are","we're":"we are","they're":"they are","he's":"he is","she's":"she is","it's":"it is","that's":"that is","what's":"what is","there's":"there is","where's":"where is","here's":"here is","i'll":"i will","you'll":"you will","we'll":"we will","i've":"i have","you've":"you have","we've":"we have","i'd":"i would","don't":"do not","doesn't":"does not","didn't":"did not","isn't":"is not","aren't":"are not","haven't":"have not","hasn't":"has not","can't":"cannot","won't":"will not","shouldn't":"should not","let's":"let us"};
+const ONES=["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+const TENS=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+function pronWords(s){
+  const out=[];
+  String(s).toLowerCase().replace(/[’‘]/g,"'").replace(/-/g," ").replace(/[^a-z0-9' ]/g," ").split(/\s+/).forEach(w=>{
+    w=w.replace(/^'+|'+$/g,""); if(!w) return;
+    if(CONTR[w]) return out.push.apply(out,CONTR[w].split(" "));
+    if(/^\d+$/.test(w)){
+      if(w.length>2||w[0]==="0") w.split("").forEach(d=>out.push(d==="0"?"oh":ONES[+d]));
+      else {const n=+w; if(n<20) out.push(ONES[n]); else {out.push(TENS[Math.floor(n/10)]); if(n%10) out.push(ONES[n%10])}}
+      return;
+    }
+    if(w==="zero"||w==="o") return out.push("oh");
+    out.push(w.replace(/'s$/,""));
+  });
+  return out;
+}
+function align(t,h){
+  const n=t.length,m=h.length,d=[];
+  for(let i=0;i<=n;i++) d.push(new Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--) d[i][j]=t[i]===h[j]?d[i+1][j+1]+1:Math.max(d[i+1][j],d[i][j+1]);
+  const ok=new Array(n).fill(false); let i=0,j=0;
+  while(i<n&&j<m){if(t[i]===h[j]){ok[i]=true;i++;j++} else if(d[i+1][j]>=d[i][j+1]) i++; else j++}
+  return ok;
+}
+function gradePron(text,heard){
+  const toks=text.split(/\s+/).filter(Boolean), groups=toks.map(pronWords), flat=[].concat.apply([],groups);
+  const ok=align(flat,pronWords(heard)); let k=0;
+  const tokens=toks.map((w,i)=>{const n=groups[i].length, good=ok.slice(k,k+n).every(Boolean); k+=n; return {w,ok:good}});
+  const score=flat.length?Math.round(ok.filter(Boolean).length/flat.length*100):0;
+  return {state:"done",heard,score,tokens};
+}
+function micBtn(text){
+  if(!NB) return "";
+  const on=prActive===text;
+  return '<button class="mic'+(on?" on":"")+'" data-act="pron" data-text="'+esc(text)+'" aria-label="'+(on?"หยุดฟัง":"พูดประโยคนี้ให้แอปฟัง")+'" aria-pressed="'+on+'">'+ICON.mic+'</button>';
+}
+function pronResult(text){
+  const r=PR[text]; if(!NB||!r) return "";
+  if(r.state==="listening") return '<div class="pron live" role="status"><span class="muted">กำลังฟัง… พูดได้เลย แตะไมค์อีกครั้งเมื่อพูดจบ</span><p class="heard" lang="en">'+esc(r.heard||"")+'</p></div>';
+  if(r.state==="error") return '<div class="pron" role="status"><span class="pen">'+esc(r.msg)+'</span></div>';
+  const msg=!r.heard?"ไม่ได้ยินเสียง ลองพูดใกล้ไมค์ขึ้นอีกนิด":r.score>=90?"ชัดเจนมาก!":r.score>=70?"ดีแล้ว ลองเน้นคำสีแดงอีกนิด":"ฟังต้นฉบับอีกครั้ง แล้วพูดช้าๆ ชัดๆ";
+  return '<div class="pron" role="status"><p class="pron-words" lang="en">'+r.tokens.map(t=>'<span class="'+(t.ok?"ok":"miss")+'">'+esc(t.w)+'</span>').join(" ")+'</p>'
+    +'<p><b>'+r.score+'%</b> <span class="pen">'+esc(msg)+'</span></p>'
+    +'<p class="muted" style="font-size:14px">แอปได้ยินว่า: <span lang="en">'+esc(r.heard||"–")+'</span></p></div>';
+}
+async function pronounce(text){
+  if(!NB) return;
+  if(prActive){const same=prActive===text; await NB.stopListening(); if(same) return}
+  Speech.stop();
+  let ok=false;
+  try{ok=(await NB.sttAvailable())&&(await NB.sttPermission())}catch(e){}
+  if(!ok){PR[text]={state:"error",msg:"ใช้ไมโครโฟนไม่ได้ เปิดสิทธิ์ไมโครโฟนและการรู้จำเสียงพูดให้แอปนี้ในการตั้งค่าของเครื่อง"};render();return}
+  const target=pronWords(text);
+  prActive=text; PR[text]={state:"listening",heard:""}; render();
+  let heard="";
+  try{
+    heard=await NB.listen({maxMs:4000+target.length*600,hints:[text],
+      onPartial:t=>{const r=PR[text]; if(r&&r.state==="listening"){r.heard=t; const el=document.querySelector(".pron.live .heard"); if(el) el.textContent=t}},
+      done:t=>align(target,pronWords(t)).every(Boolean)});
+  }catch(e){if(prActive===text) prActive=null;PR[text]={state:"error",msg:"ฟังเสียงไม่สำเร็จ ลองกดไมค์อีกครั้ง"};render();return}
+  if(prActive===text) prActive=null;
+  PR[text]=gradePron(text,heard);
+  if(PR[text].score>=70){S.xp+=2;S.pron=(S.pron||0)+1;markDay();save()}
+  render();
+}
+async function initNative(){
+  if(!NB) return;
+  NB.onBack(()=>{
+    if(route.name==="home") NB.exit();
+    else if(route.name==="lesson"||route.name==="placement") go("course");
+    else go("home");
+  });
+  try{
+    const raw=await NB.load();
+    if(raw){
+      const d=JSON.parse(raw);
+      if((d.updatedAt||0)>(S.updatedAt||0)){
+        S=migrate(d);
+        try{localStorage.setItem(KEY,raw)}catch(e){}
+        if(route.name!=="lesson") render(); else updateChrome();
+      }
+    } else if(S.updatedAt) NB.save(JSON.stringify(S)).catch(()=>{});
+  }catch(e){}
+}
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -1062,6 +1169,8 @@ const W={};   // writing drafts/results
 
 function go(name,id){
   Speech.stop();
+  if(NB&&prActive) NB.stopListening();
+  if(NB&&name==="teacher") name="home";
   if(name==="lesson"){
     const i=COURSE.findIndex(u=>u.id===id);
     if(i<0) return go("course");
@@ -1105,7 +1214,7 @@ function viewHome(){
   return '<section>'
    +'<p class="eyebrow">'+esc(thaiDate())+'</p>'
    +'<h1 class="h1" style="margin-top:4px">'+(S.name?"สวัสดี "+esc(S.name)+" ":"สวัสดี ")+'พร้อมเข้าเรียนหรือยัง</h1>'
-   +'<p class="lede">เรียนทีละบทเหมือนเข้าคลาสจริง ทุกบทมีคำศัพท์ ครูอธิบายไวยากรณ์ บทสนทนา แบบฝึกหัด ฝึกพูดกับครู และสอบท้ายบท ต้องได้ 70% ขึ้นไปจึงผ่านไปบทถัดไป</p>'
+   +'<p class="lede">เรียนทีละบทเหมือนเข้าคลาสจริง ทุกบทมีคำศัพท์ ครูอธิบายไวยากรณ์ บทสนทนา แบบฝึกหัด ฝึกพูด และสอบท้ายบท ต้องได้ 70% ขึ้นไปจึงผ่านไปบทถัดไป</p>'
    +'</section>'
    +'<div class="home-grid">'
    +'<article class="notebook class-card">'
@@ -1118,7 +1227,7 @@ function viewHome(){
    +'<div class="side-stack">'
      +'<div class="stats"><div><b>'+doneN+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+learned+'</b><span>คำศัพท์ที่เรียน</span></div><div><b>'+S.xp+'</b><span>คะแนนสะสม</span></div></div>'
      +'<button class="tile" data-act="go" data-to="review"><span class="big">'+due+'</span><span><b>การบ้านทบทวนคำศัพท์</b><small>'+(learned?(due?"มี "+due+" คำที่ถึงรอบทบทวนวันนี้":"วันนี้ทบทวนครบแล้ว คำถัดไปจะวนกลับมาตามรอบ"):"คำศัพท์จะเข้ามาที่นี่หลังเริ่มเรียนบทแรก")+'</small></span></button>'
-     +'<button class="tile" data-act="go" data-to="teacher"><span class="big" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span><span><b>คุยกับครู AI</b><small>ฝึกสนทนา ถามไวยากรณ์ หรือส่งประโยคให้ครูตรวจ ครูจะแก้ให้ด้วยปากกาแดง</small></span></button>'
+     +'<button class="tile ai-only" data-act="go" data-to="teacher"><span class="big" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span><span><b>คุยกับครู AI</b><small>ฝึกสนทนา ถามไวยากรณ์ หรือส่งประโยคให้ครูตรวจ ครูจะแก้ให้ด้วยปากกาแดง</small></span></button>'
      +(S.placement.done
        ?'<div class="card"><p class="eyebrow">ผลสอบวัดระดับ</p><p style="margin-top:4px"><b>'+LEVELS[S.placement.level-1].code+' '+LEVELS[S.placement.level-1].name+'</b> · ถูก '+S.placement.score+'/12 ข้อ</p><button class="btn btn-sm btn-ghost" style="margin-top:6px;padding-left:0" data-act="go" data-to="placement">สอบใหม่</button></div>'
        :'<button class="tile" data-act="go" data-to="placement"><span class="big">12</span><span><b>สอบวัดระดับก่อนเรียน</b><small>12 ข้อ ประมาณ 5 นาที ถ้าพื้นฐานดีจะข้ามไปเรียนระดับที่เหมาะกับคุณได้เลย</small></span></button>')
@@ -1171,9 +1280,9 @@ function stageVocab(u){
   return '<div class="vocab"><div class="flash" id="flash-'+L.vi+'">'
     +'<div class="flash-top"><span class="mono">'+esc(w.pos)+'</span><span class="mono">'+(L.vi+1)+' / '+u.vocab.length+'</span></div>'
     +'<div class="flash-word" lang="en">'+esc(w.en)+'</div>'
-    +'<div class="row"><button class="btn btn-sm" data-act="say" data-text="'+esc(w.en)+'">'+ICON.say+'ฟัง</button><button class="btn btn-sm" data-act="say" data-slow="1" data-text="'+esc(w.en)+'">ฟังช้าๆ</button></div>'
+    +'<div class="row"><button class="btn btn-sm" data-act="say" data-text="'+esc(w.en)+'">'+ICON.say+'ฟัง</button><button class="btn btn-sm" data-act="say" data-slow="1" data-text="'+esc(w.en)+'">ฟังช้าๆ</button>'+(NB?'<button class="btn btn-sm" data-act="pron" data-text="'+esc(w.en)+'" aria-pressed="'+(prActive===w.en)+'">'+ICON.mic+(prActive===w.en?'หยุดฟัง':'ลองพูด')+'</button>':'')+'</div>'+pronResult(w.en)
     +'<div class="flash-th">'+esc(w.th)+'</div>'
-    +'<div class="flash-ex">'+sayBtn(w.ex,"ฟังประโยคตัวอย่าง")+'<div><p lang="en">'+esc(w.ex)+'</p><p>'+esc(w.exTh)+'</p></div></div>'
+    +'<div class="flash-ex"><div class="says">'+sayBtn(w.ex,"ฟังประโยคตัวอย่าง")+micBtn(w.ex)+'</div><div style="flex:1"><p lang="en">'+esc(w.ex)+'</p><p>'+esc(w.exTh)+'</p>'+pronResult(w.ex)+'</div></div>'
     +'<div class="flash-nav"><button class="btn btn-ghost" data-act="v-go" data-i="'+(L.vi-1)+'"'+(L.vi===0?" disabled":"")+'>คำก่อนหน้า</button><button class="btn" data-act="v-go" data-i="'+(L.vi+1)+'"'+(L.vi===u.vocab.length-1?" disabled":"")+'>คำถัดไป</button></div>'
     +'</div><div><p class="eyebrow" style="margin-bottom:8px">คำศัพท์ในบทนี้ · ฟังและพูดตามทีละคำ</p><ol class="wordlist">'
     +u.vocab.map((x,i)=>'<li><button data-act="v-go" data-i="'+i+'"'+(i===L.vi?' aria-current="true"':'')+'><span class="w" lang="en">'+esc(x.en)+'</span><span class="t">'+esc(x.th)+'</span></button></li>').join("")
@@ -1192,7 +1301,7 @@ function stageGrammar(u){
 function stageDialogue(u){
   const d=u.dialogue;
   return '<div class="row" style="justify-content:space-between;margin-bottom:16px"><div class="row"><button class="btn btn-primary" data-act="play-dlg">'+ICON.say+'ฟังทั้งบทสนทนา</button><button class="toggle" data-act="toggle-th" aria-pressed="'+L.showTh+'">แสดงคำแปล</button></div><span class="muted" style="font-size:14px">ฟังรอบแรกโดยไม่ดูคำแปล แล้วตอบคำถามด้านล่าง</span></div>'
-   +'<div class="card"><ul class="dlg">'+d.lines.map((l,i)=>'<li class="'+l[0]+'" id="dl-'+i+'"><span class="who">'+esc(d.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p>'+(L.showTh?'<p class="tr">'+esc(l[2])+'</p>':'')+'</div>'+sayBtn(l[1])+'</li>').join("")+'</ul></div>'
+   +'<div class="card"><ul class="dlg">'+d.lines.map((l,i)=>'<li class="'+l[0]+'" id="dl-'+i+'"><span class="who">'+esc(d.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p>'+(L.showTh?'<p class="tr">'+esc(l[2])+'</p>':'')+pronResult(l[1])+'</div><div class="says">'+sayBtn(l[1])+micBtn(l[1])+'</div></li>').join("")+'</ul></div>'
    +'<div class="comp"><h2 class="h3">ฟังแล้วตอบคำถาม</h2>'+d.q.map((q,qi)=>{
      const pick=L.comp[qi];
      return '<p class="q" lang="en">'+(qi+1)+'. '+esc(q.q)+'</p><div class="opts">'+q.o.map((o,oi)=>{
@@ -1211,10 +1320,14 @@ function stagePractice(u){
   return runnerHTML(r);
 }
 function stageSpeak(u){
+  if(NB) return '<div class="card" style="margin-bottom:18px"><p class="eyebrow">สถานการณ์จำลอง</p><p style="margin-top:4px;font-size:17px">'+esc(u.role.th)+'</p>'
+   +'<div class="sh-row" style="margin-top:12px"><p lang="en"><b>ครูถาม:</b> '+esc(u.role.opener)+'</p>'+sayBtn(u.role.opener)+'</div><p class="muted" style="font-size:14.5px;margin-top:4px">ลองตอบคำถามครูออกเสียงดังๆ โดยใช้ประโยคด้านล่างช่วย</p></div>'
+   +'<h2 class="h3">ฝึกออกเสียงกับไมค์</h2><p class="muted" style="font-size:14.5px;margin-top:4px">กดลำโพงเพื่อฟัง แล้วกดไมค์และพูดตาม แอปจะบอกว่าคำไหนชัดแล้ว (สีเขียว) และคำไหนต้องฝึกเพิ่ม (สีแดง)</p><ul class="shadow-list">'
+   +u.role.shadow.map(s=>'<li><div class="sh-row"><p lang="en">'+esc(s)+'</p>'+sayBtn(s)+micBtn(s)+'</div>'+pronResult(s)+'</li>').join("")+'</ul>';
   return '<div class="card" style="margin-bottom:18px"><p class="eyebrow">สถานการณ์จำลอง</p><p style="margin-top:4px;font-size:17px">'+esc(u.role.th)+'</p></div>'
    +'<div class="teacher-grid" style="margin-top:0"><div><h2 class="h3" style="margin-bottom:10px">คุยกับครูตามบทบาท</h2><div data-chat="role:'+u.id+'"></div></div>'
    +'<aside><h2 class="h3">ฝึกพูดตาม (Shadowing)</h2><p class="muted" style="font-size:14.5px;margin-top:4px">กดฟัง แล้วพูดตามออกเสียงดังๆ 3 รอบ ให้จังหวะและเสียงเน้นเหมือนต้นฉบับ</p><ul class="shadow-list">'
-   +u.role.shadow.map(s=>'<li><p lang="en">'+esc(s)+'</p>'+sayBtn(s)+'</li>').join("")+'</ul></aside></div>';
+   +u.role.shadow.map(s=>'<li><div class="sh-row"><p lang="en">'+esc(s)+'</p>'+sayBtn(s)+'</div></li>').join("")+'</ul></aside></div>';
 }
 function buildQuiz(u){
   const vs=shuffle(u.vocab), items=[];
@@ -1239,7 +1352,7 @@ function quizResult(u){
     +(w.model?'<p class="corr" style="margin-top:12px;background:var(--accent-soft);padding:12px 14px;border-radius:12px" lang="en">'+esc(u.writing.model)+'</p>':'')
     +(w.err?'<p class="pen" style="margin-top:10px">'+esc(w.err)+'</p>':'')
     +(w.res?'<div class="grade"><p><b style="font:700 22px var(--f-display)">'+w.res.score+'/10</b> <span class="pen">'+esc(w.res.praise||"")+'</span></p><div class="corr" lang="en">'+esc(w.res.corrected||"")+'</div>'+(w.res.notes&&w.res.notes.length?'<ul>'+w.res.notes.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul>':'')+'</div>':'')
-    +(AI.state!=="ready"?'<p class="muted" style="margin-top:10px;font-size:14px">เปิดหน้านี้ใน Claude เพื่อให้ครู AI ตรวจการบ้านเขียนให้ ระหว่างนี้เทียบกับตัวอย่างคำตอบได้</p>':'')
+    +(AI.state!=="ready"?'<p class="muted" style="margin-top:10px;font-size:14px">'+(NB?"เขียนเสร็จแล้วกดดูตัวอย่างคำตอบ เทียบกับของตัวเอง แล้วลองแก้ให้ถูก":"เปิดหน้านี้ใน Claude เพื่อให้ครู AI ตรวจการบ้านเขียนให้ ระหว่างนี้เทียบกับตัวอย่างคำตอบได้")+'</p>':'')
     +'</div></section>';
   return '<div class="card"><div class="result"><div class="score-ring '+(pass?"pass":"fail")+'"><div><b>'+q.pct+'%</b><span>ถูก '+q.correct+'/'+q.total+'</span></div></div>'
    +'<div><p class="eyebrow">ผลสอบท้ายบท</p><h2 class="h2" style="margin-top:4px">'+(pass?(q.pct===100?"คะแนนเต็ม ยอดเยี่ยม":"ผ่านแล้ว เก่งมาก"):"ยังไม่ผ่าน ลองอีกครั้งนะ")+'</h2>'
@@ -1407,8 +1520,8 @@ function viewReport(){
     return '<tr><td class="mono">U'+String(u.n).padStart(2,"0")+'</td><td><span lang="en">'+esc(u.en)+'</span><br><span class="muted" style="font-size:14px">'+esc(u.th)+'</span></td><td>'+LEVELS[u.lv-1].code+'</td>'
      +'<td>'+(r&&r.done?'<span class="chip ok">ผ่าน</span>':unlocked(i)?(r&&r.reached?'<span class="chip now">กำลังเรียน</span>':'<span class="chip">ยังไม่เริ่ม</span>'):'<span class="chip lock">ล็อก</span>')+'</td>'
      +'<td style="font-variant-numeric:tabular-nums">'+(r&&r.best?r.best+"%":"–")+'</td><td class="stars">'+(r&&r.stars?"★".repeat(r.stars)+"☆".repeat(3-r.stars):"")+'</td><td style="font-variant-numeric:tabular-nums">'+(r&&r.writing!=null?r.writing+"/10":"–")+'</td></tr>';}).join("");
-  return '<h1 class="h1">สมุดพกของฉัน</h1><p class="lede">'+(cloud.on?"ความคืบหน้าบันทึกไว้กับบัญชีของคุณ เปิดจากเครื่องไหนก็เรียนต่อได้":"ความคืบหน้าบันทึกไว้ในเบราว์เซอร์นี้ ถ้าล้างข้อมูลเบราว์เซอร์ ข้อมูลจะหายไป")+'</p>'
-   +'<div class="stats" style="margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><div><b>'+done.length+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+(avg?avg+"%":"–")+'</b><span>คะแนนเฉลี่ย</span></div><div><b>'+keys.length+'</b><span>คำศัพท์</span></div><div><b>'+keys.filter(k=>S.words[k].b>=4).length+'</b><span>จำได้แม่น</span></div><div><b>'+streak()+'</b><span>วันต่อเนื่อง</span></div><div><b>'+S.days.length+'</b><span>วันที่เข้าเรียน</span></div></div>'
+  return '<h1 class="h1">สมุดพกของฉัน</h1><p class="lede">'+(NB?"ความคืบหน้าบันทึกไว้ในเครื่องนี้ ถ้าลบแอป ข้อมูลจะหายไปด้วย":cloud.on?"ความคืบหน้าบันทึกไว้กับบัญชีของคุณ เปิดจากเครื่องไหนก็เรียนต่อได้":"ความคืบหน้าบันทึกไว้ในเบราว์เซอร์นี้ ถ้าล้างข้อมูลเบราว์เซอร์ ข้อมูลจะหายไป")+'</p>'
+   +'<div class="stats" style="margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><div><b>'+done.length+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+(avg?avg+"%":"–")+'</b><span>คะแนนเฉลี่ย</span></div><div><b>'+keys.length+'</b><span>คำศัพท์</span></div><div><b>'+keys.filter(k=>S.words[k].b>=4).length+'</b><span>จำได้แม่น</span></div><div><b>'+streak()+'</b><span>วันต่อเนื่อง</span></div><div><b>'+S.days.length+'</b><span>วันที่เข้าเรียน</span></div>'+(NB?'<div><b>'+(S.pron||0)+'</b><span>ประโยคที่พูดผ่าน</span></div>':'')+'</div>'
    +'<section class="section"><h2 class="h3" style="margin-bottom:10px">ผลการเรียนรายบท</h2><div class="tbl-wrap"><table><thead><tr><th>บท</th><th>ชื่อบท</th><th>ระดับ</th><th>สถานะ</th><th>คะแนนสูงสุด</th><th>ดาว</th><th>การบ้านเขียน</th></tr></thead><tbody>'+table+'</tbody></table></div></section>'
    +'<section class="section"><div class="section-head"><h2 class="h3">ประกาศนียบัตร</h2><div class="name-field"><label for="cert-name" class="muted">ชื่อบนประกาศนียบัตร</label><input id="cert-name" value="'+esc(S.name)+'" placeholder="ชื่อของคุณ" maxlength="40"></div></div>'
    +(certs.length?'<div class="cert-grid">'+certs.map(lv=>{
@@ -1495,6 +1608,7 @@ const ACT={
     render();
   },
   "rv-end":()=>{R=null;render()},
+  pron:t=>pronounce(t.dataset.text),
   tmode:t=>{teacherMode=t.dataset.m;render()},
   suggest:t=>{const el=$("[data-chat]"); if(el&&el._fill) el._fill(t.dataset.text)},
   "chat-clear":()=>{const k="teacher:"+teacherMode,st=CHATS[k]; if(st&&st.ctl) st.ctl.abort(); delete CHATS[k]; render()},
@@ -1529,5 +1643,6 @@ document.addEventListener("change",e=>{if(e.target.id==="cert-name") render()});
   render();
 })();
 initCloud();
+initNative();
 })();
 </script>

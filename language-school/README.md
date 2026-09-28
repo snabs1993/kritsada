@@ -35,3 +35,7 @@
 ## เพิ่มบทเรียนเอง
 
 แก้ในอาร์เรย์ `COURSE` ใน `index.html` แต่ละบทมี `vocab`, `grammar`, `dialogue`, `practice`, `quiz`, `role`, `writing` ตามรูปแบบของบทที่มีอยู่
+
+## แอปจริงสำหรับ iPad / iPhone / Android
+
+ดูโฟลเดอร์ [`../language-school-app`](../language-school-app) ซึ่งใช้ไฟล์ `index.html` นี้ร่วมกัน เพิ่มการฝึกออกเสียงผ่านไมค์และใช้งานออฟไลน์ได้
