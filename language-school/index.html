@@ -10,6 +10,7 @@
   --mark:#FFE36A; --star:#E0A800;
   --red:#C93434; --red-soft:#FDEDED; --green:#1B7F52; --green-soft:#E2F4EB;
   --shadow:0 1px 2px rgba(24,32,58,.05),0 6px 20px rgba(24,32,58,.06);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
   --f-display:"Bai Jamjuree","IBM Plex Sans Thai Looped","Noto Sans Thai",system-ui,sans-serif;
   --f-body:"IBM Plex Sans Thai Looped","Noto Sans Thai","Leelawadee UI",system-ui,sans-serif;
   --f-pen:"Itim","IBM Plex Sans Thai Looped",cursive;
@@ -24,6 +25,7 @@
     --mark:rgba(229,201,74,.38); --star:#F2C94C;
     --red:#FF8987; --red-soft:#3A1F25; --green:#63D49E; --green-soft:#15302A;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70;
   }
 }
 :root[data-theme="dark"]{
@@ -34,6 +36,7 @@
   --mark:rgba(229,201,74,.38); --star:#F2C94C;
   --red:#FF8987; --red-soft:#3A1F25; --green:#63D49E; --green-soft:#15302A;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -65,7 +68,7 @@ mark{background:linear-gradient(transparent 52%,var(--mark) 52%);color:inherit;p
 .nav svg{width:20px;height:20px;flex:none}
 .streak{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink-2);padding:6px 10px;border-radius:99px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
 .streak svg{width:16px;height:16px;color:var(--red)}
-@media (max-width:960px){
+@media (max-width:1100px){
   .nav{position:fixed;left:0;right:0;bottom:0;margin:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around;z-index:30}
   .nav button{flex:1;flex-direction:column;gap:2px;font-size:11.5px;padding:6px 2px}
   .streak{margin-left:auto}
@@ -322,10 +325,110 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .name-field{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .name-field input{border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface);min-width:0;flex:1;max-width:320px}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:12px;font-size:14.5px;z-index:50;max-width:calc(100% - 32px);box-shadow:var(--shadow)}
-@media (max-width:960px){.toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:1100px){.toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+/* exam room */
+.x-hub{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px;align-items:start}
+@media (max-width:860px){.x-hub{grid-template-columns:1fr}}
+.x-exam{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+.x-logo{font:700 34px/1 var(--f-display);letter-spacing:.04em;color:var(--accent)}
+.x-secs{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.x-sec{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;width:100%;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--paper);cursor:pointer;color:var(--ink)}
+.x-sec:hover{border-color:var(--accent)}
+.x-sec b{font:600 17px var(--f-display)}
+.x-sec>small{grid-column:1;color:var(--ink-3);font-size:13.5px}
+.x-last{grid-column:2;grid-row:1/3;text-align:right;font:700 22px var(--f-display);font-variant-numeric:tabular-nums}
+.x-last small{font-size:13px;color:var(--ink-3);font-weight:500}
+.x-total{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+.x-total b{display:block;font:700 28px/1.2 var(--f-display);font-variant-numeric:tabular-nums}
+.x-total b small{font-size:14px;color:var(--ink-3);font-weight:500}
+.x-intro{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.x-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+@media (max-width:520px){.x-modes{grid-template-columns:1fr}}
+.x-mode{display:flex;flex-direction:column;gap:2px;text-align:left;padding:14px 16px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);cursor:pointer;color:var(--ink)}
+.x-mode:hover{border-color:var(--accent)}
+.x-mode b{font:600 17px var(--f-display)}
+.x-mode small{color:var(--ink-3);font-size:14px}
+.xbar{position:sticky;top:var(--topbar-h,60px);z-index:10;background:var(--paper);display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:10px 0;margin-top:18px;border-bottom:1px solid var(--line)}
+.xtimer{font:600 15px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.xtimer.over{color:var(--red)}
+.xpart{margin-top:30px}
+.xdir{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 16px;margin:10px 0 8px}
+.xdir p[lang="en"]{font-size:15px}
+.xq{padding:14px 0;border-bottom:1px solid var(--line)}
+.xq-h{display:flex;gap:10px;align-items:flex-start}
+.xq-t{flex:1;min-width:0}
+.xnum{display:inline-grid;place-items:center;min-width:28px;height:28px;padding:0 6px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font:600 13px var(--f-mono);flex:none}
+.xopts{display:flex;flex-direction:column;gap:6px;margin:10px 0 0 38px}
+.xopts.row{flex-direction:row;flex-wrap:wrap}
+.xo{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer;color:var(--ink);font-size:16px;line-height:1.5}
+.xopts.row .xo{width:auto;min-width:64px;justify-content:center}
+.xo .l{font:600 13px var(--f-mono);color:var(--ink-3);padding-top:2px}
+.xo:hover:not([disabled]){border-color:var(--accent)}
+.xo[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.xo[aria-pressed="true"] .l{color:var(--accent)}
+.xo.ok{border-color:var(--green);background:var(--green-soft)}
+.xo.no{border-color:var(--red);background:var(--red-soft)}
+.xo[disabled]{cursor:default}
+.xin{font-size:16px;padding:5px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);width:11em;max-width:100%;margin:0 4px}
+.xin.ok{border-color:var(--green);background:var(--green-soft)}
+.xin.no{border-color:var(--red);background:var(--red-soft)}
+.xwhy{margin:8px 0 0 38px;font-family:var(--f-pen);color:var(--red);font-size:16.5px;line-height:1.5}
+.xwhy.ok{color:var(--green)}
+.xwhy b{font-family:var(--f-body);font-weight:600}
+.xplay{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.xscript{margin-top:8px;padding:10px 12px;background:var(--surface);border:1px dashed var(--line);border-radius:10px;font-size:15px}
+.xscript summary{cursor:pointer;color:var(--ink-2);font-weight:500}
+.xscript p{margin-top:6px}
+.xscript b{font:600 12px var(--f-mono);color:var(--ink-3);margin-right:8px}
+.xset{margin-top:14px}
+.xdoc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+.xdoc .gap{font:600 13px var(--f-mono);background:var(--accent-soft);color:var(--accent);padding:1px 6px;border-radius:6px}
+.xform{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:10px;max-width:720px}
+.xform .fr{display:grid;grid-template-columns:minmax(110px,38%) 1fr;gap:6px 12px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line)}
+.xform .fr:last-child{border-bottom:0}
+.fr-in{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.fr-why{grid-column:1/-1}
+.fr-why .xwhy{margin-left:0}
+@media (max-width:520px){.xform .fr{grid-template-columns:1fr}}
+.xread{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:12px}
+.xpass{position:sticky;top:calc(var(--topbar-h,60px) + 58px);max-height:calc(100vh - var(--topbar-h,60px) - 80px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.xpass p{margin-top:10px;line-height:1.75}
+.xpass .pl{font:700 14px var(--f-mono);color:var(--accent);margin-right:8px}
+@media (max-width:860px){.xread{grid-template-columns:1fr}.xpass{position:static;max-height:none}}
+.xgroup{margin-bottom:22px}
+.xsubmit{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:24px}
+.xres{margin-top:18px}
+.xscore{display:flex;gap:32px;flex-wrap:wrap;align-items:flex-end;margin-top:6px}
+.xscore b{display:block;font:700 46px/1.05 var(--f-display);font-variant-numeric:tabular-nums}
+.xscore b small{font-size:18px;color:var(--ink-3);font-weight:500}
+.xscore span{font-size:13.5px;color:var(--ink-3)}
+.xta{min-height:220px;margin-top:12px}
+.xta.sm{min-height:90px;margin:10px 0 0 38px;width:calc(100% - 38px)}
+.xmodel{margin-top:12px;padding:14px 16px;border-radius:12px;background:var(--accent-soft);display:flex;flex-direction:column;gap:10px;max-width:75ch}
+.xgrade{margin-top:16px}
+.xgrade h3{margin-top:18px}
+.band-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.band-grid div{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);display:flex;flex-direction:column}
+.band-grid span{font-size:13px;color:var(--ink-3)}
+.band-grid b{font:700 26px/1.2 var(--f-display);font-variant-numeric:tabular-nums}
+.band-grid .ov{border-color:var(--accent);background:var(--accent-soft)}
+.band-grid small{font-size:12.5px;color:var(--ink-2)}
+.xcomments{margin:10px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.cue{border:2px solid var(--ink);border-radius:6px;padding:16px 20px;background:var(--surface);max-width:520px;margin-top:12px}
+.cue ul{margin:4px 0;padding-left:20px}
+.xchart{margin:14px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;max-width:720px}
+.xchart figcaption{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;justify-content:space-between}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--ink-2)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chart-wrap{overflow-x:auto;margin-top:8px}
+.chart-wrap svg{display:block;width:100%;min-width:520px;height:auto}
+.xchart .grid{stroke:var(--line);stroke-width:1}
+.xchart .base{stroke:var(--ink-3);stroke-width:1}
+.xchart .tick{fill:var(--ink-3);font:12px var(--f-mono)}
+.xchart .val{fill:var(--ink);font:600 13px var(--f-body)}
 /* touch screens: bigger speaker buttons, hide the tab bar while the keyboard is up */
 @media (pointer:coarse){.say,.mic{width:42px;height:42px}.mic svg{width:19px;height:19px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
-@media (max-width:960px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
+@media (max-width:1100px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -338,7 +441,8 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
     <nav class="nav" aria-label="เมนูหลัก">
       <button data-act="go" data-to="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>หน้าแรก</button>
       <button data-act="go" data-to="course"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20M9 8h7"/></svg>หลักสูตร</button>
-      <button data-act="go" data-to="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg>ทบทวนศัพท์</button>
+      <button data-act="go" data-to="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg>คำศัพท์</button>
+      <button data-act="go" data-to="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg>ข้อสอบ</button>
       <button class="ai-only" data-act="go" data-to="teacher"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>ครู AI</button>
       <button data-act="go" data-to="report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 20V11M11 20V5M17 20v-6M3 20h18"/></svg>ผลการเรียน</button>
     </nav>
@@ -874,11 +978,11 @@ const sayBtn=(text,label)=>'<button class="say" data-act="say" data-text="'+esc(
 
 /* ---------- state & saving ---------- */
 const KEY="eng-class-v1";
-function fresh(){return {v:1,updatedAt:0,name:"",xp:0,days:[],placement:{done:false,level:1,score:0},lessons:{},words:{},settings:{slow:false}}}
+function fresh(){return {v:1,updatedAt:0,name:"",xp:0,days:[],placement:{done:false,level:1,score:0},lessons:{},words:{},exams:[],settings:{slow:false}}}
 function migrate(s){
   const f=fresh(); if(!s||typeof s!=="object") return f;
   return Object.assign(f,s,{placement:Object.assign(f.placement,s.placement||{}),settings:Object.assign(f.settings,s.settings||{}),
-    lessons:s.lessons&&typeof s.lessons==="object"?s.lessons:{},words:s.words&&typeof s.words==="object"?s.words:{},days:Array.isArray(s.days)?s.days:[]});
+    lessons:s.lessons&&typeof s.lessons==="object"?s.lessons:{},words:s.words&&typeof s.words==="object"?s.words:{},days:Array.isArray(s.days)?s.days:[],exams:Array.isArray(s.exams)?s.exams:[]});
 }
 let S=fresh();
 try{const raw=localStorage.getItem(KEY); if(raw) S=migrate(JSON.parse(raw));}catch(e){}
@@ -961,7 +1065,7 @@ const AI={state:"pending",fn:null};
 (async function(){
   if(!window.claude||typeof window.claude.use!=="function"){AI.state="off";return}
   try{const f=await window.claude.use("sample"); AI.fn=f; AI.state=f?"ready":"off"}catch(e){AI.state="off"}
-  if(route.name==="teacher"||(route.name==="lesson"&&L&&(STEPS[L.step][0]==="speak"||STEPS[L.step][0]==="quiz"))) render();
+  if(route.name==="teacher"||route.name==="examrun"||(route.name==="lesson"&&L&&(STEPS[L.step][0]==="speak"||STEPS[L.step][0]==="quiz"))) render();
 })();
 function aiError(e){
   const c=e&&e.code;
@@ -1182,6 +1286,583 @@ async function initNative(){
   }catch(e){}
 }
 
+/* ---------- exam room: practice tests in the TOEIC and IELTS formats ----------
+   Every question below is original, written for this app in the style of each test.
+   Scores are estimates for tracking progress, not official results. */
+const EXAMS={
+toeic:{name:"TOEIC",full:"TOEIC Listening & Reading",th:"ข้อสอบแนว TOEIC ภาษาอังกฤษในที่ทำงาน นิยมใช้สมัครงานและเลื่อนตำแหน่ง",
+ sections:{
+ listening:{title:"Listening",th:"การฟัง",time:0,est:"ประมาณ 12 นาที",
+  intro:["ฟังด้วยเสียงอ่าน แล้วเลือกคำตอบ มี Part 2–4 ครบรูปแบบ (Part 1 ที่ต้องดูภาพถ่ายไม่มีในชุดนี้)","โหมดสอบจริง: แต่ละเสียงฟังได้ครั้งเดียว เหมือนสนามสอบ"],
+  parts:[
+  {kind:"respond",title:"Part 2: Question–Response",
+   dir:"You will hear a question or statement and three responses spoken in English. They will not be printed in your test book. Select the best response to the question or statement.",
+   dirTh:"ฟังคำถามหรือประโยค แล้วเลือกคำตอบที่เหมาะสมที่สุดจาก 3 ตัวเลือก ตัวเลือกไม่แสดงเป็นตัวหนังสือเหมือนข้อสอบจริง",
+   items:[
+    {q:"Where should I put these boxes?",o:["Next to the copy machine, please.","Yes, I put them there yesterday.","They're about twenty dollars each."],a:0,why:"ถาม Where ต้องตอบเป็นสถานที่ ข้อ B ใช้คำว่า put ซ้ำกับคำถามเพื่อหลอก"},
+    {q:"When does the training session start?",o:["In Conference Room B.","Right after lunch.","Mr. Tanaka is training the new staff."],a:1,why:"ถาม When ต้องตอบเวลา ข้อ A ตอบสถานที่ ข้อ C ใช้คำว่า training ซ้ำเป็นกับดัก"},
+    {q:"Who's in charge of the marketing budget?",o:["It was charged to my card.","About five thousand dollars.","Ms. Lopez handles that."],a:2,why:"ถาม Who ต้องตอบเป็นบุคคล ข้อ A ใช้เสียงคล้ายกัน (charge) ข้อ B ตอบเป็นจำนวนเงิน"},
+    {q:"Would you like me to call a taxi for you?",o:["Thanks, but my colleague is driving me.","It was a very long call.","At the taxi stand outside."],a:0,why:"เป็นการเสนอความช่วยเหลือ ตอบปฏิเสธอย่างสุภาพพร้อมเหตุผล ข้อ B และ C หยิบคำ call/taxi มาหลอก"},
+    {q:"Why was the shipment delayed?",o:["By express mail.","There was a problem at customs.","Yes, it's a little late."],a:1,why:"ถาม Why ต้องตอบเหตุผล คำถาม Wh- ตอบด้วย Yes/No ไม่ได้ ข้อ C จึงผิดทันที"},
+    {q:"The printer on the third floor isn't working, is it?",o:["Three copies, please.","No, but a technician is on the way.","I work on the fourth floor."],a:1,why:"คำถามแบบ tag question ตอบ No (มันเสีย) แล้วบอกว่าช่างกำลังมา ข้อ A และ C เล่นกับตัวเลขและคำว่า floor"}
+   ]},
+  {kind:"sets",listen:true,title:"Part 3: Conversations",
+   dir:"You will hear some conversations between two or more people. You will be asked to answer three questions about what the speakers say in each conversation.",
+   dirTh:"ฟังบทสนทนา แล้วตอบคำถามบทละ 3 ข้อ อ่านคำถามก่อนกดฟังจะช่วยให้จับประเด็นได้ง่ายขึ้น",
+   sets:[
+    {audio:[["W","Hi, I'm calling about the apartment on Maple Street that was advertised online. Is it still available?"],["M","Yes, it is. It's a two-bedroom unit on the fifth floor, and the rent includes water and internet."],["W","That sounds great. I'd like to see it this week, but I work until six every day."],["M","No problem. I can show it to you on Thursday evening at seven. Just bring a copy of your ID."]],
+     qs:[
+      {q:"Why is the woman calling?",o:["To report a problem with her internet","To ask about an apartment","To pay her rent","To change a delivery address"],a:1,why:"ประโยคแรก: I'm calling about the apartment on Maple Street"},
+      {q:"What is included in the rent?",o:["Parking","Electricity","Water and internet","Furniture"],a:2,why:"ผู้ชายพูดว่า the rent includes water and internet"},
+      {q:"What does the man ask the woman to bring?",o:["A deposit","A reference letter","A form of identification","A signed contract"],a:2,why:"Just bring a copy of your ID (ID = บัตรแสดงตัวตน)"}]},
+    {audio:[["M","Karen, the client from Singapore just moved our meeting to tomorrow morning. Are the sales figures ready?"],["W","Almost. I'm still waiting for the numbers from the Bangkok branch. They said they'd send them by noon."],["M","OK. Once you have them, could you put everything into the slides? I'd like to review them before I leave today."],["W","Sure. I'll e-mail you the presentation by four o'clock."]],
+     qs:[
+      {q:"What problem does the man mention?",o:["A client changed a meeting time.","A flight was canceled.","Sales have decreased.","A branch office has closed."],a:0,why:"the client ... just moved our meeting to tomorrow morning = ลูกค้าเลื่อนเวลาประชุม"},
+      {q:"What is the woman waiting for?",o:["A signed contract","Information from another office","A new laptop","Approval from a manager"],a:1,why:"waiting for the numbers from the Bangkok branch = ข้อมูลจากสาขาอื่น (ข้อสอบมักเปลี่ยนคำให้ต่างจากที่ได้ยิน)"},
+      {q:"What will the woman send by four o'clock?",o:["An invoice","A presentation","A travel itinerary","A product sample"],a:1,why:"I'll e-mail you the presentation by four o'clock"}]}
+   ]},
+  {kind:"sets",listen:true,title:"Part 4: Talks",
+   dir:"You will hear some talks given by a single speaker. You will be asked to answer three questions about what the speaker says in each talk.",
+   dirTh:"ฟังประกาศหรือข้อความเสียงจากผู้พูดคนเดียว แล้วตอบคำถามเรื่องละ 3 ข้อ",
+   sets:[
+    {audio:[["N","Attention, shoppers. Thank you for shopping at Greenfield Market. Today only, all fresh fruit in our produce section is twenty percent off. Please also note that our pharmacy will close early today, at five p.m., for staff training. It will reopen tomorrow at the usual time of eight a.m. If you need help finding anything, please ask any staff member in a green apron."]],
+     qs:[
+      {q:"Where is the announcement being made?",o:["At a pharmacy school","At a grocery store","On a farm","At a clothing shop"],a:1,why:"shoppers, Greenfield Market, fresh fruit = ร้านขายของสด ซูเปอร์มาร์เก็ต"},
+      {q:"What is on sale today?",o:["Fresh fruit","Vegetables","Medicine","Aprons"],a:0,why:"all fresh fruit ... is twenty percent off"},
+      {q:"Why will the pharmacy close early?",o:["For repairs","For a holiday","For staff training","For an inventory count"],a:2,why:"will close early today ... for staff training"}]},
+    {audio:[["M","Hi, this is Daniel from Brightline Office Supplies, returning your call about the order for your new office. Unfortunately, the ergonomic chairs you selected are out of stock until the end of the month. We do have a similar model in black that we can deliver on Monday at no extra cost. Please call me back at 555-0148 before Friday so I can reserve them for you."]],
+     qs:[
+      {q:"What is the purpose of the message?",o:["To confirm a payment","To explain that a product is unavailable","To advertise a new store","To schedule a job interview"],a:1,why:"the chairs you selected are out of stock = สินค้าหมด"},
+      {q:"What does the speaker offer?",o:["A discount","A similar product","Free installation","A full refund"],a:1,why:"a similar model in black ... at no extra cost (ไม่ใช่ส่วนลด แต่เป็นสินค้าทดแทน)"},
+      {q:"What should the listener do before Friday?",o:["Return the call","Visit the store","Send an e-mail","Pay a fee"],a:0,why:"Please call me back ... before Friday"}]}
+   ]}
+  ]},
+ reading:{title:"Reading",th:"การอ่าน",time:15*60,est:"15 นาที",
+  intro:["Part 5 เติมประโยค, Part 6 เติมข้อความ และ Part 7 อ่านจับใจความ","จับเวลา 15 นาที ใกล้เคียงอัตราเวลาของข้อสอบจริง (ประมาณ 45 วินาทีต่อข้อ)"],
+  parts:[
+  {kind:"mc",title:"Part 5: Incomplete Sentences",
+   dir:"A word or phrase is missing in each of the sentences below. Four answer choices are given below each sentence. Select the best answer to complete the sentence.",
+   dirTh:"เลือกคำที่เติมลงในช่องว่างแล้วประโยคถูกต้องที่สุด ส่วนนี้วัดไวยากรณ์และคำศัพท์",
+   items:[
+    {q:"The new software will allow employees to complete their reports more ___.",o:["quick","quickly","quicker","quickness"],a:1,why:"ขยายกริยา complete ต้องใช้ adverb คือ quickly"},
+    {q:"Please submit your travel expense forms ___ Friday.",o:["by","until","since","within"],a:0,why:"by + วันเวลา = ภายในกำหนดนั้น ส่วน until ใช้กับการกระทำที่ต่อเนื่องไปจนถึงเวลานั้น"},
+    {q:"Ms. Chen has worked in the finance department ___ 2019.",o:["for","during","since","from"],a:2,why:"since + จุดเริ่มต้นของเวลา ใช้คู่กับ present perfect (has worked)"},
+    {q:"All visitors must sign in at the front desk ___ entering the building.",o:["before","while","during","between"],a:0,why:"ต้องลงชื่อก่อนเข้าอาคาร before + V-ing"},
+    {q:"The conference was ___ successful that the organizers plan to hold it again next year.",o:["such","so","very","too"],a:1,why:"so + adjective + that = มากจนกระทั่ง ส่วน such ต้องตามด้วยคำนาม"},
+    {q:"Neither the manager ___ her assistant was available for comment.",o:["or","and","nor","but"],a:2,why:"neither ... nor ... ใช้เป็นคู่กันเสมอ"},
+    {q:"The package ___ yesterday, but it has not arrived yet.",o:["was sent","sent","sending","is sending"],a:0,why:"พัสดุถูกส่ง จึงใช้ passive และมี yesterday จึงเป็นอดีต was sent"},
+    {q:"Applicants should have at least three years of ___ in customer service.",o:["experienced","experiencing","experience","experiment"],a:2,why:"หลัง of ต้องเป็นคำนาม experience (ประสบการณ์ทำงาน นับไม่ได้)"},
+    {q:"The board of directors will ___ the proposal at next week's meeting.",o:["discuss","discussion","discussing","discussed"],a:0,why:"หลัง will ใช้กริยารูปธรรมดา"},
+    {q:"If the weather ___ good tomorrow, the company picnic will be held in the park.",o:["will be","is","was","be"],a:1,why:"เงื่อนไขแบบที่ 1: If + present simple, ... will + V (ห้ามใช้ will ในประโยค if)"}
+   ]},
+  {kind:"textfill",title:"Part 6: Text Completion",
+   dir:"Read the text that follows. A word, phrase, or sentence is missing in parts of the text. Select the best answer to complete the text.",
+   dirTh:"อ่านข้อความแล้วเลือกคำหรือประโยคที่เติมในช่องว่าง บางช่องต้องเลือกทั้งประโยคให้เข้ากับเนื้อเรื่อง",
+   head:["To: All staff","From: Facilities Team","Subject: Second-floor renovation"],
+   text:["Please be advised that the second floor of our building will be closed for renovation from March 3 to March 14. During this time, employees in the Accounting Department will {1} to the conference room on the fourth floor. {2}","We apologize for any {3} this may cause. If you have any questions, please contact the facilities team {4} extension 212."],
+   items:[
+    {o:["relocate","relocation","relocating","relocated"],a:0,why:"หลัง will ต้องใช้กริยารูปธรรมดา relocate"},
+    {o:["The renovation was completed last year.","Laptops and phones will be provided there.","The accounting software is very expensive.","Please send your invoices by mail."],a:1,why:"ประโยคก่อนหน้าบอกว่าย้ายไปห้องประชุม ประโยคนี้บอกสิ่งที่เตรียมไว้ที่นั่น จึงต่อเนื่องที่สุด ข้อ A ขัดกับเนื้อเรื่อง"},
+    {o:["convenience","inconvenience","inconvenient","conveniently"],a:1,why:"หลัง any ต้องเป็นคำนาม และบริบทคือขอโทษที่ไม่สะดวก = inconvenience"},
+    {o:["in","on","at","to"],a:2,why:"ใช้ at กับเบอร์ต่อภายใน (at extension 212)"}
+   ]},
+  {kind:"sets",title:"Part 7: Reading Comprehension",
+   dir:"In this part you will read a selection of texts, such as magazine and newspaper articles, e-mails, and instant messages. Each text is followed by several questions. Select the best answer for each question.",
+   dirTh:"อ่านเอกสาร เช่น โฆษณา อีเมล แล้วตอบคำถาม สังเกตคำถามแบบ NOT ที่ต้องหาข้อที่ไม่มีในเนื้อเรื่อง",
+   sets:[
+    {doc:{title:"Advertisement",lines:["<b>SUNRISE FITNESS CENTER: Grand Opening Special!</b>","Join before June 30 and receive:","• 50% off your first three months of membership","• A free session with a personal trainer","• Access to our new rooftop swimming pool","Opening hours: Monday–Friday 6 a.m.–10 p.m., Saturday–Sunday 8 a.m.–8 p.m.","Members must show their membership card at the front desk. Towels are available for 20 baht per day.","Visit us at 88 Riverside Road or sign up online."]},
+     qs:[
+      {q:"What is being advertised?",o:["A hotel","A new gym","A swimming competition","A sports clothing store"],a:1,why:"Fitness Center, Grand Opening = ฟิตเนสที่เพิ่งเปิดใหม่"},
+      {q:"What is NOT offered to people who join before June 30?",o:["A discount on membership","A personal training session","Free towels","Use of a swimming pool"],a:2,why:"ผ้าเช็ดตัวต้องจ่ายวันละ 20 บาท จึงไม่ใช่ของแถม"},
+      {q:"What time does the center close on Sundays?",o:["6 p.m.","8 p.m.","10 p.m.","11 p.m."],a:1,why:"Saturday–Sunday 8 a.m.–8 p.m."}]},
+    {doc:{title:"E-mail",lines:["<b>From:</b> Priya Nair","<b>To:</b> Tom Becker","<b>Subject:</b> Supplier meeting","Dear Tom,","Thank you for sending the price list from Hanson Packaging. I have compared it with our current supplier, and Hanson's prices are about 12 percent lower for the boxes we use most. However, their delivery time is ten days, compared with five days from our current supplier.","Before we make a decision, I would like to meet with a Hanson representative to ask whether they can deliver faster for large orders. Could you arrange a meeting for early next week? I am free on Monday afternoon and all day Tuesday.","Best regards,<br>Priya"]},
+     qs:[
+      {q:"Why did Ms. Nair write the e-mail?",o:["To complain about a late delivery","To request a meeting","To place an order","To announce a price increase"],a:1,why:"Could you arrange a meeting for early next week?"},
+      {q:"What is suggested about Hanson Packaging?",o:["Its prices are higher than the current supplier's.","It delivers more slowly than the current supplier.","It is Ms. Nair's current supplier.","It only sells large boxes."],a:1,why:"Hanson ส่งของ 10 วัน ส่วนเจ้าเดิม 5 วัน จึงส่งช้ากว่า (แต่ราคาถูกกว่า)"},
+      {q:"When is Ms. Nair available to meet?",o:["Monday morning","Monday afternoon","Wednesday","Friday"],a:1,why:"I am free on Monday afternoon and all day Tuesday"}]}
+   ]}
+  ]}
+ }},
+ielts:{name:"IELTS",full:"IELTS Academic",th:"ข้อสอบแนว IELTS Academic วัดครบ 4 ทักษะ ใช้สมัครเรียนต่อต่างประเทศ",
+ sections:{
+ listening:{title:"Listening",th:"การฟัง",time:0,est:"ประมาณ 10 นาที",
+  intro:["Part 1 เติมแบบฟอร์มจากบทสนทนา และ Part 2 ฟังผู้พูดคนเดียวแล้วเลือกคำตอบ","ข้อเติมคำต้องเขียนไม่เกินจำนวนคำที่กำหนด ถ้าเกินนับว่าผิดเหมือนสอบจริง","โหมดสอบจริง: ฟังได้ครั้งเดียว"],
+  parts:[
+  {kind:"form",title:"Part 1",max:2,
+   dir:"Complete the form below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
+   dirTh:"ฟังบทสนทนาแล้วเติมแบบฟอร์ม เขียนไม่เกิน 2 คำ และ/หรือตัวเลข ระวังการสะกดชื่อ",
+   audio:[["W","Good morning, Riverside Community Centre. How can I help you?"],["M","Hi. I'd like to sign up for the evening swimming course for adults."],["W","Certainly. Can I take your name, please?"],["M","Yes, it's David Marsh. That's M, A, R, S, H."],["W","Thank you. And your date of birth?"],["M","The fourteenth of July, nineteen ninety-one."],["W","Now, the adult course runs on Tuesdays and Thursdays. Which day would you prefer?"],["M","Thursday, please. I have a meeting every Tuesday evening."],["W","That's fine. The class starts at a quarter past seven and finishes at half past eight."],["M","Great. And how much does it cost?"],["W","It's forty-five pounds for the whole term, or thirty-eight if you're already a member of the centre."],["M","I'm not a member yet, so forty-five. Do I need to bring anything?"],["W","Just a swimming cap and a padlock for your locker. Goggles are optional."],["M","Perfect. Thanks very much."]],
+   formTitle:"RIVERSIDE COMMUNITY CENTRE: Course registration",
+   rows:[
+    {label:"Name",pre:"David",a:"marsh",show:"Marsh",why:"ผู้พูดสะกดว่า M, A, R, S, H ข้อสอบ IELTS สะกดผิดนับว่าผิด"},
+    {label:"Date of birth",pre:"14 July",a:"1991",why:"nineteen ninety-one = 1991"},
+    {label:"Day of class",a:"thursday|thursdays",show:"Thursday",why:"มีวันอังคารด้วย แต่เขาเลือก Thursday เพราะติดประชุมวันอังคาร (ตัวหลอก)"},
+    {label:"Start time",a:"7.15|7.15 pm|7.15pm|19.15|seven fifteen",show:"7.15",why:"a quarter past seven = 7.15 ส่วน half past eight คือเวลาเลิก"},
+    {label:"Cost for non-members",pre:"£",a:"45|45 pounds|forty-five|forty five",show:"45",why:"38 ปอนด์สำหรับสมาชิกเท่านั้น เขายังไม่ใช่สมาชิกจึงเป็น 45"},
+    {label:"Must bring",pre:"a swimming cap and a",a:"padlock",show:"padlock",why:"Goggles are optional แว่นว่ายน้ำไม่บังคับ จึงไม่ใช่คำตอบ"}
+   ]},
+  {kind:"sets",listen:true,title:"Part 2",
+   dir:"Choose the correct letter, A, B or C.",
+   dirTh:"ฟังผู้นำชมพิพิธภัณฑ์พูด แล้วเลือกคำตอบที่ถูกต้อง",
+   sets:[
+    {audio:[["N","Welcome to the Harbour Museum. Before we begin the tour, I'd like to give you some information. The building was originally a warehouse used to store tea, and it opened as a museum in nineteen ninety-eight. Today, we'll start on the ground floor, where you can see models of the old sailing ships. After that, we'll take the lift to the second floor for the photography exhibition, which shows the harbour as it looked a hundred years ago. Please note that photography is allowed everywhere except in the photography exhibition itself, because the old prints are very sensitive to light. The tour will last about fifty minutes, and it finishes in the gift shop, where visitors with today's ticket receive ten percent off."]],
+     qs:[
+      {q:"Before it became a museum, the building was",o:["a tea warehouse.","a shipyard.","a railway station."],a:0,why:"originally a warehouse used to store tea"},
+      {q:"Where does the tour begin?",o:["in the gift shop","on the ground floor","on the second floor"],a:1,why:"we'll start on the ground floor (ร้านของที่ระลึกคือจุดจบทัวร์)"},
+      {q:"Visitors are NOT allowed to take photographs",o:["of the ship models.","in the photography exhibition.","in the gift shop."],a:1,why:"allowed everywhere except in the photography exhibition itself"},
+      {q:"Visitors with today's ticket can",o:["get a free guidebook.","join a second tour.","receive a discount in the shop."],a:2,why:"visitors with today's ticket receive ten percent off"}]}
+   ]}
+  ]},
+ reading:{title:"Reading",th:"การอ่าน",time:20*60,est:"20 นาที",
+  intro:["บทความวิชาการ 1 เรื่อง 13 ข้อ: True/False/Not Given, เลือกคำตอบ และเติมประโยค","ข้อสอบจริงมี 3 บทความใน 60 นาที ชุดนี้จึงจับเวลา 20 นาทีต่อบทความเท่ากัน"],
+  parts:[
+  {kind:"passage",title:"Reading Passage 1",
+   dir:"You should spend about 20 minutes on Questions 1–13, which are based on Reading Passage 1 below.",
+   dirTh:"อ่านบทความแล้วตอบคำถาม 13 ข้อ ใช้เวลาประมาณ 20 นาที บนจอกว้างบทความจะอยู่ด้านซ้ายตลอด เลื่อนดูคำถามได้ทางขวา",
+   passage:{title:"Vertical Farming: Growing Food in the City",paras:[
+    ["A","For most of history, farms have spread outwards across the land. Vertical farming turns this idea on its side: crops are grown in stacked layers inside buildings, often in the middle of cities. Instead of soil, many vertical farms use hydroponics, a method in which plant roots sit in water that contains carefully measured nutrients. Light comes not from the sun but from LED lamps that can be tuned to the colours plants use most efficiently."],
+    ["B","Supporters argue that the approach solves several problems at once. Because the environment is fully controlled, crops can be harvested all year round, regardless of droughts, floods or cold winters. Pests are far less common indoors, so growers rarely need chemical pesticides. Water use is also dramatically lower than in open fields, since the water that plants do not absorb is collected and recycled rather than draining away into the ground."],
+    ["C","Location is another advantage. A vertical farm built close to a city's supermarkets can deliver lettuce that was picked the same morning. Shorter journeys mean fresher food, and they also reduce the fuel burned by lorries carrying produce over long distances. Some farms have been set up in unusual places, such as disused warehouses, old factories and even underground tunnels."],
+    ["D","However, the technology has clear limits. The most serious is energy. Replacing sunlight with electric lighting is expensive, and in places where electricity comes mainly from coal or gas, the environmental benefit of saving water and transport may be cancelled out. For this reason, most vertical farms concentrate on leafy greens and herbs, which grow quickly, are light, and sell at a high price. Staple crops such as wheat and rice take too long to grow and are worth too little to make indoor production economic."],
+    ["E","The business side has also proved difficult. Several well-funded companies expanded rapidly, only to close when energy prices rose and investors lost patience. Critics say that the industry promised too much, too early. Supporters reply that every new agricultural technology has gone through similar difficulties, and that falling prices for LEDs and renewable electricity will gradually improve the economics."],
+    ["F","What seems likely is that vertical farming will complement, rather than replace, traditional agriculture. For crops that travel badly and spoil quickly, growing them indoors near the people who eat them makes sense. For the grain that feeds most of the world, fields under the open sky will remain essential for the foreseeable future."]]},
+   groups:[
+    {type:"tfng",dir:"Do the following statements agree with the information given in Reading Passage 1? Write TRUE if the statement agrees with the information, FALSE if the statement contradicts the information, NOT GIVEN if there is no information on this.",
+     dirTh:"TRUE = ตรงกับบทความ, FALSE = ขัดกับบทความ, NOT GIVEN = บทความไม่ได้พูดถึง อย่าใช้ความรู้ของตัวเองตอบ",
+     items:[
+      {q:"In vertical farms, plants usually receive their light from the sun.",a:"F",why:"ย่อหน้า A: Light comes not from the sun but from LED lamps"},
+      {q:"Pests are less of a problem in vertical farms than in open fields.",a:"T",why:"ย่อหน้า B: Pests are far less common indoors"},
+      {q:"Vertical farms use more water than traditional farms.",a:"F",why:"ย่อหน้า B: Water use is also dramatically lower"},
+      {q:"Vertical farms in underground tunnels produce the highest yields.",a:"NG",why:"ย่อหน้า C พูดแค่ว่ามีฟาร์มในอุโมงค์ ไม่ได้พูดถึงผลผลิตเลย"},
+      {q:"Energy is the biggest challenge for vertical farming.",a:"T",why:"ย่อหน้า D: The most serious is energy"},
+      {q:"The first vertical farm was built in a disused factory.",a:"NG",why:"บทความไม่ได้บอกว่าฟาร์มแรกสร้างที่ไหน"}]},
+    {type:"mc",dir:"Choose the correct letter, A, B, C or D.",dirTh:"เลือกคำตอบที่ถูกต้อง",
+     items:[
+      {q:"According to paragraph C, one benefit of locating farms near cities is that",o:["food becomes cheaper.","produce is fresher.","more workers are available.","buildings are cheaper to rent."],a:1,why:"Shorter journeys mean fresher food"},
+      {q:"Why do most vertical farms grow leafy greens and herbs?",o:["They need less light than other crops.","They grow fast and sell for a high price.","Customers dislike imported greens.","They cannot be grown in fields."],a:1,why:"ย่อหน้า D: which grow quickly, are light, and sell at a high price"},
+      {q:"What do supporters say about the industry's business problems?",o:["They were caused by poor management.","They are typical of new farming technologies.","They will become worse over time.","They only affect small companies."],a:1,why:"ย่อหน้า E: every new agricultural technology has gone through similar difficulties"},
+      {q:"What is the writer's overall conclusion?",o:["Vertical farming will replace traditional farming.","Vertical farming has no real future.","Vertical farming will work alongside traditional farming.","Vertical farming is best suited to grain crops."],a:2,why:"ย่อหน้า F: will complement, rather than replace, traditional agriculture"}]},
+    {type:"gap",max:2,dir:"Complete the sentences below. Choose NO MORE THAN TWO WORDS from the passage for each answer.",dirTh:"เติมคำจากบทความ ไม่เกิน 2 คำ สะกดให้ตรงกับในบทความ",
+     items:[
+      {q:"In hydroponics, plant roots sit in water that contains ___.",a:"nutrients|measured nutrients",show:"nutrients",why:"ย่อหน้า A: water that contains carefully measured nutrients (carefully measured nutrients ยาว 3 คำ เกินกำหนด)"},
+      {q:"Water that plants do not absorb is collected and ___.",a:"recycled",why:"ย่อหน้า B: collected and recycled"},
+      {q:"Wheat and rice are examples of ___ that are not economic to grow indoors.",a:"staple crops",why:"ย่อหน้า D: Staple crops such as wheat and rice"}]}
+   ]}
+  ]},
+ writing:{title:"Writing",th:"การเขียน",time:60*60,est:"60 นาที",kind:"writing",
+  intro:["Task 1 อธิบายกราฟ อย่างน้อย 150 คำ (แนะนำ 20 นาที) และ Task 2 เรียงความแสดงความคิดเห็น อย่างน้อย 250 คำ (แนะนำ 40 นาที)","ส่งให้ครู AI ประเมินได้ทีละ Task ได้ band แยก 4 เกณฑ์ตามแบบ IELTS พร้อมจุดที่ต้องแก้","Task 2 มีน้ำหนักเป็น 2 เท่าของ Task 1 ในการคิดคะแนนรวม"]},
+ speaking:{title:"Speaking",th:"การพูด",time:0,est:"ประมาณ 12 นาที",kind:"speaking",
+  intro:["ผู้คุมสอบอ่านคำถามให้ฟังครบ 3 Part: คำถามทั่วไป, พูดยาวตามบัตรหัวข้อ และอภิปรายเชิงลึก","หน้าเว็บนี้ใช้ไมโครโฟนไม่ได้ จึงให้พูดคำตอบออกเสียงดังๆ ก่อน แล้วพิมพ์สิ่งที่พูด ครู AI ประเมินได้ทุกเกณฑ์ยกเว้นการออกเสียง"]}
+ }}
+};
+
+const IELTS_WRITING=[
+ {n:1,min:150,mins:20,
+  prompt:"The chart below shows the percentage of households in a city that used three types of transport to travel to work in 2004, 2014 and 2024. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  chart:{title:"Main way of commuting to work (% of households)",years:["2004","2014","2024"],series:[{name:"Car",v:[58,52,41]},{name:"Public transport",v:[30,33,39]},{name:"Bicycle",v:[12,15,20]}]},
+  model:"The bar chart compares the proportion of households in a city that used cars, public transport and bicycles to travel to work in 2004, 2014 and 2024.\n\nOverall, the car remained the most common way to commute throughout the period, but its share fell steadily, while both public transport and cycling became more popular.\n\nIn 2004, 58% of households relied on cars, almost twice the figure for public transport (30%). Only 12% cycled to work. Over the following decade, car use dropped to 52%, whereas public transport rose slightly to 33% and cycling increased to 15%.\n\nThe most significant changes happened between 2014 and 2024. The share of car commuters fell sharply to 41%, and public transport climbed to 39%, so the gap between the two had almost disappeared. Cycling also continued to grow, reaching one fifth of households by 2024, eight percentage points higher than at the start of the period."},
+ {n:2,min:250,mins:40,
+  prompt:"Some people believe that university education should be free for all students. Others think that students should pay for their own studies. Discuss both views and give your own opinion. Give reasons for your answer and include any relevant examples from your own knowledge or experience.",
+  model:"In many countries, the cost of higher education has become a major topic of debate. While some people argue that university should be free for everyone, others believe that students themselves should cover the cost. Although both positions have merit, I believe that university should be largely free, with some contribution from graduates who earn high incomes.\n\nThose who support free university education point out that it gives equal opportunities to all young people. When tuition fees are high, talented students from poor families may decide not to apply, which is unfair and wastes their potential. In addition, a society benefits when more of its citizens are well educated, because graduates tend to be more productive and pay more tax over their working lives. From this perspective, higher education is an investment for the whole country, not only for the individual.\n\nOn the other hand, there are strong reasons for making students pay. Universities are expensive to run, and if the government covers all the costs, the money must come from taxpayers, many of whom never attended university themselves. Furthermore, students who pay for their studies may take them more seriously and choose courses that lead to employment.\n\nIn my opinion, the best solution combines the strengths of both views. Tuition should be free or very low at the point of study, so that no one is prevented from entering university by a lack of money. However, graduates who later earn above a certain salary could repay part of the cost through the tax system. This approach protects access for poorer students while ensuring that those who gain the most financially also contribute the most.\n\nIn conclusion, although paying for one's own education encourages responsibility, free access is more important for fairness and for society as a whole."}
+];
+
+const IELTS_SPEAKING=[
+ {part:1,title:"Part 1: Introduction and interview",th:"คำถามทั่วไปเกี่ยวกับตัวคุณ ตอบ 2–3 ประโยคต่อข้อ ขยายด้วยเหตุผลหรือตัวอย่าง อย่าตอบแค่ Yes/No",
+  qs:["Let's talk about where you live. Where is your hometown?","What do you like most about living there?","Do you prefer mornings or evenings? Why?","How often do you use public transport?"]},
+ {part:2,title:"Part 2: Long turn",th:"มีเวลาเตรียม 1 นาที แล้วพูดต่อเนื่อง 1–2 นาที (พิมพ์ประมาณ 150–250 คำ) พูดให้ครบทุกข้อในบัตร",
+  card:{topic:"Describe a skill you learned that you think is useful.",points:["what the skill is","when and how you learned it","how often you use it"],end:"and explain why you think it is useful."},
+  model:"I'd like to talk about a skill that I learned a few years ago, which is cooking. I started when I moved out of my parents' house to study at university, because eating at restaurants every day was too expensive. At first, I learned by watching videos online and by calling my mother to ask for her recipes. My first attempts were honestly quite bad. I remember burning the rice more than once! But I kept practising, and after a few months I could make several simple Thai dishes, like stir-fried basil chicken and tom yum soup. Nowadays I cook about four or five times a week, usually in the evening after work. I think it's a really useful skill for a few reasons. First, it saves me a lot of money. Second, I can control what goes into my food, so I eat more healthily. And finally, cooking for friends is a great way to spend time together. So I'm really glad I made the effort to learn it."},
+ {part:3,title:"Part 3: Discussion",th:"คำถามเชิงความคิดเห็นที่ต่อยอดจาก Part 2 ตอบยาวขึ้น ให้เหตุผล เปรียบเทียบ และยกตัวอย่าง",
+  qs:["What skills do young people most need today?","Should schools teach practical skills such as cooking and managing money? Why or why not?","How has technology changed the way people learn new skills?"]}
+];
+
+const IELTS_BANDS=[[9,"Expert user","เชี่ยวชาญ ใช้ภาษาได้เต็มที่"],[8,"Very good user","ดีมาก ผิดพลาดน้อยครั้ง"],[7,"Good user","ดี ใช้ภาษาซับซ้อนได้ มีผิดบ้าง"],[6,"Competent user","ใช้ได้ดีพอสมควร ในเรื่องที่คุ้นเคย"],[5,"Modest user","ใช้ได้บางส่วน ผิดบ่อย"],[4,"Limited user","ใช้ได้เฉพาะสถานการณ์คุ้นเคย"],[3,"Extremely limited user","สื่อสารได้แค่ความหมายทั่วไป"]];
+
+const XS={};   // attempts by section id ("toeic-listening"), kept while the page is open
+let X=null;    // the attempt on screen
+let xTok=0;    // bumps to cancel audio playback
+const AUD={};  // audio scripts by key, filled while rendering
+const XR={};   // AI feedback on writing tasks / speaking, this visit
+const XD=(()=>{try{return JSON.parse(localStorage.getItem("exam-drafts")||"{}")||{}}catch(e){return {}}})(); // typed drafts, this browser only
+const VOICE={W:[0,1.12],M:[1,0.9],N:[0,1]};
+const LET="ABCD";
+const TFNG=[["T","TRUE"],["F","FALSE"],["NG","NOT GIVEN"]];
+const EXAM_NAMES={"toeic-listening":"TOEIC Listening","toeic-reading":"TOEIC Reading","ielts-listening":"IELTS Listening","ielts-reading":"IELTS Reading","ielts-writing":"IELTS Writing","ielts-speaking":"IELTS Speaking"};
+const ICON_EXAM='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg>';
+
+(function prepExams(){
+  Object.keys(EXAMS).forEach(ek=>Object.keys(EXAMS[ek].sections).forEach(sk=>{
+    const sec=EXAMS[ek].sections[sk]; sec.id=ek+"-"+sk; sec.exam=ek; sec.key=sk; let n=0;
+    (sec.parts||[]).forEach(p=>{
+      let qs;
+      if(p.kind==="sets") qs=[].concat.apply([],p.sets.map(s=>s.qs));
+      else if(p.kind==="form") qs=p.rows;
+      else if(p.kind==="passage") qs=[].concat.apply([],p.groups.map(g=>g.items.map(it=>{it.g=g;return it})));
+      else qs=p.items;
+      p.qs=qs; p.first=n+1;
+      qs.forEach(q=>{
+        q.n=++n; q.key=sec.id+"-"+n;
+        q.t=p.kind==="form"||(q.g&&q.g.type==="gap")?"text":q.g&&q.g.type==="tfng"?"tfng":"choice";
+        q.max=p.max||(q.g&&q.g.max)||0;
+      });
+      p.last=n;
+    });
+    sec.total=n;
+  }));
+})();
+function secById(id){const m=/^(toeic|ielts)-(\w+)$/.exec(id||""); return m&&EXAMS[m[1]].sections[m[2]]||null}
+
+/* scoring */
+function normAns(s){return String(s||"").toLowerCase().replace(/[’‘]/g,"'").replace(/[£$,]/g,"").replace(/:/g,".").replace(/\.$/,"").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"")}
+function isRight(q,v){
+  if(v==null||v==="") return false;
+  if(q.t==="text"){const n=normAns(v); if(!n||(q.max&&n.split(" ").length>q.max)) return false; return q.a.split("|").some(x=>normAns(x)===n)}
+  return String(v)===String(q.a);
+}
+function rightText(q){
+  if(q.t==="text") return q.show||q.a.split("|")[0];
+  if(q.t==="tfng") return TFNG.find(x=>x[0]===q.a)[1];
+  return LET[q.a]+(q.o?". "+q.o[q.a]:"");
+}
+function toeicScaled(c,t){return Math.max(5,Math.min(495,Math.round((5+c/t*490)/5)*5))}
+// widely published raw-score tables for the 40-question papers; our shorter sections are scaled to 40 first
+const L_TAB=[[39,9],[37,8.5],[35,8],[32,7.5],[30,7],[26,6.5],[23,6],[18,5.5],[16,5],[13,4.5],[11,4],[8,3.5],[6,3],[4,2.5],[2,2],[1,1]];
+const R_TAB=[[39,9],[37,8.5],[35,8],[33,7.5],[30,7],[27,6.5],[23,6],[19,5.5],[15,5],[13,4.5],[10,4],[8,3.5],[6,3],[4,2.5],[2,2],[1,1]];
+function ieltsBand(kind,c,t){const r=Math.round(c/t*40),row=(kind==="listening"?L_TAB:R_TAB).find(x=>r>=x[0]); return row?row[1]:0}
+function halfBand(b){return Math.round(Number(b)*2)/2}
+function bandTxt(b){return halfBand(b).toFixed(1)}
+function bandName(b){const r=IELTS_BANDS.find(x=>Math.floor(b)>=x[0]); return r?r[1]:"Non-user"}
+function examLog(){return Array.isArray(S.exams)?S.exams:[]}
+function examLast(id,f){const l=examLog(); for(let i=l.length-1;i>=0;i--) if(l[i].id===id&&(!f||f(l[i]))) return l[i]; return null}
+function examRecord(e){S.exams=examLog().concat([Object.assign({at:Date.now()},e)]).slice(-60); markDay(); save(); updateChrome()}
+function writingBand(){
+  const t1=examLast("ielts-writing",e=>e.task===1), t2=examLast("ielts-writing",e=>e.task===2);
+  if(t1&&t2) return halfBand((t1.band+2*t2.band)/3);
+  return t1?t1.band:t2?t2.band:null;
+}
+function ieltsOverall(){
+  const l=examLast("ielts-listening"),r=examLast("ielts-reading"),w=writingBand(),s=examLast("ielts-speaking");
+  return l&&r&&w!=null&&s?halfBand((l.band+r.band+w+s.band)/4):null;
+}
+function wordCount(t){return (String(t||"").trim().match(/[A-Za-z0-9'’-]+/g)||[]).length}
+function mmss(s){s=Math.max(0,Math.floor(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function answeredCount(){return X?X.sec.parts.reduce((n,p)=>n+p.qs.filter(q=>X.ans[q.key]!=null&&X.ans[q.key]!=="").length,0):0}
+function saveDrafts(){clearTimeout(saveDrafts.t); saveDrafts.t=setTimeout(()=>{try{localStorage.setItem("exam-drafts",JSON.stringify(XD))}catch(e){}},500)}
+
+/* hub */
+function viewExamHub(){
+  const T=EXAMS.toeic.sections, I=EXAMS.ielts.sections;
+  const tl=examLast("toeic-listening"), tr=examLast("toeic-reading");
+  const row=(sec,last,unit,extra)=>'<button class="x-sec" data-act="xopen" data-id="'+sec.id+'"><b lang="en">'+sec.title+'</b><span class="x-last">'+(last==null?'<span class="muted">–</span>':last+(unit?'<small>'+unit+'</small>':''))+'</span><small>'+sec.th+' · '+extra+'</small></button>';
+  const ov=ieltsOverall(), wb=writingBand();
+  const hist=examLog().slice(-10).reverse();
+  return '<h1 class="h1">ห้องสอบ</h1><p class="lede">ข้อสอบจำลองแนว TOEIC และ IELTS เขียนขึ้นใหม่ตามรูปแบบข้อสอบจริง มีเฉลยพร้อมคำอธิบายภาษาไทยทุกข้อ คะแนนเป็นค่าประมาณสำหรับดูพัฒนาการ ไม่ใช่คะแนนทางการ</p>'
+   +'<div class="x-hub">'
+   +'<article class="x-exam"><p class="x-logo" lang="en">TOEIC</p><p class="muted" lang="en">Listening &amp; Reading</p><p style="margin-top:6px">'+EXAMS.toeic.th+'</p>'
+     +'<div class="x-secs">'+row(T.listening,tl&&tl.score,"/495",T.listening.total+" ข้อ · "+T.listening.est)+row(T.reading,tr&&tr.score,"/495",T.reading.total+" ข้อ · "+T.reading.est)+'</div>'
+     +'<div class="x-total"><div><span class="muted">คะแนนรวมโดยประมาณ</span><b>'+(tl&&tr?(tl.score+tr.score)+'<small> / 990</small>':'–')+'</b></div><p class="muted" style="font-size:13.5px;flex:1;min-width:180px">'+(tl&&tr?'รวมจากผลล่าสุดของทั้งสองส่วน':'ทำครบทั้ง Listening และ Reading เพื่อดูคะแนนรวม')+'</p></div></article>'
+   +'<article class="x-exam"><p class="x-logo" lang="en">IELTS</p><p class="muted" lang="en">Academic</p><p style="margin-top:6px">'+EXAMS.ielts.th+'</p>'
+     +'<div class="x-secs">'+row(I.listening,examLast("ielts-listening")&&bandTxt(examLast("ielts-listening").band),"",I.listening.total+" ข้อ · "+I.listening.est)
+       +row(I.reading,examLast("ielts-reading")&&bandTxt(examLast("ielts-reading").band),"",I.reading.total+" ข้อ · "+I.reading.est)
+       +row(I.writing,wb==null?null:bandTxt(wb),"","2 Tasks · "+I.writing.est)
+       +row(I.speaking,examLast("ielts-speaking")&&bandTxt(examLast("ielts-speaking").band),"","3 Parts · "+I.speaking.est)+'</div>'
+     +'<div class="x-total"><div><span class="muted">Overall band โดยประมาณ</span><b>'+(ov==null?'–':bandTxt(ov)+'<small> '+bandName(ov)+'</small>')+'</b></div><p class="muted" style="font-size:13.5px;flex:1;min-width:180px">'+(ov==null?'ทำครบ 4 ทักษะเพื่อดู Overall band':'เฉลี่ยจากผลล่าสุดของ 4 ทักษะ ปัดแบบ IELTS')+'</p></div></article>'
+   +'</div>'
+   +(hist.length?'<section class="section"><h2 class="h3" style="margin-bottom:10px">ประวัติการสอบล่าสุด</h2><div class="tbl-wrap"><table><thead><tr><th>วันที่</th><th>ข้อสอบ</th><th>ผล</th><th>โหมด</th></tr></thead><tbody>'
+     +hist.map(e=>'<tr><td style="white-space:nowrap">'+esc(new Date(e.at).toLocaleDateString("th-TH",{day:"numeric",month:"short"}))+'</td><td lang="en">'+esc(EXAM_NAMES[e.id]||e.id)+(e.task?' · Task '+e.task:'')+'</td><td style="font-variant-numeric:tabular-nums">'+(e.score!=null?e.score+' / 495':'Band '+bandTxt(e.band))+(e.c!=null?' <span class="muted">(ถูก '+e.c+'/'+e.t+')</span>':'')+'</td><td class="muted">'+(e.mode==="exam"?"สอบจริง":e.mode==="practice"?"ฝึก":"ครู AI")+'</td></tr>').join("")+'</tbody></table></div></section>':'')
+   +'<section class="section"><h2 class="h3" style="margin-bottom:10px">ระดับ Band ของ IELTS</h2><div class="tbl-wrap"><table><thead><tr><th>Band</th><th>ชื่อระดับ</th><th>ความหมาย</th></tr></thead><tbody>'
+     +IELTS_BANDS.map(b=>'<tr><td style="font-variant-numeric:tabular-nums"><b>'+b[0]+'</b></td><td lang="en">'+b[1]+'</td><td>'+b[2]+'</td></tr>').join("")+'</tbody></table></div>'
+     +'<p class="muted" style="font-size:13px;margin-top:10px">TOEIC และ IELTS เป็นเครื่องหมายการค้าของเจ้าของแต่ละราย ข้อสอบในแอปนี้เขียนขึ้นเองเพื่อฝึกซ้อม ไม่มีส่วนเกี่ยวข้องกับผู้จัดสอบ</p></section>';
+}
+
+/* attempt screen */
+function viewExamRun(){
+  const sec=X.sec, ex=EXAMS[sec.exam];
+  let h='<button class="back" data-act="go" data-to="exam">← ห้องสอบ</button><p class="eyebrow" style="margin-top:8px" lang="en">'+esc(ex.full)+'</p><h1 class="h2">'+sec.title+' <span class="muted" style="font-weight:400">· '+sec.th+'</span></h1>';
+  if(!X.started) return h+introCard(sec);
+  if(sec.kind==="writing") return h+xbar()+writingView();
+  if(sec.kind==="speaking") return h+speakingView();
+  return h+(X.submitted?resultCard():"")+xbar()+sec.parts.map(renderPart).join("")+submitArea();
+}
+function introCard(sec){
+  const timed=sec.time>0, listen=sec.key==="listening";
+  return '<div class="notebook" style="margin-top:18px;max-width:760px"><p class="eyebrow">ก่อนเริ่มสอบ</p><ul class="x-intro">'+sec.intro.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ul>'
+   +(sec.kind==="speaking"
+     ?'<div class="row" style="margin-top:16px"><button class="btn btn-primary" data-act="xstart" data-mode="practice">เข้าห้องสอบพูด</button></div>'
+     :'<div class="x-modes"><button class="x-mode" data-act="xstart" data-mode="exam"><b>โหมดสอบจริง</b><small>'+(listen?"ฟังได้ครั้งเดียว":"")+(listen&&timed?" · ":"")+(timed?"จับเวลา "+Math.round(sec.time/60)+" นาที":"")+(!listen&&!timed?"ทำรวดเดียว":"")+' เฉลยหลังส่งคำตอบ</small></button>'
+       +'<button class="x-mode" data-act="xstart" data-mode="practice"><b>โหมดฝึก</b><small>'+(listen?"ฟังซ้ำได้ ":"")+'ไม่จับเวลา ทำสบายๆ แล้วดูเฉลย</small></button></div>')
+   +(listen?'<p class="muted" style="font-size:14px;margin-top:12px">เปิดเสียงลำโพงหรือใส่หูฟังก่อนเริ่ม เสียงอ่านมาจากเครื่องของคุณ สำเนียงอาจต่างกันตามอุปกรณ์</p>':'')+'</div>';
+}
+function xbar(){
+  const sec=X.sec, timed=X.mode==="exam"&&sec.time>0;
+  return '<div class="xbar">'+(sec.kind==="writing"?'<span class="muted">Writing · 2 Tasks</span>':'<span>ตอบแล้ว <b id="xcount">'+answeredCount()+'</b>/'+sec.total+'</span>')
+   +(timed?'<span class="xtimer" id="xtimer">'+(X.submitted?'ใช้เวลา '+mmss((X.endAt-X.startAt)/1000):'เหลือ '+mmss(sec.time-(Date.now()-X.startAt)/1000))+'</span>':'')
+   +'<span class="chip'+(X.mode==="exam"?" now":"")+'">'+(X.mode==="exam"?"โหมดสอบจริง":"โหมดฝึก")+'</span></div>';
+}
+function dirBox(p){
+  return '<div class="xdir"><p class="eyebrow" lang="en">DIRECTIONS · Questions '+p.first+(p.last>p.first?'–'+p.last:'')+'</p><p lang="en">'+esc(p.dir)+'</p><p class="muted" style="margin-top:6px">'+esc(p.dirTh)+'</p></div>';
+}
+function choiceOpts(q,labels,texts,row){
+  const v=X.ans[q.key];
+  return '<div class="xopts'+(row?" row":"")+'" role="group" aria-label="ข้อ '+q.n+'">'+labels.map((lab,i)=>{
+    const val=q.t==="tfng"?lab[0]:String(i); let cls="xo";
+    if(X.submitted){if(val===String(q.a)) cls+=" ok"; else if(val===v) cls+=" no"}
+    return '<button class="'+cls+'" data-act="xa" data-k="'+q.key+'" data-v="'+val+'" aria-pressed="'+(v===val)+'"'+(X.submitted?" disabled":"")+'><span class="l">'+(q.t==="tfng"?lab[1]:lab)+'</span>'+(texts?'<span lang="en">'+esc(texts[i])+'</span>':'')+'</button>';
+  }).join("")+'</div>';
+}
+function textInput(q){
+  const v=X.ans[q.key]||"", cls=X.submitted?(isRight(q,v)?" ok":" no"):"";
+  return '<input class="xin'+cls+'" data-xk="'+q.key+'" value="'+esc(v)+'" autocomplete="off" autocapitalize="off" spellcheck="false" lang="en" aria-label="คำตอบข้อ '+q.n+'"'+(X.submitted?" disabled":"")+'>';
+}
+function reviewNote(q){
+  if(!X.submitted) return "";
+  const ok=isRight(q,X.ans[q.key]);
+  return '<p class="xwhy'+(ok?" ok":"")+'">'+(ok?"✓ ถูกต้อง":"✗ คำตอบที่ถูก: <b lang=\"en\">"+esc(rightText(q))+"</b>")+(q.why?' · '+esc(q.why):'')+'</p>';
+}
+function qHead(q,html){return '<div class="xq-h"><span class="xnum">'+q.n+'</span><div class="xq-t">'+html+'</div></div>'}
+function blankQ(s){return esc(s).replace(/___/g,'<span class="blank">&nbsp;</span>')}
+function spkName(s){return s==="W"?"Woman":s==="M"?"Man":"Speaker"}
+function playLabel(k){return X.playing===k?"■ หยุดเสียง":"▶ ฟังเสียง"}
+function playNote(k){
+  const n=X.plays[k]||0;
+  if(X.mode==="exam"&&!X.submitted) return X.playing===k?"กำลังเล่น…":n?"ฟังไปแล้ว (โหมดสอบจริงฟังได้ครั้งเดียว)":"ฟังได้ 1 ครั้ง";
+  return X.playing===k?"กำลังเล่น…":n?"ฟังแล้ว "+n+" ครั้ง":"";
+}
+function audioBtn(k,lines){
+  AUD[k]=lines;
+  const locked=X.mode==="exam"&&!X.submitted&&(X.plays[k]||0)>=1&&X.playing!==k;
+  return '<div class="xplay"><button class="btn btn-sm'+(X.playing===k?"":" btn-primary")+'" data-act="xplay" data-k="'+k+'"'+(locked?" disabled":"")+'>'+playLabel(k)+'</button><span class="muted" data-pn="'+k+'">'+playNote(k)+'</span></div>'
+   +(X.submitted?'<details class="xscript"><summary>บทพูด (Transcript)</summary>'+lines.map(l=>'<p><b>'+spkName(l[0])+'</b><span lang="en">'+esc(l[1])+'</span></p>').join("")+'</details>':'');
+}
+function refreshPlay(){
+  document.querySelectorAll('[data-act="xplay"]').forEach(b=>{
+    const k=b.dataset.k; b.textContent=playLabel(k);
+    b.classList.toggle("btn-primary",X.playing!==k);
+    b.disabled=X.mode==="exam"&&!X.submitted&&(X.plays[k]||0)>=1&&X.playing!==k;
+  });
+  document.querySelectorAll("[data-pn]").forEach(s=>{s.textContent=playNote(s.dataset.pn)});
+}
+function renderPart(p){
+  const sid=X.sec.id;
+  let h='<section class="xpart"><h2 class="h3" lang="en">'+esc(p.title)+'</h2>'+dirBox(p);
+  if(p.kind==="respond"){
+    h+=p.items.map(q=>'<div class="xq">'+qHead(q,'<p class="muted" lang="en">Mark your answer.</p>'+audioBtn(q.key,[["W",q.q]].concat(q.o.map((o,i)=>["M",LET[i]+". "+o]))))+choiceOpts(q,["A","B","C"],null,true)+reviewNote(q)+'</div>').join("");
+  } else if(p.kind==="sets"){
+    h+=p.sets.map((s,si)=>'<div class="xset">'+(s.audio?audioBtn(sid+"-a"+p.first+"-"+si,s.audio):'')
+      +(s.doc?'<div class="xdoc"><p class="eyebrow" lang="en">'+esc(s.doc.title)+'</p>'+s.doc.lines.map(l=>'<p lang="en">'+l+'</p>').join("")+'</div>':'')
+      +s.qs.map(q=>'<div class="xq">'+qHead(q,'<p lang="en">'+esc(q.q)+'</p>')+choiceOpts(q,LET.slice(0,q.o.length).split(""),q.o)+reviewNote(q)+'</div>').join("")+'</div>').join("");
+  } else if(p.kind==="mc"){
+    h+=p.items.map(q=>'<div class="xq">'+qHead(q,'<p lang="en">'+blankQ(q.q)+'</p>')+choiceOpts(q,LET.split(""),q.o)+reviewNote(q)+'</div>').join("");
+  } else if(p.kind==="textfill"){
+    h+='<div class="xdoc">'+p.head.map(l=>'<p class="muted" lang="en">'+esc(l)+'</p>').join("")+p.text.map(t=>'<p lang="en">'+esc(t).replace(/\{(\d)\}/g,(m,i)=>'<span class="gap">('+p.items[i-1].n+')</span>')+'</p>').join("")+'</div>'
+      +p.items.map(q=>'<div class="xq">'+qHead(q,'')+choiceOpts(q,LET.split(""),q.o)+reviewNote(q)+'</div>').join("");
+  } else if(p.kind==="form"){
+    h+=audioBtn(sid+"-a"+p.first,p.audio)+'<div class="xform"><p class="eyebrow" lang="en">'+esc(p.formTitle)+'</p>'
+      +p.rows.map(q=>'<div class="fr"><span lang="en">'+esc(q.label)+'</span><span class="fr-in"><span class="xnum">'+q.n+'</span>'+(q.pre?'<span lang="en">'+esc(q.pre)+'</span>':'')+textInput(q)+'</span>'+(X.submitted?'<div class="fr-why">'+reviewNote(q)+'</div>':'')+'</div>').join("")+'</div>';
+  } else if(p.kind==="passage"){
+    h+='<div class="xread"><article class="xpass"><h3 class="h3" lang="en">'+esc(p.passage.title)+'</h3>'+p.passage.paras.map(pp=>'<p lang="en"><span class="pl">'+pp[0]+'</span>'+esc(pp[1])+'</p>').join("")+'</article><div>'
+      +p.groups.map(g=>'<div class="xgroup"><p class="eyebrow" lang="en">Questions '+g.items[0].n+'–'+g.items[g.items.length-1].n+'</p><p lang="en" style="font-size:15px">'+esc(g.dir)+'</p><p class="muted" style="font-size:14.5px;margin-top:4px">'+esc(g.dirTh)+'</p>'
+        +g.items.map(q=>'<div class="xq">'+qHead(q,'<p lang="en">'+(g.type==="gap"?esc(q.q).replace("___",textInput(q)):esc(q.q))+'</p>')
+          +(g.type==="tfng"?choiceOpts(q,TFNG,null,true):g.type==="mc"?choiceOpts(q,LET.split(""),q.o):'')+reviewNote(q)+'</div>').join("")+'</div>').join("")+'</div></div>';
+  }
+  return h+'</section>';
+}
+function submitArea(){
+  if(X.submitted) return '<div class="xsubmit"><button class="btn btn-primary" data-act="xretry">ทำข้อสอบชุดนี้อีกครั้ง</button><button class="btn btn-ghost" data-act="go" data-to="exam">กลับห้องสอบ</button></div>';
+  const un=X.sec.total-answeredCount();
+  return '<div class="xsubmit" id="xsubmit">'+(X.confirm&&un>0?'<p class="pen" style="width:100%">ยังไม่ได้ตอบ '+un+' ข้อ ข้อที่ว่างจะนับว่าผิด ส่งเลยไหม</p><button class="btn btn-primary" data-act="xsubmit">ส่งคำตอบเลย</button><button class="btn btn-ghost" data-act="xcancel">กลับไปทำต่อ</button>'
+    :'<button class="btn btn-primary" data-act="xsubmit">ส่งคำตอบ</button><span class="muted">ส่งแล้วจะเห็นคะแนนและเฉลยทุกข้อ</span>')+'</div>';
+}
+function resultCard(){
+  const r=X.result, sec=X.sec, toeic=sec.exam==="toeic";
+  return '<div class="card xres"><p class="eyebrow">ผลสอบ · '+(X.mode==="exam"?"โหมดสอบจริง":"โหมดฝึก")+(X.endAt&&X.startAt?' · ใช้เวลา '+mmss((X.endAt-X.startAt)/1000):'')+'</p>'
+   +'<div class="xscore"><div><b>'+r.c+'<small>/'+r.t+'</small></b><span>ตอบถูก</span></div>'
+   +(toeic?'<div><b>'+r.score+'<small>/495</small></b><span>คะแนน TOEIC '+sec.title+' โดยประมาณ</span></div>'
+     :'<div><b>'+bandTxt(r.band)+'</b><span>Band โดยประมาณ · <span lang="en">'+bandName(r.band)+'</span></span></div>')+'</div>'
+   +'<div class="tbl-wrap" style="margin-top:14px"><table><thead><tr><th>ส่วน</th><th>ถูก</th></tr></thead><tbody>'+r.parts.map(p=>'<tr><td lang="en">'+esc(p.title)+'</td><td style="font-variant-numeric:tabular-nums">'+p.c+' / '+p.t+'</td></tr>').join("")+'</tbody></table></div>'
+   +'<p class="muted" style="font-size:13.5px;margin-top:10px">'+(toeic?'คิดคะแนนจากสัดส่วนข้อที่ถูก เทียบกับสเกล 5–495 ของข้อสอบจริง':'เทียบสัดส่วนกับข้อสอบจริง 40 ข้อ แล้วแปลงเป็น band ตามตารางคะแนนที่เผยแพร่ทั่วไป')+' เป็นค่าประมาณเท่านั้น เลื่อนลงเพื่อดูเฉลยทีละข้อ</p>'
+   +'<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="xretry">ทำอีกครั้ง</button><button class="btn btn-ghost" data-act="go" data-to="exam">กลับห้องสอบ</button></div></div>';
+}
+function gradeExam(){
+  stopAudio();
+  const sec=X.sec; let c=0;
+  const parts=sec.parts.map(p=>{let pc=0; p.qs.forEach(q=>{if(isRight(q,X.ans[q.key])){c++;pc++}}); return {title:p.title,c:pc,t:p.qs.length}});
+  X.submitted=true; X.confirm=false; X.endAt=Date.now();
+  const rec={id:sec.id,c,t:sec.total,mode:X.mode};
+  if(sec.exam==="toeic") rec.score=toeicScaled(c,sec.total); else rec.band=ieltsBand(sec.key,c,sec.total);
+  X.result=Object.assign({parts},rec);
+  S.xp+=c*2; examRecord(rec);
+  render(); window.scrollTo(0,0);
+}
+
+/* audio */
+async function playScript(k){
+  const lines=AUD[k]; if(!lines||!X) return;
+  Speech.stop(); const tok=++xTok;
+  X.playing=k; X.plays[k]=(X.plays[k]||0)+1; refreshPlay();
+  for(const l of lines){
+    const bits=String(l[1]).split(/(?<!\b(?:Mr|Ms|Mrs|Dr))(?<=[.!?])\s+(?=[A-Z"])/);
+    for(const b of bits){ if(tok!==xTok) return; await Speech.say(b,{voice:VOICE[l[0]][0],pitch:VOICE[l[0]][1]}); }
+    if(tok!==xTok) return;
+    await new Promise(r=>setTimeout(r,400));
+  }
+  if(tok===xTok&&X){X.playing=null; refreshPlay()}
+}
+function stopAudio(){xTok++; Speech.stop(); if(X&&X.playing){X.playing=null; refreshPlay()}}
+
+/* timers: one ticker for every exam clock on screen */
+setInterval(()=>{
+  if(route.name!=="examrun"||!X||!X.started) return;
+  const el=$("#xtimer");
+  if(el&&!X.submitted){const left=X.sec.time-(Date.now()-X.startAt)/1000; el.textContent=left>=0?"เหลือ "+mmss(left):"หมดเวลา +"+mmss(-left); el.classList.toggle("over",left<0)}
+  const pe=$("#xprep");
+  if(pe&&X.prepAt){const left=60-(Date.now()-X.prepAt)/1000; pe.textContent=left>0?"เวลาเตรียมตัวเหลือ "+mmss(left):"หมดเวลาเตรียม เริ่มพูดได้ 1–2 นาที"; if(left<=0&&!X.prepDone){X.prepDone=true; Speech.say("Alright? Remember, you have one to two minutes for this. Please start speaking now.")}}
+},1000);
+
+/* writing */
+function aiNote(){return NB?"เทียบกับตัวอย่างคำตอบ แล้วลองปรับของตัวเอง":"ครู AI ใช้ได้เมื่อเปิดหน้านี้ใน Claude และกดอนุญาต ระหว่างนี้เทียบกับตัวอย่างคำตอบได้"}
+function wcText(n,min){return n+" คำ"+(min?(n<min?" · ต้องการอย่างน้อย "+min+" คำ":" · ครบตามกำหนด"):"")}
+function paras(t){return '<p lang="en">'+esc(t).replace(/\n\n/g,'</p><p lang="en">').replace(/\n/g,"<br>")+'</p>'}
+function writingView(){
+  return IELTS_WRITING.map(t=>{
+    const key="w"+t.n, text=XD[key]||"", r=XR[key]||{}, show=X.show[key];
+    return '<section class="xpart"><h2 class="h3" lang="en">Writing Task '+t.n+'</h2>'
+     +'<div class="xdir"><p class="eyebrow" lang="en">You should spend about '+t.mins+' minutes on this task.</p><p lang="en">'+esc(t.prompt)+'</p><p class="muted" lang="en" style="margin-top:6px">Write at least '+t.min+' words.</p></div>'
+     +(t.chart?chartSVG(t.chart):'')
+     +'<label class="sr" for="xw-'+key+'">คำตอบ Task '+t.n+'</label><textarea class="ta xta" id="xw-'+key+'" data-xw="'+key+'" lang="en" spellcheck="false" placeholder="Write your answer here…">'+esc(text)+'</textarea>'
+     +'<div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" id="wc-'+key+'">'+wcText(wordCount(text),t.min)+'</span><div class="row">'
+     +(AI.state==="ready"?'<button class="btn btn-primary" data-act="xgrade-w" data-n="'+t.n+'"'+(r.busy?" disabled":"")+'>'+(r.busy?"ครูกำลังประเมิน…":"ส่งให้ครู AI ประเมิน")+'</button>':'')
+     +'<button class="btn btn-ghost" data-act="xmodel" data-k="'+key+'">'+(show?"ซ่อนตัวอย่างคำตอบ":"ดูตัวอย่างคำตอบ")+'</button></div></div>'
+     +(AI.state!=="ready"?'<p class="muted" style="font-size:14px;margin-top:6px">'+aiNote()+'</p>':'')
+     +(show?'<div class="xmodel"><p class="eyebrow">ตัวอย่างคำตอบ</p>'+paras(t.model)+'</div>':'')
+     +(r.err?'<p class="pen" style="margin-top:10px">'+esc(r.err)+'</p>':'')
+     +(r.data?gradeHTML(r.data):'')
+     +'</section>';
+  }).join("");
+}
+function chartSVG(ch){
+  const W=640,H=320,pl=46,pr=14,pt=26,pb=38,max=70,iw=W-pl-pr,ih=H-pt-pb,bw=36,gap=2;
+  const cols=["var(--s1)","var(--s2)","var(--s3)"], gw=iw/ch.years.length;
+  const bar=(x,y,w,h,r)=>{r=Math.min(r,h,w/2); return 'M'+x+','+(y+h)+'V'+(y+r)+'Q'+x+','+y+' '+(x+r)+','+y+'H'+(x+w-r)+'Q'+(x+w)+','+y+' '+(x+w)+','+(y+r)+'V'+(y+h)+'Z'};
+  let g="";
+  for(let v=0;v<=max;v+=10){const y=pt+ih-v/max*ih; g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+y+'" y2="'+y+'" class="grid"/><text x="'+(pl-8)+'" y="'+(y+4)+'" text-anchor="end" class="tick">'+v+'%</text>'}
+  ch.years.forEach((yr,yi)=>{
+    const cx=pl+gw*yi+gw/2, tot=ch.series.length*bw+(ch.series.length-1)*gap, x0=cx-tot/2;
+    ch.series.forEach((s,si)=>{const v=s.v[yi],h=v/max*ih,x=x0+si*(bw+gap),y=pt+ih-h;
+      g+='<path d="'+bar(x,y,bw,h,4)+'" fill="'+cols[si]+'"><title>'+esc(s.name)+', '+yr+': '+v+'%</title></path><text x="'+(x+bw/2)+'" y="'+(y-6)+'" text-anchor="middle" class="val">'+v+'</text>'});
+    g+='<text x="'+cx+'" y="'+(H-14)+'" text-anchor="middle" class="tick">'+yr+'</text>';
+  });
+  g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+(pt+ih)+'" y2="'+(pt+ih)+'" class="base"/>';
+  const summary=ch.series.map(s=>s.name+" "+s.v.join("%, ")+"%").join("; ");
+  return '<figure class="xchart"><figcaption><b lang="en">'+esc(ch.title)+'</b><span class="legend">'+ch.series.map((s,i)=>'<span lang="en"><i style="background:'+cols[i]+'"></i>'+esc(s.name)+'</span>').join("")+'</span></figcaption>'
+   +'<div class="chart-wrap"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(ch.title+" for "+ch.years.join(", ")+": "+summary)+'">'+g+'</svg></div></figure>';
+}
+function cleanGrade(d){
+  if(!d||typeof d!=="object"||!Array.isArray(d.criteria)) return null;
+  const b=v=>Math.max(0,Math.min(9,halfBand(Number(v)||0)));
+  return {overall:b(d.overall),criteria:d.criteria.slice(0,4).map(c=>({name:String(c.name||""),band:b(c.band),comment:String(c.comment||"")})),
+    corrections:Array.isArray(d.corrections)?d.corrections.slice(0,6).map(c=>({wrong:String(c.wrong||""),right:String(c.right||""),why:String(c.why||"")})):[],
+    improved:String(d.improved||""),better:Array.isArray(d.better)?d.better.slice(0,3).map(x=>({question:String(x.question||""),answer:String(x.answer||"")})):[],
+    tips:Array.isArray(d.tips)?d.tips.slice(0,3).map(String):[]};
+}
+function gradeHTML(d){
+  return '<div class="xgrade"><div class="band-grid"><div class="ov"><span>Overall</span><b>'+bandTxt(d.overall)+'</b><small lang="en">'+bandName(d.overall)+'</small></div>'
+   +d.criteria.map(c=>'<div><span lang="en">'+esc(c.name)+'</span><b>'+bandTxt(c.band)+'</b></div>').join("")+'</div>'
+   +'<ul class="xcomments">'+d.criteria.map(c=>'<li><b lang="en">'+esc(c.name)+':</b> '+esc(c.comment)+'</li>').join("")+'</ul>'
+   +(d.corrections.length?'<h3 class="h3">จุดที่ควรแก้</h3><div class="mistakes" style="margin-top:6px;border:0;padding:0">'+d.corrections.map(c=>'<div class="mist"><div class="x"><s lang="en">✗ '+esc(c.wrong)+'</s><span class="ok" lang="en">✓ '+esc(c.right)+'</span></div><div class="why">'+esc(c.why)+'</div></div>').join("")+'</div>':'')
+   +(d.improved?'<h3 class="h3">ตัวอย่างที่ปรับให้ดีขึ้น</h3><div class="xmodel">'+paras(d.improved)+'</div>':'')
+   +(d.better.length?'<h3 class="h3">ตัวอย่างคำตอบที่ดีกว่า</h3>'+d.better.map(x=>'<div class="xmodel"><p class="muted" lang="en">'+esc(x.question)+'</p><div class="sh-row"><p lang="en">'+esc(x.answer)+'</p>'+sayBtn(x.answer,"ฟังตัวอย่าง")+'</div></div>').join(""):'')
+   +(d.tips.length?'<h3 class="h3">คำแนะนำ</h3><ul class="xcomments">'+d.tips.map(t=>'<li class="pen">'+esc(t)+'</li>').join("")+'</ul>':'')
+   +'<p class="muted" style="font-size:13px;margin-top:10px">ครู AI ประเมินตามเกณฑ์ที่เผยแพร่ของ IELTS เป็นค่าประมาณ ผลจริงจากผู้คุมสอบอาจต่างไปได้</p></div>';
+}
+async function gradeWriting(n){
+  const t=IELTS_WRITING[n-1], key="w"+n, text=(XD[key]||"").trim();
+  if(wordCount(text)<40){toast("เขียนอย่างน้อย 40 คำก่อนส่งให้ครูประเมิน");return}
+  XR[key]={busy:true}; render();
+  const data=t.chart?"\nChart data ("+t.chart.title+"): "+t.chart.series.map(s=>s.name+": "+t.chart.years.map((y,i)=>y+" = "+s.v[i]+"%").join(", ")).join("; "):"";
+  const prompt="You are an experienced IELTS Writing examiner. Assess this IELTS Academic Writing Task "+n+" response against the public IELTS Writing band descriptors. Be realistic and strict; do not inflate scores. Responses under "+t.min+" words must be penalised.\n\nTask: "+t.prompt+data+"\n\nWord count: "+wordCount(text)
+   +"\n\nCandidate response:\n\"\"\"\n"+text.slice(0,6000)+"\n\"\"\"\n\nReply with only a JSON object in this shape:\n{\"overall\": 6.5, \"criteria\": [{\"name\": \""+(n===1?"Task Achievement":"Task Response")+"\", \"band\": 6, \"comment\": \"1-2 sentences in Thai\"}, {\"name\": \"Coherence and Cohesion\", \"band\": 6.5, \"comment\": \"...\"}, {\"name\": \"Lexical Resource\", \"band\": 6.5, \"comment\": \"...\"}, {\"name\": \"Grammatical Range and Accuracy\", \"band\": 6, \"comment\": \"...\"}], \"corrections\": [{\"wrong\": \"exact phrase from the response\", \"right\": \"corrected phrase\", \"why\": \"short reason in Thai\"}], \"improved\": \"the weakest paragraph of the response rewritten at band 7-8 level\", \"tips\": [\"up to 3 short tips in Thai\"]}\nBands go from 0 to 9 in steps of 0.5; overall is the average of the four criteria. Give the 3-6 most important corrections.";
+  try{
+    const d=cleanGrade(await AI.fn.json(prompt,{modelTier:"default"}));
+    if(!d) throw {code:"invalid_json"};
+    XR[key]={data:d}; examRecord({id:"ielts-writing",task:n,band:d.overall,mode:"ai"}); S.xp+=10;
+  }catch(e){XR[key]={err:e&&e.code==="invalid_json"?"ครูตอบกลับมาไม่ครบ ลองกดส่งอีกครั้ง":aiError(e)}}
+  if(route.name==="examrun") render();
+}
+
+/* speaking */
+function speakingView(){
+  const r=XR.speak||{};
+  let h='<div class="xdir" style="margin-top:18px"><p>พูดคำตอบออกเสียงดังๆ ก่อนทุกข้อ เหมือนคุยกับผู้คุมสอบจริง แล้วค่อยพิมพ์สิ่งที่พูดลงในช่อง ครู AI ประเมินความคล่อง การเรียบเรียง คำศัพท์ และไวยากรณ์ได้ แต่ประเมินการออกเสียงไม่ได้</p></div>';
+  IELTS_SPEAKING.forEach(p=>{
+    h+='<section class="xpart"><h2 class="h3" lang="en">'+esc(p.title)+'</h2><p class="muted" style="margin-top:4px">'+esc(p.th)+'</p>';
+    if(p.card){
+      const key="s2", text=XD[key]||"", cardText=p.card.topic+" You should say: "+p.card.points.join(", ")+", "+p.card.end;
+      h+='<div class="cue" lang="en"><p><b>'+esc(p.card.topic)+'</b></p><p style="margin-top:6px">You should say:</p><ul>'+p.card.points.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul><p>'+esc(p.card.end)+'</p></div>'
+        +'<div class="row" style="margin-top:12px">'+sayBtn(cardText,"ฟังผู้คุมสอบอ่านบัตรหัวข้อ")+'<button class="btn btn-sm" data-act="xprep">'+(X.prepAt?"เริ่มจับเวลาใหม่":"เริ่มเตรียมตัว 1 นาที")+'</button><span class="xtimer" id="xprep">'+(X.prepAt?"":"")+'</span></div>'
+        +'<label class="sr" for="xw-s2">คำตอบ Part 2</label><textarea class="ta xta" id="xw-s2" data-xw="s2" lang="en" spellcheck="false" placeholder="Type what you said…" style="margin-top:12px">'+esc(text)+'</textarea>'
+        +'<div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted" id="wc-s2">'+wcText(wordCount(text),0)+' · พูด 2 นาทีประมาณ 200–250 คำ</span><button class="btn btn-ghost btn-sm" data-act="xmodel" data-k="s2">'+(X.show.s2?"ซ่อนตัวอย่างคำตอบ":"ดูตัวอย่างคำตอบ")+'</button></div>'
+        +(X.show.s2?'<div class="xmodel"><div class="sh-row"><p lang="en">'+esc(p.model)+'</p>'+sayBtn(p.model,"ฟังตัวอย่าง")+'</div></div>':'');
+    } else {
+      h+=p.qs.map((q,i)=>{const key="s"+p.part+"-"+i;
+        return '<div class="xq"><div class="xq-h"><span class="xnum">Q'+(i+1)+'</span><div class="xq-t sh-row"><p lang="en">'+esc(q)+'</p>'+sayBtn(q,"ฟังผู้คุมสอบ")+'</div></div>'
+          +'<label class="sr" for="xw-'+key+'">คำตอบ</label><textarea class="ta xta sm" id="xw-'+key+'" data-xw="'+key+'" lang="en" spellcheck="false" placeholder="Type what you said…">'+esc(XD[key]||"")+'</textarea></div>'}).join("");
+    }
+    h+='</section>';
+  });
+  h+='<div class="xsubmit">'+(AI.state==="ready"?'<button class="btn btn-primary" data-act="xgrade-s"'+(r.busy?" disabled":"")+'>'+(r.busy?"ครูกำลังประเมิน…":"ส่งคำตอบทั้งหมดให้ครู AI ประเมิน")+'</button>':'<p class="muted">'+aiNote()+'</p>')+'</div>'
+   +(r.err?'<p class="pen" style="margin-top:10px">'+esc(r.err)+'</p>':'')+(r.data?'<section class="xpart"><h2 class="h3">ผลประเมิน Speaking</h2>'+gradeHTML(r.data)+'</section>':'');
+  return h;
+}
+async function gradeSpeaking(){
+  const lines=[]; let words=0;
+  IELTS_SPEAKING.forEach(p=>{
+    if(p.card){const a=(XD.s2||"").trim(); words+=wordCount(a); lines.push("PART 2 cue card: "+p.card.topic+" (You should say: "+p.card.points.join("; ")+"; "+p.card.end+")\nCandidate: "+(a||"(no answer)"))}
+    else p.qs.forEach((q,i)=>{const a=(XD["s"+p.part+"-"+i]||"").trim(); words+=wordCount(a); lines.push("PART "+p.part+" Examiner: "+q+"\nCandidate: "+(a||"(no answer)"))});
+  });
+  if(words<40){toast("ตอบให้ได้อย่างน้อย 40 คำก่อนส่งให้ครูประเมิน");return}
+  XR.speak={busy:true}; render();
+  const prompt="You are an experienced IELTS Speaking examiner. The candidate could not use a microphone, so they spoke each answer aloud and then typed what they said. Assess three criteria from the public IELTS Speaking band descriptors: Fluency and Coherence (judge length, development and linking of answers), Lexical Resource, and Grammatical Range and Accuracy. Pronunciation cannot be assessed, so leave it out. Be realistic: short or undeveloped answers score low.\n\n"+lines.join("\n\n").slice(0,8000)
+   +"\n\nReply with only a JSON object in this shape:\n{\"overall\": 6, \"criteria\": [{\"name\": \"Fluency and Coherence\", \"band\": 6, \"comment\": \"1-2 sentences in Thai\"}, {\"name\": \"Lexical Resource\", \"band\": 6, \"comment\": \"...\"}, {\"name\": \"Grammatical Range and Accuracy\", \"band\": 5.5, \"comment\": \"...\"}], \"corrections\": [{\"wrong\": \"exact phrase the candidate used\", \"right\": \"corrected phrase\", \"why\": \"short reason in Thai\"}], \"better\": [{\"question\": \"the examiner question\", \"answer\": \"a natural band 7-8 spoken answer, 2-4 sentences\"}], \"tips\": [\"up to 3 short tips in Thai\"]}\nBands go from 0 to 9 in steps of 0.5; overall is the average of the three criteria. Give up to 5 corrections and better answers for the 2 weakest responses.";
+  try{
+    const d=cleanGrade(await AI.fn.json(prompt,{modelTier:"default"}));
+    if(!d) throw {code:"invalid_json"};
+    XR.speak={data:d}; examRecord({id:"ielts-speaking",band:d.overall,mode:"ai"}); S.xp+=10;
+  }catch(e){XR.speak={err:e&&e.code==="invalid_json"?"ครูตอบกลับมาไม่ครบ ลองกดส่งอีกครั้ง":aiError(e)}}
+  if(route.name==="examrun") render();
+}
+
+/* actions */
+function newAttempt(sec){return {sec,started:false,mode:"practice",ans:{},plays:{},playing:null,submitted:false,confirm:false,show:{}}}
+const XACT={
+  xopen:t=>go("examrun",t.dataset.id),
+  xstart:t=>{X.started=true; X.mode=t.dataset.mode; X.startAt=Date.now(); render(); window.scrollTo(0,0)},
+  xa:t=>{
+    if(!X||X.submitted) return;
+    X.ans[t.dataset.k]=t.dataset.v;
+    t.parentNode.querySelectorAll(".xo").forEach(b=>b.setAttribute("aria-pressed",b===t?"true":"false"));
+    const c=$("#xcount"); if(c) c.textContent=answeredCount();
+    if(X.confirm){const s=$("#xsubmit"); if(s) s.outerHTML=submitArea()}
+  },
+  xplay:t=>{
+    const k=t.dataset.k;
+    if(X.playing===k){stopAudio();return}
+    if(X.mode==="exam"&&!X.submitted&&(X.plays[k]||0)>=1){toast("โหมดสอบจริงฟังได้ครั้งเดียว");return}
+    playScript(k);
+  },
+  xsubmit:()=>{
+    if(!X||X.submitted) return;
+    if(X.sec.total-answeredCount()>0&&!X.confirm){X.confirm=true; const s=$("#xsubmit"); if(s) s.outerHTML=submitArea(); return}
+    gradeExam();
+  },
+  xcancel:()=>{X.confirm=false; const s=$("#xsubmit"); if(s) s.outerHTML=submitArea()},
+  xretry:()=>{stopAudio(); const sec=X.sec; X=XS[sec.id]=newAttempt(sec); render(); window.scrollTo(0,0)},
+  xmodel:t=>{X.show[t.dataset.k]=!X.show[t.dataset.k]; render()},
+  "xgrade-w":t=>gradeWriting(+t.dataset.n),
+  "xgrade-s":()=>gradeSpeaking(),
+  xprep:()=>{X.prepAt=Date.now(); X.prepDone=false; const pe=$("#xprep"); if(pe) pe.textContent="เวลาเตรียมตัวเหลือ 1:00"}
+};
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -1195,6 +1876,8 @@ function go(name,id){
   Speech.stop();
   if(NB&&prActive) NB.stopListening();
   if(NB&&name==="teacher") name="home";
+  xTok++; if(X) X.playing=null;
+  if(name==="examrun"){const sec=secById(id); if(!sec) return go("exam"); X=XS[id]||(XS[id]=newAttempt(sec))}
   if(name==="lesson"){
     const i=COURSE.findIndex(u=>u.id===id);
     if(i<0) return go("course");
@@ -1207,19 +1890,20 @@ function go(name,id){
   if(name==="review") R=null;
   resetAsk=false;
   route={name,id:id||null};
-  try{history.replaceState(null,"","#"+(name==="lesson"?"lesson-"+id:name))}catch(e){}
+  try{history.replaceState(null,"","#"+(name==="lesson"?"lesson-"+id:name==="examrun"?"exam-"+id:name))}catch(e){}
   render(); window.scrollTo(0,0);
 }
 
 function render(){
-  const V={home:viewHome,course:viewCourse,lesson:viewLesson,review:viewReview,teacher:viewTeacher,report:viewReport,placement:viewPlacement}[route.name]||viewHome;
+  const V={home:viewHome,course:viewCourse,lesson:viewLesson,review:viewReview,teacher:viewTeacher,report:viewReport,placement:viewPlacement,exam:viewExamHub,examrun:viewExamRun}[route.name]||viewHome;
   $("#app").innerHTML=V();
   document.querySelectorAll(".nav button").forEach(b=>{
-    const cur=b.dataset.to===route.name||(b.dataset.to==="course"&&(route.name==="lesson"||route.name==="placement"));
+    const cur=b.dataset.to===route.name||(b.dataset.to==="course"&&(route.name==="lesson"||route.name==="placement"))||(b.dataset.to==="exam"&&route.name==="examrun");
     if(cur) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
   });
   updateChrome();
   document.querySelectorAll("[data-chat]").forEach(mountChat);
+  const tb=$(".topbar"); if(tb) document.documentElement.style.setProperty("--topbar-h",tb.offsetHeight+"px");
 }
 function updateChrome(){
   const n=streak();
@@ -1251,6 +1935,7 @@ function viewHome(){
    +'<div class="side-stack">'
      +'<div class="stats"><div><b>'+doneN+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+learned+'</b><span>คำศัพท์ที่เรียน</span></div><div><b>'+S.xp+'</b><span>คะแนนสะสม</span></div></div>'
      +'<button class="tile" data-act="go" data-to="review"><span class="big">'+due+'</span><span><b>การบ้านทบทวนคำศัพท์</b><small>'+(learned?(due?"มี "+due+" คำที่ถึงรอบทบทวนวันนี้":"วันนี้ทบทวนครบแล้ว คำถัดไปจะวนกลับมาตามรอบ"):"คำศัพท์จะเข้ามาที่นี่หลังเริ่มเรียนบทแรก")+'</small></span></button>'
+     +'<button class="tile" data-act="go" data-to="exam"><span class="big" aria-hidden="true">'+ICON_EXAM.replace('<svg','<svg width="32" height="32"')+'</span><span><b>ห้องสอบ TOEIC · IELTS</b><small>ข้อสอบจำลองพร้อมเฉลยภาษาไทย ประเมินคะแนนและ band โดยประมาณ</small></span></button>'
      +'<button class="tile ai-only" data-act="go" data-to="teacher"><span class="big" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span><span><b>คุยกับครู AI</b><small>ฝึกสนทนา ถามไวยากรณ์ หรือส่งประโยคให้ครูตรวจ ครูจะแก้ให้ด้วยปากกาแดง</small></span></button>'
      +(S.placement.done
        ?'<div class="card"><p class="eyebrow">ผลสอบวัดระดับ</p><p style="margin-top:4px"><b>'+LEVELS[S.placement.level-1].code+' '+LEVELS[S.placement.level-1].name+'</b> · ถูก '+S.placement.score+'/12 ข้อ</p><button class="btn btn-sm btn-ghost" style="margin-top:6px;padding-left:0" data-act="go" data-to="placement">สอบใหม่</button></div>'
@@ -1643,6 +2328,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
+Object.assign(ACT,XACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
@@ -1659,6 +2345,12 @@ document.addEventListener("input",e=>{
   const t=e.target;
   if(t.dataset&&t.dataset.w){(W[t.dataset.w]||(W[t.dataset.w]={})).text=t.value}
   if(t.id==="cert-name"){S.name=t.value.slice(0,40);clearTimeout(t._tm);t._tm=setTimeout(()=>{save()},600)}
+  if(t.dataset&&t.dataset.xk&&X&&!X.submitted){X.ans[t.dataset.xk]=t.value; const c=$("#xcount"); if(c) c.textContent=answeredCount()}
+  if(t.dataset&&t.dataset.xw){
+    const k=t.dataset.xw; XD[k]=t.value; saveDrafts();
+    const wc=$("#wc-"+k), task=IELTS_WRITING.find(x=>"w"+x.n===k);
+    if(wc) wc.textContent=wcText(wordCount(t.value),task?task.min:0)+(k==="s2"?" · พูด 2 นาทีประมาณ 200–250 คำ":"");
+  }
 });
 document.addEventListener("change",e=>{if(e.target.id==="cert-name") render()});
 
@@ -1666,7 +2358,8 @@ document.addEventListener("change",e=>{if(e.target.id==="cert-name") render()});
 (function boot(){
   let h=""; try{h=(location.hash||"").slice(1)}catch(e){}
   if(h.indexOf("lesson-")===0){const id=h.slice(7), i=COURSE.findIndex(u=>u.id===id); if(i>=0&&unlocked(i)){go("lesson",id);return}}
-  if(["home","course","review","teacher","report","placement"].includes(h)){go(h);return}
+  if(h.indexOf("exam-")===0&&secById(h.slice(5))){go("examrun",h.slice(5));return}
+  if(["home","course","review","teacher","report","placement","exam"].includes(h)){go(h);return}
   render();
 })();
 initCloud();

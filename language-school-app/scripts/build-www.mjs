@@ -44,7 +44,7 @@ const native = `<style>
 .topbar{top:0;padding-top:${safe('top')}}
 :root{padding-bottom:${safe('bottom')}}
 button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-@media (max-width:960px){
+@media (max-width:1100px){
   .nav{padding-bottom:calc(6px + ${safe('bottom')})}
   .toast{bottom:calc(88px + ${safe('bottom')})}
 }
