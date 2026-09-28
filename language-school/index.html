@@ -587,6 +587,27 @@ body{margin:0}
 @media (pointer:coarse){.say,.mic{width:42px;height:42px}.mic svg{width:19px;height:19px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
 @media (max-width:1100px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* shadowing studio */
+.sh-how ol{margin:0 0 8px 20px;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.sh-set{margin-top:14px;padding:14px 18px}
+.sh-set summary{cursor:pointer;font-weight:600;color:var(--accent);min-height:32px;display:flex;align-items:center}
+.sh-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 18px;margin-top:10px}
+.sh-opts>div{display:flex;flex-direction:column;gap:6px}
+.sh-opts .tabs{margin-top:0}
+.sh-card{margin-top:14px;transition:box-shadow .25s}
+.sh-card.you{box-shadow:var(--shadow),inset 0 0 0 2px var(--accent)}
+.sh-en{font:600 clamp(22px,5vw,30px)/1.35 var(--f-display);margin-top:14px;letter-spacing:-.01em;overflow-wrap:anywhere}
+.sh-hidden{color:var(--ink-3);font-weight:500;font-size:18px}
+.sh-th{color:var(--ink-2);margin-top:6px}
+.sh-status{margin-top:14px;font-weight:600;color:var(--accent);min-height:1.5em}
+.sh-bar{height:6px;border-radius:99px;background:var(--fill);overflow:hidden;margin-top:8px}
+.sh-bar i{display:block;height:100%;width:0;background:var(--accent-fill);border-radius:99px}
+.sh-ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.sh-list{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:2px;background:var(--surface);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.sh-list button{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;padding:11px 16px;font-size:16px;color:var(--ink);cursor:pointer;min-height:44px}
+.sh-list li+li button{border-top:.5px solid var(--sep)}
+.sh-list li.cur button{background:var(--sel);color:var(--accent);font-weight:600}
+@media (prefers-reduced-motion:reduce){.sh-bar i{transition:none!important}}
 /* ================= iOS 26 layer: Liquid Glass surfaces, grouped lists, capsule controls ================= */
 body{font-size:17px;line-height:1.55;letter-spacing:-.01em;background:radial-gradient(900px 520px at 8% -8%,var(--tint-1),transparent 62%),radial-gradient(800px 480px at 100% -4%,var(--tint-2),transparent 60%),var(--paper);background-attachment:fixed;min-height:100%}
 h1,h2,h3{letter-spacing:-.02em}
@@ -1687,13 +1708,13 @@ const Speech={
   stop(){if(NB){NB.stopSpeak();return} if(this.ok) try{speechSynthesis.cancel()}catch(e){}},
   say(text,o){
     o=o||{};
-    if(NB) return NB.speak(text,{rate:o.slow||S.settings.slow?0.7:(RATES[S.settings.rate]||0.95),pitch:o.pitch||1}).catch(()=>{});
+    if(NB) return NB.speak(text,{rate:o.rate||(o.slow||S.settings.slow?0.7:(RATES[S.settings.rate]||0.95)),pitch:o.pitch||1}).catch(()=>{});
     return new Promise(res=>{
       if(!this.ok){toast("เบราว์เซอร์นี้ยังอ่านออกเสียงไม่ได้");return res()}
       try{
         const u=new SpeechSynthesisUtterance(text); u.lang=S.settings.accent==="GB"?"en-GB":"en-US";
         const vc=this.pick(o.voice||0); if(vc) u.voice=vc;
-        u.rate=o.slow||S.settings.slow?0.72:(RATES[S.settings.rate]||0.95); u.pitch=o.pitch||1;
+        u.rate=o.rate||(o.slow||S.settings.slow?0.72:(RATES[S.settings.rate]||0.95)); u.pitch=o.pitch||1;
         let done=false; const fin=()=>{if(!done){done=true;res()}};
         u.onend=fin; u.onerror=fin; setTimeout(fin,Math.max(2500,text.length*140));
         speechSynthesis.speak(u);
@@ -3431,6 +3452,8 @@ function viewPractice(){
   if(id.indexOf("pb.")===0) return viewPbSit(id.slice(3));
   if(id==="lvtest") return viewLvTests();
   if(id==="pods") return viewPods();
+  if(id==="shadow") return viewShadowList();
+  if(id.indexOf("shadow.")===0) return viewShadow(id.slice(7));
   if(id.indexOf("pod.")===0) return viewPod(id.slice(4));
   if(id==="thaiglish") return viewThaiglish();
   if(id==="wordforms") return viewWordForms();
@@ -3448,7 +3471,8 @@ function viewPracticeHub(){
   return '<h1 class="h1">ฝึกฝน</h1><p class="lede">แบบฝึกเสริมนอกบทเรียน ฝึกทีละทักษะ ทำวันละนิดสม่ำเสมอได้ผลกว่าทำทีเดียวเยอะๆ</p>'
    +'<div style="margin-top:18px">'+dailyCard()+'</div>'
    +group("ฟังและพูด",
-     card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน "+DICT.reduce((n,d)=>n+d.items.length,0)+" ประโยค A1–C1","ทำแล้ว "+dict+" ประโยค")
+     card("pgo","shadow","ห้องฝึก Shadowing","ฟังแล้วพูดตามทีละประโยค จากบทสนทนา พอดแคสต์ บทอ่าน และประโยคพร้อมใช้ ปรับความเร็ว ซ่อนข้อความ"+(NB?" แอปฟังเสียงและให้คะแนน":""),"ฝึกแล้ว "+(stat("shadow").n||0)+" ประโยค")
+    +card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน "+DICT.reduce((n,d)=>n+d.items.length,0)+" ประโยค A1–C1","ทำแล้ว "+dict+" ประโยค")
     +card("pgo","sounds","ฝึกหูแยกเสียง","เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W, S/Z, เสียงท้ายคำ -s -ed, TH และ -teen/-ty",snd+" / "+SOUNDS.length+" ชุดเสียง")
     +card("pgo","numbers","ฟังตัวเลขและการสะกด","ราคา เวลา ปี เบอร์โทร และสะกดชื่อ จุดที่พลาดบ่อยในชีวิตจริงและข้อสอบ",nums+" / "+NUM_MODES.length+" ประเภท")
     +card("pgo","pods","ห้องฟังพอดแคสต์","บทสนทนายาว "+PODS.length+" ตอน A2–C1 ฟังจับใจความ ตอบคำถาม แล้วเปิดบทพูดและคำแปล",Object.keys(stat("pod")).length+" / "+PODS.length+" ตอน")
@@ -5203,6 +5227,140 @@ const TACT={
   stshadow:()=>{const s=STORIES.find(x=>x.id===ST.id); if(ST.shadow){shTok++; Speech.stop(); ST.shadow=false; document.querySelectorAll(".story p").forEach(x=>x.classList.remove("playing")); render(); return} storyShadow(s)}
 };
 
+
+/* ---------- shadowing studio ---------- */
+const SH_SPEED={slow:0.72,normal:0.92,fast:1.08};
+const SH_CATS=[["lesson","บทสนทนาในบทเรียน"],["pod","พอดแคสต์"],["story","บทอ่าน"],["pb","ประโยคพร้อมใช้"]];
+let SH=null, shRunTok=0, shCat="lesson";
+function shCfg(){const d={mode:"repeat",speed:"normal",reps:1,text:"show",th:true,mic:true}; if(!S.settings.sh||typeof S.settings.sh!=="object") S.settings.sh={}; return Object.assign(d,S.settings.sh)}
+function shSplit(t){return String(t).split(/(?<!\b(?:Mr|Ms|Mrs|Dr)\.)(?<=[.!?])\s+(?=[A-Z"])/).filter(Boolean)}
+function shFromLines(lines,cast){
+  const out=[];
+  lines.forEach(l=>{const parts=l[1].split(/\s+/).length>16?shSplit(l[1]):[l[1]];
+    parts.forEach((p,i)=>out.push({en:p,th:i===parts.length-1?(l[2]||""):"",who:cast&&cast[l[0]]||"",v:l[0]}))});
+  return out;
+}
+function shSets(){
+  if(shSets.c) return shSets.c;
+  const sets=[];
+  COURSE.forEach(u=>sets.push({id:"u-"+u.id,cat:"lesson",lv:LEVELS[u.lv-1].code,title:"บทที่ "+u.n+" · "+u.en,sub:u.th,items:shFromLines(u.dialogue.lines,u.dialogue.cast)}));
+  PODS.forEach(p=>sets.push({id:"p-"+p.id,cat:"pod",lv:p.lv,title:p.title,sub:p.th,items:shFromLines(p.lines,p.cast)}));
+  STORIES.forEach(s=>sets.push({id:"s-"+s.id,cat:"story",lv:s.lv,title:s.title,sub:s.th,items:[].concat.apply([],s.paras.map(shSplit)).map(t=>({en:t,th:"",who:"",v:"A"}))}));
+  PHRASEBOOK.forEach(b=>sets.push({id:"b-"+b.id,cat:"pb",lv:"",title:b.title,sub:"ประโยคพร้อมใช้",items:b.items.map(x=>({en:x[0],th:x[1],who:"",v:"A"}))}));
+  return shSets.c=sets;
+}
+function shStat(){const s=stat("shadow"); if(!s.sets||typeof s.sets!=="object") s.sets={}; return s}
+function shGap(en,speed){return Math.round((1300+en.split(/\s+/).length*430)/SH_SPEED[speed]*0.92)}
+function viewShadowList(){
+  const st=shStat(), sets=shSets().filter(x=>x.cat===shCat);
+  const row=x=>{const r=st.sets[x.id]; return '<button class="lrow" data-act="pgo" data-id="shadow.'+x.id+'"><span class="lnum">'+(x.lv||"TH")+'</span><span class="ltitle"><b lang="en">'+esc(x.title)+'</b><small>'+esc(x.sub)+' · '+x.items.length+' ประโยค</small></span><span class="lstat">'+(r?'<span class="chip'+(r.avg==null||r.avg>=80?' ok':'')+'">'+(r.avg!=null?r.avg+'%':'ฝึกแล้ว')+'</span>':'')+'</span></button>'};
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">ห้องฝึก Shadowing</h1><p class="lede">ฟังเจ้าของภาษาแล้วพูดตามทันที เลียนแบบทั้งเสียง จังหวะ การเชื่อมคำ และน้ำเสียง วันละ 10–15 นาทีช่วยให้พูดคล่องและสำเนียงดีขึ้นเร็วที่สุด'+(NB?' แอปจะฟังเสียงคุณและให้คะแนนทุกประโยค':' ในแอป Android แอปจะฟังเสียงคุณและให้คะแนนด้วย')+'</p>'
+   +'<div class="card sh-how"><ol><li><b>ฟังแล้วพูดตาม</b> ฟังจบหนึ่งประโยค แล้วพูดตามในช่วงเว้นจังหวะ เหมาะกับการเริ่มต้น</li><li><b>พูดพร้อมกัน</b> พูดทับเสียงไปพร้อมกัน ห่างแค่ครึ่งจังหวะ นี่คือ shadowing แท้ๆ ฝึกความลื่นไหล</li><li><b>ซ่อนข้อความ</b> เมื่อคล่องแล้ว ลองฟังอย่างเดียวโดยไม่ดูตัวหนังสือ</li></ol><p class="muted" style="font-size:14px">ฝึกไปแล้ว <b>'+(st.n||0)+'</b> ประโยค</p></div>'
+   +'<div class="tabs" role="group" aria-label="ประเภท" style="margin-top:18px">'+SH_CATS.map(c=>'<button data-act="shcat" data-c="'+c[0]+'" aria-pressed="'+(shCat===c[0])+'">'+c[1]+'</button>').join("")+'</div>';
+  if(shCat==="pb") return h+'<div class="lessons" style="margin-top:14px">'+sets.map(row).join("")+'</div>';
+  return h+LEVELS.filter(lv=>sets.some(x=>x.lv===lv.code)).map(lv=>'<section class="section" style="margin-top:20px"><h2 class="h3">'+lv.code+' <span lang="en">'+lv.name+'</span></h2><div class="lessons" style="margin-top:10px">'+sets.filter(x=>x.lv===lv.code).map(row).join("")+'</div></section>').join("");
+}
+function viewShadow(id){
+  const set=shSets().find(x=>x.id===id); if(!set) return viewShadowList();
+  if(!SH||SH.id!==id) SH={id,i:0,playing:false,seen:{},scores:{},counted:{},done:false};
+  const c=shCfg(), it=set.items[SH.i], sc=SH.scores[SH.i], hide=c.text==="hide"||(c.text==="after"&&!SH.seen[SH.i]);
+  const seg=(k,opts)=>'<div class="tabs" role="group">'+opts.map(o=>'<button data-act="shopt" data-k="'+k+'" data-v="'+o[0]+'" aria-pressed="'+(String(c[k])===String(o[0]))+'">'+o[1]+'</button>').join("")+'</div>';
+  const scored=Object.keys(SH.scores).map(k=>SH.scores[k].score), avg=scored.length?Math.round(scored.reduce((a,b)=>a+b,0)/scored.length):null;
+  let h=pBack("shadow","ห้องฝึก Shadowing")+'<p class="eyebrow" style="margin-top:8px">'+(set.lv?set.lv+' · ':'')+esc(set.sub)+'</p><h1 class="h2" lang="en">'+esc(set.title)+'</h1>'
+   +'<details class="card sh-set"'+(SH.openSet?' open':'')+'><summary>ตั้งค่าการฝึก</summary><div class="sh-opts">'
+   +'<div><b>โหมด</b>'+seg("mode",[["repeat","ฟังแล้วพูดตาม"],["overlap","พูดพร้อมกัน"]])+'</div>'
+   +'<div><b>ความเร็ว</b>'+seg("speed",[["slow","ช้า"],["normal","ปกติ"],["fast","เร็ว"]])+'</div>'
+   +'<div><b>ฟังซ้ำต่อประโยค</b>'+seg("reps",[[1,"1 รอบ"],[2,"2 รอบ"],[3,"3 รอบ"]])+'</div>'
+   +'<div><b>ข้อความภาษาอังกฤษ</b>'+seg("text",[["show","แสดง"],["after","แสดงหลังฟัง"],["hide","ซ่อน"]])+'</div>'
+   +'<div><b>คำแปล</b>'+seg("th",[[true,"แสดง"],[false,"ซ่อน"]])+'</div>'
+   +(NB?'<div><b>ให้แอปฟังและให้คะแนน</b>'+seg("mic",[[true,"เปิด"],[false,"ปิด"]])+'<small class="muted">ใช้ได้ในโหมดฟังแล้วพูดตาม</small></div>':'')
+   +'</div></details>'
+   +'<div class="card sh-card'+(SH.phase==="you"?' you':'')+'" aria-live="polite"><div class="row" style="justify-content:space-between"><span class="mono">ประโยค '+(SH.i+1)+'/'+set.items.length+'</span>'+(it.who?'<span class="chip">'+esc(it.who)+'</span>':'')+'</div>'
+   +'<p class="sh-en" lang="en">'+(hide?'<span class="sh-hidden">ตั้งใจฟัง ข้อความซ่อนอยู่</span>':esc(it.en))+'</p>'
+   +(c.th&&it.th&&!hide?'<p class="sh-th">'+esc(it.th)+'</p>':'')
+   +'<p class="sh-status" id="sh-status">'+esc(SH.status||(c.mode==="overlap"?"กดเล่น แล้วพูดพร้อมเสียงไปเลย":"กดเล่น ฟังให้จบ แล้วพูดตามในช่วงที่เว้นให้"))+'</p><div class="sh-bar"><i id="sh-bar"></i></div>'
+   +(sc?'<div class="pron"><p class="pron-words" lang="en">'+sc.tokens.map(t=>'<span class="'+(t.ok?"ok":"miss")+'">'+esc(t.w)+'</span>').join(" ")+'</p><p><b>'+sc.score+'%</b> <span class="muted">แอปได้ยินว่า: <span lang="en">'+esc(sc.heard||"–")+'</span></span></p></div>':'')
+   +(NB&&c.mic&&c.mode==="repeat"?'<p class="muted" id="sh-heard" lang="en" style="min-height:1.4em;font-size:15px"></p>':'')
+   +'<div class="sh-ctrl"><button class="btn" data-act="shstep" data-d="-1"'+(SH.i===0?' disabled':'')+'>ก่อนหน้า</button>'
+   +(SH.playing?'<button class="btn btn-primary" data-act="shstop">หยุด</button>':'<button class="btn btn-primary" data-act="shplay" data-auto="1">'+ICON.say+'เล่นต่อเนื่อง</button><button class="btn" data-act="shplay">ประโยคนี้</button>')
+   +'<button class="btn" data-act="shstep" data-d="1"'+(SH.i+1>=set.items.length?' disabled':'')+'>ถัดไป</button></div></div>';
+  if(SH.done) h+='<div class="feedback ok" style="margin-top:14px"><b>จบชุดนี้แล้ว '+set.items.length+' ประโยค</b><span>'+(avg!=null?'คะแนนเฉลี่ย '+avg+'% · ':'')+'ฝึกซ้ำอีกรอบโดยซ่อนข้อความหรือเพิ่มความเร็ว จะเห็นพัฒนาการชัดเจน</span></div>';
+  h+='<section class="section"><h2 class="h3">ประโยคทั้งหมด</h2><ol class="sh-list">'+set.items.map((x,i)=>'<li'+(i===SH.i?' class="cur"':'')+'><button data-act="shjump" data-i="'+i+'"><span lang="en">'+(c.text!=="show"&&!SH.seen[i]?'• • •':esc(x.en))+'</span>'+(SH.scores[i]?'<span class="chip'+(SH.scores[i].score>=80?' ok':'')+'">'+SH.scores[i].score+'%</span>':'')+'</button></li>').join("")+'</ol></section>';
+  return h;
+}
+function shAlive(tok){return tok===shRunTok&&SH&&route.name==="practice"&&route.id==="shadow."+SH.id}
+function shSetStatus(t,ms){
+  SH.status=t; const el=$("#sh-status"); if(el) el.textContent=t;
+  const bar=$("#sh-bar"); if(bar){bar.style.transition="none"; bar.style.width=ms?"100%":"0"; if(ms){void bar.offsetWidth; bar.style.transition="width "+ms+"ms linear"; bar.style.width="0"}}
+  const card=$(".sh-card"); if(card) card.classList.toggle("you",SH.phase==="you");
+}
+async function shListen(text,ms){
+  try{if(!(await NB.sttAvailable())||!(await NB.sttPermission())) return null}catch(e){return null}
+  const target=pronWords(text); let heard="";
+  try{heard=await NB.listen({maxMs:ms,hints:[text],onPartial:t=>{const el=$("#sh-heard"); if(el) el.textContent=t},done:t=>align(target,pronWords(t)).every(Boolean)})}catch(e){return null}
+  return gradePron(text,heard);
+}
+function shCount(i){
+  if(SH.counted[i]) return; SH.counted[i]=true;
+  const st=shStat(); st.n=(st.n||0)+1; S.xp+=1; markDay();
+  if(Object.keys(SH.counted).length===5) bump("prac");
+  save();
+}
+async function shRun(auto){
+  const set=shSets().find(x=>x.id===SH.id); if(!set) return;
+  const tok=++shRunTok, c=shCfg(); Speech.stop(); SH.playing=true; SH.done=false; SH.phase=""; render();
+  while(true){
+    const it=set.items[SH.i], v=it.v==="B"?[1,0.9]:[0,1.06];
+    for(let r=0;r<c.reps;r++){
+      if(!shAlive(tok)) return;
+      SH.phase=""; shSetStatus(c.mode==="overlap"?"พูดพร้อมเสียงเลย ตามให้ทันทีละคำ":"ฟังให้ดี…"+(c.reps>1?" (รอบ "+(r+1)+"/"+c.reps+")":""));
+      await Speech.say(it.en,{rate:SH_SPEED[c.speed],voice:v[0],pitch:v[1]});
+      if(!shAlive(tok)) return;
+      if(!SH.seen[SH.i]){SH.seen[SH.i]=true; if(c.text==="after"){render()}}
+      if(c.mode==="repeat"){
+        const gap=shGap(it.en,c.speed); SH.phase="you";
+        if(NB&&c.mic){
+          shSetStatus("ถึงตาคุณ พูดตามได้เลย แอปกำลังฟัง",gap+1500);
+          const res=await shListen(it.en,gap+1500);
+          if(!shAlive(tok)) return;
+          if(res){if(!SH.scores[SH.i]||res.score>=SH.scores[SH.i].score) SH.scores[SH.i]=res; if(res.score>=70){S.xp+=1}}
+          SH.phase=""; render();
+        } else {
+          shSetStatus("ถึงตาคุณ พูดตามเลย",gap);
+          await new Promise(res=>setTimeout(res,gap));
+        }
+        SH.phase="";
+      } else await new Promise(res=>setTimeout(res,500));
+    }
+    if(!shAlive(tok)) return;
+    shCount(SH.i);
+    if(!auto) break;
+    if(SH.i+1>=set.items.length){
+      SH.done=true; const scored=Object.keys(SH.scores).map(k=>SH.scores[k].score), st=shStat();
+      const avg=scored.length?Math.round(scored.reduce((a,b)=>a+b,0)/scored.length):null, prev=st.sets[SH.id];
+      st.sets[SH.id]={avg:avg!=null?Math.max(avg,prev&&prev.avg||0):(prev?prev.avg:null)}; S.xp+=5; save();
+      break;
+    }
+    SH.i++; SH.status=""; render();
+    const cur=document.querySelector(".sh-list li.cur"); if(cur) cur.scrollIntoView({block:"nearest"});
+    await new Promise(res=>setTimeout(res,350));
+  }
+  if(shAlive(tok)){SH.playing=false; SH.phase=""; SH.status=""; render()}
+}
+function shStop(){shRunTok++; Speech.stop(); if(NB&&NB.stopListening) NB.stopListening().catch(()=>{}); if(SH){SH.playing=false; SH.phase=""; SH.status=""}}
+
+BADGES.push({id:"shadow",t:"นักพูดตาม",d:"ฝึก shadowing ครบ 100 ประโยค",ok:()=>(stat("shadow").n||0)>=100});
+
+const HACT={
+  shcat:t=>{shCat=t.dataset.c; render()},
+  shopt:t=>{const k=t.dataset.k, raw=t.dataset.v, v=raw==="true"?true:raw==="false"?false:/^\d+$/.test(raw)?+raw:raw;
+    const cfg=shCfg(); cfg[k]=v; S.settings.sh=cfg; save(); if(SH) SH.openSet=true; if(SH&&SH.playing) shStop(); render()},
+  shplay:t=>{if(!SH) return; SH.openSet=false; shRun(!!t.dataset.auto)},
+  shstop:()=>{shStop(); render()},
+  shstep:t=>{if(!SH) return; const set=shSets().find(x=>x.id===SH.id); const n=SH.i+(+t.dataset.d); if(n<0||n>=set.items.length) return; const was=SH.playing; shStop(); SH.i=n; render(); if(was) shRun(true)},
+  shjump:t=>{if(!SH) return; const was=SH.playing; shStop(); SH.i=+t.dataset.i; SH.done=false; render(); window.scrollTo({top:0,behavior:"smooth"}); if(was) shRun(true)}
+};
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -5215,6 +5373,7 @@ const W={};   // writing drafts/results
 function go(name,id){
   Speech.stop();
   if(NB&&prActive) NB.stopListening();
+  if(typeof SH!=="undefined"&&SH&&SH.playing) shStop();
   if(NB&&name==="teacher") name="home";
   xTok++; if(X){if(X.playing&&X.mode==="exam"&&!X.submitted&&X.plays[X.playing]>0) X.plays[X.playing]--; X.playing=null}
   if(name==="practice"){storyTok++; if(!id||String(id).indexOf("gram.")!==0&&id!=="mistakes"){PRUN=null;PRUN_META=null} if(!id||String(id).indexOf("story.")!==0) ST=null}
@@ -5686,7 +5845,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
