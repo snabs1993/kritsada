@@ -2110,7 +2110,7 @@ const IELTS_MORE=[
    {label:"Loan period",post:"weeks",a:"3|three",show:"3",why:"keep them for three weeks"},
    {label:"Book club",pre:"first",post:"of every month",a:"wednesday",show:"Wednesday",why:"the first Wednesday of every month"}]},
  {kind:"sets",listen:true,title:"Part 3",dir:"Choose the correct letter, A, B or C.",dirTh:"ฟังนักศึกษาสองคนวางแผนงานนำเสนอ แล้วเลือกคำตอบ",
-  sets:[{audio:[["W","Hi, Jack. Have you started planning our presentation on urban gardens yet?"],["M","A bit. I've read the article our tutor recommended, but it focuses mainly on rooftop gardens in New York. I think we should include examples from Asia as well."],["W","Good idea. I found a study about community gardens in Singapore. It showed that people who took part felt less stressed and got to know their neighbours better."],["M","That's useful. What about the structure? I thought we could start with the history of urban gardening."],["W","I think that might take too long. We only have fifteen minutes. Why don't we start with a short video to get the audience's attention, and then go straight to the benefits?"],["M","OK, that works. And who's going to do the conclusion?"],["W","You're better at summarising, so could you do it? I'll prepare the slides."],["M","Fine. Let's meet on Thursday to practise."]],
+  sets:[{audio:[["W","Hi, Jack. Have you started planning our presentation on urban gardens yet?"],["M","Hi, Sophie. A bit. I've read the article our tutor recommended, but it focuses mainly on rooftop gardens in New York. I think we should include examples from Asia as well."],["W","Good idea. I found a study about community gardens in Singapore. It showed that people who took part felt less stressed and got to know their neighbours better."],["M","That's useful. What about the structure? I thought we could start with the history of urban gardening."],["W","I think that might take too long. We only have fifteen minutes. Why don't we start with a short video to get the audience's attention, and then go straight to the benefits?"],["M","OK, that works. And who's going to do the conclusion?"],["W","You're better at summarising, so could you do it? I'll prepare the slides."],["M","Fine. Let's meet on Thursday to practise."]],
    qs:[{q:"What does Jack say about the article the tutor recommended?",o:["It is too long.","It focuses mainly on one city.","It is out of date."],a:1,why:"focuses mainly on rooftop gardens in New York"},
        {q:"The Singapore study found that community gardeners",o:["ate more healthily.","felt less stressed.","saved money on food."],a:1,why:"people who took part felt less stressed"},
        {q:"How will the presentation begin?",o:["with the history of urban gardening","with a short video","with a survey of the audience"],a:1,why:"Jack เสนอประวัติศาสตร์ แต่ Sophie ค้านเพราะใช้เวลานาน ตกลงเริ่มด้วยวิดีโอ"},
@@ -2246,7 +2246,7 @@ reading:{title:"Reading",th:"การอ่าน",time:20*60,est:"20 นาท
     items:[{q:"In some remote regions, tea ___ could be used as money.",a:"bricks|hard bricks",show:"bricks",why:"ย่อหน้า B"},
      {q:"Some doctors claimed that tea could harm a woman's ___.",a:"beauty",why:"ย่อหน้า C"},
      {q:"The Duchess of Bedford's habit led to the tradition of ___.",a:"afternoon tea",why:"ย่อหน้า D"},
-     {q:"The British established huge ___ in Assam and Darjeeling.",a:"plantations|tea plantations",show:"plantations",why:"ย่อหน้า E"}]}]}]}
+     {q:"The British established huge ___ in Assam and Darjeeling.",a:"plantations",show:"plantations",why:"ย่อหน้า E"}]}]}]}
 },IELTS_MORE[1]);
 
 /* ---- TOEIC Test 4 ---- */
@@ -2433,7 +2433,7 @@ function secById(id){const m=/^(toeic|ielts)-([a-z]+)(?:-(\d+))?$/.exec(id||"");
 function normAns(s){return String(s||"").toLowerCase().replace(/[’‘]/g,"'").replace(/[£$,]/g,"").replace(/:/g,".").replace(/\.$/,"").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"")}
 function isRight(q,v){
   if(v==null||v==="") return false;
-  if(q.t==="text"){const n=normAns(v); if(!n||(q.max&&n.split(" ").length>q.max)) return false; return q.a.split("|").some(x=>normAns(x)===n)}
+  if(q.t==="text"){const n=normAns(v); if(!n||(q.max&&String(v).trim().split(/\s+/).length>q.max)) return false; return q.a.split("|").some(x=>normAns(x)===n)}
   return String(v)===String(q.a);
 }
 function rightText(q){
@@ -2449,7 +2449,7 @@ const R_TAB=[[39,9],[37,8.5],[35,8],[33,7.5],[30,7],[27,6.5],[23,6],[19,5.5],[15
 function ieltsBand(kind,c,t){const r=Math.round(c/t*40),row=(kind==="listening"?L_TAB:R_TAB).find(x=>r>=x[0]); return row?row[1]:0}
 function halfBand(b){return Math.round(Number(b)*2)/2}
 function bandTxt(b){return halfBand(b).toFixed(1)}
-function bandName(b){const r=IELTS_BANDS.find(x=>Math.floor(b)>=x[0]); return r?r[1]:"Non-user"}
+function bandName(b){const r=IELTS_BANDS.concat([[2,"Intermittent user"],[1,"Non-user"]]).find(x=>Math.floor(b)>=x[0]); return r?r[1]:"Did not attempt"}
 function examLog(){return Array.isArray(S.exams)?S.exams:[]}
 function examLast(id,f){const l=examLog(); for(let i=l.length-1;i>=0;i--) if(l[i].id===id&&(!f||f(l[i]))) return l[i]; return null}
 function examRecord(e){S.exams=examLog().concat([Object.assign({at:Date.now()},e)]).slice(-60); bump("prac"); markDay(); save(); updateChrome()}
@@ -2468,7 +2468,7 @@ function mmss(s){s=Math.max(0,Math.floor(s)); return Math.floor(s/60)+":"+String
 function answeredCount(){return X?X.sec.parts.reduce((n,p)=>n+p.qs.filter(q=>X.ans[q.key]!=null&&X.ans[q.key]!=="").length,0):0}
 function flushDrafts(){clearTimeout(saveDrafts.t); try{localStorage.setItem("exam-drafts",JSON.stringify(XD))}catch(e){}}
 function saveDrafts(){clearTimeout(saveDrafts.t); saveDrafts.t=setTimeout(flushDrafts,500)}
-window.addEventListener("pagehide",()=>{flushDrafts(); if(typeof saveEmailDrafts==="function") saveEmailDrafts()});
+window.addEventListener("pagehide",()=>{flushDrafts(); if(typeof saveProgress==="function"&&route.name==="examrun") saveProgress(); if(typeof saveEmailDrafts==="function") saveEmailDrafts()});
 
 /* hub */
 function setTabs(ek){
@@ -2519,14 +2519,14 @@ function introCard(sec){
   return '<div class="notebook" style="margin-top:18px;max-width:760px"><p class="eyebrow">ก่อนเริ่มสอบ</p><ul class="x-intro">'+sec.intro.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ul>'
    +(sec.kind==="speaking"
      ?'<div class="row" style="margin-top:16px"><button class="btn btn-primary" data-act="xstart" data-mode="practice">เข้าห้องสอบพูด</button></div>'
-     :'<div class="x-modes"><button class="x-mode" data-act="xstart" data-mode="exam"><b>โหมดสอบจริง</b><small>'+(listen?"ฟังได้ครั้งเดียว":"")+(listen&&timed?" · ":"")+(timed?"จับเวลา "+Math.round(sec.time/60)+" นาที":"")+(!listen&&!timed?"ทำรวดเดียว":"")+' เฉลยหลังส่งคำตอบ</small></button>'
+     :'<div class="x-modes"><button class="x-mode" data-act="xstart" data-mode="exam"><b>โหมดสอบจริง</b><small>'+(listen?"ฟังได้ครั้งเดียว":"")+(listen&&timed?" · ":"")+(timed?"จับเวลา "+Math.round(sec.time/60)+" นาที":"")+(!listen&&!timed?"ทำรวดเดียว":"")+(sec.kind==="writing"?' ดูตัวอย่างคำตอบได้เมื่อหมดเวลา':' เฉลยหลังส่งคำตอบ')+'</small></button>'
        +'<button class="x-mode" data-act="xstart" data-mode="practice"><b>โหมดฝึก</b><small>'+(listen?"ฟังซ้ำได้ ":"")+'ไม่จับเวลา ทำสบายๆ แล้วดูเฉลย</small></button></div>')
    +(listen?'<p class="muted" style="font-size:14px;margin-top:12px">เปิดเสียงลำโพงหรือใส่หูฟังก่อนเริ่ม เสียงอ่านมาจากเครื่องของคุณ สำเนียงอาจต่างกันตามอุปกรณ์</p>':'')+'</div>';
 }
 function xbar(){
   const sec=X.sec, timed=X.mode==="exam"&&sec.time>0;
   return '<div class="xbar">'+(sec.kind==="writing"?'<span class="muted">Writing · 2 Tasks</span>':'<span>ตอบแล้ว <b id="xcount">'+answeredCount()+'</b>/'+sec.total+'</span>')
-   +(timed?'<span class="xtimer" id="xtimer">'+(X.submitted?'ใช้เวลา '+mmss((X.endAt-X.startAt)/1000):'เหลือ '+mmss(sec.time-(Date.now()-X.startAt)/1000))+'</span>':'')
+   +(timed?'<span class="xtimer" id="xtimer">'+(X.submitted?'ใช้เวลา '+mmss((X.endAt-X.startAt)/1000):timerText())+'</span>':'')
    +'<span class="chip'+(X.mode==="exam"?" now":"")+'">'+(X.mode==="exam"?"โหมดสอบจริง":"โหมดฝึก")+'</span></div>';
 }
 function dirBox(p){
@@ -2593,7 +2593,7 @@ function renderPart(p){
     h+='<div class="xread"><article class="xpass"><h3 class="h3" lang="en">'+esc(p.passage.title)+'</h3>'+p.passage.paras.map(pp=>'<p lang="en"><span class="pl">'+pp[0]+'</span>'+esc(pp[1])+'</p>').join("")+'</article><div>'
       +p.groups.map(g=>'<div class="xgroup"><p class="eyebrow" lang="en">Questions '+g.items[0].n+'–'+g.items[g.items.length-1].n+'</p><p lang="en" style="font-size:15px">'+esc(g.dir)+'</p><p class="muted" style="font-size:14.5px;margin-top:4px">'+esc(g.dirTh)+'</p>'
         +(g.optsTitle?'<div class="xoptsbox" lang="en"><p class="eyebrow">'+esc(g.optsTitle)+'</p>'+g.opts.map(o=>'<p><b>'+o[0]+'</b>'+esc(o[1])+'</p>').join("")+'</div>':'')
-        +g.items.map(q=>'<div class="xq">'+qHead(q,'<p lang="en">'+(g.type==="gap"?esc(q.q).replace("___",textInput(q)):esc(q.q))+'</p>')
+        +g.items.map(q=>'<div class="xq">'+qHead(q,'<p lang="en">'+(g.type==="gap"?esc(q.q).replace("___",()=>textInput(q)):esc(q.q))+'</p>')
           +(g.type==="tfng"?choiceOpts(q,TFNG,null,true):g.type==="ynng"?choiceOpts(q,YNNG,null,true):g.type==="select"?choiceOpts(q,g.opts,null,true):g.type==="mc"?choiceOpts(q,LET.split(""),q.o):'')+reviewNote(q)+'</div>').join("")+'</div>').join("")+'</div></div>';
   }
   return h+'</section>';
@@ -2606,6 +2606,7 @@ function submitArea(){
 }
 function resultCard(){
   const r=X.result, sec=X.sec, toeic=sec.exam==="toeic";
+  if(r.blank) return '<div class="card xres"><p class="eyebrow">ส่งคำตอบแล้ว</p><h2 class="h3" style="margin-top:4px">ยังไม่ได้ตอบข้อไหนเลย</h2><p class="muted" style="margin-top:6px">ครั้งนี้จึงไม่บันทึกคะแนนลงประวัติ ดูเฉลยด้านล่างได้ หรือกดทำอีกครั้ง</p><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="xretry">ทำอีกครั้ง</button><button class="btn btn-ghost" data-act="go" data-to="exam">กลับห้องสอบ</button></div></div>';
   return '<div class="card xres"><p class="eyebrow">ผลสอบ · '+(X.mode==="exam"?"โหมดสอบจริง":"โหมดฝึก")+(X.endAt&&X.startAt?' · ใช้เวลา '+mmss((X.endAt-X.startAt)/1000):'')+'</p>'
    +'<div class="xscore"><div><b>'+r.c+'<small>/'+r.t+'</small></b><span>ตอบถูก</span></div>'
    +(toeic?'<div><b>'+r.score+'<small>/495</small></b><span>คะแนน TOEIC '+sec.title+' โดยประมาณ</span></div>'
@@ -2614,6 +2615,21 @@ function resultCard(){
    +'<p class="muted" style="font-size:13.5px;margin-top:10px">'+(toeic?'คิดคะแนนจากสัดส่วนข้อที่ถูก เทียบกับสเกล 5–495 ของข้อสอบจริง':'เทียบสัดส่วนกับข้อสอบจริง 40 ข้อ แล้วแปลงเป็น band ตามตารางคะแนนที่เผยแพร่ทั่วไป')+' เป็นค่าประมาณเท่านั้น เลื่อนลงเพื่อดูเฉลยทีละข้อ</p>'
    +'<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="xretry">ทำอีกครั้ง</button><button class="btn btn-ghost" data-act="go" data-to="exam">กลับห้องสอบ</button></div></div>';
 }
+function timerText(){const left=X.sec.time-(Date.now()-X.startAt)/1000; return left>=0?"เหลือ "+mmss(left):"หมดเวลา +"+mmss(-left)}
+/* in-progress attempts survive a reload */
+const XP=(()=>{try{return JSON.parse(localStorage.getItem("exam-progress")||"{}")||{}}catch(e){return {}}})();
+function saveProgress(){
+  if(!X||!X.started||X.submitted||!X.sec.parts) return;
+  const snap={mode:X.mode,startAt:X.startAt,ans:X.ans,plays:X.plays}, js=JSON.stringify(snap);
+  if(XP[X.sec.id]&&JSON.stringify(XP[X.sec.id])===js) return;
+  XP[X.sec.id]=snap; try{localStorage.setItem("exam-progress",JSON.stringify(XP))}catch(e){}
+}
+function dropProgress(id){if(XP[id]){delete XP[id]; try{localStorage.setItem("exam-progress",JSON.stringify(XP))}catch(e){}}}
+function restoreAttempt(sec){
+  const a=newAttempt(sec), p=XP[sec.id];
+  if(p&&p.ans&&typeof p.ans==="object") Object.assign(a,{started:true,mode:p.mode==="exam"?"exam":"practice",startAt:+p.startAt||Date.now(),ans:p.ans,plays:p.plays&&typeof p.plays==="object"?p.plays:{}});
+  return a;
+}
 function gradeExam(){
   stopAudio();
   const sec=X.sec; let c=0;
@@ -2621,7 +2637,8 @@ function gradeExam(){
   X.submitted=true; X.confirm=false; X.endAt=Date.now();
   const rec={id:sec.base,set:sec.set,c,t:sec.total,mode:X.mode};
   if(sec.exam==="toeic") rec.score=toeicScaled(c,sec.total); else rec.band=ieltsBand(sec.key,c,sec.total);
-  X.result=Object.assign({parts},rec);
+  X.result=Object.assign({parts},rec); dropProgress(sec.id);
+  if(!answeredCount()){X.result.blank=true; render(); window.scrollTo(0,0); return}
   sec.parts.forEach(p=>p.qs.forEach(q=>{if(!isRight(q,X.ans[q.key])){const it=examMistake(sec,p,q); if(it) addMistake(EXAM_NAMES[sec.base]+" ชุด "+sec.set,it)}}));
   S.xp+=c*2; examRecord(rec);
   render(); window.scrollTo(0,0);
@@ -2633,7 +2650,7 @@ async function playScript(k){
   Speech.stop(); const tok=++xTok;
   X.playing=k; X.plays[k]=(X.plays[k]||0)+1; refreshPlay();
   for(const l of lines){
-    const bits=String(l[1]).split(/(?<!\b(?:Mr|Ms|Mrs|Dr))(?<=[.!?])\s+(?=[A-Z"])/);
+    const bits=String(l[1]).split(/(?<!\b(?:Mr|Ms|Mrs|Dr)\.)(?<=[.!?])\s+(?=[A-Z"])/);
     for(const b of bits){ if(tok!==xTok) return; await Speech.say(b,{voice:VOICE[l[0]][0],pitch:VOICE[l[0]][1]}); }
     if(tok!==xTok) return;
     await new Promise(r=>setTimeout(r,400));
@@ -2646,7 +2663,10 @@ function stopAudio(){xTok++; Speech.stop(); if(X&&X.playing){X.playing=null; ref
 setInterval(()=>{
   if(route.name!=="examrun"||!X||!X.started) return;
   const el=$("#xtimer");
-  if(el&&!X.submitted){const left=X.sec.time-(Date.now()-X.startAt)/1000; el.textContent=left>=0?"เหลือ "+mmss(left):"หมดเวลา +"+mmss(-left); el.classList.toggle("over",left<0)}
+  if(el&&!X.submitted){const left=X.sec.time-(Date.now()-X.startAt)/1000; el.textContent=timerText(); el.classList.toggle("over",left<0);
+    if(left<=0&&X.mode==="exam"&&X.sec.parts&&X.sec.kind!=="writing"){toast("หมดเวลา ระบบส่งคำตอบให้อัตโนมัติ"); gradeExam(); return}
+    if(left<=0&&X.mode==="exam"&&X.sec.kind==="writing"&&!X.wDone){X.wDone=true; toast("หมดเวลาแล้ว ดูตัวอย่างคำตอบได้"); const f=document.activeElement, pos=f&&f.selectionStart, id=f&&f.id; render(); const g=id&&document.getElementById(id); if(g){g.focus(); try{g.setSelectionRange(pos,pos)}catch(e){}}}}
+  if(!X.submitted) saveProgress();
   const pe=$("#xprep");
   if(pe&&X.prepAt){const left=60-(Date.now()-X.prepAt)/1000; pe.textContent=left>0?"เวลาเตรียมตัวเหลือ "+mmss(left):"หมดเวลาเตรียม เริ่มพูดได้ 1–2 นาที"; if(left<=0&&!X.prepDone){X.prepDone=true; Speech.say("Alright? Remember, you have one to two minutes for this. Please start speaking now.")}}
 },1000);
@@ -2664,7 +2684,7 @@ function writingView(){
      +'<label class="sr" for="xw-'+key+'">คำตอบ Task '+t.n+'</label><textarea class="ta xta" id="xw-'+key+'" data-xw="'+key+'" lang="en" spellcheck="false" placeholder="Write your answer here…">'+esc(text)+'</textarea>'
      +'<div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" id="wc-'+key+'">'+wcText(wordCount(text),t.min)+'</span><div class="row">'
      +(AI.state==="ready"?'<button class="btn btn-primary" data-act="xgrade-w" data-n="'+t.n+'"'+(r.busy?" disabled":"")+'>'+(r.busy?"ครูกำลังประเมิน…":"ส่งให้ครู AI ประเมิน")+'</button>':'')
-     +'<button class="btn btn-ghost" data-act="xmodel" data-k="'+key+'">'+(show?"ซ่อนตัวอย่างคำตอบ":"ดูตัวอย่างคำตอบ")+'</button></div></div>'
+     +(X.mode==="exam"&&X.sec.time-(Date.now()-X.startAt)/1000>0?'':'<button class="btn btn-ghost" data-act="xmodel" data-k="'+key+'">'+(show?"ซ่อนตัวอย่างคำตอบ":"ดูตัวอย่างคำตอบ")+'</button>')+'</div></div>'
      +(AI.state!=="ready"?'<p class="muted" style="font-size:14px;margin-top:6px">'+aiNote()+'</p>':'')
      +(show?'<div class="xmodel"><p class="eyebrow">ตัวอย่างคำตอบ</p>'+paras(t.model)+'</div>':'')
      +(r.err?'<p class="pen" style="margin-top:10px">'+esc(r.err)+'</p>':'')
@@ -2820,7 +2840,7 @@ const XACT={
     gradeExam();
   },
   xcancel:()=>{X.confirm=false; const s=$("#xsubmit"); if(s) s.outerHTML=submitArea()},
-  xretry:()=>{stopAudio(); const sec=X.sec; X=XS[sec.id]=newAttempt(sec); render(); window.scrollTo(0,0)},
+  xretry:()=>{stopAudio(); const sec=X.sec; dropProgress(sec.id); X=XS[sec.id]=newAttempt(sec); render(); window.scrollTo(0,0)},
   xmodel:t=>{X.show[t.dataset.k]=!X.show[t.dataset.k]; render()},
   "xgrade-w":t=>gradeWriting(+t.dataset.n),
   "xgrade-s":()=>gradeSpeaking(),
@@ -4380,9 +4400,9 @@ function go(name,id){
   Speech.stop();
   if(NB&&prActive) NB.stopListening();
   if(NB&&name==="teacher") name="home";
-  xTok++; if(X) X.playing=null;
+  xTok++; if(X){if(X.playing&&X.mode==="exam"&&!X.submitted&&X.plays[X.playing]>0) X.plays[X.playing]--; X.playing=null}
   if(name==="practice"){storyTok++; if(!id||String(id).indexOf("gram.")!==0&&id!=="mistakes"){PRUN=null;PRUN_META=null} if(!id||String(id).indexOf("story.")!==0) ST=null}
-  if(name==="examrun"){const sec=secById(id); if(!sec) return go("exam"); X=XS[id]||(XS[id]=newAttempt(sec))}
+  if(name==="examrun"){const sec=secById(id); if(!sec) return go("exam"); X=XS[id]||(XS[id]=restoreAttempt(sec))}
   if(name==="lesson"){
     const i=COURSE.findIndex(u=>u.id===id);
     if(i<0) return go("course");
