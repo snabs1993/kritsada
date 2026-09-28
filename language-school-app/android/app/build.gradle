@@ -31,15 +31,34 @@ android {
             enableV2Signing true
             enableV3Signing true
         }
+        // Release key for the sideloaded family build. It is committed so CI can sign every
+        // release APK with the same key and new versions install over old ones. The repository
+        // is public, so this key must never be used for a Play Store upload: create a private
+        // upload key for that.
+        release {
+            storeFile file('release.keystore')
+            storePassword 'englishclass'
+            keyAlias 'englishclass'
+            keyPassword 'englishclass'
+            enableV1Signing true
+            enableV2Signing true
+            enableV3Signing true
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.sharedDebug
         }
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lint {
+        // lint is not part of this family build; don't let it stop a release APK
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 

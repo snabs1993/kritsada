@@ -39,14 +39,23 @@ jobs:
       - name: Build web assets and sync Android project
         run: npm run build && npx cap sync android
 
-      - name: Build debug APK
+      - name: Build debug and signed release APKs
         working-directory: language-school-app/android
-        run: ./gradlew --no-daemon assembleDebug
+        run: ./gradlew --no-daemon assembleDebug assembleRelease
+
+      - name: Check the APK signatures
+        run: |
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          for apk in android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/debug/app-debug.apk; do
+            "$BT/apksigner" verify --verbose "$apk" | head -6
+          done
 
       - uses: actions/upload-artifact@v4
         with:
           name: english-class-apk
-          path: language-school-app/android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            language-school-app/android/app/build/outputs/apk/release/app-release.apk
+            language-school-app/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
       # Installed apps download lessons.json from this release to update their lessons.
@@ -56,10 +65,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk dist-ota/english-class.apk
+          cp android/app/build/outputs/apk/release/app-release.apk dist-ota/english-class.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk dist-ota/english-class-debug.apk
           if ! gh release view lessons-latest >/dev/null 2>&1; then
             gh release create lessons-latest --prerelease --target "$GITHUB_SHA" \
               --title "English class app: latest lessons" \
-              --notes "Updated automatically by CI. Installed apps download lessons.json from here. english-class.apk is the latest Android build."
+              --notes "Updated automatically by CI. Installed apps download lessons.json from here. english-class.apk is the signed release build; english-class-debug.apk is the debug build."
           fi
-          gh release upload lessons-latest dist-ota/lessons.json dist-ota/english-class.apk --clobber
+          gh release upload lessons-latest dist-ota/lessons.json dist-ota/english-class.apk dist-ota/english-class-debug.apk --clobber
