@@ -1138,8 +1138,32 @@ async function pronounce(text){
   if(PR[text].score>=70){S.xp+=2;S.pron=(S.pron||0)+1;markDay();save()}
   render();
 }
+/* lesson updates: the app downloads newer lessons in the background (see language-school-app) */
+const OTA={status:"",checking:false,pending:0};
+function otaDate(v){try{return new Date(v*1000).toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}catch(e){return String(v)}}
+async function otaCheck(manual){
+  if(!NB||!NB.checkUpdate||OTA.checking) return;
+  OTA.checking=true; if(manual&&route.name==="report") render();
+  let r={status:"error"};
+  try{r=await NB.checkUpdate()}catch(e){}
+  OTA.checking=false; OTA.status=r.status;
+  try{OTA.pending=await NB.pendingVersion()}catch(e){}
+  if(r.status==="downloaded") toast("ดาวน์โหลดบทเรียนเวอร์ชันใหม่แล้ว จะใช้เมื่อเปิดแอปครั้งถัดไป");
+  else if(manual) toast({latest:"บทเรียนเป็นเวอร์ชันล่าสุดแล้ว",offline:"ไม่มีอินเทอร์เน็ต ลองใหม่เมื่อต่อเน็ตแล้ว","needs-app":"เวอร์ชันใหม่ต้องติดตั้งแอปใหม่ ดูวิธีในหน้า GitHub"}[r.status]||"ตรวจหาอัปเดตไม่สำเร็จ ลองใหม่อีกครั้ง");
+  if(route.name==="report") render();
+}
+function otaSection(){
+  if(!NB||!NB.running) return "";
+  const run=NB.running();
+  return '<section class="section"><h2 class="h3">เวอร์ชันบทเรียน</h2><p class="muted" style="margin-top:4px">ใช้อยู่: '+esc(otaDate(run.version))+(run.source==="update"?" (อัปเดตผ่านเน็ต)":" (มากับแอป)")+' แอปเช็กบทเรียนใหม่ให้เองทุกครั้งที่เปิดแอป</p>'
+   +'<div class="row" style="margin-top:10px">'
+   +(OTA.pending?'<button class="btn btn-primary" data-act="ota-apply">ใช้เวอร์ชันใหม่ตอนนี้ ('+esc(otaDate(OTA.pending))+')</button>':'')
+   +'<button class="btn btn-sm" data-act="ota-check"'+(OTA.checking?" disabled":"")+'>'+(OTA.checking?"กำลังตรวจ…":"ตรวจหาอัปเดตตอนนี้")+'</button></div></section>';
+}
 async function initNative(){
   if(!NB) return;
+  if(NB.bootOk) NB.bootOk();
+  setTimeout(()=>otaCheck(false),2500);
   NB.onBack(()=>{
     if(route.name==="home") NB.exit();
     else if(route.name==="lesson"||route.name==="placement") go("course");
@@ -1532,6 +1556,7 @@ function viewReport(){
     }).join("")+'</div>'
     :'<div class="card"><p>ผ่านทุกบทในระดับเดียวกันครบ 4 บท เพื่อรับประกาศนียบัตรระดับนั้น</p><div class="stack" style="margin-top:14px;gap:10px">'+LEVELS.map(lv=>{const us=COURSE.filter(u=>u.lv===lv.n),d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;return '<div><div class="row" style="justify-content:space-between"><span>'+lv.code+' <span lang="en">'+esc(lv.name)+'</span></span><span class="muted">'+d+'/4</span></div><div class="bar"><i style="width:'+(d/4*100)+'%"></i></div></div>'}).join("")+'</div></div>')
    +'</section>'
+   +otaSection()
    +'<section class="section"><h2 class="h3">เริ่มเรียนใหม่ทั้งหมด</h2><p class="muted" style="margin-top:4px">ลบคะแนน คำศัพท์ และประวัติการเรียนทั้งหมด</p>'
    +(resetAsk?'<div class="row" style="margin-top:10px"><span class="pen">ลบจริงหรือไม่ ย้อนกลับไม่ได้</span><button class="btn btn-danger" data-act="reset-yes">ลบทั้งหมด</button><button class="btn btn-ghost" data-act="reset-no">ยกเลิก</button></div>'
      :'<button class="btn btn-danger btn-sm" style="margin-top:10px" data-act="reset-ask">ล้างความคืบหน้า</button>')+'</section>';
@@ -1609,6 +1634,8 @@ const ACT={
   },
   "rv-end":()=>{R=null;render()},
   pron:t=>pronounce(t.dataset.text),
+  "ota-check":()=>otaCheck(true),
+  "ota-apply":()=>{S.updatedAt=Date.now();NB.save(JSON.stringify(S)).catch(()=>{}).then(()=>NB.applyUpdate())},
   tmode:t=>{teacherMode=t.dataset.m;render()},
   suggest:t=>{const el=$("[data-chat]"); if(el&&el._fill) el._fill(t.dataset.text)},
   "chat-clear":()=>{const k="teacher:"+teacherMode,st=CHATS[k]; if(st&&st.ctl) st.ctl.abort(); delete CHATS[k]; render()},
