@@ -551,6 +551,25 @@ body{margin:0}
   .vb-tbl{font-size:14px}.vb-tbl th,.vb-tbl td{padding:7px 5px}
   .vb-tbl td:last-child{min-width:5.5em}
 }
+/* round 7: podcasts, Thai-English mistakes, word forms, stress, goal */
+.pod-dlg li{align-items:flex-start}
+.tg-list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.tg-item{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.tg-wrong{color:var(--red)}
+.tg-wrong s{text-decoration-thickness:1.5px}
+.tg-right{color:var(--green);font-weight:600}
+.wf-tips ul{margin:6px 0 0 18px;display:flex;flex-direction:column;gap:2px;font-size:15px}
+.ss-syl{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ss-syl .mg{min-width:64px;font-size:20px}
+.ss-syl .mg.ss-ok{border-color:var(--green);background:var(--green-soft)}
+.goal-card .bar{height:10px}
+.goal-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
+.goal-form label{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--ink-2)}
+.goal-form select,.goal-form input{font-size:16px;padding:9px 10px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);min-height:44px}
+.shadow-now{margin-top:12px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface)}
+.shadow-now p{font-size:18px;font-weight:600;margin-top:4px}
+.shadow-now.your-turn{border-color:var(--accent);background:var(--accent-soft)}
+.shadow-now.your-turn::after{content:"ถึงตาคุณพูดตาม";display:block;font-size:13px;color:var(--accent);font-weight:600;margin-top:4px}
 /* touch screens: bigger speaker buttons, hide the tab bar while the keyboard is up */
 @media (pointer:coarse){.say,.mic{width:42px;height:42px}.mic svg{width:19px;height:19px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
 @media (max-width:1100px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
@@ -3169,7 +3188,7 @@ function mistSrc(r){
   if(r.kind==="placement") return "สอบวัดระดับ";
   if((r.kind==="practice"||r.kind==="quiz")&&L) return "บทที่ "+COURSE[L.idx].n+" · "+(r.kind==="quiz"?"สอบท้ายบท":"ฝึกทำ");
   if(r.kind==="gq"&&PRUN_META) return "ไวยากรณ์ · "+PRUN_META.title;
-  if((r.kind==="lvt"||r.kind==="pb")&&PRUN_META) return PRUN_META.title;
+  if((r.kind==="lvt"||r.kind==="pb"||r.kind==="tg"||r.kind==="wf")&&PRUN_META) return PRUN_META.title;
   return "";
 }
 function mistAnswer(it){return it.t==="mc"?it.o[it.a]:it.t==="fill"?String(it.a).split("|")[0]:it.a}
@@ -3231,6 +3250,11 @@ function viewPractice(){
   if(id==="phrasebook") return viewPhrasebook();
   if(id.indexOf("pb.")===0) return viewPbSit(id.slice(3));
   if(id==="lvtest") return viewLvTests();
+  if(id==="pods") return viewPods();
+  if(id.indexOf("pod.")===0) return viewPod(id.slice(4));
+  if(id==="thaiglish") return viewThaiglish();
+  if(id==="wordforms") return viewWordForms();
+  if(id==="stress") return viewStress();
   if(id.indexOf("lvtest.")===0) return viewLvTest(+id.slice(7));
   if(id.indexOf("scene.")===0) return viewScene(id.slice(6));
   return viewPracticeHub();
@@ -3247,6 +3271,8 @@ function viewPracticeHub(){
      card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน "+DICT.reduce((n,d)=>n+d.items.length,0)+" ประโยค A1–C1","ทำแล้ว "+dict+" ประโยค")
     +card("pgo","sounds","ฝึกหูแยกเสียง","เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W, S/Z, เสียงท้ายคำ -s -ed, TH และ -teen/-ty",snd+" / "+SOUNDS.length+" ชุดเสียง")
     +card("pgo","numbers","ฟังตัวเลขและการสะกด","ราคา เวลา ปี เบอร์โทร และสะกดชื่อ จุดที่พลาดบ่อยในชีวิตจริงและข้อสอบ",nums+" / "+NUM_MODES.length+" ประเภท")
+    +card("pgo","pods","ห้องฟังพอดแคสต์","บทสนทนายาว "+PODS.length+" ตอน A2–C1 ฟังจับใจความ ตอบคำถาม แล้วเปิดบทพูดและคำแปล",Object.keys(stat("pod")).length+" / "+PODS.length+" ตอน")
+    +card("pgo","stress","ฝึกเน้นเสียงพยางค์","ฟังแล้วแตะพยางค์ที่ออกเสียงหนัก แก้นิสัยลงเสียงท้ายคำแบบไทย",stat("stress").best!=null?"ดีที่สุด "+stat("stress").best+"/10":STRESS.length+" คำ")
     +card("pgo","phrasebook","ประโยคพร้อมใช้ตามสถานการณ์","สนามบิน โรงแรม ร้านอาหาร ช้อปปิ้ง ถามทาง ที่ทำงาน หาหมอ โทรศัพท์",pbN+" / "+PHRASEBOOK.length+" หมวดทดสอบแล้ว")
     +card("pgo","scenes","สถานการณ์จำลองกับครู AI","คุยกับครู AI ใน "+SCENES.length+" สถานการณ์จริง เช่น สัมภาษณ์งาน สนามบิน หาหมอ ขอขึ้นเงินเดือน","ครูแก้ภาษาให้ทุกประโยค"," ai-only"))
    +group("อ่านและเขียน",
@@ -3254,6 +3280,8 @@ function viewPracticeHub(){
     +card("pgo","email","เวิร์กช็อปเขียนอีเมล","อีเมลงาน 6 แบบ: ขอข้อมูล ติดตามงาน ขอโทษ ร้องเรียน ขอบคุณ นัดประชุม มีวลีสำเร็จรูปและตัวอย่าง",Object.keys(emailDone()).length+" / "+EMAILS.length+" แบบ"))
    +group("คำศัพท์และไวยากรณ์",
      card("pgo","grammar","คลังไวยากรณ์","ไวยากรณ์ "+(COURSE.length+GRAM_X.length)+" เรื่อง มีตาราง ตัวอย่าง จุดที่คนไทยพูดผิดบ่อย และแบบทดสอบ","ทำแบบทดสอบแล้ว "+gram+" เรื่อง")
+    +card("pgo","thaiglish","ภาษาอังกฤษแบบไทยๆ",THAIGLISH.length+" จุดที่คนไทยพูดผิดเพราะแปลตรงจากภาษาไทย พร้อมคำอธิบายและแบบทดสอบ",stat("tg").best!=null?"ดีที่สุด "+stat("tg").best+"/10":"ยังไม่เคยทดสอบ")
+    +card("pgo","wordforms","ตระกูลคำ (Word forms)",WFAM.length+" ตระกูลคำ และข้อสอบแนว TOEIC Part 5 เลือกรูปคำให้ถูกตำแหน่ง",stat("wf").best!=null?"ดีที่สุด "+stat("wf").best+"/10":"ยังไม่เคยทดสอบ")
     +card("pgo","verbs","กริยา 3 ช่อง","ตารางกริยาอปกติ "+IRREG.length+" คำ พร้อมเสียงอ่าน และทดสอบพิมพ์ช่อง 2 ช่อง 3",stat("verbs").best!=null?"ดีที่สุด "+stat("verbs").best+"/10":"ยังไม่เคยทดสอบ")
     +card("pgo","lookup","พจนานุกรมของฉัน","ค้นหาคำศัพท์ไทยหรืออังกฤษจากทุกบทเรียน ฟังเสียง แล้วเพิ่มเข้าคลังทบทวน",Object.keys(WORDS).length+" คำ")
     +card("go","review","ชุดคำศัพท์เพิ่มเติม",DECKS.length+" ชุด: TOEIC, IELTS, Phrasal verbs, Collocations, คำเชื่อม, สำนวน, ท่องเที่ยว, สุขภาพ และอื่นๆ รวมถึงเพิ่มคำของตัวเองได้","อยู่ในคลังแล้ว "+deckN+" / "+deckT+" คำ"))
@@ -3329,8 +3357,8 @@ function viewStory(id){
   const answered=Object.keys(ST.ans).length, correct=s.qs.filter((q,i)=>ST.ans[i]===q.a).length;
   const allIn=s.gloss.every(x=>S.words[x[0].toLowerCase()]);
   return pBack("reading","ห้องสมุดบทอ่าน")+'<p class="eyebrow" style="margin-top:8px">'+s.lv+' · '+esc(s.th)+'</p><h1 class="h2" lang="en">'+esc(s.title)+'</h1>'
-   +'<div class="row" style="margin-top:12px"><button class="btn btn-sm btn-primary" data-act="stplay">'+ICON.say+(ST.playing>=0?"หยุดอ่าน":"ฟังทั้งเรื่อง")+'</button><span class="muted" style="font-size:14px">แตะคำที่ขีดเส้นเพื่อดูความหมาย</span></div>'
-   +'<article class="notebook story" style="margin-top:14px">'+s.paras.map((p,i)=>'<p lang="en" id="sp-'+i+'"'+(ST.playing===i?' class="playing"':'')+'>'+glossText(s,p)+'</p>').join("")+'</article>'
+   +'<div class="row" style="margin-top:12px"><button class="btn btn-sm btn-primary" data-act="stplay">'+ICON.say+(ST.playing>=0?"หยุดอ่าน":"ฟังทั้งเรื่อง")+'</button><button class="btn btn-sm" data-act="stshadow">'+(ST.shadow?"หยุดฝึกพูดตาม":"ฝึกพูดตามทีละประโยค")+'</button><span class="muted" style="font-size:14px">แตะคำที่ขีดเส้นเพื่อดูความหมาย</span></div>'
+   +(ST.shadow?'<div class="shadow-now" id="shadow-now" aria-live="polite"><span class="muted">เตรียมพูดตาม…</span></div>':'')+'<article class="notebook story" style="margin-top:14px">'+s.paras.map((p,i)=>'<p lang="en" id="sp-'+i+'"'+(ST.playing===i?' class="playing"':'')+'>'+glossText(s,p)+'</p>').join("")+'</article>'
    +(g?'<div class="gloss-panel" role="dialog" aria-label="ความหมายคำศัพท์"><div class="sh-row"><p lang="en"><b>'+esc(g[0])+'</b></p>'+sayBtn(g[0])+'<button class="btn btn-sm btn-ghost" data-act="gloss" data-w="" aria-label="ปิด">✕</button></div><p style="font-size:18px">'+esc(g[1])+'</p><div class="row" style="margin-top:8px">'+(inBank?'<span class="chip ok">อยู่ในคลังคำศัพท์แล้ว</span>':'<button class="btn btn-sm btn-primary" data-act="gadd" data-w="'+esc(g[0].toLowerCase())+'">เพิ่มเข้าทบทวน</button>')+'</div></div>':'')
    +'<section class="comp"><h2 class="h3">คำถามท้ายเรื่อง</h2>'+s.qs.map((q,qi)=>{const pick=ST.ans[qi];
       return '<p class="q" lang="en">'+(qi+1)+'. '+esc(q.q)+'</p><div class="opts">'+q.o.map((o,oi)=>{let c="opt"; if(pick!=null){if(oi===q.a) c+=" is-right"; else if(oi===pick) c+=" is-wrong"} return '<button class="'+c+'" data-act="stq" data-q="'+qi+'" data-o="'+oi+'"'+(pick!=null?" disabled":"")+' lang="en">'+esc(o)+'</button>'}).join("")+'</div>'}).join("")
@@ -4033,6 +4061,7 @@ function settingsHTML(){
    +'<div class="card"><b>สำเนียง</b>'+seg("accent",[["US","อเมริกัน"],["GB","อังกฤษ"]],st.accent||"US")+'<p class="muted" style="font-size:13px;margin-top:8px">ขึ้นกับเสียงที่มีในเครื่อง <button class="btn btn-sm btn-ghost" style="color:var(--accent)" data-act="say" data-text="Hello! This is how I sound. Have a lovely day.">ลองฟัง</button></p></div>'
    +'<div class="card"><b>ภารกิจรายวัน</b>'+seg("goal",[["light","เบาๆ"],["normal","ปกติ"],["intense","เข้มข้น"]],st.goal||"normal")+'<p class="muted" style="font-size:13px;margin-top:8px">ทบทวน '+GOAL_N[st.goal||"normal"][0]+' คำ · เรียน '+GOAL_N[st.goal||"normal"][1]+' ขั้น · ฟังพิมพ์ '+GOAL_N[st.goal||"normal"][2]+' ประโยค</p></div>'
    +'</div>'
+   +goalSettingsHTML()
    +'<div class="card" style="margin-top:12px"><b>สำรองและกู้คืนข้อมูล</b><p class="muted" style="font-size:14px;margin-top:4px">คัดลอกรหัสสำรองเก็บไว้ (เช่น ส่งไลน์หาตัวเอง) แล้ววางกลับเพื่อย้ายความคืบหน้าไปเบราว์เซอร์หรือเครื่องอื่นได้</p>'
    +'<div class="row" style="margin-top:10px"><button class="btn btn-sm" data-act="bkcopy">คัดลอกรหัสสำรอง</button></div>'
    +(BK.show?'<label class="sr" for="bk-out">รหัสสำรอง</label><textarea id="bk-out" class="ta bk-ta" readonly>'+esc(BK.code)+'</textarea><p class="muted" style="font-size:13px">คัดลอกไม่สำเร็จอัตโนมัติ เลือกข้อความด้านบนแล้วคัดลอกเอง</p>':'')
@@ -4367,6 +4396,7 @@ function runnerDoneX(r,c,tot){
   const pct=Math.round(c/tot*100);
   if(r.kind==="lvt"&&PRUN_META){const st=stat("lvtest"); st[PRUN_META.lv]=Math.max(st[PRUN_META.lv]||0,pct); S.xp+=c*3}
   if(r.kind==="pb"&&PRUN_META){const st=stat("pb"); st[PRUN_META.sit]=Math.max(st[PRUN_META.sit]||0,pct); S.xp+=c*2}
+  if(r.kind==="tg"||r.kind==="wf"){const st=stat(r.kind); st.best=Math.max(st.best||0,c); S.xp+=c*2}
   bump("prac"); markDay(); save();
 }
 
@@ -4406,6 +4436,591 @@ const SACT={
   pbplay:t=>pbPlayAll(t.dataset.id),
   pbquiz:t=>{const s=PHRASEBOOK.find(x=>x.id===t.dataset.id); if(!s) return; pbTok++; Speech.stop(); PRUN_META={id:"pb."+s.id,sit:s.id,title:"ประโยค"+s.title}; PRUN=newRunner(pbItems(s),"pb"); render(); const el=$(".section:last-of-type"); if(el) el.scrollIntoView({block:"start"})},
   lvstart:t=>{const n=+t.dataset.n; PRUN_META={id:"lvt"+n,lv:n,title:"สอบรวม "+LEVELS[n-1].code}; PRUN=newRunner(lvItems(n),"lvt"); render(); window.scrollTo(0,0)}
+};
+
+
+/* ---------- round 7 content ---------- */
+const PODS=[
+ {id:"p1",lv:"A2",title:"Weekend Plans",th:"แผนเที่ยวสุดสัปดาห์",cast:{A:"Emma",B:"Tom"},
+  lines:[
+   ["A","Hi Tom! Do you have any plans for the weekend?","สวัสดีทอม มีแผนอะไรช่วงสุดสัปดาห์ไหม"],
+   ["B","Not really. I'm free on Saturday. What about you?","ยังไม่มีเลย วันเสาร์ผมว่าง แล้วคุณล่ะ"],
+   ["A","I want to go to the beach, but the weather might be bad.","ฉันอยากไปทะเล แต่อากาศอาจจะไม่ดี"],
+   ["B","Yes, I heard it will rain on Saturday afternoon.","ใช่ ผมได้ยินมาว่าบ่ายวันเสาร์ฝนจะตก"],
+   ["A","Oh no. Then maybe we can go to the cinema instead.","แย่จัง งั้นเราไปดูหนังแทนดีไหม"],
+   ["B","Good idea. There's a new comedy at the mall.","ความคิดดีนะ ที่ห้างมีหนังตลกเรื่องใหม่เข้าด้วย"],
+   ["A","Great. What time does it start?","เยี่ยมเลย หนังเริ่มกี่โมง"],
+   ["B","There's a show at two o'clock and another one at five.","มีรอบบ่ายสองโมง แล้วก็มีอีกรอบตอนห้าโมงเย็น"],
+   ["A","Let's go at two. Then we can have dinner after the film.","ไปรอบบ่ายสองกันเถอะ ดูจบแล้วจะได้ไปกินข้าวเย็นกัน"],
+   ["B","Sure. I know a nice Italian restaurant near the mall.","ได้เลย ผมรู้จักร้านอาหารอิตาเลียนดี ๆ ใกล้ห้างร้านหนึ่ง"],
+   ["A","Perfect. Let's meet at the mall at half past one.","เยี่ยมเลย งั้นเจอกันที่ห้างตอนบ่ายโมงครึ่งนะ"],
+   ["B","OK. See you on Saturday!","โอเค เจอกันวันเสาร์นะ"]
+  ],
+  qs:[
+   {q:"What will Emma and Tom do on Saturday?",o:["Go to the beach","Watch a film","Cook dinner at home"],a:1,why:"เอ็มม่าเสนอว่า “maybe we can go to the cinema instead” และทอมตอบว่า “Good idea” จึงไปดูหนังแทนการไปทะเล"},
+   {q:"Why don't they go to the beach?",o:["Tom is busy","The mall is closer","It might rain"],a:2,why:"ทอมบอกว่า “I heard it will rain on Saturday afternoon” ส่วนทอมเองบอกว่าวันเสาร์ว่าง จึงไม่ใช่เพราะเขาไม่ว่าง"},
+   {q:"What time will they meet?",o:["At half past one","At two o'clock","At five o'clock"],a:0,why:"เอ็มม่าบอกว่า “Let's meet at the mall at half past one” ส่วนบ่ายสองโมงและห้าโมงเย็นเป็นเวลารอบหนัง"},
+   {q:"How does Tom feel about the idea of going to the cinema?",o:["He prefers the beach","He thinks it's a good idea","He wants to see a different film"],a:1,why:"ทอมตอบทันทีว่า “Good idea.” และยังแนะนำหนังตลกเรื่องใหม่ที่ห้างด้วย แสดงว่าเขาเห็นด้วย"}
+  ]},
+ {id:"p2",lv:"A2",title:"A Birthday Present",th:"ของขวัญวันเกิดแม่",cast:{A:"Lucy",B:"Sam"},
+  lines:[
+   ["A","Sam, Mum's birthday is next Friday. What should we buy her?","แซม วันศุกร์หน้าเป็นวันเกิดแม่ เราควรซื้ออะไรให้แม่ดี"],
+   ["B","Hmm. How about some flowers?","อืม ดอกไม้ดีไหม"],
+   ["A","We gave her flowers last year. I want something different.","ปีที่แล้วเราก็ให้ดอกไม้ไปแล้ว ฉันอยากได้อะไรที่ต่างออกไป"],
+   ["B","She likes cooking. Maybe a new cookbook?","แม่ชอบทำอาหาร งั้นหนังสือสอนทำอาหารเล่มใหม่ดีไหม"],
+   ["A","She has lots of cookbooks. But she often says her bag is old.","แม่มีหนังสือทำอาหารเยอะแล้ว แต่แม่ชอบบ่นบ่อย ๆ ว่ากระเป๋าเก่าแล้ว"],
+   ["B","That's true. Her bag is really old. Let's buy her a new one.","จริงด้วย กระเป๋าแม่เก่ามากจริง ๆ ซื้อใบใหม่ให้แม่กันเถอะ"],
+   ["A","Good. How much can you spend?","ดีเลย แล้วนายจ่ายได้เท่าไหร่"],
+   ["B","About 50 dollars. Is that OK?","ประมาณ 50 ดอลลาร์ โอเคไหม"],
+   ["A","Yes. I can pay 50 too, so we have 100 dollars.","ได้สิ ฉันก็จ่ายได้ 50 เหมือนกัน รวมเป็น 100 ดอลลาร์"],
+   ["B","Great. Let's go shopping on Sunday morning.","เยี่ยม งั้นไปซื้อกันเช้าวันอาทิตย์นะ"],
+   ["A","Sunday morning is fine. And let's make a card for her too.","เช้าวันอาทิตย์ได้เลย แล้วเราทำการ์ดให้แม่ด้วยนะ"],
+   ["B","Good idea. She will love it.","ความคิดดี แม่ต้องชอบแน่ ๆ"]
+  ],
+  qs:[
+   {q:"What are they going to buy for their mother?",o:["Flowers","A cookbook","A bag"],a:2,why:"แซมพูดว่า “Her bag is really old. Let's buy her a new one.” ส่วนดอกไม้และหนังสือทำอาหารถูกปฏิเสธไป"},
+   {q:"Why doesn't Lucy want to buy flowers?",o:["They gave her flowers last year","Flowers are too expensive","Mum doesn't like flowers"],a:0,why:"ลูซี่บอกว่า “We gave her flowers last year. I want something different.”"},
+   {q:"How much money do they have in total?",o:["50 dollars","100 dollars","150 dollars"],a:1,why:"แซมจ่ายได้ 50 และลูซี่บอกว่า “I can pay 50 too, so we have 100 dollars.”"},
+   {q:"What else will they give their mother?",o:["A cookbook","Some flowers","A card they make"],a:2,why:"ลูซี่บอกว่า “let's make a card for her too” และแซมตอบว่า “Good idea.”"}
+  ]},
+ {id:"p3",lv:"B1",title:"Moving to a New City",th:"ย้ายไปอยู่เมืองใหม่",cast:{A:"Sarah",B:"Ben"},
+  lines:[
+   ["A","Ben! It's so good to hear from you. How are things back home?","เบน! ดีใจจังที่ได้คุยกับเธอ ทางบ้านเป็นยังไงบ้าง"],
+   ["B","Everything's fine here. But I want to hear about you. How's life in Manchester?","ทางนี้ทุกอย่างเรียบร้อยดี แต่ฉันอยากฟังเรื่องของเธอมากกว่า ชีวิตที่แมนเชสเตอร์เป็นยังไงบ้าง"],
+   ["A","Honestly, the first two weeks were quite hard. I didn't know anyone, and I got lost almost every day.","พูดตรง ๆ สองสัปดาห์แรกค่อนข้างลำบาก ฉันไม่รู้จักใครเลย แล้วก็หลงทางแทบทุกวัน"],
+   ["B","That sounds stressful. Have you found a flat yet?","ฟังดูเครียดนะ แล้วหาห้องพักได้หรือยัง"],
+   ["A","Yes, finally. I'm sharing a flat with two other women. It's a bit small, but it's close to my office, so I can walk to work.","ได้แล้ว ในที่สุด ฉันแชร์ห้องกับผู้หญิงอีกสองคน ห้องเล็กไปหน่อย แต่ใกล้ออฟฟิศ ฉันเลยเดินไปทำงานได้"],
+   ["B","That's lucky. What about the new job? Do you like your colleagues?","โชคดีจัง แล้วงานใหม่ล่ะ ชอบเพื่อนร่วมงานไหม"],
+   ["A","They're really friendly. One of them invited me to join a running club, so now I run with them every Wednesday evening.","พวกเขาเป็นมิตรมาก มีคนหนึ่งชวนฉันเข้าชมรมวิ่ง ตอนนี้ฉันเลยไปวิ่งกับพวกเขาทุกเย็นวันพุธ"],
+   ["B","A running club? You never liked running!","ชมรมวิ่งเหรอ เธอไม่เคยชอบวิ่งเลยนี่นา"],
+   ["A","I know! But it's a great way to meet people. And after the run, we usually go to a café together.","ใช่เลย! แต่มันเป็นวิธีรู้จักคนใหม่ ๆ ที่ดีมาก แล้วพอวิ่งเสร็จ พวกเราก็มักจะไปนั่งคาเฟ่ด้วยกัน"],
+   ["B","So do you think you'll stay there for a long time?","แล้วเธอคิดว่าจะอยู่ที่นั่นอีกนานไหม"],
+   ["A","I think so. The weather is terrible, of course. It rains all the time. But I'm starting to feel at home.","คิดว่าอย่างนั้นนะ แน่นอนว่าอากาศแย่มาก ฝนตกตลอดเวลา แต่ฉันเริ่มรู้สึกเหมือนอยู่บ้านแล้ว"],
+   ["B","I'm really happy for you. Maybe I can visit you next month.","ฉันดีใจด้วยจริง ๆ เดือนหน้าฉันอาจจะไปเยี่ยมเธอนะ"],
+   ["A","Please do! You can sleep on our sofa. Just bring an umbrella.","มาเลย! มานอนบนโซฟาที่ห้องเราได้ แค่อย่าลืมพกร่มมาด้วยนะ"]
+  ],
+  qs:[
+   {q:"What is the conversation mainly about?",o:["Ben's plans to change jobs","How Sarah is settling into a new city","Why Sarah wants to move back home"],a:1,why:"ทั้งบทสนทนาเป็นเรื่องชีวิตของซาราห์ที่แมนเชสเตอร์ ตั้งแต่ “the first two weeks were quite hard” จนถึง “I'm starting to feel at home”"},
+   {q:"How does Sarah get to work?",o:["She runs with her colleagues","She takes the bus","She walks"],a:2,why:"ซาราห์บอกว่าห้องพัก “close to my office, so I can walk to work” ส่วนการวิ่งเป็นกิจกรรมเย็นวันพุธ ไม่ใช่การเดินทางไปทำงาน"},
+   {q:"Why is Ben surprised about the running club?",o:["Sarah didn't use to like running","The club meets too late","Sarah is always busy on Wednesdays"],a:0,why:"เบนพูดว่า “A running club? You never liked running!” แสดงว่าเขาแปลกใจเพราะซาราห์ไม่เคยชอบวิ่งมาก่อน"},
+   {q:"How does Sarah feel about Manchester now?",o:["She wants to leave because of the weather","She is beginning to feel at home","She still feels lonely"],a:1,why:"แม้จะบ่นเรื่องฝน แต่ซาราห์บอกว่า “But I'm starting to feel at home.” และคิดว่าจะอยู่ที่นั่นอีกนาน"}
+  ]},
+ {id:"p4",lv:"B1",title:"Saving for a Trip",th:"เก็บเงินไปเที่ยว",cast:{A:"Lisa",B:"Mark"},
+  lines:[
+   ["A","Mark, you look worried. Is everything OK?","มาร์ก ดูเหมือนคุณกังวลอะไรอยู่นะ มีอะไรหรือเปล่า"],
+   ["B","I've just checked my bank account. I want to go to Japan in December, but I haven't saved much money at all.","ผมเพิ่งเช็กบัญชีธนาคารมา ผมอยากไปญี่ปุ่นเดือนธันวาคม แต่แทบยังไม่ได้เก็บเงินเลย"],
+   ["A","How much do you need for the trip?","ทริปนี้ต้องใช้เงินเท่าไหร่"],
+   ["B","About 1,500 dollars. At the moment I've only got 300.","ประมาณ 1,500 ดอลลาร์ ตอนนี้ผมมีแค่ 300"],
+   ["A","OK, let's think about it. Where does most of your money go every month?","โอเค มาลองคิดดูกัน แต่ละเดือนเงินส่วนใหญ่ของคุณหมดไปกับอะไร"],
+   ["B","Rent, of course. But I also eat out a lot, and I buy coffee every morning on the way to work.","ค่าเช่าห้องอยู่แล้ว แต่ผมยังกินข้าวนอกบ้านบ่อย แล้วก็ซื้อกาแฟทุกเช้าระหว่างทางไปทำงาน"],
+   ["A","Coffee every day can cost more than you think. If you make it at home, you could save around 80 dollars a month.","กาแฟทุกวันอาจแพงกว่าที่คุณคิดนะ ถ้าชงเองที่บ้าน คุณอาจประหยัดได้ประมาณเดือนละ 80 ดอลลาร์"],
+   ["B","Really? That much? I never thought about it like that.","จริงเหรอ ขนาดนั้นเลย ผมไม่เคยมองแบบนั้นมาก่อนเลย"],
+   ["A","Also, try cooking dinner three or four times a week. I usually cook on Sunday and take lunch to work too.","นอกจากนี้ ลองทำอาหารเย็นกินเองสักสัปดาห์ละสามสี่ครั้ง ฉันมักทำอาหารไว้ตั้งแต่วันอาทิตย์ แล้วห่อข้าวกลางวันไปทำงานด้วย"],
+   ["B","That's a good idea, but I'm not a very good cook.","เป็นความคิดที่ดีนะ แต่ผมทำอาหารไม่ค่อยเก่ง"],
+   ["A","Don't worry. Start with simple things, like pasta or fried rice. And here's another tip: when you get paid, move some money into a savings account straight away.","ไม่ต้องห่วง เริ่มจากอะไรง่าย ๆ อย่างพาสต้าหรือข้าวผัดก่อน แล้วมีอีกเคล็ดลับหนึ่ง พอเงินเดือนออก ให้โอนเงินส่วนหนึ่งเข้าบัญชีออมทรัพย์ทันที"],
+   ["B","So I don't spend it by accident?","จะได้ไม่เผลอใช้หมดใช่ไหม"],
+   ["A","Exactly. If you can't see it, you won't miss it.","ใช่เลย ถ้ามองไม่เห็นเงินก้อนนั้น คุณก็จะไม่รู้สึกว่าขาดมันไป"],
+   ["B","Right. I'll start this month. Japan, here I come!","ได้เลย ผมจะเริ่มเดือนนี้เลย ญี่ปุ่น รอผมก่อนนะ!"]
+  ],
+  qs:[
+   {q:"Why is Mark worried at the start?",o:["He lost his bank card","He doesn't have enough money for his trip","His rent has gone up"],a:1,why:"มาร์กบอกว่า “I want to go to Japan in December, but I haven't saved much money at all.”"},
+   {q:"How much money does Mark have now?",o:["300 dollars","80 dollars","1,500 dollars"],a:0,why:"มาร์กบอกว่า “At the moment I've only got 300.” ส่วน 1,500 คือเงินที่ต้องใช้ และ 80 คือเงินที่อาจประหยัดได้จากกาแฟ"},
+   {q:"What does Lisa suggest Mark should do when he gets paid?",o:["Buy his plane ticket","Pay his rent early","Put some money into a savings account immediately"],a:2,why:"ลิซ่าแนะนำว่า “when you get paid, move some money into a savings account straight away.”"},
+   {q:"How does Mark feel at the end of the conversation?",o:["Doubtful that the plan will work","Motivated to start saving","Upset that he can't go to Japan"],a:1,why:"ตอนท้ายมาร์กพูดว่า “I'll start this month. Japan, here I come!” แสดงว่าเขามีกำลังใจและพร้อมเริ่มเก็บเงิน"}
+  ]},
+ {id:"p5",lv:"B2",title:"The Interview Debrief",th:"คุยกันหลังสัมภาษณ์งาน",cast:{A:"Rachel",B:"David"},
+  lines:[
+   ["A","So, how did the interview go? I've been waiting all afternoon to hear about it.","แล้วสัมภาษณ์เป็นยังไงบ้าง ฉันรอฟังมาทั้งบ่ายเลยนะ"],
+   ["B","To be honest, I'm not really sure. Some parts went brilliantly, but there was one question that completely threw me.","พูดตามตรง ผมก็ไม่ค่อยแน่ใจ บางช่วงไปได้ดีมาก แต่มีคำถามหนึ่งที่ทำให้ผมไปไม่เป็นเลย"],
+   ["A","Let's start with the good parts. What went well?","เริ่มจากส่วนที่ดีก่อนแล้วกัน อะไรไปได้ดีบ้าง"],
+   ["B","They asked me about the marketing campaign I led last year, and I could talk about it in detail. I had real numbers, and I think the panel was genuinely impressed.","พวกเขาถามถึงแคมเปญการตลาดที่ผมเป็นคนนำเมื่อปีที่แล้ว และผมเล่าได้อย่างละเอียด ผมมีตัวเลขจริงมายืนยัน และคิดว่ากรรมการประทับใจจริง ๆ"],
+   ["A","That's great. Concrete examples always make a strong impression. So what was the difficult question?","ดีมากเลย ตัวอย่างที่เป็นรูปธรรมสร้างความประทับใจได้เสมอ แล้วคำถามที่ยากคืออะไร"],
+   ["B","They asked me to describe a time when I failed. My mind just went blank, and I ended up talking about a small scheduling mistake that didn't really matter.","พวกเขาให้เล่าถึงครั้งหนึ่งที่ผมล้มเหลว สมองผมว่างเปล่าไปเลย สุดท้ายเลยไปเล่าเรื่องจัดตารางผิดนิดหน่อยที่ไม่ได้สำคัญอะไร"],
+   ["A","Hmm, that's a very common question. Interviewers usually want to see how you learn from mistakes, not just the mistake itself.","อืม นั่นเป็นคำถามที่เจอบ่อยมาก ผู้สัมภาษณ์มักอยากเห็นว่าคุณเรียนรู้อะไรจากความผิดพลาด ไม่ใช่แค่ตัวความผิดพลาดเอง"],
+   ["B","I know, and that's what annoys me. I actually have a much better story about a product launch that went wrong, but I only remembered it on the train home.","ผมรู้ และนั่นแหละที่ทำให้ผมหงุดหงิด จริง ๆ ผมมีเรื่องที่ดีกว่านั้นมาก เรื่องการเปิดตัวสินค้าที่พังไม่เป็นท่า แต่ดันมานึกออกตอนนั่งรถไฟกลับบ้าน"],
+   ["A","Well, it's not too late to use it. Why don't you mention it in your thank-you email? You could say you've reflected on the question and add a better example.","ก็ยังไม่สายเกินไปที่จะใช้นะ ทำไมไม่พูดถึงมันในอีเมลขอบคุณล่ะ บอกไปว่าคุณได้ทบทวนคำถามนั้นแล้ว และเพิ่มตัวอย่างที่ดีกว่าเข้าไป"],
+   ["B","Isn't that a bit unusual? I don't want to look desperate.","มันจะแปลกไปหน่อยไหม ผมไม่อยากดูเหมือนคนร้อนรนอยากได้งานเกินไป"],
+   ["A","Not at all, as long as you keep it short. It shows you're thoughtful. Just two or three sentences, then thank them for their time.","ไม่เลย ขอแค่เขียนให้สั้นกระชับ มันแสดงว่าคุณเป็นคนคิดรอบคอบ แค่สองสามประโยค แล้วก็ขอบคุณที่พวกเขาสละเวลา"],
+   ["B","OK, that makes sense. They said they'd let candidates know by the end of next week, so I should send it tonight.","โอเค ฟังดูมีเหตุผล พวกเขาบอกว่าจะแจ้งผลผู้สมัครภายในสิ้นสัปดาห์หน้า งั้นผมควรส่งคืนนี้เลย"],
+   ["A","Definitely. And whatever happens, you've clearly learned something useful for next time.","แน่นอน และไม่ว่าผลจะออกมาอย่างไร คุณก็ได้เรียนรู้สิ่งที่มีประโยชน์สำหรับครั้งหน้าแล้ว"],
+   ["B","True. Next time I'll prepare a proper failure story before I walk in.","จริง ครั้งหน้าผมจะเตรียมเรื่องความล้มเหลวดี ๆ ไว้ก่อนเดินเข้าห้องสัมภาษณ์เลย"]
+  ],
+  qs:[
+   {q:"What is David's overall feeling about the interview?",o:["Confident that he got the job","Uncertain, because some parts went well and one went badly","Sure that he failed completely"],a:1,why:"เดวิดบอกว่า “I'm not really sure. Some parts went brilliantly, but there was one question that completely threw me.” จึงรู้สึกไม่แน่ใจ"},
+   {q:"Which part of the interview went well?",o:["Talking about a marketing campaign he led","Explaining a product launch that went wrong","Describing a scheduling mistake"],a:0,why:"เดวิดเล่าว่าตอนพูดถึง “the marketing campaign I led last year” เขามีตัวเลขจริงและกรรมการประทับใจ ส่วนเรื่องเปิดตัวสินค้าเขานึกออกตอนกลับบ้าน"},
+   {q:"What does Rachel advise David to do?",o:["Call the panel to explain","Wait until he hears from them","Add a better example to a short thank-you email"],a:2,why:"เรเชลแนะนำว่า “Why don't you mention it in your thank-you email?” และย้ำว่า “as long as you keep it short”"},
+   {q:"How does David first react to Rachel's suggestion?",o:["He worries it will seem desperate","He thinks it's a brilliant idea","He says it is too late"],a:0,why:"เดวิดถามกลับว่า “Isn't that a bit unusual? I don't want to look desperate.” แสดงว่าตอนแรกเขายังลังเล"}
+  ]},
+ {id:"p6",lv:"B2",title:"Better Sleep",th:"นอนหลับให้ดีขึ้น",cast:{A:"Anna",B:"James"},
+  lines:[
+   ["A","Welcome back to Healthy Habits. I'm Anna, and today James and I are talking about something we all do but rarely think about: sleep.","ยินดีต้อนรับกลับสู่รายการ Healthy Habits ฉันแอนนา วันนี้ฉันกับเจมส์จะคุยเรื่องที่เราทุกคนทำแต่แทบไม่เคยใส่ใจ นั่นคือการนอน"],
+   ["B","Thanks, Anna. And I have a confession to make. Last night I slept for about five hours, which is far less than the seven to nine hours most adults need.","ขอบคุณครับแอนนา ผมมีเรื่องต้องสารภาพ เมื่อคืนผมนอนแค่ประมาณห้าชั่วโมง ซึ่งน้อยกว่าเจ็ดถึงเก้าชั่วโมงที่ผู้ใหญ่ส่วนใหญ่ต้องการอยู่มาก"],
+   ["A","Five hours! What kept you up?","ห้าชั่วโมงเองเหรอ! อะไรทำให้คุณไม่ได้นอน"],
+   ["B","My phone, mainly. I told myself I'd just check my messages, and suddenly it was one in the morning.","ส่วนใหญ่ก็มือถือนี่แหละครับ ผมบอกตัวเองว่าจะแค่เช็กข้อความ รู้ตัวอีกทีก็ตีหนึ่งแล้ว"],
+   ["A","That's incredibly common. Screens are a problem for two reasons. The bright light tells your brain it's still daytime, and the content keeps your mind active when it should be slowing down.","เรื่องนี้เกิดขึ้นบ่อยมากค่ะ หน้าจอเป็นปัญหาด้วยสองเหตุผล แสงสว่างจ้าบอกสมองว่ายังเป็นกลางวันอยู่ และเนื้อหาก็ทำให้สมองตื่นตัวในเวลาที่ควรจะผ่อนคลายลง"],
+   ["B","So what do you do? I know you're quite strict about your routine.","แล้วคุณทำยังไงครับ ผมรู้ว่าคุณค่อนข้างเคร่งเรื่องกิจวัตรก่อนนอน"],
+   ["A","I am. I stop using screens an hour before bed, and I charge my phone in the kitchen, not the bedroom. Then I read a paper book until I feel sleepy.","ใช่ค่ะ ฉันเลิกใช้หน้าจอหนึ่งชั่วโมงก่อนนอน และชาร์จมือถือไว้ในครัว ไม่ใช่ในห้องนอน จากนั้นก็อ่านหนังสือเล่มจนรู้สึกง่วง"],
+   ["B","The kitchen! That seems a bit extreme. What if you need an alarm?","ในครัวเลยเหรอ ดูสุดโต่งไปหน่อยนะ แล้วถ้าต้องใช้นาฬิกาปลุกล่ะ"],
+   ["A","I bought an old-fashioned alarm clock. It was cheap, and honestly it changed my life. I fall asleep much faster now.","ฉันซื้อนาฬิกาปลุกแบบโบราณมาค่ะ ราคาถูกมาก และพูดตรง ๆ มันเปลี่ยนชีวิตฉันเลย ตอนนี้ฉันหลับเร็วขึ้นเยอะ"],
+   ["B","Another thing I've read about is keeping the same wake-up time every day, even at weekends. Is that really important?","อีกเรื่องที่ผมเคยอ่านเจอคือการตื่นเวลาเดิมทุกวัน แม้แต่วันหยุดสุดสัปดาห์ มันสำคัญขนาดนั้นจริงเหรอ"],
+   ["A","It is. If you sleep until eleven on Sunday, your body clock gets confused, and Monday morning feels terrible. Experts sometimes call it social jet lag.","สำคัญค่ะ ถ้าวันอาทิตย์คุณนอนถึงสิบเอ็ดโมง นาฬิกาชีวภาพจะสับสน แล้วเช้าวันจันทร์ก็จะรู้สึกแย่มาก ผู้เชี่ยวชาญบางคนเรียกอาการนี้ว่า social jet lag"],
+   ["B","That explains a lot about my Mondays. What about caffeine? I usually have a coffee after lunch.","นั่นอธิบายเรื่องวันจันทร์ของผมได้หมดเลย แล้วคาเฟอีนล่ะ ผมมักดื่มกาแฟหลังมื้อกลางวัน"],
+   ["A","Caffeine can stay in your body for six hours or more, so an afternoon coffee might still affect you at bedtime. Try switching to herbal tea or water after midday.","คาเฟอีนอาจค้างอยู่ในร่างกายได้หกชั่วโมงหรือนานกว่านั้น กาแฟตอนบ่ายจึงอาจยังส่งผลตอนเข้านอน ลองเปลี่ยนไปดื่มชาสมุนไพรหรือน้ำเปล่าหลังเที่ยงดูค่ะ"],
+   ["B","All right, here's my challenge for this week: no phone in the bedroom and no coffee after twelve. I'll report back next episode.","เอาล่ะ นี่คือภารกิจของผมสัปดาห์นี้ ไม่เอามือถือเข้าห้องนอน และไม่ดื่มกาแฟหลังเที่ยง แล้วผมจะมารายงานผลในตอนหน้าครับ"]
+  ],
+  qs:[
+   {q:"What is the main purpose of this episode?",o:["To compare different alarm clocks","To explain why coffee is unhealthy","To share practical habits for sleeping better"],a:2,why:"แอนนาเปิดรายการว่าจะคุยเรื่อง “sleep” และทั้งตอนเป็นคำแนะนำเรื่องหน้าจอ เวลาตื่น และคาเฟอีน นาฬิกาปลุกกับกาแฟเป็นเพียงรายละเอียดย่อย"},
+   {q:"Why did James sleep for only five hours?",o:["He drank coffee late at night","He was using his phone","He woke up early for work"],a:1,why:"เจมส์บอกว่า “My phone, mainly. I told myself I'd just check my messages, and suddenly it was one in the morning.”"},
+   {q:"Where does Anna keep her phone at night?",o:["In the kitchen","Next to her bed","In the living room"],a:0,why:"แอนนาบอกว่า “I charge my phone in the kitchen, not the bedroom.”"},
+   {q:"What was James's first reaction to Anna's phone habit?",o:["He said he already does the same","He thought it was a bit extreme","He thought it was too expensive"],a:1,why:"เจมส์พูดว่า “The kitchen! That seems a bit extreme.” ส่วนคำว่า cheap พูดถึงนาฬิกาปลุก ไม่ใช่ความเห็นของเจมส์"}
+  ]},
+ {id:"p7",lv:"C1",title:"The Remote Work Debate",th:"ถกเถียงเรื่องการทำงานทางไกล",cast:{A:"Claire",B:"Daniel"},
+  lines:[
+   ["A","Welcome to Both Sides, the show where we take one question and argue it from opposite corners. I'm Claire, and today's question is whether companies should bring employees back to the office full time. Daniel, you're arguing yes, which I suspect won't make you very popular.","ยินดีต้อนรับสู่รายการ Both Sides รายการที่เราหยิบคำถามหนึ่งข้อมาถกกันจากคนละฝั่ง ฉันแคลร์ คำถามวันนี้คือบริษัทควรเรียกพนักงานกลับเข้าออฟฟิศเต็มเวลาหรือไม่ แดเนียล คุณอยู่ฝั่งที่เห็นด้วย ซึ่งฉันว่าคงไม่ทำให้คุณเป็นที่รักสักเท่าไหร่"],
+   ["B","Probably not, but hear me out. My concern is less about productivity and more about how people learn. Junior staff pick up an enormous amount simply by overhearing how experienced colleagues handle a difficult call or a tricky client, and that kind of learning barely happens over video.","คงไม่หรอกครับ แต่ฟังผมก่อน สิ่งที่ผมกังวลไม่ได้อยู่ที่ประสิทธิภาพการทำงานเท่าไหร่ แต่อยู่ที่วิธีการเรียนรู้ของคน พนักงานรุ่นใหม่ได้เรียนรู้มหาศาลเพียงแค่ได้ยินว่ารุ่นพี่ที่มีประสบการณ์รับมือกับสายโทรศัพท์ยาก ๆ หรือลูกค้าที่จัดการยากอย่างไร และการเรียนรู้แบบนี้แทบไม่เกิดขึ้นผ่านวิดีโอคอลเลย"],
+   ["A","I'll grant you that mentoring is harder at a distance. But forcing everyone back five days a week is a very blunt solution to that problem. Many people moved further out during the pandemic, and they'd lose two hours a day for the privilege of sitting on video calls in an open-plan office.","ฉันยอมรับว่าการเป็นพี่เลี้ยงทำได้ยากกว่าเมื่ออยู่ห่างกัน แต่การบังคับทุกคนกลับมาห้าวันต่อสัปดาห์เป็นทางแก้ที่หยาบเกินไป หลายคนย้ายไปอยู่ไกลขึ้นในช่วงโรคระบาด และพวกเขาจะต้องเสียเวลาวันละสองชั่วโมง เพียงเพื่อได้สิทธิ์มานั่งประชุมวิดีโอในออฟฟิศแบบเปิดโล่ง"],
+   ["B","That last point is fair, but it's a failure of how offices are run rather than an argument against them. If people come in, those days should be designed around collaboration, not spent wearing headphones. Still, I'd argue that a shared culture needs a shared place.","ประเด็นสุดท้ายก็มีเหตุผลครับ แต่นั่นคือความล้มเหลวของการบริหารออฟฟิศ มากกว่าจะเป็นเหตุผลคัดค้านการมีออฟฟิศ ถ้าคนต้องเข้ามา วันเหล่านั้นก็ควรออกแบบให้เน้นการทำงานร่วมกัน ไม่ใช่นั่งใส่หูฟังทั้งวัน ถึงอย่างนั้น ผมก็ยังยืนยันว่าวัฒนธรรมร่วมกันต้องมีพื้นที่ร่วมกัน"],
+   ["A","Does it, though? Some of the most tightly knit teams I've worked with were fully remote, spread across four time zones. What they had was clear communication and a manager who trusted them, and neither of those depends on a building.","จริงหรือคะ ทีมที่เหนียวแน่นที่สุดบางทีมที่ฉันเคยร่วมงานด้วยทำงานทางไกลเต็มรูปแบบ กระจายอยู่ในสี่เขตเวลา สิ่งที่พวกเขามีคือการสื่อสารที่ชัดเจนและผู้จัดการที่ไว้ใจพวกเขา ซึ่งทั้งสองอย่างไม่ได้ขึ้นอยู่กับตึกเลย"],
+   ["B","Trust is the key word there, and I think it cuts both ways. A lot of return to office rules are really about managers who don't know how to measure output, so they measure presence instead. I'm not defending that.","ความไว้ใจคือคำสำคัญเลยครับ และผมคิดว่ามันใช้ได้กับทั้งสองฝั่ง กฎเรียกคนกลับเข้าออฟฟิศจำนวนมาก แท้จริงแล้วมาจากผู้จัดการที่ไม่รู้วิธีวัดผลงาน จึงหันไปวัดจากการมาปรากฏตัวแทน เรื่องนั้นผมไม่ได้แก้ต่างให้"],
+   ["A","Then what exactly are you defending? Because it's starting to sound as if we agree.","แล้วตกลงคุณกำลังปกป้องอะไรอยู่คะ เพราะเริ่มฟังดูเหมือนเราเห็นตรงกันแล้วนะ"],
+   ["B","Narrowly, I'm defending the idea that being physically together has value that is hard to measure and easy to lose. I'd accept a hybrid model, perhaps three days in the office, as long as those days are protected for teamwork and new starters are actually sitting next to someone who can help them.","ถ้าพูดให้แคบลง ผมปกป้องแนวคิดที่ว่าการได้อยู่ด้วยกันจริง ๆ มีคุณค่าที่วัดได้ยากแต่สูญเสียได้ง่าย ผมรับรูปแบบไฮบริดได้ อาจจะเข้าออฟฟิศสามวัน ตราบใดที่วันเหล่านั้นถูกกันไว้สำหรับการทำงานเป็นทีม และพนักงานใหม่ได้นั่งข้าง ๆ คนที่ช่วยพวกเขาได้จริง"],
+   ["A","I could live with that, although I'd push for two days rather than three, and I'd let each team choose which ones. The real mistake is a single rule imposed from the top on people doing very different jobs.","แบบนั้นฉันรับได้ แม้ว่าฉันจะผลักดันให้เป็นสองวันแทนสามวัน และให้แต่ละทีมเลือกเองว่าจะเป็นวันไหน ความผิดพลาดที่แท้จริงคือการใช้กฎข้อเดียวสั่งลงมาจากเบื้องบน กับคนที่ทำงานต่างกันมาก"],
+   ["B","So we've gone from full time in the office versus fully remote to arguing over a single day. I suspect that's roughly where most sensible companies will end up as well.","สรุปคือเราเปลี่ยนจากการเถียงว่าเข้าออฟฟิศเต็มเวลาหรือทำงานทางไกลเต็มรูปแบบ มาเป็นเถียงกันแค่เรื่องวันเดียว ผมว่านั่นก็คงเป็นจุดที่บริษัทส่วนใหญ่ที่มีเหตุผลจะไปลงเอยเหมือนกัน"],
+   ["A","Perhaps. Although I'd add that the companies that get this right will be the ones that actually ask their staff before deciding, rather than announcing a policy by email on a Friday afternoon.","อาจจะใช่ค่ะ แต่ฉันขอเสริมว่า บริษัทที่ทำเรื่องนี้ได้ถูกต้องคือบริษัทที่ถามความเห็นพนักงานก่อนตัดสินใจจริง ๆ ไม่ใช่ประกาศนโยบายทางอีเมลตอนบ่ายวันศุกร์"],
+   ["B","On that point, at least, we're in complete agreement. Nothing damages trust faster than a decision people only hear about after it's been made.","อย่างน้อยในประเด็นนี้เราเห็นตรงกันทุกอย่างครับ ไม่มีอะไรทำลายความไว้ใจได้เร็วไปกว่าการตัดสินใจที่คนได้ยินก็ตอนที่มันถูกตัดสินไปแล้ว"],
+   ["A","On that rare note of agreement, we'll leave it there. Thanks for listening to Both Sides.","ด้วยความเห็นพ้องที่หาได้ยากนี้ ขอจบรายการไว้เพียงเท่านี้ ขอบคุณที่รับฟัง Both Sides ค่ะ"]
+  ],
+  qs:[
+   {q:"How does the debate develop over the episode?",o:["The speakers become more strongly opposed","The speakers move closer to a compromise","One speaker completely changes sides"],a:1,why:"แคลร์พูดว่า “it's starting to sound as if we agree” และแดเนียลสรุปว่าจากเดิมเถียงกันสุดขั้ว ตอนนี้ “arguing over a single day” แสดงว่าทั้งคู่ค่อย ๆ หาจุดกึ่งกลาง แต่ไม่มีใครเปลี่ยนข้างทั้งหมด"},
+   {q:"What is Daniel's main reason for supporting office work?",o:["Junior staff learn by watching experienced colleagues","Managers can measure output more easily","People are more productive in offices"],a:0,why:"แดเนียลบอกว่า “My concern is less about productivity and more about how people learn” และยกตัวอย่างพนักงานรุ่นใหม่ที่เรียนรู้จากการได้ยินรุ่นพี่ทำงาน"},
+   {q:"What does Daniel suggest about many return to office rules?",o:["They are popular with junior staff","They are mainly designed to improve teamwork","They reflect managers who cannot measure output"],a:2,why:"แดเนียลพูดว่า “A lot of return to office rules are really about managers who don't know how to measure output, so they measure presence instead.” และบอกว่าเขาไม่ได้แก้ต่างให้เรื่องนี้"},
+   {q:"What do Claire and Daniel still disagree about at the end?",o:["Whether hybrid work should exist at all","How many days people should spend in the office","Whether remote teams can build trust"],a:1,why:"แดเนียลเสนอ “perhaps three days in the office” ส่วนแคลร์บอกว่า “I'd push for two days rather than three” จึงยังต่างกันแค่จำนวนวัน"}
+  ]},
+ {id:"p8",lv:"C1",title:"Learning a Language Later in Life",th:"เรียนภาษาเมื่อเป็นผู้ใหญ่",cast:{A:"Maya",B:"Oliver"},
+  lines:[
+   ["A","Welcome to Lifelong Learner. I'm Maya, and my guest today is Oliver, who started learning Portuguese at forty-two and now works as a translator. Oliver, the first thing people usually ask is whether it's simply too late for adults to learn a language properly.","ยินดีต้อนรับสู่รายการ Lifelong Learner ฉันมายา แขกรับเชิญวันนี้คือโอลิเวอร์ ผู้เริ่มเรียนภาษาโปรตุเกสตอนอายุสี่สิบสอง และตอนนี้ทำงานเป็นนักแปล โอลิเวอร์คะ คำถามแรกที่คนมักถามคือ ผู้ใหญ่สายเกินไปแล้วหรือเปล่าที่จะเรียนภาษาให้เก่งจริง ๆ"],
+   ["B","It's a question I hear constantly, and the short answer is no. Children do have an advantage when it comes to accent, but adults are actually faster learners in the early stages, because we can understand grammar explanations, use a dictionary and connect new words to things we already know.","เป็นคำถามที่ผมได้ยินอยู่ตลอดครับ และคำตอบสั้น ๆ คือไม่สาย เด็กได้เปรียบจริงเรื่องสำเนียง แต่ในช่วงแรกผู้ใหญ่เรียนได้เร็วกว่า เพราะเราเข้าใจคำอธิบายไวยากรณ์ ใช้พจนานุกรมเป็น และเชื่อมโยงคำใหม่กับสิ่งที่รู้อยู่แล้วได้"],
+   ["A","So why do so many adults give up? I've started and abandoned at least three languages myself.","แล้วทำไมผู้ใหญ่จำนวนมากถึงเลิกกลางทางล่ะคะ ตัวฉันเองก็เริ่มเรียนแล้วทิ้งไปอย่างน้อยสามภาษา"],
+   ["B","In my experience, it's rarely about ability. It's about time and, more importantly, embarrassment. Adults are used to being competent, and suddenly sounding like a five-year-old is genuinely uncomfortable, so people avoid speaking and then conclude they're not making progress.","จากประสบการณ์ของผม มันแทบไม่เกี่ยวกับความสามารถเลย แต่เกี่ยวกับเวลา และที่สำคัญกว่านั้นคือความอาย ผู้ใหญ่เคยชินกับการเป็นคนเก่ง พอจู่ ๆ ต้องพูดเหมือนเด็กห้าขวบก็อึดอัดใจจริง ๆ คนจึงเลี่ยงไม่พูด แล้วก็สรุปเอาเองว่าตัวเองไม่ก้าวหน้า"],
+   ["A","That rings very true. How did you deal with that feeling?","ตรงใจมากเลยค่ะ แล้วคุณรับมือกับความรู้สึกนั้นอย่างไร"],
+   ["B","I gave myself permission to be bad at it for a while. I set a goal of making ten mistakes a day in conversation, which sounds silly, but it turned errors into evidence that I was practising rather than proof that I was failing.","ผมอนุญาตให้ตัวเองพูดได้ไม่ดีไปสักพัก ผมตั้งเป้าว่าจะพูดผิดให้ได้วันละสิบครั้งเวลาสนทนา ฟังดูตลกนะครับ แต่มันเปลี่ยนความผิดพลาดให้เป็นหลักฐานว่าผมกำลังฝึกอยู่ แทนที่จะเป็นข้อพิสูจน์ว่าผมล้มเหลว"],
+   ["A","I love that. What about the practical side? You must have had a job and a family at the time.","ชอบมากเลยค่ะ แล้วในแง่การปฏิบัติล่ะ ตอนนั้นคุณคงมีทั้งงานและครอบครัวต้องดูแล"],
+   ["B","Exactly, so I never had long study sessions. Instead, I did twenty minutes every single day, mostly listening to podcasts on my commute. I'm convinced that consistency matters far more than intensity. A three-hour class once a week is less effective than a little every day.","ใช่ครับ ผมเลยไม่เคยมีเวลานั่งเรียนนาน ๆ แต่ผมเรียนวันละยี่สิบนาทีทุกวันไม่เว้นเลย ส่วนใหญ่คือฟังพอดแคสต์ระหว่างเดินทางไปทำงาน ผมเชื่อมั่นว่าความสม่ำเสมอสำคัญกว่าความหนักหน่วงมาก เรียนสามชั่วโมงสัปดาห์ละครั้งได้ผลน้อยกว่าเรียนทีละนิดทุกวัน"],
+   ["A","And did the listening really help, even when you couldn't understand everything?","แล้วการฟังช่วยได้จริงไหมคะ แม้ในตอนที่คุณยังฟังไม่ออกทั้งหมด"],
+   ["B","It did, as long as I understood most of it. If something was far too difficult, I switched to material for learners. The sweet spot is when you can follow the story but meet a few new words along the way.","ช่วยครับ ตราบใดที่ผมเข้าใจเนื้อหาส่วนใหญ่ ถ้าอะไรยากเกินไปมาก ผมจะเปลี่ยนไปฟังสื่อสำหรับผู้เรียน จุดที่พอดีที่สุดคือตอนที่คุณตามเรื่องทัน แต่ก็เจอคำใหม่บ้างระหว่างทาง"],
+   ["A","What about your accent? Does it still bother you?","แล้วสำเนียงของคุณล่ะคะ ยังกวนใจอยู่ไหม"],
+   ["B","Not anymore. People can tell I'm not a native speaker within about ten seconds, and that's perfectly fine. The goal was never to sound Brazilian. It was to be understood clearly and to understand others, and an accent doesn't get in the way of either.","ไม่แล้วครับ คนฟังแค่ประมาณสิบวินาทีก็รู้ว่าผมไม่ใช่เจ้าของภาษา และนั่นก็ไม่มีปัญหาอะไรเลย เป้าหมายไม่เคยอยู่ที่การพูดให้เหมือนคนบราซิล แต่คือการพูดให้คนอื่นเข้าใจชัดเจน และเข้าใจสิ่งที่คนอื่นพูด ซึ่งสำเนียงไม่ได้ขวางทั้งสองอย่างเลย"],
+   ["A","That's a very reassuring note to end on. Oliver, thank you so much for joining us.","เป็นข้อคิดปิดท้ายที่ทำให้อุ่นใจมากค่ะ โอลิเวอร์ ขอบคุณมากที่มาร่วมรายการกับเรา"]
+  ],
+  qs:[
+   {q:"What is Oliver's main message?",o:["Adults should focus on getting a native accent","Intensive weekly classes are the fastest route","Adults can learn a language well if they approach it sensibly"],a:2,why:"โอลิเวอร์ตอบคำถามแรกว่า “the short answer is no” คือไม่สายเกินไป แล้วอธิบายวิธีที่ได้ผล เช่น ยอมพูดผิดและเรียนทีละนิดทุกวัน เขาบอกด้วยว่าเรียนสัปดาห์ละครั้งได้ผลน้อยกว่า และไม่ได้ตั้งเป้าพูดเหมือนเจ้าของภาษา"},
+   {q:"According to Oliver, why do many adults give up?",o:["They lack natural ability","They feel embarrassed about speaking badly","Grammar is too difficult for them"],a:1,why:"โอลิเวอร์บอกว่า “it's rarely about ability. It's about time and, more importantly, embarrassment.”"},
+   {q:"What was the purpose of his goal of making ten mistakes a day?",o:["To make mistakes feel like a normal part of practice","To help him find a good teacher","To measure how fast he was improving"],a:0,why:"เขาอธิบายว่าเป้าหมายนี้ “turned errors into evidence that I was practising rather than proof that I was failing” คือทำให้การพูดผิดกลายเป็นเรื่องปกติของการฝึก"},
+   {q:"How does Oliver feel about his accent now?",o:["He is still trying hard to lose it","He is relaxed about it, because being understood matters more","He is embarrassed when people notice it"],a:1,why:"โอลิเวอร์บอกว่า “that's perfectly fine” และ “The goal was never to sound Brazilian” เพราะเป้าหมายคือการสื่อสารให้เข้าใจกัน"}
+  ]}
+];
+const THAIGLISH=[
+{"cat":"ไวยากรณ์","wrong":"He go to work every day.","right":"He goes to work every day.","why":"ประธานเอกพจน์บุรุษที่ 3 (he/she/it) ในปัจจุบันกาลต้องเติม -s/-es ที่กริยา ภาษาไทยไม่ผันกริยาตามประธาน คนไทยจึงลืมเติมบ่อย"},
+{"cat":"ไวยากรณ์","wrong":"Yesterday I go to the market.","right":"Yesterday I went to the market.","why":"ภาษาไทยบอกอดีตด้วยคำบอกเวลาอย่าง \"เมื่อวาน\" แต่ภาษาอังกฤษต้องเปลี่ยนกริยาเป็นรูปอดีต (go → went) ด้วยเสมอ"},
+{"cat":"ไวยากรณ์","wrong":"I have many homework.","right":"I have a lot of homework.","why":"homework เป็นคำนามนับไม่ได้ จึงใช้ many และเติม -s ไม่ได้ ต้องใช้ a lot of หรือ much แทน ภาษาไทยไม่แยกนามนับได้/นับไม่ได้จึงสับสนง่าย"},
+{"cat":"ไวยากรณ์","wrong":"There's nothing to do, so I'm boring.","right":"There's nothing to do, so I'm bored.","why":"คุณศัพท์ลงท้าย -ed บอกความรู้สึกของเรา ส่วน -ing บอกลักษณะของสิ่งที่ทำให้รู้สึก \"I'm boring\" จึงแปลว่า \"ฉันเป็นคนน่าเบื่อ\" ไม่ใช่ \"ฉันเบื่อ\""},
+{"cat":"ไวยากรณ์","wrong":"I'm so exciting about the trip.","right":"I'm so excited about the trip.","why":"ถ้าพูดถึงความรู้สึกของตัวเองต้องใช้ excited ส่วน exciting ใช้บรรยายสิ่งที่น่าตื่นเต้น เช่น an exciting trip ภาษาไทยใช้คำว่า \"ตื่นเต้น\" คำเดียวทั้งสองความหมาย"},
+{"cat":"ไวยากรณ์","wrong":"I don't sure.","right":"I'm not sure.","why":"sure เป็นคุณศัพท์ ไม่ใช่กริยา จึงต้องใช้กับ verb to be (am/is/are) และปฏิเสธด้วย not คนไทยแปลตรงจาก \"ไม่แน่ใจ\" จึงใส่ don't ผิดที่"},
+{"cat":"ไวยากรณ์","wrong":"I will go to shopping tomorrow.","right":"I will go shopping tomorrow.","why":"กิจกรรมที่ลงท้าย -ing ใช้โครงสร้าง go + V-ing ได้เลยโดยไม่ต้องมี to (go shopping, go swimming) เพราะ to ใช้กับสถานที่ เช่น go to the mall"},
+{"cat":"ไวยากรณ์","wrong":"She is work at a bank.","right":"She works at a bank.","why":"ประโยคปัจจุบันกาลธรรมดาไม่ต้องมี is หน้ากริยาแท้ คนไทยมักเติม is เพราะคิดว่าเป็นคำว่า \"เป็น/อยู่\" ที่ต้องมีทุกประโยค"},
+{"cat":"ไวยากรณ์","wrong":"I have two brother.","right":"I have two brothers.","why":"คำนามนับได้ที่มีจำนวนมากกว่าหนึ่งต้องเติม -s/-es เสมอ ภาษาไทยบอกจำนวนด้วยตัวเลขอย่างเดียวโดยไม่เปลี่ยนรูปคำนาม"},
+{"cat":"ไวยากรณ์","wrong":"I bought new car last week.","right":"I bought a new car last week.","why":"คำนามนับได้เอกพจน์ต้องมี article (a/an/the) หรือคำอย่าง my/this นำหน้า ภาษาไทยไม่มี article จึงมักตกหล่น"},
+{"cat":"ไวยากรณ์","wrong":"I am agree with you.","right":"I agree with you.","why":"agree เป็นกริยาอยู่แล้ว จึงไม่ต้องใช้ am ซ้อนเข้าไป คนไทยมักใส่ am เพราะแปลมาจาก \"ฉันเห็นด้วย\" และคิดว่า agree เป็นคุณศัพท์"},
+{"cat":"ไวยากรณ์","wrong":"I live in Bangkok since 2015.","right":"I have lived in Bangkok since 2015.","why":"เรื่องที่เริ่มในอดีตและยังเป็นอยู่ถึงตอนนี้ (ใช้คู่กับ since/for) ต้องใช้ Present Perfect (have + V3) ภาษาไทยไม่มีการผันกาลจึงใช้ปัจจุบันกาลธรรมดาแทน"},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"I very like it.","right":"I really like it.","why":"very ใช้ขยายคุณศัพท์หรือกริยาวิเศษณ์เท่านั้น (very good) ขยายกริยาไม่ได้ ถ้าจะบอกว่า \"ชอบมาก\" ให้ใช้ really like หรือ like it very much"},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"I play Facebook every night.","right":"I use Facebook every night.","why":"play ใช้กับเกม กีฬา หรือเครื่องดนตรี ส่วนโซเชียลมีเดียใช้ use หรือ be on Facebook คนไทยแปลตรงจาก \"เล่นเฟซ\""},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"Please borrow me your pen.","right":"Please lend me your pen.","why":"borrow คือ \"ขอยืม\" (ผู้รับเป็นคนทำ) ส่วน lend คือ \"ให้ยืม\" (เจ้าของเป็นคนทำ) ภาษาไทยใช้คำว่า \"ยืม\" คำเดียว จึงสลับกันบ่อย"},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"I stay at Bangkok with my family.","right":"I live in Bangkok with my family.","why":"stay ใช้กับการพักชั่วคราว เช่น stay at a hotel ถ้าเป็นที่อยู่ถาวรต้องใช้ live และใช้ in กับเมืองหรือประเทศ คนไทยแปลตรงจาก \"อยู่ที่กรุงเทพฯ\""},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"We discussed about the budget.","right":"We discussed the budget.","why":"discuss เป็นกริยาที่มีกรรมตามได้ทันที ไม่ต้องมี about คนไทยมักเติม about เพราะแปลมาจาก \"พูดคุยเกี่ยวกับ\" (แต่ใช้ a discussion about ได้)"},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"Can you explain me the process?","right":"Can you explain the process to me?","why":"explain ต้องตามด้วยสิ่งที่อธิบายก่อน แล้วจึงใช้ to + ผู้ฟัง (explain something to someone) ใส่คนไว้ต่อท้ายกริยาทันทีไม่ได้เหมือน \"อธิบายฉัน\" ในภาษาไทย"},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"She is married with a doctor.","right":"She is married to a doctor.","why":"be married ใช้คู่กับบุพบท to เสมอ คนไทยใช้ with เพราะแปลจาก \"แต่งงานกับ\" ซึ่ง \"กับ\" มักแปลเป็น with"},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"The price of this phone is very cheap.","right":"The price of this phone is very low.","why":"cheap และ expensive ใช้บรรยายตัวสินค้า (This phone is cheap.) ส่วนคำว่า price ต้องใช้ low หรือ high คนไทยแปลตรงจาก \"ราคาถูก/ราคาแพง\""},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"This is Tom. He is my fan.","right":"This is Tom. He is my boyfriend.","why":"fan ในภาษาอังกฤษแปลว่า \"แฟนคลับ/ผู้ชื่นชอบ\" ไม่ใช่คนรัก ถ้าหมายถึงแฟนต้องใช้ boyfriend, girlfriend หรือ partner"},
+{"cat":"คำศัพท์ที่ใช้ผิด","wrong":"I will wait you in the lobby.","right":"I will wait for you in the lobby.","why":"wait ต้องตามด้วย for ก่อนบอกว่ารอใครหรือรออะไร คนไทยตัด for ทิ้งเพราะภาษาไทยพูดว่า \"รอคุณ\" ได้เลย"},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"Please open the light.","right":"Please turn on the light.","why":"เครื่องใช้ไฟฟ้าและไฟใช้ turn on/turn off (หรือ switch on/off) ส่วน open/close ใช้กับประตู หน้าต่าง หรือกล่อง คนไทยแปลตรงจาก \"เปิดไฟ\""},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"Can you close the TV?","right":"Can you turn off the TV?","why":"\"ปิดทีวี\" ในความหมายหยุดการทำงานต้องใช้ turn off เพราะ close หมายถึงปิดสิ่งที่เปิดออกได้ทางกายภาพ เช่น close the door"},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"There have many people in the room.","right":"There are many people in the room.","why":"การบอกว่า \"มีบางอย่างอยู่ที่ไหน\" ใช้ There is/There are ไม่ใช่ There have คนไทยแปลคำว่า \"มี\" เป็น have ตรง ๆ"},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"Although it rained, but we went out.","right":"Although it rained, we went out.","why":"although กับ but เป็นคำเชื่อมทั้งคู่ ใช้ในประโยคเดียวกันไม่ได้ ต้องเลือกใช้อย่างใดอย่างหนึ่ง คนไทยติดโครงสร้าง \"แม้ว่า...แต่...\""},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"Because I was tired, so I went home early.","right":"Because I was tired, I went home early.","why":"because กับ so ใช้ซ้อนในประโยคเดียวกันไม่ได้ เลือกใช้ Because... หรือ ..., so... อย่างใดอย่างหนึ่ง คนไทยแปลจาก \"เพราะ...จึง...\""},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"This shirt and that shirt are same same.","right":"These two shirts are the same.","why":"\"same same\" เป็นการพูดซ้ำคำแบบภาษาไทย (เหมือน ๆ กัน) ในภาษาอังกฤษต้องใช้ the same หรือ similar ถ้าแค่คล้ายกัน"},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"Don't forget to eat your medicine.","right":"Don't forget to take your medicine.","why":"การกินยาในภาษาอังกฤษใช้กริยา take ไม่ใช่ eat คนไทยแปลตรงจาก \"กินยา\""},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"I go first. See you tomorrow.","right":"I'm heading out now. See you tomorrow.","why":"\"ไปก่อนนะ\" ไม่ควรแปลตรงเป็น I go first ซึ่งฟังเหมือนขอเดินนำหน้า ให้ใช้ I'm heading out หรือ I have to go now แทน"},
+{"cat":"สำนวนแปลตรงจากไทย","wrong":"Have you eaten rice yet?","right":"Have you eaten yet?","why":"\"กินข้าว\" ในภาษาไทยหมายถึงกินมื้ออาหาร แต่ eat rice แปลว่ากินข้าวสวยจริง ๆ ถ้าถามว่ากินอะไรมาหรือยังใช้ Have you eaten yet? หรือ Have you had lunch?"},
+{"cat":"คำถาม-คำตอบ","wrong":"Can you speak English? — Can.","right":"Can you speak English? — Yes, I can.","why":"คำตอบสั้นในภาษาอังกฤษต้องมี Yes/No และประธานด้วย (Yes, I can.) ตอบแค่กริยาคำเดียวไม่ได้เหมือน \"ได้\" ในภาษาไทย"},
+{"cat":"คำถาม-คำตอบ","wrong":"You don't like durian? — Yes. I don't like it.","right":"You don't like durian? — No, I don't.","why":"ภาษาอังกฤษเลือก Yes/No ตามความจริง ไม่ชอบก็ตอบ No แม้คำถามจะเป็นปฏิเสธ ส่วนภาษาไทยตอบ \"ใช่\" เพื่อยืนยันคำถาม จึงกลับด้านกัน"},
+{"cat":"คำถาม-คำตอบ","wrong":"How to say this word in English?","right":"How do you say this word in English?","why":"How to...? เป็นแค่วลี ไม่ใช่ประโยคคำถามที่สมบูรณ์ ต้องมีกริยาช่วยและประธาน (How do you say...?) คนไทยแปลจาก \"พูดยังไง\""},
+{"cat":"คำถาม-คำตอบ","wrong":"What your name?","right":"What is your name?","why":"คำถามที่ขึ้นต้นด้วย Wh- ต้องมี verb to be หรือกริยาช่วยตามหลังเสมอ ภาษาไทยพูด \"คุณชื่ออะไร\" ได้โดยไม่มีกริยาเชื่อม"},
+{"cat":"คำถาม-คำตอบ","wrong":"Why you not come to the meeting yesterday?","right":"Why didn't you come to the meeting yesterday?","why":"คำถามปฏิเสธในอดีตต้องใช้กริยาช่วย didn't วางหน้าประธาน ภาษาไทยแค่ใส่ \"ไม่\" หน้ากริยาจึงเรียงคำตามแบบไทย"},
+{"cat":"คำถาม-คำตอบ","wrong":"Do you understand? — Understand.","right":"Do you understand? — Yes, I understand.","why":"ภาษาอังกฤษตอบด้วยกริยาเปล่า ๆ ไม่ได้ ต้องมี Yes/No และประธาน (Yes, I do. / Yes, I understand.) ไม่ใช่ตอบคำเดียวว่า \"เข้าใจ\" แบบภาษาไทย"},
+{"cat":"การออกเสียงและการสะกด","wrong":"I'd like some chocolate cake for desert.","right":"I'd like some chocolate cake for dessert.","why":"dessert (ขนมหวาน) มี s สองตัวและเน้นพยางค์หลัง ส่วน desert (ทะเลทราย) มี s ตัวเดียวและเน้นพยางค์หน้า คนไทยมักสะกดและออกเสียงสลับกัน"},
+{"cat":"การออกเสียงและการสะกด","wrong":"She lead the meeting yesterday.","right":"She led the meeting yesterday.","why":"รูปอดีตของ lead (ลีด = นำ) คือ led ซึ่งออกเสียง \"เล็ด\" คนไทยสับสนเพราะ lead ที่แปลว่าตะกั่วก็ออกเสียง \"เล็ด\" เหมือนกัน"},
+{"cat":"การออกเสียงและการสะกด","wrong":"Can you fly an egg for me?","right":"Can you fry an egg for me?","why":"fry (ทอด) ออกเสียง r ม้วนลิ้น ส่วน fly คือบิน คนไทยมักออกเสียง ร เป็น ล และตัดเสียงควบกล้ำ จึงสะกดและพูดสลับกัน"},
+{"cat":"การออกเสียงและการสะกด","wrong":"I sink so, but let me check.","right":"I think so, but let me check.","why":"เสียง th ไม่มีในภาษาไทย คนไทยจึงออกเสียงเป็น ส หรือ ต ทำให้ think กลายเป็น sink (จม) ให้แตะปลายลิ้นที่ฟันหน้าแล้วเป่าลมออก"},
+{"cat":"การออกเสียงและการสะกด","wrong":"I don't want to loose my job.","right":"I don't want to lose my job.","why":"lose (ลูซ เสียง z) แปลว่าทำหาย/สูญเสีย ส่วน loose (ลูส เสียง s) แปลว่าหลวม คนไทยสะกดสลับกันบ่อยเพราะออกเสียงคล้ายกัน"},
+{"cat":"การออกเสียงและการสะกด","wrong":"The office is very quite today.","right":"The office is very quiet today.","why":"quiet (ไคว-เอิท สองพยางค์) แปลว่าเงียบ ส่วน quite (ไควท์ พยางค์เดียว) แปลว่าค่อนข้าง คนไทยมักสลับตัว e กับ t เวลาเขียน"},
+{"cat":"การออกเสียงและการสะกด","wrong":"Can you advice me on this contract?","right":"Can you advise me on this contract?","why":"advise (เสียง z) เป็นกริยา ส่วน advice (เสียง s) เป็นคำนาม คนไทยมักใช้ advice เป็นกริยาเพราะออกเสียงท้ายเป็น ส เหมือนกัน"}
+];
+
+const WFAM=[
+["decide","decision","decisive","decisively","ตัดสินใจ"],
+["produce","production","productive","productively","ผลิต"],
+["compete","competition","competitive","competitively","แข่งขัน"],
+["succeed","success","successful","successfully","ประสบความสำเร็จ"],
+["","economy","economic","economically","เศรษฐกิจ"],
+["create","creation","creative","creatively","สร้างสรรค์"],
+["inform","information","informative","informatively","แจ้ง / ให้ข้อมูล"],
+["","effect","effective","effectively","ผล / ได้ผล"],
+["","efficiency","efficient","efficiently","ประสิทธิภาพ"],
+["profit","profit","profitable","profitably","กำไร"],
+["rely","reliability","reliable","reliably","พึ่งพา / เชื่อถือได้"],
+["attract","attraction","attractive","attractively","ดึงดูด"],
+["respond","response","responsive","responsively","ตอบสนอง"],
+["operate","operation","operational","operationally","ดำเนินการ / ใช้งาน"],
+["manage","management","manageable","","จัดการ / บริหาร"],
+["analyze","analysis","analytical","analytically","วิเคราะห์"],
+["","accuracy","accurate","accurately","ความถูกต้องแม่นยำ"],
+["","confidence","confident","confidently","ความมั่นใจ"],
+["differ","difference","different","differently","แตกต่าง"],
+["signify","significance","significant","significantly","มีนัยสำคัญ / สำคัญ"],
+["continue","continuation","continuous","continuously","ดำเนินต่อ / ต่อเนื่อง"],
+["extend","extension","extensive","extensively","ขยาย / ยืดออก"],
+["impress","impression","impressive","impressively","ทำให้ประทับใจ"],
+["innovate","innovation","innovative","innovatively","คิดค้นสิ่งใหม่ / นวัตกรรม"],
+["benefit","benefit","beneficial","beneficially","ประโยชน์"],
+["satisfy","satisfaction","satisfactory","satisfactorily","ทำให้พอใจ"],
+["finance","finance","financial","financially","การเงิน"],
+["","strategy","strategic","strategically","กลยุทธ์"],
+["","responsibility","responsible","responsibly","ความรับผิดชอบ"],
+["complete","completion","complete","completely","ทำให้เสร็จสมบูรณ์"]
+];
+
+const WFQ=[
+{"q":"The new machine has made our factory much more ___.","o":["produce","production","productive","productively"],"a":2,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะโครงสร้าง make + กรรม + (more) adjective บอกลักษณะของ factory"},
+{"q":"Ms. Tanaka made a ___ to open a new branch in Chiang Mai.","o":["decision","decide","decisive","decisively"],"a":0,"why":"ต้องใช้คำนาม (noun) เพราะอยู่หลัง article \"a\" และเป็นกรรมของ made (make a decision = ตัดสินใจ)"},
+{"q":"Our prices are highly ___ compared to those of other suppliers.","o":["compete","competition","competitively","competitive"],"a":3,"why":"ต้องใช้คุณศัพท์ (adjective) หลัง verb to be เพราะ highly เป็น adverb ที่ขยายคุณศัพท์"},
+{"q":"The team ___ completed the project ahead of schedule.","o":["success","successfully","succeed","successful"],"a":1,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะอยู่ระหว่างประธานกับกริยา completed เพื่อขยายกริยา"},
+{"q":"The ___ situation in the region has improved this year.","o":["economy","economic","economically","economize"],"a":1,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หน้าคำนาม situation (economic = เกี่ยวกับเศรษฐกิจ)"},
+{"q":"Please ___ the form before Friday's meeting.","o":["completion","completely","completeness","complete"],"a":3,"why":"ต้องใช้กริยารูปฐาน (base verb) เพราะเป็นประโยคคำสั่งที่ขึ้นต้นด้วย Please และมีกรรม the form ตามหลัง"},
+{"q":"The marketing department came up with a very ___ advertising campaign.","o":["creative","create","creation","creatively"],"a":0,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หลัง very และอยู่หน้าคำนาม advertising campaign"},
+{"q":"Thank you for the ___ you provided about the new policy.","o":["inform","informative","information","informatively"],"a":2,"why":"ต้องใช้คำนาม (noun) เพราะอยู่หลัง article \"the\" และเป็นกรรมของบุพบท for"},
+{"q":"The new software is more ___ than the old version.","o":["efficiency","efficiently","efficiencies","efficient"],"a":3,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หลัง verb to be ในโครงสร้างเปรียบเทียบ more ... than เพื่อบอกลักษณะของ software"},
+{"q":"The company has been operating ___ since it moved to the new building.","o":["profit","profitably","profitable","profits"],"a":1,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะขยายกริยา operating ว่าดำเนินกิจการอย่างไร"},
+{"q":"We need a ___ supplier who can deliver on time.","o":["rely","reliably","reliable","reliability"],"a":2,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่ระหว่าง article \"a\" กับคำนาม supplier"},
+{"q":"The hotel offers ___ discounts for long-term guests.","o":["attractive","attract","attraction","attractively"],"a":0,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หน้าคำนาม discounts เพื่อบอกลักษณะ"},
+{"q":"We are still waiting for a ___ from the client.","o":["response","respond","responsive","responsively"],"a":0,"why":"ต้องใช้คำนาม (noun) เพราะอยู่หลัง article \"a\" ในวลี wait for a response"},
+{"q":"The new factory will be fully ___ by the end of March.","o":["operation","operate","operational","operationally"],"a":2,"why":"ต้องใช้คุณศัพท์ (adjective) หลัง verb to be เพราะ fully เป็น adverb ที่ขยายคุณศัพท์ (fully operational = พร้อมใช้งานเต็มที่)"},
+{"q":"Mr. Lee is responsible for the ___ of the sales team.","o":["manage","management","manageable","managed"],"a":1,"why":"ต้องใช้คำนาม (noun) เพราะอยู่ในโครงสร้าง the ___ of ซึ่งต้องการคำนาม"},
+{"q":"The consultant will ___ the survey results next week.","o":["analysis","analytical","analytically","analyze"],"a":3,"why":"ต้องใช้กริยารูปฐาน (base verb) เพราะอยู่หลัง modal verb will และมีกรรม the survey results"},
+{"q":"The report ___ reflects the company's financial situation.","o":["accurate","accuracy","accurately","accuracies"],"a":2,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะอยู่ระหว่างประธานกับกริยา reflects เพื่อขยายกริยา"},
+{"q":"Ms. Park spoke ___ during her presentation to the board.","o":["confidently","confident","confidence","confide"],"a":0,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะขยายกริยา spoke ว่าพูดอย่างไร"},
+{"q":"There is a big ___ between the two proposals.","o":["differ","different","differently","difference"],"a":3,"why":"ต้องใช้คำนาม (noun) เพราะอยู่หลัง article \"a\" และคุณศัพท์ big"},
+{"q":"Sales have increased ___ since we launched the online store.","o":["significant","significantly","significance","signify"],"a":1,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะขยายกริยา increased ว่าเพิ่มขึ้นมากน้อยแค่ไหน"},
+{"q":"The machines have been running ___ for 24 hours.","o":["continue","continuously","continuous","continuation"],"a":1,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะขยายกริยา running ว่าทำงานอย่างไร"},
+{"q":"The new manager has ___ experience in international trade.","o":["extend","extension","extensively","extensive"],"a":3,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หน้าคำนาม experience (extensive experience = ประสบการณ์กว้างขวาง)"},
+{"q":"The candidate's presentation was very ___.","o":["impressive","impress","impression","impressively"],"a":0,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หลัง verb to be และ very เพื่อบอกลักษณะของ presentation"},
+{"q":"The company is known for its ___ products.","o":["innovate","innovation","innovative","innovatively"],"a":2,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่ระหว่างคำแสดงความเป็นเจ้าของ its กับคำนาม products"},
+{"q":"Flexible working hours are ___ for both employees and employers.","o":["benefit","beneficially","benefited","beneficial"],"a":3,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หลัง verb to be ในโครงสร้าง be beneficial for (เป็นประโยชน์ต่อ)"},
+{"q":"Customer ___ is our top priority.","o":["satisfy","satisfaction","satisfactory","satisfactorily"],"a":1,"why":"ต้องใช้คำนาม (noun) เพราะเป็นประธานของประโยคที่ตามด้วย is (customer satisfaction = ความพึงพอใจของลูกค้า)"},
+{"q":"The company is in a strong ___ position.","o":["finance","financially","financial","financed"],"a":2,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หน้าคำนาม position (financial position = สถานะทางการเงิน)"},
+{"q":"The new branch is ___ located near the airport.","o":["strategically","strategy","strategic","strategize"],"a":0,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะขยายกริยารูป V3 located ในประโยค passive"},
+{"q":"All employees must dispose of waste ___.","o":["responsibly","responsible","responsibility","responsibilities"],"a":0,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะอยู่ท้ายประโยคเพื่อขยายกริยา dispose of ว่าทำอย่างไร"},
+{"q":"The ___ of the new office building is expected in June.","o":["complete","completely","completion","completed"],"a":2,"why":"ต้องใช้คำนาม (noun) เพราะอยู่ในโครงสร้าง the ___ of และเป็นประธานของประโยค"},
+{"q":"Thank you for ___ our order so quickly.","o":["process","processing","processed","processor"],"a":1,"why":"ต้องใช้ gerund (V-ing) เพราะอยู่หลังบุพบท for และยังมีกรรม our order ตามหลัง"},
+{"q":"Our goal this year is to ___ into three new markets.","o":["expansion","expansive","expansively","expand"],"a":3,"why":"ต้องใช้กริยารูปฐาน (base verb) เพราะอยู่หลัง to ในรูป to-infinitive"},
+{"q":"Several firms will ___ for the government contract.","o":["competition","competitive","compete","competitively"],"a":2,"why":"ต้องใช้กริยารูปฐาน (base verb) เพราะอยู่หลัง modal verb will และประโยคยังไม่มีกริยาแท้"},
+{"q":"The new policy was ___ received by the staff.","o":["warmly","warm","warmth","warmer"],"a":0,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะขยายกริยา received ในประโยค passive (was warmly received = ได้รับการตอบรับอย่างดี)"},
+{"q":"Please read the safety instructions ___ before using the machine.","o":["care","careful","carefulness","carefully"],"a":3,"why":"ต้องใช้กริยาวิเศษณ์ (adverb) เพราะขยายกริยา read ว่าอ่านอย่างไร"},
+{"q":"The director is considering ___ the deadline by two weeks.","o":["extend","extending","extension","extensive"],"a":1,"why":"ต้องใช้ gerund (V-ing) เพราะกริยา consider ต้องตามด้วย V-ing และยังมีกรรม the deadline ตามหลัง"},
+{"q":"We are committed to ___ excellent service to our customers.","o":["provide","providing","provision","provided"],"a":1,"why":"ต้องใช้ gerund (V-ing) เพราะ to ใน be committed to เป็นบุพบท ไม่ใช่ to-infinitive"},
+{"q":"The updated employee handbook is now ___ on the company website.","o":["avail","availability","availabilities","available"],"a":3,"why":"ต้องใช้คุณศัพท์ (adjective) เพราะอยู่หลัง verb to be เพื่อบอกสถานะของ handbook (available = มีให้ใช้)"},
+{"q":"The new CEO plans to ___ the approval process.","o":["simplify","simple","simply","simplicity"],"a":0,"why":"ต้องใช้กริยารูปฐาน (base verb) เพราะอยู่หลัง to ใน plan to do และมีกรรม the approval process"},
+{"q":"We greatly appreciate your ___ in this matter.","o":["cooperate","cooperative","cooperation","cooperatively"],"a":2,"why":"ต้องใช้คำนาม (noun) เพราะอยู่หลังคำแสดงความเป็นเจ้าของ your และเป็นกรรมของ appreciate"}
+];
+const STRESS=[
+ {w:"photograph",syl:["pho","to","graph"],s:0,th:"รูปถ่าย"},
+ {w:"photographer",syl:["pho","tog","ra","pher"],s:1,th:"ช่างภาพ"},
+ {w:"photographic",syl:["pho","to","graph","ic"],s:2,th:"เกี่ยวกับการถ่ายภาพ"},
+ {w:"comfortable",syl:["com","fort","a","ble"],s:0,th:"สบาย"},
+ {w:"vegetable",syl:["veg","e","ta","ble"],s:0,th:"ผัก"},
+ {w:"interesting",syl:["in","ter","est","ing"],s:0,th:"น่าสนใจ"},
+ {w:"chocolate",syl:["choc","o","late"],s:0,th:"ช็อกโกแลต"},
+ {w:"develop",syl:["de","vel","op"],s:1,th:"พัฒนา"},
+ {w:"hotel",syl:["ho","tel"],s:1,th:"โรงแรม"},
+ {w:"event",syl:["e","vent"],s:1,th:"งาน, เหตุการณ์"},
+ {w:"technology",syl:["tech","nol","o","gy"],s:1,th:"เทคโนโลยี"},
+ {w:"economy",syl:["e","con","o","my"],s:1,th:"เศรษฐกิจ"},
+ {w:"economic",syl:["ec","o","nom","ic"],s:2,th:"ทางเศรษฐกิจ"},
+ {w:"necessary",syl:["nec","es","sar","y"],s:0,th:"จำเป็น"},
+ {w:"information",syl:["in","for","ma","tion"],s:2,th:"ข้อมูล"},
+ {w:"preparation",syl:["prep","a","ra","tion"],s:2,th:"การเตรียมตัว"},
+ {w:"especially",syl:["es","pe","cial","ly"],s:1,th:"โดยเฉพาะ"},
+ {w:"determine",syl:["de","ter","mine"],s:1,th:"กำหนด, ตัดสิน"},
+ {w:"career",syl:["ca","reer"],s:1,th:"อาชีพการงาน"},
+ {w:"percent",syl:["per","cent"],s:1,th:"เปอร์เซ็นต์"},
+ {w:"Japan",syl:["ja","pan"],s:1,th:"ประเทศญี่ปุ่น"},
+ {w:"Japanese",syl:["jap","a","nese"],s:2,th:"ชาวญี่ปุ่น, ภาษาญี่ปุ่น"},
+ {w:"hundred",syl:["hun","dred"],s:0,th:"ร้อย"},
+ {w:"thirteen",syl:["thir","teen"],s:1,th:"สิบสาม"},
+ {w:"thirty",syl:["thir","ty"],s:0,th:"สามสิบ"},
+ {w:"banana",syl:["ba","nan","a"],s:1,th:"กล้วย"},
+ {w:"important",syl:["im","por","tant"],s:1,th:"สำคัญ"},
+ {w:"computer",syl:["com","put","er"],s:1,th:"คอมพิวเตอร์"},
+ {w:"family",syl:["fam","i","ly"],s:0,th:"ครอบครัว"},
+ {w:"understand",syl:["un","der","stand"],s:2,th:"เข้าใจ"},
+ {w:"volunteer",syl:["vol","un","teer"],s:2,th:"อาสาสมัคร"},
+ {w:"engineer",syl:["en","gi","neer"],s:2,th:"วิศวกร"},
+ {w:"company",syl:["com","pa","ny"],s:0,th:"บริษัท"},
+ {w:"customer",syl:["cus","tom","er"],s:0,th:"ลูกค้า"},
+ {w:"restaurant",syl:["res","tau","rant"],s:0,th:"ร้านอาหาร"},
+ {w:"politics",syl:["pol","i","tics"],s:0,th:"การเมือง"},
+ {w:"political",syl:["po","lit","i","cal"],s:1,th:"ทางการเมือง"},
+ {w:"politician",syl:["pol","i","ti","cian"],s:2,th:"นักการเมือง"},
+ {w:"analysis",syl:["a","nal","y","sis"],s:1,th:"การวิเคราะห์"},
+ {w:"Thailand",syl:["thai","land"],s:0,th:"ประเทศไทย"},
+ {w:"success",syl:["suc","cess"],s:1,th:"ความสำเร็จ"},
+ {w:"environment",syl:["en","vi","ron","ment"],s:1,th:"สิ่งแวดล้อม"},
+ {w:"electricity",syl:["e","lec","tric","i","ty"],s:2,th:"ไฟฟ้า"},
+ {w:"personality",syl:["per","son","al","i","ty"],s:3,th:"บุคลิกภาพ"},
+ {w:"university",syl:["u","ni","ver","si","ty"],s:2,th:"มหาวิทยาลัย"},
+ {w:"unfortunately",syl:["un","for","tu","nate","ly"],s:1,th:"โชคไม่ดีที่, น่าเสียดายที่"},
+ {w:"emergency",syl:["e","mer","gen","cy"],s:1,th:"เหตุฉุกเฉิน"},
+ {w:"European",syl:["eu","ro","pe","an"],s:2,th:"ชาวยุโรป, เกี่ยวกับยุโรป"}
+];
+DECKS.push(
+ {id:"env",title:"IELTS: สิ่งแวดล้อม",th:"คำศัพท์และ collocation หัวข้อสิ่งแวดล้อม ใช้บ่อยใน Writing Task 2 และ Speaking",words:[
+  ["carbon footprint","ปริมาณคาร์บอนที่แต่ละคนหรือองค์กรปล่อยออกมา","n.","Taking the train instead of flying is one of the easiest ways to reduce your carbon footprint.","การนั่งรถไฟแทนการบินเป็นหนึ่งในวิธีที่ง่ายที่สุดในการลดปริมาณคาร์บอนที่คุณปล่อย"],
+  ["renewable energy","พลังงานหมุนเวียน","n.","Many governments are investing heavily in renewable energy such as solar and wind power.","หลายรัฐบาลกำลังลงทุนอย่างมากในพลังงานหมุนเวียน เช่น พลังงานแสงอาทิตย์และพลังงานลม"],
+  ["fossil fuels","เชื้อเพลิงฟอสซิล (ถ่านหิน น้ำมัน ก๊าซ)","n.","Our dependence on fossil fuels is a major cause of air pollution in big cities.","การพึ่งพาเชื้อเพลิงฟอสซิลเป็นสาเหตุหลักของมลพิษทางอากาศในเมืองใหญ่"],
+  ["greenhouse gas","ก๊าซเรือนกระจก","n.","Methane is a greenhouse gas that traps far more heat than carbon dioxide.","มีเทนเป็นก๊าซเรือนกระจกที่กักเก็บความร้อนได้มากกว่าคาร์บอนไดออกไซด์มาก"],
+  ["global warming","ภาวะโลกร้อน","n.","Rising sea levels are one of the most serious consequences of global warming.","ระดับน้ำทะเลที่สูงขึ้นเป็นหนึ่งในผลกระทบที่ร้ายแรงที่สุดของภาวะโลกร้อน"],
+  ["climate change","การเปลี่ยนแปลงสภาพภูมิอากาศ","n.","Tackling climate change requires cooperation between all countries, not just wealthy ones.","การรับมือกับการเปลี่ยนแปลงสภาพภูมิอากาศต้องอาศัยความร่วมมือจากทุกประเทศ ไม่ใช่แค่ประเทศร่ำรวย"],
+  ["deforestation","การตัดไม้ทำลายป่า","n.","Deforestation has destroyed the homes of countless animals in Southeast Asia.","การตัดไม้ทำลายป่าได้ทำลายที่อยู่ของสัตว์นับไม่ถ้วนในเอเชียตะวันออกเฉียงใต้"],
+  ["endangered species","สัตว์หรือพืชที่ใกล้สูญพันธุ์","n.","The government has introduced strict laws to protect endangered species like the tiger.","รัฐบาลได้ออกกฎหมายที่เข้มงวดเพื่อคุ้มครองสัตว์ใกล้สูญพันธุ์อย่างเสือ"],
+  ["biodiversity","ความหลากหลายทางชีวภาพ","n.","Coral reefs support an incredible level of biodiversity.","แนวปะการังเป็นแหล่งความหลากหลายทางชีวภาพที่น่าทึ่งมาก"],
+  ["pollutant","สารก่อมลพิษ","n.","Factories must not release harmful pollutants into rivers.","โรงงานต้องไม่ปล่อยสารก่อมลพิษที่เป็นอันตรายลงสู่แม่น้ำ"],
+  ["single-use plastic","พลาสติกแบบใช้ครั้งเดียวทิ้ง","n.","Several supermarkets have stopped giving out single-use plastic bags.","ซูเปอร์มาร์เก็ตหลายแห่งเลิกแจกถุงพลาสติกแบบใช้ครั้งเดียวทิ้งแล้ว"],
+  ["landfill","หลุมฝังกลบขยะ","n.","Most household waste still ends up in landfill instead of being recycled.","ขยะในครัวเรือนส่วนใหญ่ยังคงไปจบที่หลุมฝังกลบแทนที่จะถูกนำไปรีไซเคิล"],
+  ["natural habitat","ถิ่นที่อยู่ตามธรรมชาติ","n.","Elephants are losing their natural habitat as farms expand into the forest.","ช้างกำลังสูญเสียถิ่นที่อยู่ตามธรรมชาติเมื่อไร่นาขยายเข้าไปในป่า"],
+  ["conservation","การอนุรักษ์","n.","The national park runs several conservation projects funded by tourism.","อุทยานแห่งชาติดำเนินโครงการอนุรักษ์หลายโครงการโดยใช้เงินจากการท่องเที่ยว"],
+  ["cut emissions","ลดการปล่อยก๊าซ","phr.","Car manufacturers are under pressure to cut emissions from new vehicles.","ผู้ผลิตรถยนต์ถูกกดดันให้ลดการปล่อยก๊าซจากรถรุ่นใหม่"],
+  ["deplete","ทำให้ร่อยหรอ, ใช้จนหมด","v.","Overfishing has seriously depleted fish stocks in the Gulf of Thailand.","การจับปลามากเกินไปทำให้ปริมาณปลาในอ่าวไทยลดลงอย่างมาก"],
+  ["drought","ภัยแล้ง","n.","The long drought caused serious damage to rice farmers in the northeast.","ภัยแล้งที่ยาวนานสร้างความเสียหายอย่างหนักให้กับชาวนาในภาคอีสาน"],
+  ["eco-friendly","เป็นมิตรกับสิ่งแวดล้อม","adj.","More customers are willing to pay extra for eco-friendly products.","ลูกค้าจำนวนมากขึ้นยินดีจ่ายเพิ่มสำหรับสินค้าที่เป็นมิตรกับสิ่งแวดล้อม"],
+  ["raise awareness","สร้างความตระหนักรู้","phr.","Schools can play a key role in raising awareness of environmental issues.","โรงเรียนมีบทบาทสำคัญในการสร้างความตระหนักรู้เรื่องปัญหาสิ่งแวดล้อม"],
+  ["irreversible","ไม่สามารถย้อนกลับหรือแก้ไขได้","adj.","Scientists warn that some damage to the ocean may already be irreversible.","นักวิทยาศาสตร์เตือนว่าความเสียหายบางอย่างต่อมหาสมุทรอาจแก้ไขไม่ได้แล้ว"]
+ ]},
+ {id:"edu",title:"IELTS: การศึกษา",th:"คำศัพท์หัวข้อการศึกษา โรงเรียน มหาวิทยาลัย สำหรับ Writing Task 2 และ Speaking",words:[
+  ["curriculum","หลักสูตร","n.","Many parents believe the school curriculum should include more practical life skills.","ผู้ปกครองหลายคนเชื่อว่าหลักสูตรของโรงเรียนควรมีทักษะชีวิตที่ใช้ได้จริงมากกว่านี้"],
+  ["tuition fees","ค่าเล่าเรียน","n.","Rising tuition fees prevent many talented students from going to university.","ค่าเล่าเรียนที่สูงขึ้นทำให้นักเรียนเก่ง ๆ หลายคนไม่ได้เข้ามหาวิทยาลัย"],
+  ["compulsory","ที่เป็นภาคบังคับ","adj.","In some countries, learning a second language is compulsory from primary school.","ในบางประเทศ การเรียนภาษาที่สองเป็นวิชาบังคับตั้งแต่ชั้นประถม"],
+  ["extracurricular activities","กิจกรรมนอกหลักสูตร","n.","Extracurricular activities such as sport and music help children develop social skills.","กิจกรรมนอกหลักสูตรอย่างกีฬาและดนตรีช่วยให้เด็กพัฒนาทักษะทางสังคม"],
+  ["academic performance","ผลการเรียน","n.","Lack of sleep can have a negative effect on students' academic performance.","การนอนไม่พอส่งผลเสียต่อผลการเรียนของนักเรียนได้"],
+  ["higher education","การศึกษาระดับอุดมศึกษา","n.","Access to higher education should not depend on how rich your family is.","การเข้าถึงการศึกษาระดับอุดมศึกษาไม่ควรขึ้นอยู่กับว่าครอบครัวรวยแค่ไหน"],
+  ["vocational training","การฝึกอาชีพ","n.","Vocational training can be a better option for students who prefer hands-on work.","การฝึกอาชีพอาจเป็นทางเลือกที่ดีกว่าสำหรับนักเรียนที่ชอบงานลงมือปฏิบัติ"],
+  ["distance learning","การเรียนทางไกล","n.","Distance learning allows working adults to study without quitting their jobs.","การเรียนทางไกลช่วยให้ผู้ใหญ่ที่ทำงานอยู่เรียนได้โดยไม่ต้องลาออกจากงาน"],
+  ["rote learning","การเรียนแบบท่องจำ","n.","Critics argue that rote learning does not prepare students for real-world problems.","ผู้วิจารณ์แย้งว่าการเรียนแบบท่องจำไม่ได้เตรียมนักเรียนให้พร้อมรับปัญหาในโลกจริง"],
+  ["critical thinking","การคิดเชิงวิพากษ์","n.","Good teachers encourage critical thinking rather than simply giving students the answers.","ครูที่ดีส่งเสริมการคิดเชิงวิพากษ์แทนที่จะแค่บอกคำตอบให้นักเรียน"],
+  ["scholarship","ทุนการศึกษา","n.","She won a full scholarship to study engineering in Australia.","เธอได้ทุนการศึกษาเต็มจำนวนไปเรียนวิศวกรรมที่ออสเตรเลีย"],
+  ["undergraduate","นักศึกษาปริญญาตรี","n.","Most undergraduates live in shared accommodation during their first year.","นักศึกษาปริญญาตรีส่วนใหญ่อาศัยอยู่ในที่พักร่วมกับคนอื่นในปีแรก"],
+  ["literacy","ความสามารถในการอ่านออกเขียนได้","n.","The charity works to improve literacy among children in rural areas.","องค์กรการกุศลนี้ทำงานเพื่อพัฒนาการอ่านออกเขียนได้ของเด็กในพื้นที่ชนบท"],
+  ["peer pressure","แรงกดดันจากเพื่อน","n.","Teenagers often start smoking because of peer pressure.","วัยรุ่นมักเริ่มสูบบุหรี่เพราะแรงกดดันจากเพื่อน"],
+  ["drop out","ลาออกกลางคัน","phr.","He dropped out of university to start his own online business.","เขาลาออกจากมหาวิทยาลัยกลางคันเพื่อเริ่มธุรกิจออนไลน์ของตัวเอง"],
+  ["enrol","ลงทะเบียนเรียน","v.","I've enrolled on an evening course in business English.","ฉันลงทะเบียนเรียนคอร์สภาษาอังกฤษธุรกิจรอบค่ำแล้ว"],
+  ["lifelong learning","การเรียนรู้ตลอดชีวิต","n.","In a fast-changing job market, lifelong learning is no longer optional.","ในตลาดงานที่เปลี่ยนแปลงเร็ว การเรียนรู้ตลอดชีวิตไม่ใช่ทางเลือกอีกต่อไป"],
+  ["assessment","การประเมินผล","n.","Continuous assessment gives a fairer picture of a student's ability than one final exam.","การประเมินผลอย่างต่อเนื่องสะท้อนความสามารถของนักเรียนได้ยุติธรรมกว่าการสอบปลายภาคครั้งเดียว"],
+  ["qualification","วุฒิการศึกษา, คุณสมบัติ","n.","Employers are increasingly looking at skills as well as formal qualifications.","นายจ้างเริ่มดูที่ทักษะควบคู่ไปกับวุฒิการศึกษาอย่างเป็นทางการมากขึ้นเรื่อย ๆ"],
+  ["discipline","ระเบียบวินัย","n.","Some people believe schools today are too relaxed about discipline.","บางคนเชื่อว่าโรงเรียนสมัยนี้ผ่อนปรนเรื่องระเบียบวินัยมากเกินไป"]
+ ]},
+ {id:"work",title:"งานและธุรกิจ",th:"คำศัพท์เรื่องการทำงานและธุรกิจ ใช้ได้ทั้งในที่ทำงานและ IELTS",words:[
+  ["work-life balance","ความสมดุลระหว่างงานกับชีวิต","n.","Flexible hours have really improved my work-life balance.","เวลาทำงานที่ยืดหยุ่นช่วยให้ชีวิตกับงานของฉันสมดุลขึ้นมาก"],
+  ["job satisfaction","ความพึงพอใจในงาน","n.","For many young workers, job satisfaction matters more than a high salary.","สำหรับคนทำงานรุ่นใหม่หลายคน ความพึงพอใจในงานสำคัญกว่าเงินเดือนสูง"],
+  ["work remotely","ทำงานทางไกล (ไม่เข้าออฟฟิศ)","phr.","Since the pandemic, our team has been allowed to work remotely twice a week.","ตั้งแต่เกิดโรคระบาด ทีมเราได้รับอนุญาตให้ทำงานจากที่อื่นได้สัปดาห์ละสองวัน"],
+  ["entrepreneur","ผู้ประกอบการ","n.","The young entrepreneur turned her small café into a chain of twenty shops.","ผู้ประกอบการสาวขยายร้านกาแฟเล็ก ๆ ของเธอจนกลายเป็นเครือข่ายยี่สิบสาขา"],
+  ["start-up","บริษัทเกิดใหม่, สตาร์ทอัพ","n.","He left his bank job to join a tech start-up in Bangkok.","เขาลาออกจากงานธนาคารไปร่วมงานกับสตาร์ทอัพด้านเทคโนโลยีในกรุงเทพฯ"],
+  ["market share","ส่วนแบ่งตลาด","n.","The company has lost market share to cheaper competitors.","บริษัทเสียส่วนแบ่งตลาดให้กับคู่แข่งที่ขายถูกกว่า"],
+  ["profit margin","อัตรากำไร","n.","Online shops often have higher profit margins because they don't pay rent for a store.","ร้านค้าออนไลน์มักมีอัตรากำไรสูงกว่าเพราะไม่ต้องจ่ายค่าเช่าหน้าร้าน"],
+  ["stakeholder","ผู้มีส่วนได้ส่วนเสีย","n.","We need to consult all stakeholders before making any changes to the plan.","เราต้องปรึกษาผู้มีส่วนได้ส่วนเสียทุกฝ่ายก่อนจะเปลี่ยนแผน"],
+  ["workload","ปริมาณงาน","n.","My workload has doubled since two people left the team.","ปริมาณงานของฉันเพิ่มขึ้นเป็นสองเท่าตั้งแต่มีคนลาออกจากทีมไปสองคน"],
+  ["delegate","มอบหมายงาน","v.","A good manager knows how to delegate tasks instead of doing everything alone.","ผู้จัดการที่ดีรู้จักมอบหมายงานแทนที่จะทำทุกอย่างเอง"],
+  ["resign","ลาออก","v.","She resigned from her position after ten years with the company.","เธอลาออกจากตำแหน่งหลังจากทำงานกับบริษัทมาสิบปี"],
+  ["job security","ความมั่นคงในงาน","n.","Government jobs are popular in Thailand because they offer good job security.","งานราชการเป็นที่นิยมในไทยเพราะมีความมั่นคงในงานสูง"],
+  ["annual leave","วันลาพักร้อน","n.","I'm planning to use my annual leave to visit Japan in December.","ฉันวางแผนจะใช้วันลาพักร้อนไปเที่ยวญี่ปุ่นในเดือนธันวาคม"],
+  ["overtime","การทำงานล่วงเวลา, โอที","n.","We had to work overtime every day to finish the project on time.","เราต้องทำโอทีทุกวันเพื่อให้โปรเจกต์เสร็จทันเวลา"],
+  ["merger","การควบรวมกิจการ","n.","Hundreds of jobs were cut after the merger of the two banks.","มีการเลิกจ้างหลายร้อยตำแหน่งหลังจากธนาคารสองแห่งควบรวมกิจการกัน"],
+  ["outsource","จ้างบุคคลภายนอกทำ, เอาต์ซอร์ส","v.","Many companies outsource their customer service to save money.","หลายบริษัทจ้างบริษัทภายนอกดูแลงานบริการลูกค้าเพื่อประหยัดค่าใช้จ่าย"],
+  ["recruit","รับสมัครพนักงาน","v.","We are recruiting two new engineers for the Chiang Mai office.","เรากำลังรับสมัครวิศวกรใหม่สองตำแหน่งสำหรับสำนักงานเชียงใหม่"],
+  ["productivity","ประสิทธิภาพการทำงาน","n.","Studies suggest that short breaks can actually increase productivity.","งานวิจัยชี้ว่าการพักสั้น ๆ ช่วยเพิ่มประสิทธิภาพการทำงานได้จริง"],
+  ["brainstorm","ระดมความคิด","v.","Let's brainstorm some ideas for the new advertising campaign.","มาระดมความคิดสำหรับแคมเปญโฆษณาใหม่กันเถอะ"],
+  ["launch a product","เปิดตัวสินค้า","phr.","The company plans to launch a new product in the Thai market next spring.","บริษัทวางแผนจะเปิดตัวสินค้าใหม่ในตลาดไทยช่วงฤดูใบไม้ผลิปีหน้า"]
+ ]}
+);
+
+/* ---------- listening library (podcasts) ---------- */
+let PD=null, podTok=0;
+const POD_VOICE={A:[0,1.12],B:[1,0.9]};
+function viewPods(){
+  const st=stat("pod");
+  return pBack()+'<h1 class="h2" style="margin-top:8px">ห้องฟังพอดแคสต์</h1><p class="lede">บทสนทนายาวแบบพอดแคสต์ '+PODS.length+' ตอน ฟังให้จบก่อนโดยไม่ดูบทพูด แล้วตอบคำถาม จากนั้นค่อยเปิดบทพูดและคำแปลดูจุดที่ฟังไม่ทัน</p>'
+   +LEVELS.filter(lv=>PODS.some(p=>p.lv===lv.code)).map(lv=>'<section class="section" style="margin-top:22px"><h2 class="h3">'+lv.code+' <span lang="en">'+lv.name+'</span></h2><div class="lessons" style="margin-top:10px">'
+     +PODS.filter(p=>p.lv===lv.code).map(p=>'<button class="lrow" data-act="pgo" data-id="pod.'+p.id+'"><span class="lnum">'+p.lv+'</span><span class="ltitle"><b lang="en">'+esc(p.title)+'</b><small>'+esc(p.th)+' · '+p.lines.length+' ช่วง · '+p.qs.length+' คำถาม</small></span><span class="lstat">'+(st[p.id]!=null?'<span class="chip'+(st[p.id]===p.qs.length?' ok':'')+'">'+st[p.id]+'/'+p.qs.length+'</span>':'')+'</span></button>').join("")+'</div></section>').join("");
+}
+function viewPod(id){
+  const p=PODS.find(x=>x.id===id); if(!p) return viewPods();
+  if(!PD||PD.id!==id) PD={id,ans:{},script:false,th:false,playing:-1};
+  const answered=Object.keys(PD.ans).length, correct=p.qs.filter((q,i)=>PD.ans[i]===q.a).length;
+  let h=pBack("pods","ห้องฟังพอดแคสต์")+'<p class="eyebrow" style="margin-top:8px">'+p.lv+' · '+esc(p.th)+'</p><h1 class="h2" lang="en">'+esc(p.title)+'</h1>'
+   +'<p class="muted" style="margin-top:4px">ผู้พูด: <span lang="en">'+esc(p.cast.A)+'</span> และ <span lang="en">'+esc(p.cast.B)+'</span></p>'
+   +'<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="podplay">'+ICON.say+(PD.playing>=0?"หยุด":"ฟังทั้งตอน")+'</button>'
+   +'<button class="btn btn-sm" data-act="podscript">'+(PD.script?"ซ่อนบทพูด":"ดูบทพูด")+'</button>'+(PD.script?'<button class="btn btn-sm btn-ghost" data-act="podth">'+(PD.th?"ซ่อนคำแปล":"แสดงคำแปล")+'</button>':'')+'</div>';
+  if(PD.script) h+='<ol class="dlg pod-dlg" style="margin-top:14px">'+p.lines.map((l,i)=>'<li id="pd-'+i+'" class="'+(l[0]==="A"?"a":"b")+(PD.playing===i?" playing":"")+'"><span class="who" lang="en">'+esc(p.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p>'+(PD.th?'<p class="tr">'+esc(l[2])+'</p>':'')+'</div>'+sayBtn(l[1],"ฟังช่วงนี้")+'</li>').join("")+'</ol>';
+  else h+='<div class="card pod-now" style="margin-top:14px"><p class="muted" id="pod-now">'+(PD.playing>=0?"กำลังฟังช่วงที่ "+(PD.playing+1)+"/"+p.lines.length:"กดฟังทั้งตอน ตั้งใจฟังใจความหลักก่อน แล้วค่อยตอบคำถามด้านล่าง")+'</p></div>';
+  h+='<section class="comp"><h2 class="h3">คำถาม</h2>'+p.qs.map((q,qi)=>{const pick=PD.ans[qi];
+     return '<p class="q" lang="en">'+(qi+1)+'. '+esc(q.q)+'</p><div class="opts">'+q.o.map((o,oi)=>{let c="opt"; if(pick!=null){if(oi===q.a) c+=" is-right"; else if(oi===pick) c+=" is-wrong"} return '<button class="'+c+'" data-act="podq" data-q="'+qi+'" data-o="'+oi+'"'+(pick!=null?" disabled":"")+' lang="en">'+esc(o)+'</button>'}).join("")+'</div>'+(pick!=null&&q.why?'<p class="muted" style="font-size:14px;margin-top:4px">'+esc(q.why)+'</p>':'')}).join("")
+   +(answered===p.qs.length?'<div class="feedback '+(correct===p.qs.length?"ok":"no")+'" style="margin-top:16px"><b>ตอบถูก '+correct+'/'+p.qs.length+'</b><span>'+(PD.script?'':'เปิดบทพูดดูช่วงที่พลาด แล้วฟังซ้ำอีกรอบ')+'</span></div>':'')+'</section>';
+  return h;
+}
+async function podPlay(p){
+  const tok=++podTok; Speech.stop();
+  for(let i=0;i<p.lines.length;i++){
+    if(tok!==podTok||route.name!=="practice"||route.id!=="pod."+p.id) break;
+    PD.playing=i; document.querySelectorAll(".pod-dlg li").forEach(x=>x.classList.remove("playing")); const el=$("#pd-"+i); if(el){el.classList.add("playing"); el.scrollIntoView({block:"nearest"})}
+    const now=$("#pod-now"); if(now) now.textContent="กำลังฟังช่วงที่ "+(i+1)+"/"+p.lines.length;
+    const v=POD_VOICE[p.lines[i][0]]||POD_VOICE.A;
+    for(const b of String(p.lines[i][1]).split(/(?<!\b(?:Mr|Ms|Mrs|Dr)\.)(?<=[.!?])\s+(?=[A-Z"])/)){if(tok!==podTok) break; await Speech.say(b,{voice:v[0],pitch:v[1]})}
+    await new Promise(r=>setTimeout(r,350));
+  }
+  if(tok===podTok&&PD){PD.playing=-1; if(route.name==="practice"&&route.id==="pod."+p.id) render()}
+}
+
+/* ---------- Thai-English mistakes ---------- */
+let tgCat="all";
+function viewThaiglish(){
+  const cats=Array.from(new Set(THAIGLISH.map(x=>x.cat))), list=THAIGLISH.filter(x=>tgCat==="all"||x.cat===tgCat), st=stat("tg");
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">ภาษาอังกฤษแบบไทยๆ ที่ควรเลิกใช้</h1><p class="lede">'+THAIGLISH.length+' จุดที่คนไทยพูดผิดบ่อยเพราะแปลตรงจากภาษาไทย อ่านแล้วลองทดสอบ เลือกประโยคที่ถูก</p>'
+   +'<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="tgquiz">ทดสอบ 10 ข้อ</button>'+(st.best!=null?'<span class="muted">ดีที่สุด '+st.best+'/10</span>':'')+'</div>';
+  if(PRUN&&PRUN_META&&PRUN_META.id==="tg"){
+    h+='<section class="section"><h2 class="h3">ทดสอบ: ประโยคไหนถูก</h2>';
+    if(PRUN.done){const c=PRUN.results.filter(Boolean).length; h+='<div class="card" style="margin-top:12px;max-width:680px"><h2 class="h2">ถูก '+c+'/'+PRUN.items.length+'</h2><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="tgquiz">ทดสอบอีกชุด</button></div></div>'}
+    else h+='<div style="margin-top:12px">'+runnerHTML(PRUN)+'</div>';
+    h+='</section>';
+  }
+  h+='<div class="tabs" role="group" aria-label="หมวด"><button data-act="tgcat" data-c="all" aria-pressed="'+(tgCat==="all")+'">ทั้งหมด</button>'+cats.map(c=>'<button data-act="tgcat" data-c="'+esc(c)+'" aria-pressed="'+(tgCat===c)+'">'+esc(c)+'</button>').join("")+'</div>'
+   +'<div class="tg-list">'+list.map(x=>'<div class="tg-item"><p class="tg-wrong" lang="en"><span aria-hidden="true">✗</span> <s>'+esc(x.wrong)+'</s></p><div class="sh-row"><p class="tg-right" lang="en"><span aria-hidden="true">✓</span> '+esc(x.right)+'</p>'+sayBtn(x.right,"ฟังประโยคที่ถูก")+'</div><p class="muted" style="font-size:14.5px">'+esc(x.why)+'</p></div>').join("")+'</div>';
+  return h;
+}
+function tgItems(){return shuffle(THAIGLISH).slice(0,10).map(x=>{const o=shuffle([x.right,x.wrong]); return {t:"mc",q:"ประโยคไหนถูกต้อง",o,a:o.indexOf(x.right),w:x.why}})}
+
+/* ---------- word forms (TOEIC Part 5) ---------- */
+let wfTab="table";
+function viewWordForms(){
+  const st=stat("wf");
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">ตระกูลคำ (Word forms)</h1><p class="lede">คำเดียวกันเปลี่ยนรูปเป็นกริยา คำนาม คุณศัพท์ และกริยาวิเศษณ์ ออกสอบ TOEIC Part 5 ทุกครั้ง ดูตำแหน่งในประโยคแล้วเลือกรูปคำให้ถูก</p>'
+   +'<div class="tabs" role="group" aria-label="โหมด"><button data-act="wftab" data-t="table" aria-pressed="'+(wfTab==="table")+'">ตารางตระกูลคำ</button><button data-act="wftab" data-t="quiz" aria-pressed="'+(wfTab==="quiz")+'">ทดสอบ 10 ข้อ'+(st.best!=null?' <small>ดีที่สุด '+st.best+'/10</small>':'')+'</button></div>';
+  if(wfTab==="table") return h+'<div class="card wf-tips" style="margin-top:14px"><p><b>จำตำแหน่งให้ได้</b></p><ul><li>หน้าคำนาม หลัง be/seem/become → <b>คุณศัพท์</b> (a <u>successful</u> plan)</li><li>หลัง a/the/my, หลังบุพบท → <b>คำนาม</b> (the <u>success</u> of…)</li><li>ขยายกริยาหรือคุณศัพท์ → <b>กริยาวิเศษณ์</b> -ly (work <u>efficiently</u>)</li><li>หลัง will/can/to → <b>กริยารูปธรรมดา</b> (to <u>succeed</u>)</li></ul></div>'
+    +'<div class="tbl-wrap" style="margin-top:14px"><table class="wf-tbl"><thead><tr><th>กริยา</th><th>คำนาม</th><th>คุณศัพท์</th><th>กริยาวิเศษณ์</th><th>ความหมาย</th></tr></thead><tbody>'
+    +WFAM.map(r=>'<tr>'+r.slice(0,4).map(x=>'<td lang="en">'+(x?esc(x):'<span class="muted">–</span>')+'</td>').join("")+'<td>'+esc(r[4])+'</td></tr>').join("")+'</tbody></table></div>';
+  if(!PRUN||!PRUN_META||PRUN_META.id!=="wf") return h+'<div class="row" style="margin-top:14px"><button class="btn btn-primary" data-act="wfstart">เริ่มทดสอบ</button></div>';
+  if(PRUN.done){const c=PRUN.results.filter(Boolean).length; return h+'<div class="card" style="margin-top:16px;max-width:680px"><h2 class="h2">ถูก '+c+'/'+PRUN.items.length+'</h2><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="wfstart">ทดสอบอีกชุด</button></div></div>'}
+  return h+'<div style="margin-top:16px">'+runnerHTML(PRUN)+'</div>';
+}
+
+/* ---------- word stress ---------- */
+let SS=null;
+function ssNew(){SS={list:shuffle(STRESS.map((_,i)=>i)).slice(0,10),i:0,pick:null,correct:0,missed:[]}}
+function viewStress(){
+  const best=stat("stress").best;
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">ฝึกเน้นเสียงพยางค์</h1><p class="lede">คนไทยมักลงเสียงหนักที่พยางค์สุดท้าย ทำให้ฝรั่งฟังไม่ออก เช่น CHOC-o-late ไม่ใช่ choc-o-LATE ฟังเสียงแล้วแตะพยางค์ที่ออกเสียงหนักที่สุด</p>';
+  if(!SS) return h+'<div class="card" style="margin-top:16px;max-width:620px"><p>'+(best!=null?'ดีที่สุด <b>'+best+'/10</b>':'ชุดละ 10 คำ จากทั้งหมด '+STRESS.length+' คำ')+'</p><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="ssnew">เริ่มฝึก</button></div></div>';
+  if(SS.i>=SS.list.length) return h+'<div class="card" style="margin-top:16px;max-width:620px"><h2 class="h2">ถูก '+SS.correct+'/'+SS.list.length+'</h2>'
+    +(SS.missed.length?'<p class="muted" style="margin-top:8px">คำที่ต้องฝึก</p><ul class="sp-miss">'+SS.missed.map(i=>{const w=STRESS[i]; return '<li lang="en">'+w.syl.map((x,j)=>j===w.s?'<b>'+esc(x.toUpperCase())+'</b>':esc(x)).join("·")+' <span lang="th" class="muted">'+esc(w.th)+'</span></li>'}).join("")+'</ul>':'')
+    +'<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="ssnew">ฝึกอีกชุด</button></div></div>';
+  const w=STRESS[SS.list[SS.i]], p=SS.pick;
+  h+='<div class="card" style="margin-top:16px;max-width:620px"><div class="row" style="justify-content:space-between"><span class="mono">คำที่ '+(SS.i+1)+'/'+SS.list.length+' · ถูก '+SS.correct+'</span><div class="row"><button class="btn btn-sm btn-primary" data-act="ssplay">'+ICON.say+'ฟัง</button><button class="btn btn-sm" data-act="ssplay" data-slow="1">ฟังช้าๆ</button></div></div>'
+   +'<p class="muted" style="margin-top:8px">'+esc(w.th)+'</p><div class="ss-syl" lang="en">'+w.syl.map((x,j)=>{let c="mg"; if(p!=null){if(j===w.s) c+=" ss-ok"; else if(j===p) c+=" bad"} return '<button class="'+c+'" data-act="sspick" data-j="'+j+'"'+(p!=null?" disabled":"")+'>'+esc(x)+'</button>'}).join("")+'</div>';
+  if(p!=null) h+='<div class="feedback '+(p===w.s?"ok":"no")+'"><b>'+(p===w.s?"ถูกต้อง!":"ยังไม่ถูก")+'</b><span lang="en">'+w.syl.map((x,j)=>j===w.s?x.toUpperCase():x).join("-")+'</span></div><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="ssnext">'+(SS.i+1<SS.list.length?"คำต่อไป":"ดูผล")+'</button></div>';
+  return h+'</div>';
+}
+
+/* ---------- goal and exam countdown ---------- */
+function goalNow(g){
+  if(g.type==="toeic"){const l=examLast("toeic-listening"),r=examLast("toeic-reading"); return l&&r?l.score+r.score:null}
+  if(g.type==="ielts") return ieltsOverall();
+  let n=0; LEVELS.forEach(lv=>{if(lvDone(lv.n)) n=lv.n}); return n||null;
+}
+function goalCard(){
+  const g=S.goal; if(!g||!g.type) return '';
+  const now=goalNow(g), days=g.date?Math.ceil((new Date(g.date+"T00:00:00")-new Date(dayKey()+"T00:00:00"))/DAY):null;
+  const fmt=v=>g.type==="ielts"?Number(v).toFixed(1):g.type==="level"?LEVELS[v-1].code:String(v);
+  const pct=now!=null?Math.max(0,Math.min(100,Math.round(g.type==="toeic"?now/g.target*100:g.type==="ielts"?now/g.target*100:now/g.target*100))):0;
+  const name=g.type==="toeic"?"TOEIC "+g.target:g.type==="ielts"?"IELTS "+Number(g.target).toFixed(1):"จบระดับ "+LEVELS[g.target-1].code;
+  const tip=g.type==="toeic"?"ทำข้อสอบ TOEIC ทั้ง Listening และ Reading อย่างน้อยสัปดาห์ละครั้ง แล้วทบทวนสมุดคำผิด":g.type==="ielts"?"สลับฝึก Reading/Listening กับส่ง Writing ให้ครูประเมินสัปดาห์ละ 1–2 ชิ้น":"เรียนวันละ 2 ขั้นตามภารกิจรายวัน จะจบบทละประมาณ 3 วัน";
+  return '<section class="card goal-card"><div class="row" style="justify-content:space-between"><p class="eyebrow">เป้าหมายของฉัน</p>'+(days!=null?'<span class="chip'+(days<=14&&days>=0?' now':'')+'">'+(days>0?"อีก "+days+" วัน":days===0?"วันนี้!":"เลยวันสอบแล้ว")+'</span>':'')+'</div>'
+   +'<h2 class="h3" style="margin-top:4px">'+esc(name)+'</h2>'
+   +'<div class="bar" style="margin-top:10px"><i style="width:'+pct+'%"></i></div>'
+   +'<p class="muted" style="font-size:14px;margin-top:6px">ตอนนี้: '+(now!=null?'<b>'+esc(fmt(now))+'</b>':'ยังไม่มีผล')+(now!=null&&g.type!=="level"&&now>=g.target?' · ถึงเป้าแล้ว ตั้งเป้าใหม่ได้เลย':'')+'</p>'
+   +'<p style="font-size:14px;margin-top:6px">'+esc(tip)+'</p></section>';
+}
+function goalSettingsHTML(){
+  const g=S.goal||{}, type=g.type||"";
+  const tOpts=type==="toeic"?[450,550,650,750,850,950]:type==="ielts"?[5,5.5,6,6.5,7,7.5,8]:type==="level"?LEVELS.map(l=>l.n):[];
+  return '<div class="card" style="margin-top:12px"><b>เป้าหมายและวันสอบ</b><p class="muted" style="font-size:14px;margin-top:4px">ตั้งเป้าแล้วหน้าแรกจะนับถอยหลังและแสดงความคืบหน้า</p>'
+   +'<div class="tabs" role="group" style="margin-top:8px">'+[["","ไม่ตั้ง"],["toeic","TOEIC"],["ielts","IELTS"],["level","จบระดับ"]].map(o=>'<button data-act="goaltype" data-v="'+o[0]+'" aria-pressed="'+(type===o[0])+'">'+o[1]+'</button>').join("")+'</div>'
+   +(type?'<div class="goal-form"><label>เป้าหมาย<select id="goal-target">'+tOpts.map(v=>'<option value="'+v+'"'+(String(g.target)===String(v)?" selected":"")+'>'+(type==="level"?LEVELS[v-1].code+" "+LEVELS[v-1].name:type==="ielts"?Number(v).toFixed(1):v)+'</option>').join("")+'</select></label>'
+     +'<label>วันสอบ / วันเป้าหมาย<input type="date" id="goal-date" value="'+esc(g.date||"")+'"></label></div>':'')
+   +'</div>';
+}
+
+/* ---------- vocabulary typing review, story shadowing ---------- */
+function rvMask(w){return w.ex?esc(w.ex).replace(new RegExp("\\b"+escRe(esc(w.en))+"\\w*","ig"),"_____"):""}
+let shTok=0;
+async function storyShadow(s){
+  const tok=++shTok; storyTok++; Speech.stop(); ST.shadow=true; render();
+  const sents=[]; s.paras.forEach((p,pi)=>p.split(/(?<=[.!?])\s+(?=[A-Z"])/).forEach(t=>sents.push([pi,t])));
+  for(let i=0;i<sents.length;i++){
+    if(tok!==shTok||route.name!=="practice"||route.id!=="story."+s.id) return;
+    document.querySelectorAll(".story p").forEach(x=>x.classList.remove("playing")); const el=$("#sp-"+sents[i][0]); if(el) el.classList.add("playing");
+    const box=$("#shadow-now"); if(box) box.innerHTML='<span class="muted">ประโยค '+(i+1)+'/'+sents.length+' · ฟังแล้วพูดตาม</span><p lang="en">'+esc(sents[i][1])+'</p>';
+    await Speech.say(sents[i][1]);
+    if(tok!==shTok) return;
+    const b2=$("#shadow-now"); if(b2) b2.classList.add("your-turn");
+    await new Promise(r=>setTimeout(r,Math.max(1800,sents[i][1].split(" ").length*450)));
+    const b3=$("#shadow-now"); if(b3) b3.classList.remove("your-turn");
+  }
+  if(tok===shTok){ST.shadow=false; document.querySelectorAll(".story p").forEach(x=>x.classList.remove("playing")); if(route.id==="story."+s.id) render(); bump("prac"); S.xp+=5; markDay(); save()}
+}
+
+BADGES.push(
+ {id:"pod",t:"นักฟังพอดแคสต์",d:"ตอบคำถามพอดแคสต์ครบทุกตอน",ok:()=>PODS.every(p=>stat("pod")[p.id]!=null)},
+ {id:"tg",t:"เลิกพูดแบบไทยๆ",d:"ทดสอบภาษาอังกฤษแบบไทยๆ ได้ 10/10",ok:()=>(stat("tg").best||0)>=10},
+ {id:"stress",t:"เน้นเสียงเป๊ะ",d:"ฝึกเน้นเสียงพยางค์ได้ 10/10",ok:()=>(stat("stress").best||0)>=10},
+ {id:"goal",t:"มีเป้าหมาย",d:"ตั้งเป้าหมายการเรียนหรือวันสอบ",ok:()=>!!(S.goal&&S.goal.type)}
+);
+
+const TACT={
+  podplay:()=>{const p=PODS.find(x=>x.id===PD.id); if(PD.playing>=0){podTok++; Speech.stop(); PD.playing=-1; render(); return} PD.playing=0; render(); podPlay(p)},
+  podscript:()=>{PD.script=!PD.script; render()},
+  podth:()=>{PD.th=!PD.th; render()},
+  podq:t=>{const p=PODS.find(x=>x.id===PD.id), qi=+t.dataset.q; if(PD.ans[qi]!=null) return; PD.ans[qi]=+t.dataset.o;
+    if(Object.keys(PD.ans).length===p.qs.length){const c=p.qs.filter((q,i)=>PD.ans[i]===q.a).length, st=stat("pod"); st[p.id]=Math.max(st[p.id]||0,c); S.xp+=c*3; bump("prac"); markDay(); save()}
+    render()},
+  tgcat:t=>{tgCat=t.dataset.c; render()},
+  tgquiz:()=>{PRUN_META={id:"tg",title:"ภาษาอังกฤษแบบไทยๆ"}; PRUN=newRunner(tgItems(),"tg"); render(); window.scrollTo(0,0)},
+  wftab:t=>{wfTab=t.dataset.t; render()},
+  wfstart:()=>{PRUN_META={id:"wf",title:"ตระกูลคำ"}; PRUN=newRunner(shuffle(WFQ).slice(0,10).map(x=>({t:"mc",q:x.q,o:x.o,a:x.a,w:x.why})),"wf"); render()},
+  ssnew:()=>{ssNew(); render(); Speech.say(STRESS[SS.list[0]].w)},
+  ssplay:t=>{if(SS&&SS.i<SS.list.length){Speech.stop(); Speech.say(STRESS[SS.list[SS.i]].w,{slow:!!t.dataset.slow})}},
+  sspick:t=>{if(!SS||SS.pick!=null) return; const w=STRESS[SS.list[SS.i]]; SS.pick=+t.dataset.j; if(SS.pick===w.s) SS.correct++; else SS.missed.push(SS.list[SS.i]); render(); Speech.say(w.w)},
+  ssnext:()=>{if(!SS) return; SS.i++; SS.pick=null; if(SS.i>=SS.list.length){const st=stat("stress"); st.best=Math.max(st.best||0,SS.correct); S.xp+=SS.correct*2; bump("prac"); markDay(); save(); render(); return} render(); Speech.say(STRESS[SS.list[SS.i]].w)},
+  goaltype:t=>{const v=t.dataset.v; if(!v){S.goal=null} else {const def={toeic:650,ielts:6.5,level:3}[v]; S.goal={type:v,target:S.goal&&S.goal.type===v?S.goal.target:def,date:S.goal&&S.goal.date||""}} save(); render()},
+  "rv-mode":()=>{S.settings.rvType=!S.settings.rvType; save(); render()},
+  "rv-type-check":t=>{if(!R||!R.queue.length||R.revealed) return; const v=t&&t.dataset&&t.dataset.skip?"":(($("#rv-in")||{}).value||"").trim(); const w=WORDS[R.queue[0]];
+    R.typed=v; R.typedOk=!!v&&norm(v)===norm(w.en); R.revealed=true; render(); Speech.say(w.en)},
+  stshadow:()=>{const s=STORIES.find(x=>x.id===ST.id); if(ST.shadow){shTok++; Speech.stop(); ST.shadow=false; document.querySelectorAll(".story p").forEach(x=>x.classList.remove("playing")); render(); return} storyShadow(s)}
 };
 
 /* ---------- routing ---------- */
@@ -4490,7 +5105,7 @@ function viewHome(){
        ?'<div class="card"><p class="eyebrow">ผลสอบวัดระดับ</p><p style="margin-top:4px"><b>'+LEVELS[S.placement.level-1].code+' '+LEVELS[S.placement.level-1].name+'</b> · ถูก '+S.placement.score+'/12 ข้อ</p><button class="btn btn-sm btn-ghost" style="margin-top:6px;padding-left:0" data-act="go" data-to="placement">สอบใหม่</button></div>'
        :'<button class="tile" data-act="go" data-to="placement"><span class="big">12</span><span><b>สอบวัดระดับก่อนเรียน</b><small>12 ข้อ ประมาณ 5 นาที ถ้าพื้นฐานดีจะข้ามไปเรียนระดับที่เหมาะกับคุณได้เลย</small></span></button>')
    +'</div></div>'
-   +'<div class="home-row">'+dailyCard()+phraseCard()+'</div>'
+   +goalCard()+'<div class="home-row">'+dailyCard()+phraseCard()+'</div>'
    +'<section class="section"><div class="section-head"><h2 class="h3">หลักสูตรระดับ '+lv.code+' '+esc(lv.name)+' <span class="muted" style="font-weight:400">· '+esc(lv.th)+'</span></h2><button class="btn btn-sm btn-ghost" data-act="go" data-to="course">ดูหลักสูตรทั้งหมด</button></div>'
    +'<div class="lessons">'+inLevel.map(x=>lessonRow(COURSE.indexOf(x))).join("")+'</div></section>';
 }
@@ -4710,7 +5325,7 @@ function runnerDone(r){
     if(r.kind==="gq"&&PRUN_META){const gs=stat("gram"); gs[PRUN_META.id]=Math.max(gs[PRUN_META.id]||0,Math.round(c/tot*100))}
     S.xp+=c*2; bump("prac"); markDay(); save();
   }
-  if(r.kind==="lvt"||r.kind==="pb") runnerDoneX(r,c,tot);
+  if(r.kind==="lvt"||r.kind==="pb"||r.kind==="tg"||r.kind==="wf") runnerDoneX(r,c,tot);
   if(r.kind==="placement"){
     const g=[0,4,8].map(s=>r.results.slice(s,s+4).filter(Boolean).length);
     const level=g[0]>=3&&g[1]>=3?3:g[0]>=3?2:1;
@@ -4740,11 +5355,13 @@ function viewReview(){
   const keys=Object.keys(S.words).filter(k=>WORDS[k]);
   if(R&&R.queue.length){
     const w=WORDS[R.queue[0]], s=S.words[R.queue[0]];
-    return '<div class="review-card"><p class="muted">เหลือ '+R.queue.length+' คำ · ทบทวนแล้ว '+R.count+' คำ</p><div class="flash" style="margin-top:10px">'
+    return '<div class="review-card"><div class="row" style="justify-content:space-between"><p class="muted">เหลือ '+R.queue.length+' คำ · ทบทวนแล้ว '+R.count+' คำ</p><button class="btn btn-sm btn-ghost" data-act="rv-mode">'+(S.settings.rvType?"โหมดดูคำ":"โหมดพิมพ์คำ")+'</button></div><div class="flash" style="margin-top:10px">'
       +'<div class="flash-top"><span class="mono">'+esc(w.pos)+'</span><span class="mastery" aria-label="ระดับความจำ '+s.b+' จาก 6">'+[1,2,3,4,5,6].map(n=>'<i class="'+(n<=s.b?"on":"")+'"></i>').join("")+'</span></div>'
-      +'<div class="flash-word" lang="en">'+esc(w.en)+'</div><div class="row" style="justify-content:center">'+sayBtn(w.en)+'</div>'
+      +(S.settings.rvType&&!R.revealed?'<div class="flash-th" style="font-size:22px">'+esc(w.th)+'</div>'+(w.ex?'<p class="flash-ex" lang="en" style="text-align:left;display:block">'+rvMask(w)+'</p>':'')
+        :'<div class="flash-word" lang="en">'+esc(w.en)+'</div><div class="row" style="justify-content:center">'+sayBtn(w.en)+'</div>'+(S.settings.rvType&&R.typed!=null?'<div class="feedback '+(R.typedOk?"ok":"no")+'"><b>'+(R.typedOk?"พิมพ์ถูก!":"ยังไม่ถูก")+'</b><span>คุณพิมพ์: <span lang="en">'+esc(R.typed||"–")+'</span></span></div>':''))
       +(R.revealed?'<div class="flash-th">'+esc(w.th)+'</div>'+(w.ex?'<div class="flash-ex" style="text-align:left">'+sayBtn(w.ex)+'<div><p lang="en">'+esc(w.ex)+'</p>'+(w.exTh?'<p>'+esc(w.exTh)+'</p>':'')+'</div></div>':'')
         +'<div class="grade-btns"><button class="btn" data-act="rv-grade" data-g="0">จำไม่ได้<small>เจออีกรอบวันนี้</small></button><button class="btn" data-act="rv-grade" data-g="1">พอจำได้<small>พรุ่งนี้</small></button><button class="btn btn-primary" data-act="rv-grade" data-g="2">จำได้แม่น<small style="color:inherit;opacity:.8">อีก '+INT[Math.min(s.b+1,6)]+' วัน</small></button></div>'
+        :S.settings.rvType?'<label class="sr" for="rv-in">พิมพ์คำศัพท์ภาษาอังกฤษ</label><input id="rv-in" class="dict-in" lang="en" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="พิมพ์คำภาษาอังกฤษจากความหมาย…"><div class="row" style="margin-top:12px;justify-content:center"><button class="btn btn-primary" data-act="rv-type-check">ตรวจ</button><button class="btn btn-ghost" data-act="rv-type-check" data-skip="1">ไม่รู้ ดูคำตอบ</button></div>'
         :'<p class="muted" style="margin-top:14px">นึกความหมายในใจก่อน แล้วกดดูคำตอบ</p><button class="btn btn-primary" style="margin-top:14px;width:100%" data-act="rv-reveal">ดูคำตอบ</button>')
       +'</div><button class="btn btn-ghost" style="margin-top:14px" data-act="rv-end">พอแค่นี้ก่อน</button></div>';
   }
@@ -4874,7 +5491,7 @@ const ACT={
     if(g===0){s.b=0;s.due=now;R.queue.push(k)}
     else if(g===1){s.b=Math.max(1,s.b);s.due=now+DAY}
     else{s.b=Math.min(s.b+1,6);s.due=now+INT[s.b]*DAY}
-    R.count++; R.revealed=false; S.xp+=1; bump("review"); markDay(); save();
+    R.count++; R.revealed=false; R.typed=null; S.xp+=1; bump("review"); markDay(); save();
     if(!R.queue.length){R=null;toast("ทบทวนเสร็จแล้ว เก่งมาก")}
     render();
   },
@@ -4889,7 +5506,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
@@ -4928,12 +5545,14 @@ document.addEventListener("keydown",e=>{
   if(e.target.id==="dict-in"){e.preventDefault(); ACT.dcheck()}
   if(e.target.id==="sb-in"){e.preventDefault(); ACT.sbcheck()}
   if(e.target.id==="num-in"){e.preventDefault(); ACT.nucheck()}
+  if(e.target.id==="rv-in"){e.preventDefault(); ACT["rv-type-check"]()}
   if(e.target.id==="vb2"){e.preventDefault(); const f=$("#vb3"); if(f) f.focus()}
   if(e.target.id==="vb3"){e.preventDefault(); ACT.vbcheck()}
 });
 setInterval(()=>{if(route.name!=="practice"||route.id!=="game.speed"||!SPG||SPG.end) return; const l=speedLeft(); if(l<=0){speedFinish(); render(); return} const el=$("#sptimer"); if(el) el.textContent=mmss(l)},250);
 setInterval(()=>{if(route.name==="practice"&&route.id==="game.match"&&MG&&!MG.end){const el=$("#mtimer"); if(el) el.textContent=mmss((Date.now()-MG.start)/1000+MG.miss*3)}},1000);
-document.addEventListener("change",e=>{if(e.target.id==="cert-name") render()});
+document.addEventListener("change",e=>{if(e.target.id==="cert-name") render();
+  if((e.target.id==="goal-target"||e.target.id==="goal-date")&&S.goal){if(e.target.id==="goal-target") S.goal.target=Number(e.target.value); else S.goal.date=e.target.value; save(); toast("บันทึกเป้าหมายแล้ว")}});
 
 /* ---------- boot ---------- */
 (function boot(){
