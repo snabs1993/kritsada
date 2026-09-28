@@ -341,6 +341,9 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .x-total{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
 .x-total b{display:block;font:700 28px/1.2 var(--f-display);font-variant-numeric:tabular-nums}
 .x-total b small{font-size:14px;color:var(--ink-3);font-weight:500}
+.x-tabs{margin-top:14px}
+.xoptsbox{border:1.5px solid var(--ink);border-radius:8px;padding:10px 14px;margin:10px 0 4px;background:var(--surface);display:flex;flex-direction:column;gap:3px;font-size:15px}
+.xoptsbox b{display:inline-block;min-width:34px;font-family:var(--f-mono);font-size:13px;color:var(--accent)}
 .x-intro{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 .x-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
 @media (max-width:520px){.x-modes{grid-template-columns:1fr}}
@@ -362,6 +365,7 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .xopts.row{flex-direction:row;flex-wrap:wrap}
 .xo{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer;color:var(--ink);font-size:16px;line-height:1.5}
 .xopts.row .xo{width:auto;min-width:64px;justify-content:center}
+.xopts.codes .xo{min-width:46px;padding:8px 10px}
 .xo .l{font:600 13px var(--f-mono);color:var(--ink-3);padding-top:2px}
 .xo:hover:not([disabled]){border-color:var(--accent)}
 .xo[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
@@ -1413,8 +1417,8 @@ ielts:{name:"IELTS",full:"IELTS Academic",th:"ข้อสอบแนว IELTS 
       {q:"Visitors with today's ticket can",o:["get a free guidebook.","join a second tour.","receive a discount in the shop."],a:2,why:"visitors with today's ticket receive ten percent off"}]}
    ]}
   ]},
- reading:{title:"Reading",th:"การอ่าน",time:20*60,est:"20 นาที",
-  intro:["บทความวิชาการ 1 เรื่อง 13 ข้อ: True/False/Not Given, เลือกคำตอบ และเติมประโยค","ข้อสอบจริงมี 3 บทความใน 60 นาที ชุดนี้จึงจับเวลา 20 นาทีต่อบทความเท่ากัน"],
+ reading:{title:"Reading",th:"การอ่าน",time:60*60,est:"60 นาที",
+  intro:["ข้อสอบเต็มชุด 3 บทความ 40 ข้อ 60 นาที เท่าข้อสอบจริง","คำถามหลายแบบ: True/False/Not Given, Yes/No/Not Given, Matching Headings, Matching Information, เลือกคำตอบ และเติมคำ","แนะนำให้ใช้เวลาประมาณ 20 นาทีต่อบทความ"],
   parts:[
   {kind:"passage",title:"Reading Passage 1",
    dir:"You should spend about 20 minutes on Questions 1–13, which are based on Reading Passage 1 below.",
@@ -1478,7 +1482,285 @@ const IELTS_SPEAKING=[
 
 const IELTS_BANDS=[[9,"Expert user","เชี่ยวชาญ ใช้ภาษาได้เต็มที่"],[8,"Very good user","ดีมาก ผิดพลาดน้อยครั้ง"],[7,"Good user","ดี ใช้ภาษาซับซ้อนได้ มีผิดบ้าง"],[6,"Competent user","ใช้ได้ดีพอสมควร ในเรื่องที่คุ้นเคย"],[5,"Modest user","ใช้ได้บางส่วน ผิดบ่อย"],[4,"Limited user","ใช้ได้เฉพาะสถานการณ์คุ้นเคย"],[3,"Extremely limited user","สื่อสารได้แค่ความหมายทั่วไป"]];
 
-const XS={};   // attempts by section id ("toeic-listening"), kept while the page is open
+
+/* more practice sets: TOEIC Tests 2–3, IELTS Reading passages 2–3 for Test 1, IELTS Tests 2–3 */
+const P2DIR={dir:"You will hear a question or statement and three responses spoken in English. They will not be printed in your test book. Select the best response to the question or statement.",dirTh:"ฟังคำถามหรือประโยค แล้วเลือกคำตอบที่เหมาะสมที่สุดจาก 3 ตัวเลือก"};
+const P3DIR={dir:"You will hear some conversations between two or more people. You will be asked to answer three questions about what the speakers say in each conversation.",dirTh:"ฟังบทสนทนา แล้วตอบคำถามบทละ 3 ข้อ"};
+const P4DIR={dir:"You will hear some talks given by a single speaker. You will be asked to answer three questions about what the speaker says in each talk.",dirTh:"ฟังผู้พูดคนเดียว แล้วตอบคำถามเรื่องละ 3 ข้อ"};
+const P5DIR={dir:"A word or phrase is missing in each of the sentences below. Four answer choices are given below each sentence. Select the best answer to complete the sentence.",dirTh:"เลือกคำที่เติมแล้วประโยคถูกต้องที่สุด"};
+const P6DIR={dir:"Read the text that follows. A word, phrase, or sentence is missing in parts of the text. Select the best answer to complete the text.",dirTh:"อ่านข้อความแล้วเลือกคำหรือประโยคที่เติมในช่องว่าง"};
+const P7DIR={dir:"In this part you will read a selection of texts. Each text is followed by several questions. Select the best answer for each question.",dirTh:"อ่านเอกสารแล้วตอบคำถาม"};
+const TL_INTRO=["Part 2–4 รูปแบบเดียวกับชุดที่ 1 ฟังด้วยเสียงอ่าน","โหมดสอบจริง: แต่ละเสียงฟังได้ครั้งเดียว"];
+const TR_INTRO=["Part 5 เติมประโยค, Part 6 เติมข้อความ และ Part 7 อ่านจับใจความ","จับเวลา 15 นาที"];
+
+const TOEIC_MORE=[
+/* ---- TOEIC Test 2 ---- */
+{listening:{title:"Listening",th:"การฟัง",time:0,est:"ประมาณ 12 นาที",intro:TL_INTRO,parts:[
+ Object.assign({kind:"respond",title:"Part 2: Question–Response",items:[
+  {q:"Who's leading the client presentation tomorrow?",o:["At ten o'clock.","I think Maria is.","Yes, it was a great presentation."],a:1,why:"ถาม Who ต้องตอบเป็นบุคคล"},
+  {q:"How long will the repairs take?",o:["About two hours.","The repair shop on Fifth Avenue.","Yes, it's quite long."],a:0,why:"How long ถามระยะเวลา"},
+  {q:"Didn't you receive my e-mail about the schedule change?",o:["The schedule is on the wall.","No, I've been out of the office all morning.","I'll send it by mail."],a:1,why:"ตอบว่ายังไม่ได้รับพร้อมเหตุผล ข้อ A และ C หยิบคำ schedule/mail มาหลอก"},
+  {q:"Should we order lunch or go out to eat?",o:["Let's go to the café across the street.","Yes, we should.","It was delicious."],a:0,why:"คำถามแบบให้เลือก (A or B) ตอบด้วยการเลือก ไม่ตอบ Yes/No"},
+  {q:"The new employees start on Monday, right?",o:["No, on Wednesday.","They're very friendly.","Start the car, please."],a:0,why:"ยืนยันข้อมูล ตอบ No แล้วแก้ให้ถูก"},
+  {q:"Could you help me move this table?",o:["It's on the table.","Sure, where do you want it?","A new table costs a lot."],a:1,why:"คำขอร้อง ตอบรับแล้วถามต่อ"}]},P2DIR),
+ Object.assign({kind:"sets",title:"Part 3: Conversations",sets:[
+  {audio:[["W","Good evening. I have a reservation under the name Rivera. I'm here for the medical conference."],["M","Welcome, Ms. Rivera. I see you're staying for three nights. I'm afraid your room isn't quite ready yet. The cleaning staff are finishing it now."],["W","That's fine. Is there somewhere I can leave my suitcase? I'd like to get something to eat."],["M","Of course. I can keep your bag here at the desk. Our restaurant on the ground floor serves dinner until ten. And here's a voucher for a free drink, to apologize for the wait."]],
+   qs:[{q:"Why is the woman in town?",o:["To attend a conference","To visit family","To interview for a job","To go on vacation"],a:0,why:"I'm here for the medical conference"},
+       {q:"What problem does the man mention?",o:["The restaurant is closed.","Her room is not ready.","Her reservation was canceled.","The hotel is fully booked."],a:1,why:"your room isn't quite ready yet"},
+       {q:"What does the man give the woman?",o:["A room key","A map","A drink voucher","A discount on her room"],a:2,why:"a voucher for a free drink"}]},
+  {audio:[["M","Hi, Lisa. The projector in the main meeting room stopped working during my presentation this morning."],["W","Again? That's the third time this month. I think we should just buy a new one instead of repairing it."],["M","I agree. Do we have enough money left in this quarter's budget?"],["W","I'll check with the finance department this afternoon. In the meantime, you can borrow the portable projector from the training room."]],
+   qs:[{q:"What are the speakers mainly discussing?",o:["A broken piece of equipment","A training schedule","A new client","An office move"],a:0,why:"the projector ... stopped working"},
+       {q:"What does the woman suggest?",o:["Hiring a technician","Buying a replacement","Canceling a meeting","Moving to another room"],a:1,why:"we should just buy a new one"},
+       {q:"What will the woman do this afternoon?",o:["Give a presentation","Contact the finance department","Visit the training room","Order office supplies"],a:1,why:"I'll check with the finance department this afternoon"}]}]},P3DIR),
+ Object.assign({kind:"sets",title:"Part 4: Talks",sets:[
+  {audio:[["N","Good morning, this is the traffic update on City Radio. Drivers heading downtown should avoid Central Bridge this morning, where roadwork has closed two lanes. Delays of up to thirty minutes are expected. Instead, use the Harbor Tunnel, which is moving smoothly. Also, remember that the city marathon takes place this Sunday, so several streets near the park will be closed from six a.m. to two p.m. Our next update is at eight thirty."]],
+   qs:[{q:"What is causing delays on Central Bridge?",o:["An accident","Roadwork","Bad weather","A parade"],a:1,why:"roadwork has closed two lanes"},
+       {q:"What does the speaker recommend?",o:["Taking the train","Leaving home early","Using the Harbor Tunnel","Working from home"],a:2,why:"use the Harbor Tunnel"},
+       {q:"What will happen on Sunday?",o:["A bridge will reopen.","A marathon will take place.","A tunnel will close.","A new road will open."],a:1,why:"the city marathon takes place this Sunday"}]},
+  {audio:[["N","Welcome to your first day at Norland Electronics. I'm Grace Park from Human Resources. This morning, you'll complete some paperwork and receive your employee badge, which you'll need to enter the building. After lunch, which will be served in the cafeteria on the second floor, your department managers will take you on a tour of the factory. Before you leave today, please make sure you have set up your company e-mail account. The IT help desk is on the first floor if you need assistance."]],
+   qs:[{q:"Who most likely are the listeners?",o:["New employees","Factory visitors","Job applicants","Customers"],a:0,why:"Welcome to your first day"},
+       {q:"Where will lunch be served?",o:["In the factory","In the cafeteria","In a meeting room","At a nearby restaurant"],a:1,why:"served in the cafeteria on the second floor"},
+       {q:"What should the listeners do before they leave?",o:["Return their badges","Set up an e-mail account","Meet their managers","Sign a contract"],a:1,why:"make sure you have set up your company e-mail account"}]}]},P4DIR)
+]},
+ reading:{title:"Reading",th:"การอ่าน",time:15*60,est:"15 นาที",intro:TR_INTRO,parts:[
+ Object.assign({kind:"mc",title:"Part 5: Incomplete Sentences",items:[
+  {q:"The marketing team worked ___ to finish the campaign before the deadline.",o:["hard","hardly","hardness","harden"],a:0,why:"hard เป็นได้ทั้ง adj. และ adv. (ทำงานหนัก) ส่วน hardly แปลว่า แทบจะไม่"},
+  {q:"Mr. Park will be out of the office ___ next Tuesday.",o:["on","until","at","during"],a:1,why:"until = จนถึง (ไม่อยู่ต่อเนื่องไปจนถึงวันอังคาร)"},
+  {q:"Customers ___ purchases exceed 100 dollars will receive free shipping.",o:["who","which","whose","whom"],a:2,why:"whose + คำนาม แสดงความเป็นเจ้าของ (การซื้อของลูกค้า)"},
+  {q:"The annual report must be ___ by the end of the month.",o:["complete","completed","completing","completion"],a:1,why:"รายงานถูกทำให้เสร็จ must be + V3 (passive)"},
+  {q:"Our sales increased ___ the difficult economic conditions.",o:["although","despite","because","even"],a:1,why:"despite + คำนาม ส่วน although ต้องตามด้วยประโยค"},
+  {q:"Ms. Wong is the ___ candidate for the position because of her experience.",o:["most qualified","more qualified","qualify","qualifies"],a:0,why:"the + ขั้นสูงสุด (most qualified)"},
+  {q:"Please ___ the attached document and return it by Friday.",o:["review","reviewing","to review","reviewed"],a:0,why:"Please + กริยารูปธรรมดา (ประโยคคำสั่ง)"},
+  {q:"The factory has reduced its energy costs ___ 15 percent this year.",o:["by","at","with","for"],a:0,why:"เพิ่มขึ้น/ลดลง by + จำนวน"},
+  {q:"We look forward to ___ with your company again.",o:["work","working","worked","works"],a:1,why:"look forward to + V-ing (to ตรงนี้เป็นบุพบท)"},
+  {q:"___ the hotel is fully booked, we cannot accept any more reservations.",o:["Since","Despite","Unless","However"],a:0,why:"Since = เนื่องจาก ตามด้วยประโยค"}]},P5DIR),
+ Object.assign({kind:"textfill",title:"Part 6: Text Completion",head:["NOTICE TO ALL RESIDENTS","Greenview Apartments"],
+  text:["The building's water supply will be {1} off on Thursday, May 8, from 9 a.m. to 1 p.m. while workers replace old pipes on the ground floor. {2}","We recommend that residents store some water {3} use during this period. We appreciate your patience and {4}."],
+  items:[
+   {o:["turn","turning","turned","turns"],a:2,why:"น้ำถูกปิด will be + V3 (turned off)"},
+   {o:["Rent is due on the first of each month.","Hot water may take a few hours to return to normal afterward.","The swimming pool will open in June.","Pets are not allowed in the building."],a:1,why:"ต่อจากเรื่องการปิดน้ำ บอกผลที่ตามมา ข้ออื่นไม่เกี่ยวกับประกาศนี้"},
+   {o:["at","for","from","since"],a:1,why:"store water for use = เก็บไว้ใช้"},
+   {o:["cooperate","cooperative","cooperation","cooperatively"],a:2,why:"หลัง patience and ต้องเป็นคำนามคู่กัน cooperation"}]},P6DIR),
+ Object.assign({kind:"sets",title:"Part 7: Reading Comprehension",sets:[
+  {doc:{title:"Text-message chain",lines:["<b>Anna Liu (9:12 A.M.)</b> Hi Ben, I'm stuck in traffic on Highway 5. I'll be about 20 minutes late for the 9:30 meeting with Carter Foods.","<b>Ben Ortiz (9:13 A.M.)</b> No problem. Should I start without you?","<b>Anna Liu (9:14 A.M.)</b> Yes, please. Could you begin with the delivery schedule? The price proposal is in my folder, so I'll present that when I arrive.","<b>Ben Ortiz (9:15 A.M.)</b> Will do. I'll let them know you're on your way."]},
+   qs:[{q:"Why did Ms. Liu write to Mr. Ortiz?",o:["To cancel a meeting","To say she will be late","To ask for a document","To change a price"],a:1,why:"I'll be about 20 minutes late"},
+       {q:"What will Mr. Ortiz discuss first?",o:["The price proposal","The delivery schedule","Traffic on Highway 5","A new product"],a:1,why:"Could you begin with the delivery schedule?"},
+       {q:"At 9:15 A.M., what does Mr. Ortiz mean when he writes, \"Will do\"?",o:["He will drive to Highway 5.","He agrees to start the meeting as requested.","He will call Carter Foods later.","He has finished the price proposal."],a:1,why:"Will do = ได้เลย จะทำตามที่ขอ (เริ่มประชุมเรื่องตารางส่งของ)"}]},
+  {doc:{title:"Job advertisement",lines:["<b>Hiring: Part-Time Library Assistant</b>","Eastwood Public Library is looking for a part-time assistant to work 20 hours per week, including two Saturdays per month.","Responsibilities include checking books in and out, helping visitors use our computers, and organizing children's reading events.","Applicants should have good communication skills and basic computer knowledge. Experience working with children is an advantage but not required.","To apply, send your résumé and a short cover letter by April 15. Interviews will take place during the last week of April."]},
+   qs:[{q:"What is one responsibility of the job?",o:["Repairing computers","Organizing events for children","Buying new books","Managing the library budget"],a:1,why:"organizing children's reading events"},
+       {q:"What is NOT required for the position?",o:["Communication skills","Basic computer knowledge","Experience working with children","Availability on some Saturdays"],a:2,why:"an advantage but not required = มีจะดี แต่ไม่บังคับ"},
+       {q:"When will interviews be held?",o:["Before April 15","On April 15","In the last week of April","In May"],a:2,why:"during the last week of April"}]}]},P7DIR)
+]}},
+/* ---- TOEIC Test 3 ---- */
+{listening:{title:"Listening",th:"การฟัง",time:0,est:"ประมาณ 12 นาที",intro:TL_INTRO,parts:[
+ Object.assign({kind:"respond",title:"Part 2: Question–Response",items:[
+  {q:"What time does the museum open on weekends?",o:["At nine thirty.","It's a very large museum.","Every weekend."],a:0,why:"What time ต้องตอบเวลา"},
+  {q:"Which bus goes to the airport?",o:["Number 12, from the main station.","About forty minutes.","My flight leaves at noon."],a:0,why:"Which bus ตอบว่าสายไหน"},
+  {q:"Have you finished the budget report yet?",o:["I'm working on it now.","It's a very large budget.","She reported it to the police."],a:0,why:"ตอบว่ากำลังทำอยู่ ข้อ C ใช้เสียงคล้าย report"},
+  {q:"Why don't we take a short break?",o:["Good idea. I need some coffee.","Because it was broken.","No, it's not short."],a:0,why:"Why don't we... เป็นการชวน ไม่ได้ถามเหตุผล จึงไม่ตอบด้วย Because"},
+  {q:"How many people have registered for the workshop?",o:["In the main hall.","Almost fifty so far.","It starts next Friday."],a:1,why:"How many ถามจำนวน"},
+  {q:"I can't find the keys to the storage room.",o:["Did you check with the security guard?","We need more storage.","The key point is the price."],a:0,why:"ประโยคบอกเล่าปัญหา ตอบด้วยการเสนอทางแก้"}]},P2DIR),
+ Object.assign({kind:"sets",title:"Part 3: Conversations",sets:[
+  {audio:[["M","Hello, Luca's Kitchen. How can I help you?"],["W","Hi, I'd like to book a table for twelve people this Friday at seven. It's for a colleague's retirement party."],["M","Let me check. For a group that size, we'd need to put you in our private room upstairs. There's a minimum charge of three hundred dollars for the room."],["W","That should be fine. Could you also prepare a cake? I'll send you the message we'd like written on it."]],
+   qs:[{q:"What is the woman planning?",o:["A birthday dinner","A retirement party","A business meeting","A wedding"],a:1,why:"a colleague's retirement party"},
+       {q:"What does the man say about the private room?",o:["It is already booked.","It has a minimum charge.","It is on the ground floor.","It holds only ten people."],a:1,why:"a minimum charge of three hundred dollars"},
+       {q:"What will the woman send the man?",o:["A deposit","A guest list","A message for a cake","A menu"],a:2,why:"I'll send you the message we'd like written on it"}]},
+  {audio:[["W","Tom, have you installed the new accounting software yet?"],["M","I tried, but I keep getting an error message. I think my computer is too old to run it."],["W","Several people have said the same thing. I'll ask the IT department whether we can get new laptops for the team."],["M","Thanks. Until then, can I use the computer in the meeting room? It's newer than mine."]],
+   qs:[{q:"What problem does the man have?",o:["He forgot his password.","He cannot install some software.","His laptop was stolen.","He lost an important file."],a:1,why:"I keep getting an error message"},
+       {q:"What does the woman say she will do?",o:["Contact the IT department","Buy a new computer","Reinstall the software","Book a meeting room"],a:0,why:"I'll ask the IT department"},
+       {q:"What does the man ask to do?",o:["Work from home","Borrow a colleague's laptop","Use a computer in the meeting room","Take a training course"],a:2,why:"can I use the computer in the meeting room?"}]}]},P3DIR),
+ Object.assign({kind:"sets",title:"Part 4: Talks",sets:[
+  {audio:[["N","Attention, passengers on Sky Pacific flight 208 to Tokyo. Because of the late arrival of the aircraft, the departure time has been changed from two fifteen to three forty p.m. The flight will now depart from Gate 17 instead of Gate 12. Passengers with connecting flights in Tokyo should speak to an agent at the service desk near Gate 15. We apologize for the inconvenience, and meal vouchers will be provided at the gate."]],
+   qs:[{q:"What is the new departure time?",o:["2:15 P.M.","3:14 P.M.","3:40 P.M.","4:30 P.M."],a:2,why:"changed from two fifteen to three forty (2:15 คือเวลาเดิม)"},
+       {q:"What else has changed?",o:["The destination","The gate","The airline","The seat numbers"],a:1,why:"Gate 17 instead of Gate 12"},
+       {q:"What will passengers receive?",o:["A free upgrade","Meal vouchers","A hotel room","A refund"],a:1,why:"meal vouchers will be provided at the gate"}]},
+  {audio:[["N","Are you tired of spending hours cleaning your home? Sparkle Home Services has professional cleaners available seven days a week. Our staff use only eco-friendly products that are safe for children and pets. This month only, first-time customers get their second cleaning free. Book online or download our app, and choose a time that suits you."]],
+   qs:[{q:"What is being advertised?",o:["A cleaning service","A pet shop","A cleaning product","A mobile phone"],a:0,why:"professional cleaners = บริการทำความสะอาด"},
+       {q:"What does the speaker say about the products?",o:["They are imported.","They are environmentally friendly.","They are sold in stores.","They are expensive."],a:1,why:"eco-friendly = เป็นมิตรกับสิ่งแวดล้อม"},
+       {q:"What special offer is mentioned?",o:["A discount for pet owners","A free second cleaning for new customers","Free products with every visit","Half price on weekends"],a:1,why:"first-time customers get their second cleaning free"}]}]},P4DIR)
+]},
+ reading:{title:"Reading",th:"การอ่าน",time:15*60,est:"15 นาที",intro:TR_INTRO,parts:[
+ Object.assign({kind:"mc",title:"Part 5: Incomplete Sentences",items:[
+  {q:"The seminar has been postponed ___ the speaker is ill.",o:["because","because of","due","although"],a:0,why:"because + ประโยค ส่วน because of + คำนาม"},
+  {q:"All employees are required to wear their ID badges ___ times.",o:["at all","in all","for all","on all"],a:0,why:"at all times = ตลอดเวลา"},
+  {q:"The company's profits this year are ___ than last year's.",o:["high","highest","higher","more high"],a:2,why:"มี than ใช้ขั้นกว่า คำสั้นเติม -er"},
+  {q:"Ms. Silva asked her assistant ___ the meeting room for 3 P.M.",o:["book","to book","booking","booked"],a:1,why:"ask + คน + to V"},
+  {q:"The new branch office will open ___ the spring.",o:["in","on","at","by"],a:0,why:"ฤดูกาล เดือน ปี ใช้ in"},
+  {q:"The contract ___ by both parties last week.",o:["signed","was signed","has signed","is signing"],a:1,why:"สัญญาถูกเซ็น (passive) และ last week เป็นอดีต"},
+  {q:"Mr. Kim is responsible ___ training new staff.",o:["of","for","to","with"],a:1,why:"responsible for = รับผิดชอบ"},
+  {q:"Please call the front desk ___ you need extra towels.",o:["if","unless","whether","so"],a:0,why:"if = ถ้า (ถ้าต้องการผ้าเช็ดตัวเพิ่ม)"},
+  {q:"The survey results were ___ than we had expected.",o:["much better","very better","more better","most good"],a:0,why:"เน้นขั้นกว่าใช้ much ไม่ใช้ very"},
+  {q:"Each participant ___ a certificate at the end of the course.",o:["receive","receives","receiving","have received"],a:1,why:"Each + นามเอกพจน์ กริยาเติม s"}]},P5DIR),
+ Object.assign({kind:"textfill",title:"Part 6: Text Completion",head:["To: customerservice@quickprint.com","From: Helen Brooks","Subject: Order #4471"],
+  text:["I am writing about the business cards I ordered from your website on June 2. When the box {1} yesterday, I found that my phone number was printed incorrectly on every card. {2}","I would appreciate it if you could reprint the cards {3} possible. Please let me know if you need any further information. I look forward to your {4} reply."],
+  items:[
+   {o:["arrive","arrived","arriving","arrives"],a:1,why:"yesterday เป็นอดีต"},
+   {o:["I have attached a photo of one of the cards.","Our company was founded in 2010.","Business cards are becoming less popular.","Your prices are very reasonable."],a:0,why:"แนบหลักฐานความผิดพลาด ต่อเนื่องกับประโยคก่อนหน้าที่สุด"},
+   {o:["as soon as","as long as","as well as","as far as"],a:0,why:"as soon as possible = เร็วที่สุดเท่าที่ทำได้"},
+   {o:["prompt","promptly","promptness","prompting"],a:0,why:"หน้าคำนาม reply ต้องเป็น adjective"}]},P6DIR),
+ Object.assign({kind:"sets",title:"Part 7: Reading Comprehension",sets:[
+  {doc:{title:"Notice",lines:["<b>Riverside Company Annual Staff Picnic</b>","Date: Saturday, July 19 · Time: 11 A.M.–4 P.M. · Place: Lakeview Park, Area C","All employees and their families are welcome. Lunch and drinks will be provided, and there will be games for children, a volleyball tournament and a prize draw at 3 P.M.","Please tell Mark Evans in Human Resources how many family members you plan to bring by July 10 so that we can order enough food.","If it rains, the picnic will be moved to the company gym."]},
+   qs:[{q:"What is the purpose of the notice?",o:["To announce a company event","To advertise a park","To recruit volleyball players","To request donations"],a:0,why:"Annual Staff Picnic"},
+       {q:"What are employees asked to do by July 10?",o:["Pay a fee","Bring food","Tell HR how many people are coming","Sign up for a game"],a:2,why:"tell Mark Evans in Human Resources how many family members"},
+       {q:"What will happen if it rains?",o:["The event will be canceled.","The event will move indoors.","The event will be postponed.","The prize draw will be canceled."],a:1,why:"moved to the company gym = ย้ายเข้าในอาคาร"}]},
+  {doc:{title:"Article",lines:["<b>Local Bakery Expands</b>","WESTFIELD — Golden Crust Bakery, which opened on Market Street five years ago, will open a second location next month in the Northgate Shopping Center.","Owner Sofia Martinez said the new shop will be twice as large as the original and will include a seating area where customers can enjoy coffee and pastries.","\"Many of our customers live in the north of the city, and they told us they wanted a shop closer to home,\" Ms. Martinez explained. The bakery will hire fifteen new employees, most of them part-time.","The Market Street shop will remain open with its current hours."]},
+   qs:[{q:"What is the article mainly about?",o:["A new shopping center","A bakery opening a second shop","A change in opening hours","A baking competition"],a:1,why:"will open a second location"},
+       {q:"What is indicated about the new location?",o:["It is smaller than the first shop.","It will have a seating area.","It is on Market Street.","It will replace the original shop."],a:1,why:"will include a seating area"},
+       {q:"Why did Ms. Martinez choose the new location?",o:["The rent was cheaper.","Customers requested it.","It was near her home.","The old shop was closing."],a:1,why:"they told us they wanted a shop closer to home"}]}]},P7DIR)
+]}}
+];
+
+/* IELTS Test 1: Reading passages 2 and 3, completing a full 40-question paper */
+const HEADINGS1=[["i","A new explanation for a familiar complaint"],["ii","How a chemical signal arrives later"],["iii","Practical difficulties of change"],["iv","Evidence from schools that tried a different approach"],["v","The gap between advice and reality"],["vi","The dangers of using screens at night"],["vii","Consequences for learning, health and safety"],["viii","Why adults need less sleep than children"]];
+const PARA6=[["A","Paragraph A"],["B","Paragraph B"],["C","Paragraph C"],["D","Paragraph D"],["E","Paragraph E"],["F","Paragraph F"]];
+const IELTS_R1_MORE=[
+ {kind:"passage",title:"Reading Passage 2",
+  dir:"You should spend about 20 minutes on Questions 14–26, which are based on Reading Passage 2 below.",
+  dirTh:"บทความที่ 2 มีคำถามแบบเลือกหัวข้อย่อหน้า (Matching Headings) และเติมสรุป",
+  passage:{title:"Why Teenagers Sleep Late",paras:[
+   ["A","Parents around the world complain that teenagers stay up late at night and are almost impossible to wake in the morning. For many years this behaviour was blamed on laziness or on too much time spent with screens. Research over the last three decades, however, suggests that the explanation is largely biological."],
+   ["B","Every person has an internal body clock, known as the circadian rhythm, which controls when we feel alert and when we feel sleepy. One of its most important signals is melatonin, a hormone released by the brain as evening approaches. In adults and young children, melatonin levels rise at around nine or ten o'clock at night. In adolescents, the release of melatonin is delayed by up to two hours, which means that teenagers genuinely do not feel tired until much later."],
+   ["C","This shift would not matter if teenagers could simply sleep later in the morning. Sleep scientists recommend that people aged thirteen to eighteen get between eight and ten hours of sleep a night. Yet in many countries, secondary school begins before eight o'clock, and students must get up by six or half past six. As a result, surveys regularly find that most teenagers sleep fewer than seven hours on school nights."],
+   ["D","The effects of this shortage are wide-ranging. Tired students find it harder to concentrate and remember new information, and their marks tend to suffer. Lack of sleep has also been linked to low mood, weaker immune systems and a higher risk of road accidents among young drivers. Some researchers argue that chronic sleep loss is one of the most widespread and least recognised health problems among young people."],
+   ["E","In response, some school districts have experimented with later start times. When schools in one American city moved the start of the day from 7.50 to 8.45, students slept on average 34 minutes longer each night. Attendance improved, fewer students fell asleep in class, and exam results rose modestly. Similar trials in the United Kingdom and Brazil produced comparable findings."],
+   ["F","Changing school timetables is not always easy, however. Later starts can mean later finishing times, which affect after-school sports and part-time jobs, and bus schedules may need to be redesigned. Parents who work early shifts may also find it difficult to arrange transport. Despite these obstacles, a growing number of education authorities now believe that the benefits outweigh the costs."]]},
+  groups:[
+   {type:"select",opts:HEADINGS1,optsTitle:"List of Headings",dir:"Reading Passage 2 has six paragraphs, A–F. Choose the correct heading for each paragraph from the list of headings below.",dirTh:"เลือกหัวข้อที่ตรงกับใจความหลักของแต่ละย่อหน้า มีหัวข้อหลอก 2 ข้อที่ไม่ได้ใช้",
+    items:[{q:"Paragraph A",a:"i",why:"พฤติกรรมที่พ่อแม่บ่นกันมานาน (familiar complaint) มีคำอธิบายใหม่ทางชีววิทยา"},{q:"Paragraph B",a:"ii",why:"ฮอร์โมน melatonin (สัญญาณเคมี) หลั่งช้ากว่าในวัยรุ่น"},{q:"Paragraph C",a:"v",why:"นักวิทยาศาสตร์แนะนำ 8–10 ชั่วโมง แต่ความจริงนอนไม่ถึง 7 ชั่วโมง"},{q:"Paragraph D",a:"vii",why:"ผลต่อการเรียน สุขภาพ และอุบัติเหตุบนถนน"},{q:"Paragraph E",a:"iv",why:"ผลจากโรงเรียนที่ลองเลื่อนเวลาเข้าเรียน"},{q:"Paragraph F",a:"iii",why:"อุปสรรคในทางปฏิบัติ: กีฬา งานพิเศษ รถโรงเรียน"}]},
+   {type:"gap",max:1,dir:"Complete the summary sentences below. Choose ONE WORD ONLY from the passage for each answer.",dirTh:"เติมคำจากบทความ 1 คำเท่านั้น (ตัวเลขนับเป็น 1 คำ)",
+    items:[{q:"Teenagers' body clocks are influenced by a hormone called ___, which is released later than in adults.",a:"melatonin",why:"ย่อหน้า B"},
+     {q:"Although eight to ten hours are recommended, most teenagers sleep fewer than ___ hours on school nights.",a:"seven|7",show:"seven",why:"ย่อหน้า C: fewer than seven hours"},
+     {q:"Tired students find it harder to ___ and remember new information.",a:"concentrate",why:"ย่อหน้า D"},
+     {q:"Lack of sleep is linked to a higher risk of road ___ among young drivers.",a:"accidents",why:"ย่อหน้า D"},
+     {q:"When one American city started school later, ___ improved and fewer students fell asleep in class.",a:"attendance",why:"ย่อหน้า E: Attendance improved"}]},
+   {type:"mc",dir:"Choose the correct letter, A, B, C or D.",dirTh:"เลือกคำตอบที่ถูกต้อง",
+    items:[{q:"According to paragraph B, in teenagers melatonin is released",o:["at the same time as in adults.","up to two hours later than in adults.","only in the morning.","in smaller amounts than in adults."],a:1,why:"delayed by up to two hours"},
+     {q:"What is the writer's main purpose in paragraph F?",o:["to argue that school times should never change","to describe the challenges of later start times","to criticise parents who work early","to explain how bus schedules are planned"],a:1,why:"ย่อหน้า F พูดถึงความยากของการเปลี่ยนเวลาเรียน แต่สรุปว่าประโยชน์คุ้มค่า"}]}]},
+ {kind:"passage",title:"Reading Passage 3",
+  dir:"You should spend about 20 minutes on Questions 27–40, which are based on Reading Passage 3 below.",
+  dirTh:"บทความที่ 3 เป็นบทความแสดงความเห็นของผู้เขียน มีคำถาม YES/NO/NOT GIVEN ที่ถามความเห็นผู้เขียน",
+  passage:{title:"Will Robots Take Our Jobs?",paras:[
+   ["A","Few topics generate as much anxiety as the idea that machines will soon do our jobs. Newspaper headlines regularly warn that millions of positions will vanish as artificial intelligence and robots become more capable. Such fears are understandable, but in my view they rest on a misunderstanding of how technology has changed work in the past."],
+   ["B","The history of the last two centuries shows a clear pattern. When the first mechanical looms appeared in English textile mills, weavers protested that they would all be unemployed. Some did lose their livelihoods, and the transition was painful for individual families. Yet over the following decades, cheaper cloth increased demand, and far more people ended up working in the textile industry than before. Similar stories can be told about the tractor, the telephone switchboard and the personal computer."],
+   ["C","The reason is that technology rarely replaces an entire job; instead, it takes over particular tasks. Bank cash machines, for example, did not eliminate bank tellers. Because each branch needed fewer tellers, banks opened more branches, and tellers moved away from counting money towards advising customers. The number of tellers in the United States actually rose for several decades after cash machines were introduced."],
+   ["D","Nevertheless, it would be foolish to assume that the future will simply repeat the past. Today's artificial intelligence can perform tasks that were once thought to require human judgement, such as translating documents, writing computer code and analysing medical scans. The speed of change is also greater: earlier technologies spread over generations, whereas new software can be adopted by millions of businesses within a few years."],
+   ["E","For this reason, I believe governments should focus less on predicting which jobs will disappear and more on helping workers adapt. Adult education is the most important tool. Too many training programmes are designed for young people at the start of their careers, while workers in their forties and fifties receive little support. Short, flexible courses, partly funded by employers, would allow people to learn new skills without giving up their income."],
+   ["F","Individuals, too, can prepare. The skills that machines find hardest to copy are those involving creativity, complex communication and care for other people. Nurses, teachers and skilled tradespeople are unlikely to be replaced soon. Rather than fearing technology, workers should look for ways to use it to become more productive in their current roles."]]},
+  groups:[
+   {type:"mc",dir:"Choose the correct letter, A, B, C or D.",dirTh:"เลือกคำตอบที่ถูกต้อง",
+    items:[{q:"In paragraph A, the writer says that fears about job losses",o:["are completely unjustified.","are based on a misunderstanding of history.","are mainly spread by newspapers.","will disappear in the future."],a:1,why:"they rest on a misunderstanding of how technology has changed work in the past (ผู้เขียนบอกว่าเข้าใจได้ จึงไม่ใช่ completely unjustified)"},
+     {q:"What happened to the textile industry after mechanical looms were introduced?",o:["It employed fewer people than before.","It eventually employed more people.","It moved to other countries.","It stopped producing cheap cloth."],a:1,why:"far more people ended up working in the textile industry"},
+     {q:"The example of bank tellers is used to show that",o:["cash machines were unpopular.","technology usually takes over particular tasks.","banks prefer human workers.","the number of banks decreased."],a:1,why:"technology rarely replaces an entire job; instead, it takes over particular tasks"},
+     {q:"According to paragraph D, what makes modern technology different?",o:["It is more expensive.","It spreads much more quickly.","It is used only by large companies.","It cannot do tasks requiring judgement."],a:1,why:"can be adopted by millions of businesses within a few years"},
+     {q:"Which workers does the writer believe are least likely to be replaced soon?",o:["translators","bank tellers","nurses and teachers","computer programmers"],a:2,why:"ย่อหน้า F: Nurses, teachers and skilled tradespeople are unlikely to be replaced soon"}]},
+   {type:"ynng",dir:"Do the following statements agree with the claims of the writer in Reading Passage 3? Write YES if the statement agrees with the claims of the writer, NO if the statement contradicts the claims of the writer, NOT GIVEN if it is impossible to say what the writer thinks about this.",dirTh:"YES = ตรงกับความเห็นผู้เขียน, NO = ขัดกับความเห็นผู้เขียน, NOT GIVEN = ผู้เขียนไม่ได้แสดงความเห็นเรื่องนี้",
+    items:[{q:"The introduction of mechanical looms caused hardship for some families.",a:"Y",why:"ย่อหน้า B: the transition was painful for individual families"},
+     {q:"The number of bank tellers in the United States fell as soon as cash machines were introduced.",a:"N",why:"ย่อหน้า C: actually rose for several decades"},
+     {q:"Artificial intelligence will create more jobs than it destroys.",a:"NG",why:"ผู้เขียนไม่ได้บอกว่า AI จะสร้างงานมากกว่าที่ทำลาย"},
+     {q:"Governments should put more effort into helping workers adapt than into predicting job losses.",a:"Y",why:"ย่อหน้า E: focus less on predicting ... more on helping workers adapt"},
+     {q:"Most employers are unwilling to pay for staff training.",a:"NG",why:"ผู้เขียนเสนอให้นายจ้างร่วมจ่าย แต่ไม่ได้บอกว่านายจ้างส่วนใหญ่ไม่ยอมจ่าย"}]},
+   {type:"select",opts:PARA6,dir:"Reading Passage 3 has six paragraphs, A–F. Which paragraph contains the following information? You may use any letter more than once.",dirTh:"หาว่าข้อมูลแต่ละข้ออยู่ในย่อหน้าไหน ตัวอักษรเดียวกันใช้ซ้ำได้",
+    items:[{q:"a suggestion about how courses for older workers could be funded",a:"E",why:"partly funded by employers"},
+     {q:"a reference to technology being adopted faster than in the past",a:"D",why:"within a few years (เทียบกับ over generations)"},
+     {q:"a description of how the main activity of a job changed",a:"C",why:"tellers moved away from counting money towards advising customers"},
+     {q:"advice for workers about how to view new technology",a:"F",why:"Rather than fearing technology, workers should look for ways to use it"}]}]}
+];
+
+/* IELTS Tests 2 and 3 */
+const IELTS_MORE=[
+/* ---- IELTS Test 2 ---- */
+{listening:{title:"Listening",th:"การฟัง",time:0,est:"ประมาณ 12 นาที",
+ intro:["Part 1 เติมแบบฟอร์ม, Part 3 บทสนทนานักศึกษา และ Part 4 บรรยายวิชาการ เติมโน้ต","ข้อเติมคำต้องเขียนไม่เกินจำนวนคำที่กำหนด ถ้าเกินนับว่าผิด","โหมดสอบจริง: ฟังได้ครั้งเดียว"],
+ parts:[
+ {kind:"form",title:"Part 1",max:2,dir:"Complete the form below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",dirTh:"ฟังบทสนทนาสมัครสมาชิกห้องสมุด แล้วเติมแบบฟอร์ม ระวังข้อมูลหลอก",
+  audio:[["M","Good afternoon, Westbrook Library. How can I help?"],["W","Hello. I've just moved to the area, and I'd like to join the library."],["M","Of course. I just need a few details. What's your full name?"],["W","It's Emily Grant. That's G, R, A, N, T."],["M","Thank you. And your address?"],["W","It's 27 Hillside Road."],["M","Hillside Road. And the postcode?"],["W","B, R, 3, 4, L, P."],["M","Lovely. Now, adult membership is free, but if you'd like to borrow DVDs as well as books, there's a charge of twelve pounds a year."],["W","I'll just take the free membership, thanks. How many books can I borrow at a time?"],["M","Up to eight, and you can keep them for three weeks. Children's members can borrow five."],["W","That's fine. Do you run any events?"],["M","Yes, we have a book club that meets on the first Wednesday of every month, in the evening."]],
+  formTitle:"WESTBROOK LIBRARY: New member",
+  rows:[
+   {label:"Surname",a:"grant",show:"Grant",why:"ผู้พูดสะกด G, R, A, N, T"},
+   {label:"Address",pre:"27",post:"Road",a:"hillside",show:"Hillside",why:"27 Hillside Road (คำว่า Road มีให้แล้ว เขียนแค่ Hillside)"},
+   {label:"Postcode",a:"br3 4lp|br34lp",show:"BR3 4LP",why:"B, R, 3, 4, L, P"},
+   {label:"Maximum number of books",a:"8|eight",show:"8",why:"ผู้ใหญ่ยืมได้ 8 เล่ม ส่วน 5 เล่มสำหรับสมาชิกเด็ก (ตัวหลอก)"},
+   {label:"Loan period",post:"weeks",a:"3|three",show:"3",why:"keep them for three weeks"},
+   {label:"Book club",pre:"first",post:"of every month",a:"wednesday",show:"Wednesday",why:"the first Wednesday of every month"}]},
+ {kind:"sets",listen:true,title:"Part 3",dir:"Choose the correct letter, A, B or C.",dirTh:"ฟังนักศึกษาสองคนวางแผนงานนำเสนอ แล้วเลือกคำตอบ",
+  sets:[{audio:[["W","Hi, Jack. Have you started planning our presentation on urban gardens yet?"],["M","A bit. I've read the article our tutor recommended, but it focuses mainly on rooftop gardens in New York. I think we should include examples from Asia as well."],["W","Good idea. I found a study about community gardens in Singapore. It showed that people who took part felt less stressed and got to know their neighbours better."],["M","That's useful. What about the structure? I thought we could start with the history of urban gardening."],["W","I think that might take too long. We only have fifteen minutes. Why don't we start with a short video to get the audience's attention, and then go straight to the benefits?"],["M","OK, that works. And who's going to do the conclusion?"],["W","You're better at summarising, so could you do it? I'll prepare the slides."],["M","Fine. Let's meet on Thursday to practise."]],
+   qs:[{q:"What does Jack say about the article the tutor recommended?",o:["It is too long.","It focuses mainly on one city.","It is out of date."],a:1,why:"focuses mainly on rooftop gardens in New York"},
+       {q:"The Singapore study found that community gardeners",o:["ate more healthily.","felt less stressed.","saved money on food."],a:1,why:"people who took part felt less stressed"},
+       {q:"How will the presentation begin?",o:["with the history of urban gardening","with a short video","with a survey of the audience"],a:1,why:"Jack เสนอประวัติศาสตร์ แต่ Sophie ค้านเพราะใช้เวลานาน ตกลงเริ่มด้วยวิดีโอ"},
+       {q:"What will Sophie prepare?",o:["the conclusion","the video","the slides"],a:2,why:"I'll prepare the slides (Jack ทำบทสรุป)"}]}]},
+ {kind:"form",title:"Part 4",max:1,dir:"Complete the notes below. Write ONE WORD ONLY for each answer.",dirTh:"ฟังการบรรยายเรื่องผึ้ง แล้วเติมโน้ต 1 คำเท่านั้น",
+  audio:[["N","Today I want to talk about the honeybee and why it matters so much to agriculture. Bees are responsible for pollinating around a third of the crops we eat, including apples, almonds and coffee. In recent years, however, bee populations in many countries have declined sharply. Scientists have identified several causes. The first is the loss of habitat, as wild flowers are replaced by farmland and buildings. The second is the use of pesticides, particularly a group of chemicals that affect the bees' ability to find their way back to the hive. A third factor is disease, spread by a tiny parasite called the varroa mite. So what can be done? Farmers can plant strips of wild flowers along the edges of their fields, which provide bees with food. Governments in several regions have banned the most harmful pesticides. And ordinary people can help too, simply by avoiding chemicals in their gardens and growing plants that flower at different times of the year."]],
+  formTitle:"THE DECLINE OF THE HONEYBEE",
+  rows:[
+   {label:"Importance",pre:"pollinate about a",post:"of the crops we eat",a:"third",why:"around a third of the crops"},
+   {label:"Cause 1",pre:"loss of",a:"habitat",why:"the loss of habitat"},
+   {label:"Cause 2",post:"that affect bees' navigation",a:"pesticides",why:"the use of pesticides ... affect the bees' ability to find their way back"},
+   {label:"Cause 3",pre:"disease spread by the varroa",a:"mite",why:"a tiny parasite called the varroa mite"},
+   {label:"Farmers can",pre:"plant wild flowers along the",post:"of fields",a:"edges",why:"along the edges of their fields"},
+   {label:"The public can",pre:"avoid using",post:"in gardens",a:"chemicals",why:"avoiding chemicals in their gardens"}]}]},
+ reading:{title:"Reading",th:"การอ่าน",time:20*60,est:"20 นาที",
+ intro:["บทความ 1 เรื่อง 13 ข้อ: True/False/Not Given, เลือกคำตอบ และเติมประโยค","จับเวลา 20 นาทีต่อบทความเท่ากับข้อสอบจริง"],
+ parts:[
+ {kind:"passage",title:"Reading Passage 1",dir:"You should spend about 20 minutes on Questions 1–13, which are based on Reading Passage 1 below.",dirTh:"อ่านบทความแล้วตอบคำถาม 13 ข้อ",
+  passage:{title:"The Return of the Night Train",paras:[
+   ["A","For much of the twentieth century, overnight trains were a normal way to travel across Europe. Passengers could board in Paris in the evening and wake up in Vienna or Rome the next morning. By the early 2000s, however, many of these services had disappeared. Low-cost airlines offered cheaper and faster journeys, and railway companies found sleeper trains expensive to operate, since each carriage carries far fewer passengers than an ordinary one."],
+   ["B","In the last decade, the trend has reversed. Austria's national railway began taking over routes that other companies had abandoned, and new private operators have launched services between cities such as Amsterdam, Berlin and Prague. Several governments have supported these services with subsidies, arguing that they reduce carbon emissions."],
+   ["C","The environmental case is strong. According to one estimate, a journey by night train produces less than a tenth of the carbon dioxide of the same trip by plane. For travellers who are worried about climate change, this is a powerful reason to choose the train, even if the journey takes longer."],
+   ["D","Convenience also plays a part. Although a flight may take only two hours, passengers must travel to an airport outside the city, arrive well before departure and pass through security checks. A night train, by contrast, leaves from the city centre and arrives in the city centre, and the time on board is spent sleeping rather than waiting. Many business travellers also value saving the cost of a hotel room."],
+   ["E","Problems remain. Tickets for a private sleeping compartment can cost more than a flight, and demand is so high on popular routes that trains are often fully booked weeks in advance. Operators also complain that a shortage of modern sleeping carriages limits how quickly they can expand, as new carriages take years to design and build."]]},
+  groups:[
+   {type:"tfng",dir:"Do the following statements agree with the information given in Reading Passage 1? Write TRUE, FALSE or NOT GIVEN.",dirTh:"TRUE = ตรงกับบทความ, FALSE = ขัดกับบทความ, NOT GIVEN = ไม่ได้พูดถึง",
+    items:[{q:"Sleeper carriages carry more passengers than ordinary carriages.",a:"F",why:"ย่อหน้า A: far fewer passengers"},
+     {q:"Austria's national railway took over routes that other companies had stopped running.",a:"T",why:"ย่อหน้า B: taking over routes that other companies had abandoned"},
+     {q:"The night train between Amsterdam and Prague is the most popular route in Europe.",a:"NG",why:"บทความไม่ได้บอกว่าเส้นทางไหนนิยมที่สุด"},
+     {q:"A night train journey produces about half the carbon dioxide of a flight.",a:"F",why:"ย่อหน้า C: less than a tenth ไม่ใช่ครึ่งหนึ่ง"},
+     {q:"Some business travellers like night trains because they do not need to pay for a hotel.",a:"T",why:"ย่อหน้า D: value saving the cost of a hotel room"}]},
+   {type:"mc",dir:"Choose the correct letter, A, B, C or D.",dirTh:"เลือกคำตอบที่ถูกต้อง",
+    items:[{q:"According to paragraph B, why have some governments supported night trains?",o:["to create jobs","to reduce carbon emissions","to compete with private operators","to attract tourists"],a:1,why:"arguing that they reduce carbon emissions"},
+     {q:"Which advantage of night trains is mentioned in paragraph D?",o:["They are faster than flights.","They travel between city centres.","They serve better food.","They are cheaper than buses."],a:1,why:"leaves from the city centre and arrives in the city centre"},
+     {q:"Which problem is mentioned in paragraph E?",o:["Trains are often late.","Popular routes sell out early.","Stations are closing.","Staff are poorly trained."],a:1,why:"fully booked weeks in advance"},
+     {q:"Why is it difficult for operators to expand quickly?",o:["There are not enough drivers.","New carriages take a long time to produce.","Governments have stopped subsidies.","Tracks need to be repaired."],a:1,why:"new carriages take years to design and build"}]},
+   {type:"gap",max:2,dir:"Complete the sentences below. Choose NO MORE THAN TWO WORDS from the passage for each answer.",dirTh:"เติมคำจากบทความ ไม่เกิน 2 คำ",
+    items:[{q:"In the early 2000s, many travellers chose ___ because they were cheaper and faster.",a:"low-cost airlines|airlines",show:"low-cost airlines",why:"ย่อหน้า A (low-cost นับเป็น 1 คำ)"},
+     {q:"Several governments have given ___ to night train services.",a:"subsidies",why:"ย่อหน้า B: supported these services with subsidies"},
+     {q:"Air passengers must arrive early and pass through ___.",a:"security checks",why:"ย่อหน้า D"},
+     {q:"A ticket for a private ___ can cost more than a flight.",a:"sleeping compartment|compartment",show:"sleeping compartment",why:"ย่อหน้า E"}]}]}]},
+ writing:{title:"Writing",th:"การเขียน",time:60*60,est:"60 นาที",kind:"writing",
+  intro:["Task 1 อธิบายกราฟเส้น อย่างน้อย 150 คำ และ Task 2 เรียงความแบบสาเหตุและทางแก้ อย่างน้อย 250 คำ","ส่งให้ครู AI ประเมินได้ทีละ Task"],
+  tasks:[
+   {n:1,min:150,mins:20,prompt:"The graph below shows the average number of hours per week that people in one country spent on three leisure activities between 2000 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+    chart:{type:"line",title:"Average hours per week spent on leisure activities",unit:"hours",max:20,step:5,years:["2000","2005","2010","2015","2020"],series:[{name:"Watching TV",v:[15,14,12,10,8]},{name:"Using the internet",v:[2,5,9,13,17]},{name:"Reading",v:[5,4.5,4,3.5,3]}]},
+    model:"The line graph illustrates how many hours per week people in one country spent watching television, using the internet and reading between 2000 and 2020.\n\nOverall, watching television and reading both became less popular over the period, while internet use rose dramatically and overtook television to become the most time-consuming activity.\n\nIn 2000, people spent 15 hours a week watching TV, far more than the time spent reading (5 hours) or online (just 2 hours). Over the next two decades, television viewing fell steadily, dropping to 10 hours in 2015 and 8 hours by 2020.\n\nBy contrast, internet use grew rapidly, reaching 9 hours in 2010. The two lines crossed shortly after 2010, and by the end of the period people were spending 17 hours a week online, more than double the figure for television. Reading showed a slow but continuous decline, falling from 5 hours to only 3 hours in 2020."},
+   {n:2,min:250,mins:40,prompt:"In many countries, children now spend more time using electronic devices than playing outdoors. What are the causes of this? What can be done to encourage children to spend more time outside?",
+    model:"It is increasingly common for children to spend their free time looking at screens rather than playing outside. In my view, this trend has several causes, but there are also practical steps that parents, schools and governments can take to reverse it.\n\nThe most obvious cause is the attraction of the devices themselves. Games and video apps are designed to be highly engaging, with constant rewards that make it difficult for children to stop. Another reason is that many parents are busy and find that a tablet keeps their children quiet and safe at home. In addition, cities have become more crowded, and in many neighbourhoods there are few parks or safe places where children can play without supervision. Parents who worry about traffic or strangers may therefore prefer to keep their children indoors.\n\nThere are, however, several ways to encourage outdoor activity. Firstly, parents can set clear limits on screen time and act as role models by going outside with their children, for example by cycling or visiting parks at weekends. Secondly, schools can include more outdoor lessons and sports in the timetable, and organise clubs such as gardening or hiking. Finally, local governments should invest in safe, attractive public spaces. When a neighbourhood has a well-maintained playground close to home, children are far more likely to use it.\n\nIn conclusion, children spend so much time on devices because the technology is appealing, parents are busy and safe outdoor spaces are limited. By combining sensible family rules, active schools and better public facilities, society can help children enjoy the benefits of playing outside."}]},
+ speaking:{title:"Speaking",th:"การพูด",time:0,est:"ประมาณ 12 นาที",kind:"speaking",
+  intro:["ผู้คุมสอบอ่านคำถามให้ฟังครบ 3 Part หัวข้อ: งาน/การเรียน, อาหาร, สถานที่ที่อยากกลับไป และการท่องเที่ยว","พูดคำตอบออกเสียงก่อน แล้วพิมพ์สิ่งที่พูด ครู AI ประเมินได้ทุกเกณฑ์ยกเว้นการออกเสียง"],
+  sp:[
+   {part:1,title:"Part 1: Introduction and interview",th:"คำถามทั่วไป ตอบ 2–3 ประโยค ขยายด้วยเหตุผลหรือตัวอย่าง",qs:["Let's talk about what you do. Do you work, or are you a student?","What do you enjoy most about your work or studies?","Do you like cooking? Why or why not?","What kind of food is popular in your country?"]},
+   {part:2,title:"Part 2: Long turn",th:"เตรียม 1 นาที แล้วพูดต่อเนื่อง 1–2 นาที ให้ครบทุกข้อในบัตร",
+    card:{topic:"Describe a place you visited that you would like to go back to.",points:["where it is","when you went there","what you did there"],end:"and explain why you would like to go back."},
+    model:"The place I'd like to talk about is Chiang Mai, in the north of Thailand. I went there about two years ago with three friends from university during the cool season, which is the best time to visit. We stayed for five days. On the first day, we explored the old city and visited some beautiful temples. We also went to the Sunday walking street, where we tried lots of local food, such as khao soi, a curry noodle soup that I absolutely loved. Later in the trip, we drove up Doi Suthep mountain early in the morning to watch the sunrise, and it was one of the most peaceful moments I've ever experienced. The reason I'd like to go back is that I feel I only saw a small part of the region. Next time, I'd love to stay in a village in the mountains and learn more about the local culture. Also, the pace of life there is much slower than in Bangkok, so it's the perfect place to relax and recharge."},
+   {part:3,title:"Part 3: Discussion",th:"คำถามเชิงความคิดเห็น ตอบยาวขึ้น ให้เหตุผล เปรียบเทียบ และยกตัวอย่าง",qs:["Why do people enjoy travelling to other countries?","What effects can tourism have on local communities?","Do you think people will travel more or less in the future? Why?"]}]}},
+/* ---- IELTS Test 3: Writing and Speaking ---- */
+{writing:{title:"Writing",th:"การเขียน",time:60*60,est:"60 นาที",kind:"writing",
+  intro:["Task 1 อธิบายตาราง อย่างน้อย 150 คำ และ Task 2 เรียงความแบบ Advantages/Disadvantages อย่างน้อย 250 คำ","ตัวเลขในตารางเป็นข้อมูลสมมติสำหรับฝึกเขียน"],
+  tasks:[
+   {n:1,min:150,mins:20,prompt:"The table below shows the number of international tourists (in millions) who visited five countries in 2013 and 2023. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+    table:{title:"International tourist arrivals (millions)",note:"ข้อมูลสมมติสำหรับฝึก",cols:["Country","2013","2023"],rows:[["Thailand","26.5","28.2"],["Malaysia","25.7","20.1"],["Singapore","15.6","13.6"],["Japan","10.4","25.1"],["Vietnam","7.6","12.6"]]},
+    model:"The table compares the number of international tourists, in millions, who visited five Asian countries in 2013 and 2023.\n\nOverall, three of the five countries received more visitors in 2023 than a decade earlier, with Japan showing by far the largest increase. Thailand remained the most popular destination in both years.\n\nIn 2013, Thailand and Malaysia attracted similar numbers of tourists, at 26.5 million and 25.7 million respectively. Ten years later, Thailand's figure had risen slightly to 28.2 million, whereas Malaysia's fell to 20.1 million.\n\nJapan experienced remarkable growth, with visitor numbers more than doubling from 10.4 million to 25.1 million, which made it the second most visited country in 2023. Vietnam also grew considerably, from 7.6 million to 12.6 million. Singapore, on the other hand, saw a modest decline, from 15.6 million to 13.6 million."},
+   {n:2,min:250,mins:40,prompt:"Many young people take a year off between finishing school and starting university in order to work or travel. Do the advantages of this outweigh the disadvantages?",
+    model:"In many countries, it has become popular for school leavers to spend a year working or travelling before they start university. While this choice has some drawbacks, I believe that the advantages are greater, provided that the year is planned carefully.\n\nThe main benefit of a gap year is the personal growth it offers. Young people who travel alone or work in a new environment learn to manage money, solve problems and communicate with people from different backgrounds. These skills are rarely taught in school, but they are highly valued by universities and employers. A gap year can also help students choose the right course. Many eighteen-year-olds are unsure what they want to study, and a year of work experience may show them which career really suits them, reducing the risk of dropping out later.\n\nThere are, of course, some disadvantages. Travelling can be expensive, and not every family can afford it. Some students may also lose the habit of studying and find it difficult to return to academic work after a year away. In addition, starting university a year later means entering the job market later, which could delay financial independence.\n\nHowever, most of these problems can be avoided with good planning. Students can work for part of the year to pay for their travel, and they can keep up their studies through online courses or reading. In this way, a gap year becomes a productive period rather than a long holiday.\n\nIn conclusion, although a gap year involves some costs and risks, the independence, maturity and clearer direction it can provide mean that its advantages outweigh its disadvantages."}]},
+ speaking:{title:"Speaking",th:"การพูด",time:0,est:"ประมาณ 12 นาที",kind:"speaking",
+  intro:["ผู้คุมสอบอ่านคำถามให้ฟังครบ 3 Part หัวข้อ: ดนตรี, โทรศัพท์มือถือ, บุคคลที่มีอิทธิพลต่อคุณ และแบบอย่างที่ดี","พูดคำตอบออกเสียงก่อน แล้วพิมพ์สิ่งที่พูด ครู AI ประเมินได้ทุกเกณฑ์ยกเว้นการออกเสียง"],
+  sp:[
+   {part:1,title:"Part 1: Introduction and interview",th:"คำถามทั่วไป ตอบ 2–3 ประโยค ขยายด้วยเหตุผลหรือตัวอย่าง",qs:["Let's talk about music. What kind of music do you like?","Did you learn to play a musical instrument as a child?","How often do you use your mobile phone?","What do you use your phone for most?"]},
+   {part:2,title:"Part 2: Long turn",th:"เตรียม 1 นาที แล้วพูดต่อเนื่อง 1–2 นาที ให้ครบทุกข้อในบัตร",
+    card:{topic:"Describe a person who has influenced you.",points:["who this person is","how you know them","what they have done"],end:"and explain how this person has influenced you."},
+    model:"I'd like to talk about my grandmother, who has had a huge influence on my life. She lived with our family when I was growing up, so I spent a lot of time with her, especially after school while my parents were at work. She ran a small food stall at the local market for more than thirty years, which was very hard work, but she never complained. She used to get up at four every morning to prepare the ingredients. What I admire most is that she was always generous to other people, even though she didn't have much money herself. She often gave free food to elderly neighbours who lived alone. She influenced me in two main ways. First, she taught me the value of hard work and patience, which really helped me when I was preparing for my university entrance exams. Second, she showed me that kindness matters more than money. Even now, whenever I have a difficult decision to make, I ask myself what she would do."},
+   {part:3,title:"Part 3: Discussion",th:"คำถามเชิงความคิดเห็น ตอบยาวขึ้น ให้เหตุผล เปรียบเทียบ และยกตัวอย่าง",qs:["What qualities make a good role model?","Do celebrities have a responsibility to set a good example? Why or why not?","How has the role of grandparents in families changed in your country?"]}]}}
+];
+
+const XS={};   // attempts by section id ("toeic-listening-1"), kept while the page is open
 let X=null;    // the attempt on screen
 let xTok=0;    // bumps to cancel audio playback
 const AUD={};  // audio scripts by key, filled while rendering
@@ -1487,12 +1769,21 @@ const XD=(()=>{try{return JSON.parse(localStorage.getItem("exam-drafts")||"{}")|
 const VOICE={W:[0,1.12],M:[1,0.9],N:[0,1]};
 const LET="ABCD";
 const TFNG=[["T","TRUE"],["F","FALSE"],["NG","NOT GIVEN"]];
+const YNNG=[["Y","YES"],["N","NO"],["NG","NOT GIVEN"]];
+const HUBSET=(()=>{try{return Object.assign({toeic:1,ielts:1},JSON.parse(localStorage.getItem("exam-hubset")||"{}"))}catch(e){return {toeic:1,ielts:1}}})();
+// drafts typed before exams had numbered sets belong to set 1
+Object.keys(XD).forEach(k=>{const m=/^(w\d|s\d(?:-\d)?)$/.exec(k); if(m){const nk=(k[0]==="w"?"ielts-writing-1-":"ielts-speaking-1-")+k; if(XD[nk]==null) XD[nk]=XD[k]; delete XD[k]}});
 const EXAM_NAMES={"toeic-listening":"TOEIC Listening","toeic-reading":"TOEIC Reading","ielts-listening":"IELTS Listening","ielts-reading":"IELTS Reading","ielts-writing":"IELTS Writing","ielts-speaking":"IELTS Speaking"};
 const ICON_EXAM='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg>';
 
 (function prepExams(){
-  Object.keys(EXAMS).forEach(ek=>Object.keys(EXAMS[ek].sections).forEach(sk=>{
-    const sec=EXAMS[ek].sections[sk]; sec.id=ek+"-"+sk; sec.exam=ek; sec.key=sk; let n=0;
+  const I1=EXAMS.ielts.sections;
+  I1.reading.parts=I1.reading.parts.concat(IELTS_R1_MORE);
+  I1.writing.tasks=IELTS_WRITING; I1.speaking.sp=IELTS_SPEAKING;
+  EXAMS.toeic.sets=[EXAMS.toeic.sections].concat(TOEIC_MORE);
+  EXAMS.ielts.sets=[I1].concat(IELTS_MORE);
+  Object.keys(EXAMS).forEach(ek=>EXAMS[ek].sets.forEach((set,si)=>Object.keys(set).forEach(sk=>{
+    const sec=set[sk]; sec.set=si+1; sec.base=ek+"-"+sk; sec.id=sec.base+"-"+sec.set; sec.exam=ek; sec.key=sk; let n=0;
     (sec.parts||[]).forEach(p=>{
       let qs;
       if(p.kind==="sets") qs=[].concat.apply([],p.sets.map(s=>s.qs));
@@ -1502,15 +1793,17 @@ const ICON_EXAM='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
       p.qs=qs; p.first=n+1;
       qs.forEach(q=>{
         q.n=++n; q.key=sec.id+"-"+n;
-        q.t=p.kind==="form"||(q.g&&q.g.type==="gap")?"text":q.g&&q.g.type==="tfng"?"tfng":"choice";
+        const gt=q.g&&q.g.type;
+        q.t=p.kind==="form"||gt==="gap"?"text":gt==="tfng"||gt==="ynng"?"judge":gt==="select"?"code":"choice";
+        if(q.t==="judge") q.labels=gt==="ynng"?YNNG:TFNG;
         q.max=p.max||(q.g&&q.g.max)||0;
       });
       p.last=n;
     });
     sec.total=n;
-  }));
+  })));
 })();
-function secById(id){const m=/^(toeic|ielts)-(\w+)$/.exec(id||""); return m&&EXAMS[m[1]].sections[m[2]]||null}
+function secById(id){const m=/^(toeic|ielts)-([a-z]+)(?:-(\d+))?$/.exec(id||""); if(!m) return null; const set=EXAMS[m[1]].sets[(+m[3]||1)-1]; return set&&set[m[2]]||null}
 
 /* scoring */
 function normAns(s){return String(s||"").toLowerCase().replace(/[’‘]/g,"'").replace(/[£$,]/g,"").replace(/:/g,".").replace(/\.$/,"").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"")}
@@ -1521,7 +1814,8 @@ function isRight(q,v){
 }
 function rightText(q){
   if(q.t==="text") return q.show||q.a.split("|")[0];
-  if(q.t==="tfng") return TFNG.find(x=>x[0]===q.a)[1];
+  if(q.t==="judge") return (q.labels.find(x=>x[0]===q.a)||["",q.a])[1];
+  if(q.t==="code"){const o=q.g.opts.find(x=>x[0]===q.a); return o&&q.g.optsTitle?o[0]+". "+o[1]:q.a}
   return LET[q.a]+(q.o?". "+q.o[q.a]:"");
 }
 function toeicScaled(c,t){return Math.max(5,Math.min(495,Math.round((5+c/t*490)/5)*5))}
@@ -1535,8 +1829,9 @@ function bandName(b){const r=IELTS_BANDS.find(x=>Math.floor(b)>=x[0]); return r?
 function examLog(){return Array.isArray(S.exams)?S.exams:[]}
 function examLast(id,f){const l=examLog(); for(let i=l.length-1;i>=0;i--) if(l[i].id===id&&(!f||f(l[i]))) return l[i]; return null}
 function examRecord(e){S.exams=examLog().concat([Object.assign({at:Date.now()},e)]).slice(-60); markDay(); save(); updateChrome()}
-function writingBand(){
-  const t1=examLast("ielts-writing",e=>e.task===1), t2=examLast("ielts-writing",e=>e.task===2);
+function writingBand(set){
+  const inSet=e=>!set||(e.set||1)===set;
+  const t1=examLast("ielts-writing",e=>e.task===1&&inSet(e)), t2=examLast("ielts-writing",e=>e.task===2&&inSet(e));
   if(t1&&t2) return halfBand((t1.band+2*t2.band)/3);
   return t1?t1.band:t2?t2.band:null;
 }
@@ -1547,29 +1842,40 @@ function ieltsOverall(){
 function wordCount(t){return (String(t||"").trim().match(/[A-Za-z0-9'’-]+/g)||[]).length}
 function mmss(s){s=Math.max(0,Math.floor(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
 function answeredCount(){return X?X.sec.parts.reduce((n,p)=>n+p.qs.filter(q=>X.ans[q.key]!=null&&X.ans[q.key]!=="").length,0):0}
-function saveDrafts(){clearTimeout(saveDrafts.t); saveDrafts.t=setTimeout(()=>{try{localStorage.setItem("exam-drafts",JSON.stringify(XD))}catch(e){}},500)}
+function flushDrafts(){clearTimeout(saveDrafts.t); try{localStorage.setItem("exam-drafts",JSON.stringify(XD))}catch(e){}}
+function saveDrafts(){clearTimeout(saveDrafts.t); saveDrafts.t=setTimeout(flushDrafts,500)}
+window.addEventListener("pagehide",flushDrafts);
 
 /* hub */
+function setTabs(ek){
+  return '<div class="tabs x-tabs" role="group" aria-label="เลือกชุดข้อสอบ '+EXAMS[ek].name+'">'+EXAMS[ek].sets.map((st,i)=>'<button data-act="xset" data-e="'+ek+'" data-n="'+(i+1)+'" aria-pressed="'+(HUBSET[ek]===i+1)+'">ชุดที่ '+(i+1)+(st.listening?'':' · W+S')+'</button>').join("")+'</div>';
+}
+function secRows(ek){
+  const set=EXAMS[ek].sets[HUBSET[ek]-1]||EXAMS[ek].sets[0];
+  return Object.keys(set).map(k=>{
+    const sec=set[k], inSet=e=>(e.set||1)===sec.set; let last=null, unit="";
+    if(ek==="toeic"){const e=examLast(sec.base,inSet); last=e&&e.score; unit="/495"}
+    else if(sec.kind==="writing"){const b=writingBand(sec.set); last=b==null?null:bandTxt(b)}
+    else {const e=examLast(sec.base,inSet); last=e&&bandTxt(e.band)}
+    const extra=sec.kind==="writing"?"2 Tasks":sec.kind==="speaking"?"3 Parts":sec.total+" ข้อ";
+    return '<button class="x-sec" data-act="xopen" data-id="'+sec.id+'"><b lang="en">'+sec.title+'</b><span class="x-last">'+(last==null?'<span class="muted">–</span>':last+(unit?'<small>'+unit+'</small>':''))+'</span><small>'+sec.th+' · '+extra+' · '+sec.est+'</small></button>';
+  }).join("");
+}
 function viewExamHub(){
-  const T=EXAMS.toeic.sections, I=EXAMS.ielts.sections;
   const tl=examLast("toeic-listening"), tr=examLast("toeic-reading");
-  const row=(sec,last,unit,extra)=>'<button class="x-sec" data-act="xopen" data-id="'+sec.id+'"><b lang="en">'+sec.title+'</b><span class="x-last">'+(last==null?'<span class="muted">–</span>':last+(unit?'<small>'+unit+'</small>':''))+'</span><small>'+sec.th+' · '+extra+'</small></button>';
-  const ov=ieltsOverall(), wb=writingBand();
+  const ov=ieltsOverall();
   const hist=examLog().slice(-10).reverse();
   return '<h1 class="h1">ห้องสอบ</h1><p class="lede">ข้อสอบจำลองแนว TOEIC และ IELTS เขียนขึ้นใหม่ตามรูปแบบข้อสอบจริง มีเฉลยพร้อมคำอธิบายภาษาไทยทุกข้อ คะแนนเป็นค่าประมาณสำหรับดูพัฒนาการ ไม่ใช่คะแนนทางการ</p>'
    +'<div class="x-hub">'
    +'<article class="x-exam"><p class="x-logo" lang="en">TOEIC</p><p class="muted" lang="en">Listening &amp; Reading</p><p style="margin-top:6px">'+EXAMS.toeic.th+'</p>'
-     +'<div class="x-secs">'+row(T.listening,tl&&tl.score,"/495",T.listening.total+" ข้อ · "+T.listening.est)+row(T.reading,tr&&tr.score,"/495",T.reading.total+" ข้อ · "+T.reading.est)+'</div>'
-     +'<div class="x-total"><div><span class="muted">คะแนนรวมโดยประมาณ</span><b>'+(tl&&tr?(tl.score+tr.score)+'<small> / 990</small>':'–')+'</b></div><p class="muted" style="font-size:13.5px;flex:1;min-width:180px">'+(tl&&tr?'รวมจากผลล่าสุดของทั้งสองส่วน':'ทำครบทั้ง Listening และ Reading เพื่อดูคะแนนรวม')+'</p></div></article>'
+     +setTabs("toeic")+'<div class="x-secs">'+secRows("toeic")+'</div>'
+     +'<div class="x-total"><div><span class="muted">คะแนนรวมโดยประมาณ</span><b>'+(tl&&tr?(tl.score+tr.score)+'<small> / 990</small>':'–')+'</b></div><p class="muted" style="font-size:13.5px;flex:1;min-width:180px">'+(tl&&tr?'รวมจากผลล่าสุดของทั้งสองส่วน ไม่ว่าชุดไหน':'ทำครบทั้ง Listening และ Reading เพื่อดูคะแนนรวม')+'</p></div></article>'
    +'<article class="x-exam"><p class="x-logo" lang="en">IELTS</p><p class="muted" lang="en">Academic</p><p style="margin-top:6px">'+EXAMS.ielts.th+'</p>'
-     +'<div class="x-secs">'+row(I.listening,examLast("ielts-listening")&&bandTxt(examLast("ielts-listening").band),"",I.listening.total+" ข้อ · "+I.listening.est)
-       +row(I.reading,examLast("ielts-reading")&&bandTxt(examLast("ielts-reading").band),"",I.reading.total+" ข้อ · "+I.reading.est)
-       +row(I.writing,wb==null?null:bandTxt(wb),"","2 Tasks · "+I.writing.est)
-       +row(I.speaking,examLast("ielts-speaking")&&bandTxt(examLast("ielts-speaking").band),"","3 Parts · "+I.speaking.est)+'</div>'
+     +setTabs("ielts")+'<div class="x-secs">'+secRows("ielts")+'</div>'
      +'<div class="x-total"><div><span class="muted">Overall band โดยประมาณ</span><b>'+(ov==null?'–':bandTxt(ov)+'<small> '+bandName(ov)+'</small>')+'</b></div><p class="muted" style="font-size:13.5px;flex:1;min-width:180px">'+(ov==null?'ทำครบ 4 ทักษะเพื่อดู Overall band':'เฉลี่ยจากผลล่าสุดของ 4 ทักษะ ปัดแบบ IELTS')+'</p></div></article>'
    +'</div>'
    +(hist.length?'<section class="section"><h2 class="h3" style="margin-bottom:10px">ประวัติการสอบล่าสุด</h2><div class="tbl-wrap"><table><thead><tr><th>วันที่</th><th>ข้อสอบ</th><th>ผล</th><th>โหมด</th></tr></thead><tbody>'
-     +hist.map(e=>'<tr><td style="white-space:nowrap">'+esc(new Date(e.at).toLocaleDateString("th-TH",{day:"numeric",month:"short"}))+'</td><td lang="en">'+esc(EXAM_NAMES[e.id]||e.id)+(e.task?' · Task '+e.task:'')+'</td><td style="font-variant-numeric:tabular-nums">'+(e.score!=null?e.score+' / 495':'Band '+bandTxt(e.band))+(e.c!=null?' <span class="muted">(ถูก '+e.c+'/'+e.t+')</span>':'')+'</td><td class="muted">'+(e.mode==="exam"?"สอบจริง":e.mode==="practice"?"ฝึก":"ครู AI")+'</td></tr>').join("")+'</tbody></table></div></section>':'')
+     +hist.map(e=>'<tr><td style="white-space:nowrap">'+esc(new Date(e.at).toLocaleDateString("th-TH",{day:"numeric",month:"short"}))+'</td><td lang="en">'+esc(EXAM_NAMES[e.id]||e.id)+(e.set?' <span class="muted">ชุด '+e.set+'</span>':'')+(e.task?' · Task '+e.task:'')+'</td><td style="font-variant-numeric:tabular-nums">'+(e.score!=null?e.score+' / 495':'Band '+bandTxt(e.band))+(e.c!=null?' <span class="muted">(ถูก '+e.c+'/'+e.t+')</span>':'')+'</td><td class="muted">'+(e.mode==="exam"?"สอบจริง":e.mode==="practice"?"ฝึก":"ครู AI")+'</td></tr>').join("")+'</tbody></table></div></section>':'')
    +'<section class="section"><h2 class="h3" style="margin-bottom:10px">ระดับ Band ของ IELTS</h2><div class="tbl-wrap"><table><thead><tr><th>Band</th><th>ชื่อระดับ</th><th>ความหมาย</th></tr></thead><tbody>'
      +IELTS_BANDS.map(b=>'<tr><td style="font-variant-numeric:tabular-nums"><b>'+b[0]+'</b></td><td lang="en">'+b[1]+'</td><td>'+b[2]+'</td></tr>').join("")+'</tbody></table></div>'
      +'<p class="muted" style="font-size:13px;margin-top:10px">TOEIC และ IELTS เป็นเครื่องหมายการค้าของเจ้าของแต่ละราย ข้อสอบในแอปนี้เขียนขึ้นเองเพื่อฝึกซ้อม ไม่มีส่วนเกี่ยวข้องกับผู้จัดสอบ</p></section>';
@@ -1578,7 +1884,7 @@ function viewExamHub(){
 /* attempt screen */
 function viewExamRun(){
   const sec=X.sec, ex=EXAMS[sec.exam];
-  let h='<button class="back" data-act="go" data-to="exam">← ห้องสอบ</button><p class="eyebrow" style="margin-top:8px" lang="en">'+esc(ex.full)+'</p><h1 class="h2">'+sec.title+' <span class="muted" style="font-weight:400">· '+sec.th+'</span></h1>';
+  let h='<button class="back" data-act="go" data-to="exam">← ห้องสอบ</button><p class="eyebrow" style="margin-top:8px" lang="en">'+esc(ex.full)+'</p><h1 class="h2">'+sec.title+' <span class="muted" style="font-weight:400">· '+sec.th+' · ชุดที่ '+sec.set+'</span></h1>';
   if(!X.started) return h+introCard(sec);
   if(sec.kind==="writing") return h+xbar()+writingView();
   if(sec.kind==="speaking") return h+speakingView();
@@ -1604,10 +1910,10 @@ function dirBox(p){
 }
 function choiceOpts(q,labels,texts,row){
   const v=X.ans[q.key];
-  return '<div class="xopts'+(row?" row":"")+'" role="group" aria-label="ข้อ '+q.n+'">'+labels.map((lab,i)=>{
-    const val=q.t==="tfng"?lab[0]:String(i); let cls="xo";
+  return '<div class="xopts'+(row?" row":"")+(q.t==="code"?" codes":"")+'" role="group" aria-label="ข้อ '+q.n+'">'+labels.map((lab,i)=>{
+    const val=q.t==="judge"||q.t==="code"?lab[0]:String(i); let cls="xo";
     if(X.submitted){if(val===String(q.a)) cls+=" ok"; else if(val===v) cls+=" no"}
-    return '<button class="'+cls+'" data-act="xa" data-k="'+q.key+'" data-v="'+val+'" aria-pressed="'+(v===val)+'"'+(X.submitted?" disabled":"")+'><span class="l">'+(q.t==="tfng"?lab[1]:lab)+'</span>'+(texts?'<span lang="en">'+esc(texts[i])+'</span>':'')+'</button>';
+    return '<button class="'+cls+'" data-act="xa" data-k="'+q.key+'" data-v="'+val+'" aria-pressed="'+(v===val)+'"'+(X.submitted?" disabled":"")+'><span class="l">'+(q.t==="judge"?lab[1]:q.t==="code"?lab[0]:lab)+'</span>'+(texts?'<span lang="en">'+esc(texts[i])+'</span>':'')+'</button>';
   }).join("")+'</div>';
 }
 function textInput(q){
@@ -1658,12 +1964,13 @@ function renderPart(p){
       +p.items.map(q=>'<div class="xq">'+qHead(q,'')+choiceOpts(q,LET.split(""),q.o)+reviewNote(q)+'</div>').join("");
   } else if(p.kind==="form"){
     h+=audioBtn(sid+"-a"+p.first,p.audio)+'<div class="xform"><p class="eyebrow" lang="en">'+esc(p.formTitle)+'</p>'
-      +p.rows.map(q=>'<div class="fr"><span lang="en">'+esc(q.label)+'</span><span class="fr-in"><span class="xnum">'+q.n+'</span>'+(q.pre?'<span lang="en">'+esc(q.pre)+'</span>':'')+textInput(q)+'</span>'+(X.submitted?'<div class="fr-why">'+reviewNote(q)+'</div>':'')+'</div>').join("")+'</div>';
+      +p.rows.map(q=>'<div class="fr"><span lang="en">'+esc(q.label)+'</span><span class="fr-in"><span class="xnum">'+q.n+'</span>'+(q.pre?'<span lang="en">'+esc(q.pre)+'</span>':'')+textInput(q)+(q.post?'<span lang="en">'+esc(q.post)+'</span>':'')+'</span>'+(X.submitted?'<div class="fr-why">'+reviewNote(q)+'</div>':'')+'</div>').join("")+'</div>';
   } else if(p.kind==="passage"){
     h+='<div class="xread"><article class="xpass"><h3 class="h3" lang="en">'+esc(p.passage.title)+'</h3>'+p.passage.paras.map(pp=>'<p lang="en"><span class="pl">'+pp[0]+'</span>'+esc(pp[1])+'</p>').join("")+'</article><div>'
       +p.groups.map(g=>'<div class="xgroup"><p class="eyebrow" lang="en">Questions '+g.items[0].n+'–'+g.items[g.items.length-1].n+'</p><p lang="en" style="font-size:15px">'+esc(g.dir)+'</p><p class="muted" style="font-size:14.5px;margin-top:4px">'+esc(g.dirTh)+'</p>'
+        +(g.optsTitle?'<div class="xoptsbox" lang="en"><p class="eyebrow">'+esc(g.optsTitle)+'</p>'+g.opts.map(o=>'<p><b>'+o[0]+'</b>'+esc(o[1])+'</p>').join("")+'</div>':'')
         +g.items.map(q=>'<div class="xq">'+qHead(q,'<p lang="en">'+(g.type==="gap"?esc(q.q).replace("___",textInput(q)):esc(q.q))+'</p>')
-          +(g.type==="tfng"?choiceOpts(q,TFNG,null,true):g.type==="mc"?choiceOpts(q,LET.split(""),q.o):'')+reviewNote(q)+'</div>').join("")+'</div>').join("")+'</div></div>';
+          +(g.type==="tfng"?choiceOpts(q,TFNG,null,true):g.type==="ynng"?choiceOpts(q,YNNG,null,true):g.type==="select"?choiceOpts(q,g.opts,null,true):g.type==="mc"?choiceOpts(q,LET.split(""),q.o):'')+reviewNote(q)+'</div>').join("")+'</div>').join("")+'</div></div>';
   }
   return h+'</section>';
 }
@@ -1688,7 +1995,7 @@ function gradeExam(){
   const sec=X.sec; let c=0;
   const parts=sec.parts.map(p=>{let pc=0; p.qs.forEach(q=>{if(isRight(q,X.ans[q.key])){c++;pc++}}); return {title:p.title,c:pc,t:p.qs.length}});
   X.submitted=true; X.confirm=false; X.endAt=Date.now();
-  const rec={id:sec.id,c,t:sec.total,mode:X.mode};
+  const rec={id:sec.base,set:sec.set,c,t:sec.total,mode:X.mode};
   if(sec.exam==="toeic") rec.score=toeicScaled(c,sec.total); else rec.band=ieltsBand(sec.key,c,sec.total);
   X.result=Object.assign({parts},rec);
   S.xp+=c*2; examRecord(rec);
@@ -1724,11 +2031,11 @@ function aiNote(){return NB?"เทียบกับตัวอย่างค
 function wcText(n,min){return n+" คำ"+(min?(n<min?" · ต้องการอย่างน้อย "+min+" คำ":" · ครบตามกำหนด"):"")}
 function paras(t){return '<p lang="en">'+esc(t).replace(/\n\n/g,'</p><p lang="en">').replace(/\n/g,"<br>")+'</p>'}
 function writingView(){
-  return IELTS_WRITING.map(t=>{
-    const key="w"+t.n, text=XD[key]||"", r=XR[key]||{}, show=X.show[key];
+  return X.sec.tasks.map(t=>{
+    const key=X.sec.id+"-w"+t.n, text=XD[key]||"", r=XR[key]||{}, show=X.show[key];
     return '<section class="xpart"><h2 class="h3" lang="en">Writing Task '+t.n+'</h2>'
      +'<div class="xdir"><p class="eyebrow" lang="en">You should spend about '+t.mins+' minutes on this task.</p><p lang="en">'+esc(t.prompt)+'</p><p class="muted" lang="en" style="margin-top:6px">Write at least '+t.min+' words.</p></div>'
-     +(t.chart?chartSVG(t.chart):'')
+     +taskFigure(t)
      +'<label class="sr" for="xw-'+key+'">คำตอบ Task '+t.n+'</label><textarea class="ta xta" id="xw-'+key+'" data-xw="'+key+'" lang="en" spellcheck="false" placeholder="Write your answer here…">'+esc(text)+'</textarea>'
      +'<div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" id="wc-'+key+'">'+wcText(wordCount(text),t.min)+'</span><div class="row">'
      +(AI.state==="ready"?'<button class="btn btn-primary" data-act="xgrade-w" data-n="'+t.n+'"'+(r.busy?" disabled":"")+'>'+(r.busy?"ครูกำลังประเมิน…":"ส่งให้ครู AI ประเมิน")+'</button>':'')
@@ -1739,6 +2046,37 @@ function writingView(){
      +(r.data?gradeHTML(r.data):'')
      +'</section>';
   }).join("");
+}
+function taskFigure(t){
+  if(t.table) return tableFig(t.table);
+  if(t.chart) return t.chart.type==="line"?lineSVG(t.chart):chartSVG(t.chart);
+  return "";
+}
+function taskData(t){
+  if(t.table) return "\nTable ("+t.table.title+", columns: "+t.table.cols.join(", ")+"): "+t.table.rows.map(r=>r.join(" ")).join("; ");
+  if(t.chart) return "\nChart data ("+t.chart.title+"): "+t.chart.series.map(s=>s.name+": "+t.chart.years.map((y,i)=>y+" = "+s.v[i]+(t.chart.unit?" "+t.chart.unit:"%")).join(", ")).join("; ");
+  return "";
+}
+function tableFig(tb){
+  return '<figure class="xchart"><figcaption><b lang="en">'+esc(tb.title)+'</b>'+(tb.note?'<span class="muted" style="font-size:13px">'+esc(tb.note)+'</span>':'')+'</figcaption><div class="tbl-wrap" style="margin-top:8px"><table lang="en"><thead><tr>'+tb.cols.map(c=>'<th>'+esc(c)+'</th>').join("")+'</tr></thead><tbody>'
+   +tb.rows.map(r=>'<tr>'+r.map((c,i)=>'<td'+(i?' style="font-variant-numeric:tabular-nums;text-align:right"':'')+'>'+esc(c)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div></figure>';
+}
+function lineSVG(ch){
+  const W=660,H=320,pl=40,pr=190,pt=20,pb=38,iw=W-pl-pr,ih=H-pt-pb,cols=["var(--s1)","var(--s2)","var(--s3)"];
+  const X=i=>pl+i*iw/(ch.years.length-1), Y=v=>pt+ih-v/ch.max*ih;
+  let g="";
+  for(let v=0;v<=ch.max;v+=ch.step){g+='<line x1="'+pl+'" x2="'+(pl+iw)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" class="grid"/><text x="'+(pl-8)+'" y="'+(Y(v)+4)+'" text-anchor="end" class="tick">'+v+'</text>'}
+  ch.years.forEach((yr,i)=>{g+='<text x="'+X(i)+'" y="'+(H-14)+'" text-anchor="middle" class="tick">'+yr+'</text>'});
+  g+='<line x1="'+pl+'" x2="'+(pl+iw)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" class="base"/>';
+  ch.series.forEach((s,si)=>{
+    g+='<polyline fill="none" stroke="'+cols[si]+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="'+s.v.map((v,i)=>X(i)+","+Y(v)).join(" ")+'"/>';
+    s.v.forEach((v,i)=>{g+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4.5" fill="'+cols[si]+'" stroke="var(--surface)" stroke-width="2"><title>'+esc(s.name)+', '+ch.years[i]+': '+v+' '+ch.unit+'</title></circle>'});
+    const last=s.v[s.v.length-1];
+    g+='<text x="'+(pl+iw+10)+'" y="'+(Y(last)+4)+'" class="val">'+esc(s.name)+' · '+last+'</text>';
+  });
+  const summary=ch.series.map(s=>s.name+" "+s.v.join(", ")).join("; ");
+  return '<figure class="xchart"><figcaption><b lang="en">'+esc(ch.title)+'</b><span class="legend">'+ch.series.map((s,i)=>'<span lang="en"><i style="background:'+cols[i]+'"></i>'+esc(s.name)+'</span>').join("")+'</span></figcaption>'
+   +'<div class="chart-wrap"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(ch.title+" ("+ch.unit+") for "+ch.years.join(", ")+": "+summary)+'"><text x="'+pl+'" y="12" class="tick">'+esc(ch.unit)+'</text>'+g+'</svg></div></figure>';
 }
 function chartSVG(ch){
   const W=640,H=320,pl=46,pr=14,pt=26,pb=38,max=70,iw=W-pl-pr,ih=H-pt-pb,bw=36,gap=2;
@@ -1776,35 +2114,35 @@ function gradeHTML(d){
    +'<p class="muted" style="font-size:13px;margin-top:10px">ครู AI ประเมินตามเกณฑ์ที่เผยแพร่ของ IELTS เป็นค่าประมาณ ผลจริงจากผู้คุมสอบอาจต่างไปได้</p></div>';
 }
 async function gradeWriting(n){
-  const t=IELTS_WRITING[n-1], key="w"+n, text=(XD[key]||"").trim();
+  const sec=X.sec, t=sec.tasks[n-1], key=sec.id+"-w"+n, text=(XD[key]||"").trim();
   if(wordCount(text)<40){toast("เขียนอย่างน้อย 40 คำก่อนส่งให้ครูประเมิน");return}
   XR[key]={busy:true}; render();
-  const data=t.chart?"\nChart data ("+t.chart.title+"): "+t.chart.series.map(s=>s.name+": "+t.chart.years.map((y,i)=>y+" = "+s.v[i]+"%").join(", ")).join("; "):"";
+  const data=taskData(t);
   const prompt="You are an experienced IELTS Writing examiner. Assess this IELTS Academic Writing Task "+n+" response against the public IELTS Writing band descriptors. Be realistic and strict; do not inflate scores. Responses under "+t.min+" words must be penalised.\n\nTask: "+t.prompt+data+"\n\nWord count: "+wordCount(text)
    +"\n\nCandidate response:\n\"\"\"\n"+text.slice(0,6000)+"\n\"\"\"\n\nReply with only a JSON object in this shape:\n{\"overall\": 6.5, \"criteria\": [{\"name\": \""+(n===1?"Task Achievement":"Task Response")+"\", \"band\": 6, \"comment\": \"1-2 sentences in Thai\"}, {\"name\": \"Coherence and Cohesion\", \"band\": 6.5, \"comment\": \"...\"}, {\"name\": \"Lexical Resource\", \"band\": 6.5, \"comment\": \"...\"}, {\"name\": \"Grammatical Range and Accuracy\", \"band\": 6, \"comment\": \"...\"}], \"corrections\": [{\"wrong\": \"exact phrase from the response\", \"right\": \"corrected phrase\", \"why\": \"short reason in Thai\"}], \"improved\": \"the weakest paragraph of the response rewritten at band 7-8 level\", \"tips\": [\"up to 3 short tips in Thai\"]}\nBands go from 0 to 9 in steps of 0.5; overall is the average of the four criteria. Give the 3-6 most important corrections.";
   try{
     const d=cleanGrade(await AI.fn.json(prompt,{modelTier:"default"}));
     if(!d) throw {code:"invalid_json"};
-    XR[key]={data:d}; examRecord({id:"ielts-writing",task:n,band:d.overall,mode:"ai"}); S.xp+=10;
+    XR[key]={data:d}; examRecord({id:"ielts-writing",set:sec.set,task:n,band:d.overall,mode:"ai"}); S.xp+=10;
   }catch(e){XR[key]={err:e&&e.code==="invalid_json"?"ครูตอบกลับมาไม่ครบ ลองกดส่งอีกครั้ง":aiError(e)}}
   if(route.name==="examrun") render();
 }
 
 /* speaking */
 function speakingView(){
-  const r=XR.speak||{};
+  const sid=X.sec.id+"-", r=XR[sid+"speak"]||{};
   let h='<div class="xdir" style="margin-top:18px"><p>พูดคำตอบออกเสียงดังๆ ก่อนทุกข้อ เหมือนคุยกับผู้คุมสอบจริง แล้วค่อยพิมพ์สิ่งที่พูดลงในช่อง ครู AI ประเมินความคล่อง การเรียบเรียง คำศัพท์ และไวยากรณ์ได้ แต่ประเมินการออกเสียงไม่ได้</p></div>';
-  IELTS_SPEAKING.forEach(p=>{
+  X.sec.sp.forEach(p=>{
     h+='<section class="xpart"><h2 class="h3" lang="en">'+esc(p.title)+'</h2><p class="muted" style="margin-top:4px">'+esc(p.th)+'</p>';
     if(p.card){
-      const key="s2", text=XD[key]||"", cardText=p.card.topic+" You should say: "+p.card.points.join(", ")+", "+p.card.end;
+      const key=sid+"s2", text=XD[key]||"", cardText=p.card.topic+" You should say: "+p.card.points.join(", ")+", "+p.card.end;
       h+='<div class="cue" lang="en"><p><b>'+esc(p.card.topic)+'</b></p><p style="margin-top:6px">You should say:</p><ul>'+p.card.points.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul><p>'+esc(p.card.end)+'</p></div>'
         +'<div class="row" style="margin-top:12px">'+sayBtn(cardText,"ฟังผู้คุมสอบอ่านบัตรหัวข้อ")+'<button class="btn btn-sm" data-act="xprep">'+(X.prepAt?"เริ่มจับเวลาใหม่":"เริ่มเตรียมตัว 1 นาที")+'</button><span class="xtimer" id="xprep">'+(X.prepAt?"":"")+'</span></div>'
-        +'<label class="sr" for="xw-s2">คำตอบ Part 2</label><textarea class="ta xta" id="xw-s2" data-xw="s2" lang="en" spellcheck="false" placeholder="Type what you said…" style="margin-top:12px">'+esc(text)+'</textarea>'
-        +'<div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted" id="wc-s2">'+wcText(wordCount(text),0)+' · พูด 2 นาทีประมาณ 200–250 คำ</span><button class="btn btn-ghost btn-sm" data-act="xmodel" data-k="s2">'+(X.show.s2?"ซ่อนตัวอย่างคำตอบ":"ดูตัวอย่างคำตอบ")+'</button></div>'
-        +(X.show.s2?'<div class="xmodel"><div class="sh-row"><p lang="en">'+esc(p.model)+'</p>'+sayBtn(p.model,"ฟังตัวอย่าง")+'</div></div>':'');
+        +'<label class="sr" for="xw-'+key+'">คำตอบ Part 2</label><textarea class="ta xta" id="xw-'+key+'" data-xw="'+key+'" lang="en" spellcheck="false" placeholder="Type what you said…" style="margin-top:12px">'+esc(text)+'</textarea>'
+        +'<div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted" id="wc-'+key+'">'+wcText(wordCount(text),0)+' · พูด 2 นาทีประมาณ 200–250 คำ</span><button class="btn btn-ghost btn-sm" data-act="xmodel" data-k="'+key+'">'+(X.show[key]?"ซ่อนตัวอย่างคำตอบ":"ดูตัวอย่างคำตอบ")+'</button></div>'
+        +(X.show[key]?'<div class="xmodel"><div class="sh-row"><p lang="en">'+esc(p.model)+'</p>'+sayBtn(p.model,"ฟังตัวอย่าง")+'</div></div>':'');
     } else {
-      h+=p.qs.map((q,i)=>{const key="s"+p.part+"-"+i;
+      h+=p.qs.map((q,i)=>{const key=sid+"s"+p.part+"-"+i;
         return '<div class="xq"><div class="xq-h"><span class="xnum">Q'+(i+1)+'</span><div class="xq-t sh-row"><p lang="en">'+esc(q)+'</p>'+sayBtn(q,"ฟังผู้คุมสอบ")+'</div></div>'
           +'<label class="sr" for="xw-'+key+'">คำตอบ</label><textarea class="ta xta sm" id="xw-'+key+'" data-xw="'+key+'" lang="en" spellcheck="false" placeholder="Type what you said…">'+esc(XD[key]||"")+'</textarea></div>'}).join("");
     }
@@ -1815,20 +2153,20 @@ function speakingView(){
   return h;
 }
 async function gradeSpeaking(){
-  const lines=[]; let words=0;
-  IELTS_SPEAKING.forEach(p=>{
-    if(p.card){const a=(XD.s2||"").trim(); words+=wordCount(a); lines.push("PART 2 cue card: "+p.card.topic+" (You should say: "+p.card.points.join("; ")+"; "+p.card.end+")\nCandidate: "+(a||"(no answer)"))}
-    else p.qs.forEach((q,i)=>{const a=(XD["s"+p.part+"-"+i]||"").trim(); words+=wordCount(a); lines.push("PART "+p.part+" Examiner: "+q+"\nCandidate: "+(a||"(no answer)"))});
+  const sec=X.sec, sid=sec.id+"-", lines=[]; let words=0;
+  sec.sp.forEach(p=>{
+    if(p.card){const a=(XD[sid+"s2"]||"").trim(); words+=wordCount(a); lines.push("PART 2 cue card: "+p.card.topic+" (You should say: "+p.card.points.join("; ")+"; "+p.card.end+")\nCandidate: "+(a||"(no answer)"))}
+    else p.qs.forEach((q,i)=>{const a=(XD[sid+"s"+p.part+"-"+i]||"").trim(); words+=wordCount(a); lines.push("PART "+p.part+" Examiner: "+q+"\nCandidate: "+(a||"(no answer)"))});
   });
   if(words<40){toast("ตอบให้ได้อย่างน้อย 40 คำก่อนส่งให้ครูประเมิน");return}
-  XR.speak={busy:true}; render();
+  XR[sid+"speak"]={busy:true}; render();
   const prompt="You are an experienced IELTS Speaking examiner. The candidate could not use a microphone, so they spoke each answer aloud and then typed what they said. Assess three criteria from the public IELTS Speaking band descriptors: Fluency and Coherence (judge length, development and linking of answers), Lexical Resource, and Grammatical Range and Accuracy. Pronunciation cannot be assessed, so leave it out. Be realistic: short or undeveloped answers score low.\n\n"+lines.join("\n\n").slice(0,8000)
    +"\n\nReply with only a JSON object in this shape:\n{\"overall\": 6, \"criteria\": [{\"name\": \"Fluency and Coherence\", \"band\": 6, \"comment\": \"1-2 sentences in Thai\"}, {\"name\": \"Lexical Resource\", \"band\": 6, \"comment\": \"...\"}, {\"name\": \"Grammatical Range and Accuracy\", \"band\": 5.5, \"comment\": \"...\"}], \"corrections\": [{\"wrong\": \"exact phrase the candidate used\", \"right\": \"corrected phrase\", \"why\": \"short reason in Thai\"}], \"better\": [{\"question\": \"the examiner question\", \"answer\": \"a natural band 7-8 spoken answer, 2-4 sentences\"}], \"tips\": [\"up to 3 short tips in Thai\"]}\nBands go from 0 to 9 in steps of 0.5; overall is the average of the three criteria. Give up to 5 corrections and better answers for the 2 weakest responses.";
   try{
     const d=cleanGrade(await AI.fn.json(prompt,{modelTier:"default"}));
     if(!d) throw {code:"invalid_json"};
-    XR.speak={data:d}; examRecord({id:"ielts-speaking",band:d.overall,mode:"ai"}); S.xp+=10;
-  }catch(e){XR.speak={err:e&&e.code==="invalid_json"?"ครูตอบกลับมาไม่ครบ ลองกดส่งอีกครั้ง":aiError(e)}}
+    XR[sid+"speak"]={data:d}; examRecord({id:"ielts-speaking",set:sec.set,band:d.overall,mode:"ai"}); S.xp+=10;
+  }catch(e){XR[sid+"speak"]={err:e&&e.code==="invalid_json"?"ครูตอบกลับมาไม่ครบ ลองกดส่งอีกครั้ง":aiError(e)}}
   if(route.name==="examrun") render();
 }
 
@@ -1836,6 +2174,7 @@ async function gradeSpeaking(){
 function newAttempt(sec){return {sec,started:false,mode:"practice",ans:{},plays:{},playing:null,submitted:false,confirm:false,show:{}}}
 const XACT={
   xopen:t=>go("examrun",t.dataset.id),
+  xset:t=>{HUBSET[t.dataset.e]=+t.dataset.n; try{localStorage.setItem("exam-hubset",JSON.stringify(HUBSET))}catch(e){} render()},
   xstart:t=>{X.started=true; X.mode=t.dataset.mode; X.startAt=Date.now(); render(); window.scrollTo(0,0)},
   xa:t=>{
     if(!X||X.submitted) return;
@@ -2348,8 +2687,8 @@ document.addEventListener("input",e=>{
   if(t.dataset&&t.dataset.xk&&X&&!X.submitted){X.ans[t.dataset.xk]=t.value; const c=$("#xcount"); if(c) c.textContent=answeredCount()}
   if(t.dataset&&t.dataset.xw){
     const k=t.dataset.xw; XD[k]=t.value; saveDrafts();
-    const wc=$("#wc-"+k), task=IELTS_WRITING.find(x=>"w"+x.n===k);
-    if(wc) wc.textContent=wcText(wordCount(t.value),task?task.min:0)+(k==="s2"?" · พูด 2 นาทีประมาณ 200–250 คำ":"");
+    const wc=document.getElementById("wc-"+k), task=X&&X.sec.tasks&&X.sec.tasks.find(x=>X.sec.id+"-w"+x.n===k);
+    if(wc) wc.textContent=wcText(wordCount(t.value),task?task.min:0)+(/-s2$/.test(k)?" · พูด 2 นาทีประมาณ 200–250 คำ":"");
   }
 });
 document.addEventListener("change",e=>{if(e.target.id==="cert-name") render()});
