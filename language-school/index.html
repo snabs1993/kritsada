@@ -36,7 +36,9 @@
   --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
 }
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{background:var(--paper);color:var(--ink);font:400 16px/1.7 var(--f-body);-webkit-font-smoothing:antialiased}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 button,input,textarea{font:inherit;color:inherit}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.25}
 p{margin:0}
@@ -51,7 +53,7 @@ mark{background:linear-gradient(transparent 52%,var(--mark) 52%);color:inherit;p
 
 /* top bar */
 .topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
-.topbar-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px}
+.topbar-in{max-width:1080px;margin:0 auto;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:14px}
 .brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer;text-align:left}
 .brand-mark{width:36px;height:36px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 16px/1 var(--f-display);letter-spacing:-.02em}
 .brand-name{font:700 17px/1.1 var(--f-display)}
@@ -63,14 +65,14 @@ mark{background:linear-gradient(transparent 52%,var(--mark) 52%);color:inherit;p
 .nav svg{width:20px;height:20px;flex:none}
 .streak{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink-2);padding:6px 10px;border-radius:99px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
 .streak svg{width:16px;height:16px;color:var(--red)}
-@media (max-width:780px){
+@media (max-width:960px){
   .nav{position:fixed;left:0;right:0;bottom:0;margin:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around;z-index:30}
   .nav button{flex:1;flex-direction:column;gap:2px;font-size:11.5px;padding:6px 2px}
   .streak{margin-left:auto}
   .brand-sub{display:none}
   main{padding-bottom:84px}
 }
-main .wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:24px 56px}
+main .wrap{max-width:1080px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:24px 56px}
 @media (min-width:780px){main .wrap{padding-inline:28px;padding-block:32px 64px}}
 
 /* type & basics */
@@ -308,7 +310,10 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .name-field{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .name-field input{border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface);min-width:0;flex:1;max-width:320px}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:12px;font-size:14.5px;z-index:50;max-width:calc(100% - 32px);box-shadow:var(--shadow)}
-@media (max-width:780px){.toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:960px){.toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+/* touch screens: bigger speaker buttons, hide the tab bar while the keyboard is up */
+@media (pointer:coarse){.say{width:42px;height:42px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
+@media (max-width:960px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -1310,7 +1315,7 @@ function runnerNext(r){
   r.i++; r.answered=false; r.ok=null; r.given="";
   if(r.i>=r.items.length){r.done=true; runnerDone(r)} else prepItem(r);
   render();
-  if(!r.done){const f=$("#fill-in"); if(f&&window.matchMedia("(min-width:780px)").matches) f.focus()}
+  if(!r.done){const f=$("#fill-in"); if(f&&window.matchMedia("(pointer:fine)").matches) f.focus()}
 }
 function runnerDone(r){
   const c=r.results.filter(Boolean).length, tot=r.items.length;
