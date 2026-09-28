@@ -1401,14 +1401,15 @@ const sayBtn=(text,label)=>'<button class="say" data-act="say" data-text="'+esc(
 
 /* ---------- state & saving ---------- */
 const KEY="eng-class-v1";
-function fresh(){return {v:1,updatedAt:0,name:"",xp:0,days:[],placement:{done:false,level:1,score:0},lessons:{},words:{},exams:[],mistakes:[],custom:[],stats:{},settings:{slow:false,rate:"normal",accent:"US",goal:"normal"}}}
+function fresh(){return {v:1,updatedAt:0,name:"",xp:0,_xpSeen:0,days:[],placement:{done:false,level:1,score:0},lessons:{},words:{},exams:[],mistakes:[],custom:[],stats:{},settings:{slow:false,rate:"normal",accent:"US",goal:"normal"}}}
 function migrate(s){
   const f=fresh(); if(!s||typeof s!=="object") return f;
   return Object.assign(f,s,{placement:Object.assign(f.placement,s.placement||{}),settings:Object.assign(f.settings,s.settings||{}),
-    lessons:s.lessons&&typeof s.lessons==="object"?s.lessons:{},words:s.words&&typeof s.words==="object"?s.words:{},days:Array.isArray(s.days)?s.days:[],exams:Array.isArray(s.exams)?s.exams:[]});
+    _xpSeen:typeof s._xpSeen==="number"?s._xpSeen:(Number(s.xp)||0),lessons:s.lessons&&typeof s.lessons==="object"?s.lessons:{},words:s.words&&typeof s.words==="object"?s.words:{},days:Array.isArray(s.days)?s.days:[],exams:Array.isArray(s.exams)?s.exams:[]});
 }
 let S=fresh();
 try{const raw=localStorage.getItem(KEY); if(raw) S=migrate(JSON.parse(raw));}catch(e){}
+const LOADED_AT=S.updatedAt||0; // compare remote copies with what was on disk, not with saves made while booting
 const cloud={ref:null,timer:null,writing:false,again:false,on:false};
 function save(){
   trackXp(); S.updatedAt=Date.now();
@@ -1435,7 +1436,7 @@ async function initCloud(){
     cloud.ref=ref; cloud.on=true;
     if(snap.exists){
       const d=snap.data()||{};
-      if((d.updatedAt||0)>(S.updatedAt||0)){
+      if((d.updatedAt||0)>LOADED_AT){
         S=migrate(JSON.parse(JSON.stringify(d)));
         try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
         if(route.name!=="lesson") render(); else updateChrome();
@@ -1449,11 +1450,16 @@ function rec(id){return S.lessons[id]||(S.lessons[id]={reached:0,done:false,best
 function isDone(i){const r=S.lessons[COURSE[i].id];return !!(r&&r.done)}
 function firstOfLevel(lv){return COURSE.findIndex(u=>u.lv===lv)}
 function unlocked(i){return i===0||isDone(i-1)||(S.placement.done&&i<=firstOfLevel(S.placement.level))}
-function nextIdx(){for(let i=0;i<COURSE.length;i++) if(unlocked(i)&&!isDone(i)) return i; return COURSE.length-1}
+function nextIdx(){
+  const st=S.placement.done?Math.max(0,firstOfLevel(S.placement.level)):0;
+  for(let i=st;i<COURSE.length;i++) if(unlocked(i)&&!isDone(i)) return i;
+  for(let i=0;i<st;i++) if(unlocked(i)&&!isDone(i)) return i;
+  return COURSE.length-1;
+}
 function markDay(){const k=dayKey(); if(!S.days.includes(k)){S.days.push(k); if(S.days.length>400) S.days=S.days.slice(-400)}}
 function streak(){
   const set=new Set(S.days); let d=new Date(); if(!set.has(dayKey(d))) d=new Date(Date.now()-DAY);
-  let n=0; while(set.has(dayKey(d))){n++; d=new Date(d.getTime()-DAY)} return n;
+  let n=0; while(set.has(dayKey(d))){n++; d=new Date(d.getFullYear(),d.getMonth(),d.getDate()-1)} return n;
 }
 function addWords(u){let added=0;u.vocab.forEach(w=>{if(!S.words[w.en]){S.words[w.en]={b:0,due:Date.now()};added++}});return added}
 function dueWords(){const now=Date.now();return Object.keys(S.words).filter(k=>WORDS[k]&&S.words[k].due<=now)}
@@ -1708,7 +1714,7 @@ async function initNative(){
     const raw=await NB.load();
     if(raw){
       const d=JSON.parse(raw);
-      if((d.updatedAt||0)>(S.updatedAt||0)){
+      if((d.updatedAt||0)>LOADED_AT){
         S=migrate(d);
         try{localStorage.setItem(KEY,raw)}catch(e){}
         if(route.name!=="lesson") render(); else updateChrome();
@@ -2768,7 +2774,7 @@ async function gradeWriting(n){
   try{
     const d=cleanGrade(await AI.fn.json(prompt,{modelTier:"default"}));
     if(!d) throw {code:"invalid_json"};
-    XR[key]={data:d}; examRecord({id:"ielts-writing",set:sec.set,task:n,band:d.overall,mode:"ai"}); S.xp+=10;
+    XR[key]={data:d}; S.xp+=10; examRecord({id:"ielts-writing",set:sec.set,task:n,band:d.overall,mode:"ai"});
   }catch(e){XR[key]={err:e&&e.code==="invalid_json"?"ครูตอบกลับมาไม่ครบ ลองกดส่งอีกครั้ง":aiError(e)}}
   if(route.name==="examrun") render();
 }
@@ -2810,7 +2816,7 @@ async function gradeSpeaking(){
   try{
     const d=cleanGrade(await AI.fn.json(prompt,{modelTier:"default"}));
     if(!d) throw {code:"invalid_json"};
-    XR[sid+"speak"]={data:d}; examRecord({id:"ielts-speaking",set:sec.set,band:d.overall,mode:"ai"}); S.xp+=10;
+    XR[sid+"speak"]={data:d}; S.xp+=10; examRecord({id:"ielts-speaking",set:sec.set,band:d.overall,mode:"ai"});
   }catch(e){XR[sid+"speak"]={err:e&&e.code==="invalid_json"?"ครูตอบกลับมาไม่ครบ ลองกดส่งอีกครั้ง":aiError(e)}}
   if(route.name==="examrun") render();
 }
@@ -3611,11 +3617,11 @@ function badgesHTML(){
 }
 function calendarHTML(){
   const set=new Set(S.days), weeks=12, today=new Date(); today.setHours(0,0,0,0);
-  const start=new Date(today.getTime()-((weeks-1)*7+today.getDay())*DAY);
+  const start=new Date(today.getFullYear(),today.getMonth(),today.getDate()-((weeks-1)*7+today.getDay()));
   let cells="", n=0;
   for(let w=0;w<weeks;w++){
     for(let d=0;d<7;d++){
-      const day=new Date(start.getTime()+(w*7+d)*DAY), k=dayKey(day), future=day>today, on=set.has(k);
+      const day=new Date(start.getFullYear(),start.getMonth(),start.getDate()+w*7+d), k=dayKey(day), future=day>today, on=set.has(k);
       if(on) n++;
       cells+='<i class="cd'+(on?' on':'')+(future?' fut':'')+'" style="grid-column:'+(w+1)+';grid-row:'+(d+1)+'" title="'+esc(day.toLocaleDateString("th-TH",{day:"numeric",month:"short"}))+(on?" · เข้าเรียน":"")+'"></i>';
     }
@@ -3999,7 +4005,7 @@ let BK={show:false,code:"",pending:null};
 function encodeBackup(){return "ENGCLASS1:"+btoa(unescape(encodeURIComponent(JSON.stringify(S))))}
 function decodeBackup(txt){
   try{
-    const m=/ENGCLASS1:([A-Za-z0-9+/=\s]+)/.exec(String(txt||"")); if(!m) return null;
+    const m=/ENGCLASS1:([A-Za-z0-9+/=]+)/.exec(String(txt||"")); if(!m) return null;
     const o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/\s+/g,"")))));
     return o&&typeof o==="object"&&o.lessons&&typeof o.lessons==="object"?o:null;
   }catch(e){return null}
@@ -4409,7 +4415,7 @@ function go(name,id){
     if(!unlocked(i)){toast("ต้องผ่านบทก่อนหน้าก่อน หรือทำแบบทดสอบวัดระดับ");return}
     const r=rec(id);
     L={id,idx:i,step:r.done?0:Math.min(r.reached,5),vi:0,showTh:false,comp:{},practice:null,quiz:null,quizDone:null};
-    if(L.step===0){addWords(COURSE[i]);save()}
+    if(L.step===0&&addWords(COURSE[i])) save()
   }
   if(name==="placement") P={runner:null,result:null};
   if(name==="review") R=null;
@@ -4692,7 +4698,7 @@ function runnerDone(r){
   if(r.kind==="placement"){
     const g=[0,4,8].map(s=>r.results.slice(s,s+4).filter(Boolean).length);
     const level=g[0]>=3&&g[1]>=3?3:g[0]>=3?2:1;
-    S.placement={done:true,level,score:c,at:Date.now()}; markDay(); save();
+    S.placement={done:true,level:Math.max(level,S.placement.done?S.placement.level||1:1),score:c,at:Date.now()}; markDay(); save();
     P.result={level,score:c,g};
   }
 }
@@ -4827,7 +4833,7 @@ const ACT={
   },
   "next-step":()=>{
     const r=rec(L.id); Speech.stop();
-    if(L.step<5){L.step++; if(L.step>r.reached){r.reached=L.step; S.xp+=5} bump("step"); markDay(); save()}
+    if(L.step<5){L.step++; if(L.step>r.reached){r.reached=L.step; S.xp+=5; bump("step")} markDay(); save()}
     render(); window.scrollTo(0,0);
   },
   "v-go":t=>{const u=COURSE[L.idx],i=+t.dataset.i; if(i<0||i>=u.vocab.length) return; L.vi=i; render(); Speech.say(u.vocab[i].en)},
@@ -4865,7 +4871,7 @@ const ACT={
   "chat-clear":()=>{const k="teacher:"+teacherMode,st=CHATS[k]; if(st&&st.ctl) st.ctl.abort(); delete CHATS[k]; render()},
   "reset-ask":()=>{resetAsk=true;render()},
   "reset-no":()=>{resetAsk=false;render()},
-  "reset-yes":()=>{S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
+  "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
 Object.assign(ACT,XACT,PACT,GACT,RACT,SACT);
 document.addEventListener("click",e=>{
