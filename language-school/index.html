@@ -781,7 +781,7 @@ th,td{border-bottom:.5px solid var(--sep)}
   <div class="topbar-in">
     <button class="brand" data-act="go" data-to="home" aria-label="หน้าแรก">
       <span class="brand-mark" aria-hidden="true">Aa</span>
-      <span><span class="brand-name">ห้องเรียนอังกฤษ</span><span class="brand-sub">PRIVATE CLASS · A1–C1</span></span>
+      <span><span class="brand-name">ห้องเรียนอังกฤษ</span><span class="brand-sub">PRIVATE CLASS · A1–C2</span></span>
     </button>
     <nav class="nav" aria-label="เมนูหลัก">
       <button data-act="go" data-to="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>หน้าแรก</button>
@@ -816,7 +816,8 @@ const LEVELS=[
   {n:2,code:"A2",name:"Elementary",th:"ระดับพื้นฐาน"},
   {n:3,code:"B1",name:"Intermediate",th:"ระดับกลาง"},
   {n:4,code:"B2",name:"Upper-Intermediate",th:"ระดับกลางตอนปลาย"},
-  {n:5,code:"C1",name:"Advanced",th:"ระดับสูง"}
+  {n:5,code:"C1",name:"Advanced",th:"ระดับสูง"},
+  {n:6,code:"C2",name:"Proficiency",th:"ระดับเชี่ยวชาญ"}
 ];
 
 const COURSE=[
@@ -1598,7 +1599,170 @@ const COURSE=[
  quiz:[mc("Cycling is cheap. ___, it is good for your health.",["Furthermore","Whereas","Despite"],0),fill("___ its drawbacks, the plan was accepted. (แม้จะมี)","despite|in spite of"),mc("The flight was delayed ___ bad weather.",["because","due to","therefore"],1)],
  role:{th:"ฝึกโต้แย้งแบบสอบ IELTS Speaking Part 3 ครูจะถามความเห็นในประเด็นต่างๆ ตอบให้มีเหตุผลและใช้คำเชื่อม",opener:"Some people say that social media does more harm than good. What's your view?",
   shadow:["From my perspective, the benefits are clear.","Furthermore, it saves a great deal of time.","Nevertheless, there are some drawbacks.","Overall, I would argue that a balance is best."]},
- writing:{th:"เขียนย่อหน้าแสดงความคิดเห็น 5–6 ประโยค เรื่องการทำงานที่บ้าน ใช้คำเชื่อมอย่างน้อย 4 คำ",model:"Working from home has become common in recent years. From my perspective, it offers several benefits. Firstly, employees save time and money on commuting. Furthermore, many people find that they can concentrate better at home. Nevertheless, there are some drawbacks, such as loneliness and weaker teamwork. Overall, I would argue that a combination of home and office work is the most effective approach."}}
+ writing:{th:"เขียนย่อหน้าแสดงความคิดเห็น 5–6 ประโยค เรื่องการทำงานที่บ้าน ใช้คำเชื่อมอย่างน้อย 4 คำ",model:"Working from home has become common in recent years. From my perspective, it offers several benefits. Firstly, employees save time and money on commuting. Furthermore, many people find that they can concentrate better at home. Nevertheless, there are some drawbacks, such as loneliness and weaker teamwork. Overall, I would argue that a combination of home and office work is the most effective approach."}},
+{id:"u21",lv:6,en:"Subtle persuasion",th:"การโน้มน้าวอย่างแนบเนียน",
+ vocab:[
+  v("compelling","หนักแน่น น่าคล้อยตาม","adj.","She made a compelling case for the new strategy.","เธอให้เหตุผลสนับสนุนกลยุทธ์ใหม่ได้อย่างหนักแน่นน่าคล้อยตาม"),
+  v("undermine","บั่นทอน ทำให้อ่อนแอลง","v.","Constant delays undermine the client's trust.","ความล่าช้าซ้ำแล้วซ้ำเล่าบั่นทอนความไว้วางใจของลูกค้า"),
+  v("leverage","ใช้ประโยชน์จากสิ่งที่มีให้เต็มที่","v.","We should leverage our local expertise.","เราควรใช้ความเชี่ยวชาญในท้องถิ่นของเราให้เป็นประโยชน์เต็มที่"),
+  v("concede","ยอมรับ (อย่างไม่ค่อยเต็มใจ)","v.","He conceded that the plan had some weaknesses.","เขายอมรับว่าแผนนี้มีจุดอ่อนอยู่บ้าง"),
+  v("rhetoric","วาทศิลป์ คำพูดสวยหรู","n.","The speech was full of empty rhetoric.","สุนทรพจน์นั้นเต็มไปด้วยคำพูดสวยหรูที่ไม่มีเนื้อหา"),
+  v("stakeholder","ผู้มีส่วนได้ส่วนเสีย","n.","We need to consult all the stakeholders first.","เราต้องปรึกษาผู้มีส่วนได้ส่วนเสียทุกฝ่ายก่อน"),
+  v("unprecedented","ไม่เคยเกิดขึ้นมาก่อน","adj.","The company saw unprecedented growth last year.","ปีที่แล้วบริษัทเติบโตแบบที่ไม่เคยเป็นมาก่อน"),
+  v("sway","โน้มน้าว ทำให้เปลี่ยนใจ","v.","Her presentation swayed the board.","การนำเสนอของเธอทำให้บอร์ดเปลี่ยนใจ")
+ ],
+ grammar:{title:"Inversion for emphasis",
+  intro:["เมื่อขึ้นต้นประโยคด้วยคำที่มีความหมายปฏิเสธหรือจำกัด เช่น Never, Seldom, Rarely, Not only, Only when, Hardly, No sooner ต้อง<mark>สลับกริยาช่วยไว้หน้าประธาน</mark> เหมือนประโยคคำถาม ทั้งที่ไม่ได้ถาม ใช้ในสุนทรพจน์ งานเขียนทางการ และการนำเสนอ เพื่อให้ประโยคมีน้ำหนักและน่าจดจำ",
+   "ถ้าประโยคเดิมไม่มีกริยาช่วย ต้อง<mark>เติม do / does / did</mark> แล้วกริยาหลักกลับเป็นรูปธรรมดา เช่น She rarely complains → Rarely <b>does she complain</b>. คนไทยมักลืมข้อนี้ เพราะภาษาไทยไม่มีการสลับประธานกับกริยาเลย",
+   "<b>Hardly … when</b> และ <b>No sooner … than</b> ใช้กับ past perfect (had + V3) บอกว่าเรื่องที่สองเกิดตามมาทันที ห้ามสลับคู่กัน ส่วน <b>Only when / Only after / Not until</b> ให้สลับที่<mark>ประโยคหลัก</mark> ไม่ใช่ประโยคที่อยู่หลัง when"],
+  head:["คำขึ้นต้น","โครงสร้าง","ตัวอย่าง"],
+  rows:[["Never / Rarely / Seldom","+ aux + S + V","Seldom do we see such commitment."],["Not only","+ aux + S + V, but … also …","Not only did she win the contract, but she also cut costs."],["Only when / Only after","+ ประโยค/คำนาม, aux + S + V","Only when the data arrived did we understand the problem."],["Hardly … when","Hardly + had + S + V3 … when + past","Hardly had I sat down when the phone rang."],["No sooner … than","No sooner + had + S + V3 … than + past","No sooner had we launched the product than orders poured in."]],
+  ex:[["Never have I seen such a compelling proposal.","ไม่เคยเห็นข้อเสนอที่น่าคล้อยตามขนาดนี้มาก่อนเลย"],["Not only does the plan save money, but it also reduces risk.","แผนนี้ไม่เพียงช่วยประหยัดเงิน แต่ยังลดความเสี่ยงด้วย"],["Only after the audit did we realise how serious the problem was.","ต้องรอจนตรวจสอบบัญชีเสร็จ เราถึงได้รู้ว่าปัญหาร้ายแรงแค่ไหน"]],
+  mist:[["Not only she speaks Thai, but she also speaks Chinese.","Not only does she speak Thai, but she also speaks Chinese.","ประโยคไม่มีกริยาช่วย ต้องเติม does ไว้หน้าประธาน และ speak กลับเป็นรูปธรรมดา"],["Only when the client called we realised the mistake.","Only when the client called did we realise the mistake.","Only when… ต้องสลับที่ประโยคหลัก (did we realise) ไม่ใช่ปล่อยไว้แบบประโยคปกติ"],["No sooner had we started when the power went off.","No sooner had we started than the power went off.","No sooner คู่กับ than ส่วน Hardly คู่กับ when ห้ามสลับกัน"]]},
+ dialogue:{cast:{A:"Arisa",B:"David"},lines:[
+  ["A","David, I need your help. Tomorrow I'm pitching the regional expansion to the board, and they're sceptical.","เดวิด ช่วยหน่อยนะ พรุ่งนี้ฉันต้องเสนอแผนขยายธุรกิจในภูมิภาคต่อบอร์ด แต่พวกเขายังไม่ค่อยเชื่อ"],
+  ["B","Then don't open with numbers. Open with something memorable, like 'Never has this market been so ready for us.'","งั้นอย่าเปิดด้วยตัวเลข เปิดด้วยประโยคที่คนจำได้ เช่น ‘ไม่เคยมีครั้งไหนที่ตลาดนี้พร้อมสำหรับเราเท่าตอนนี้’"],
+  ["A","Isn't that a bit dramatic?","มันจะดราม่าเกินไปหรือเปล่า"],
+  ["B","Used once, it's compelling. Used five times, it becomes empty rhetoric.","ใช้ครั้งเดียวจะฟังหนักแน่น แต่ถ้าใช้ห้าครั้งก็กลายเป็นแค่คำพูดสวยหรูที่ว่างเปล่า"],
+  ["A","Fair enough. Then I'll add: 'Not only will this bring in new customers, but it will also let us leverage our supply chain.'","จริงด้วย งั้นฉันจะพูดต่อว่า ‘โครงการนี้ไม่เพียงจะนำลูกค้าใหม่เข้ามา แต่ยังทำให้เราใช้ประโยชน์จากห่วงโซ่อุปทานที่มีอยู่ได้เต็มที่’"],
+  ["B","Good. And be ready for the finance director. He'll concede the potential, but he'll worry about the risk.","ดีมาก แล้วเตรียมรับมือผู้อำนวยการฝ่ายการเงินด้วย เขาจะยอมรับว่ามีศักยภาพ แต่จะกังวลเรื่องความเสี่ยง"],
+  ["A","I know. Only when he sees the risk analysis will he feel comfortable.","รู้แล้ว ต้องให้เขาเห็นการวิเคราะห์ความเสี่ยงก่อน เขาถึงจะสบายใจ"],
+  ["B","Exactly. Rarely does a board reject a plan that answers its questions in advance.","ใช่เลย บอร์ดแทบไม่เคยปฏิเสธแผนที่ตอบคำถามของพวกเขาไว้ล่วงหน้าแล้ว"]],
+  q:[mc("What does David warn Arisa about?",["using dramatic phrases too often","showing too many numbers at the end","talking to the finance director"],0),mc("What will make the finance director feel comfortable?",["a memorable opening","seeing the risk analysis","a smaller budget"],1)]},
+ practice:[
+  mc("Never ___ such a well-prepared proposal.",["I have seen","have I seen","I saw"],1,"ขึ้นต้นด้วย Never ต้องสลับกริยาช่วย have ไว้หน้าประธาน"),
+  mc("Not only ___ the deadline, but she also stayed under budget.",["she met","did she meet","she did meet"],1,"ประโยคเดิมไม่มีกริยาช่วย ต้องเติม did แล้วสลับไว้หน้าประธาน"),
+  fill("No sooner had the CEO finished speaking ___ the questions began.","than","No sooner คู่กับ than เสมอ"),
+  mc("Hardly ___ the meeting started when the fire alarm went off.",["had","has","did"],0,"Hardly … when ใช้ past perfect: had + V3 (started)"),
+  mc("Only when the contract was signed ___.",["we could relax","could we relax","we relaxed"],1,"Only when … สลับกริยาช่วยในประโยคหลัก"),
+  ord("No sooner had we arrived than the meeting began","ทันทีที่เรามาถึง การประชุมก็เริ่มขึ้น","No sooner + had + ประธาน + V3 … than + อดีต")],
+ quiz:[fill("Only after the audit ___ we discover the error. (do ในรูปอดีต)","did"),mc("No sooner had she joined the company ___ she was promoted.",["when","than","that"],1),mc("The consultant made a ___ case for restructuring, and nobody could argue with it.",["compelling","conceded","rhetoric"],0)],
+ role:{th:"ครูรับบทกรรมการบริหารที่ยังไม่เชื่อในข้อเสนอของคุณ ลองโน้มน้าวด้วย inversion เช่น Never has… / Not only… but also… / Only when… will…",opener:"I've read your proposal, but frankly I'm not convinced. Why should we invest in this now?",
+  shadow:["Never has the market been so ready for a product like this.","Not only will it cut costs, but it will also reduce risk.","Only when we act now will we stay ahead of our competitors.","Rarely do we get an opportunity like this."]},
+ writing:{th:"เขียนจดหมายสั้นถึงคณะกรรมการบริหาร 120–160 คำ โน้มน้าวให้อนุมัติโครงการของคุณ ใช้ inversion อย่างน้อย 3 แบบ",model:"Dear members of the board, I am writing to ask for your support for our proposal to open a regional office in Ho Chi Minh City. Never before has our company had such a clear opportunity to grow in Southeast Asia. Demand for our services in Vietnam has risen by forty per cent in two years, and our competitors have been slow to respond. Not only would a local office bring us closer to our clients, but it would also allow us to leverage our existing supply chain. I fully concede that the initial costs are significant. However, only when we have people on the ground will we be able to compete seriously. Rarely does an opportunity of this scale remain open for long. I would therefore urge you to approve the proposal at next month's meeting."}},
+
+{id:"u22",lv:6,en:"Hedging and precision",th:"ภาษาระมัดระวังและแม่นยำ",
+ vocab:[
+  v("plausible","ฟังขึ้น มีความเป็นไปได้","adj.","That is a plausible explanation, but we need more data.","คำอธิบายนั้นฟังขึ้น แต่เรายังต้องการข้อมูลเพิ่ม"),
+  v("preliminary","เบื้องต้น","adj.","The preliminary results look promising.","ผลเบื้องต้นดูมีแนวโน้มที่ดี"),
+  v("caveat","ข้อแม้ ข้อควรระวัง","n.","One caveat: the sample size was very small.","มีข้อควรระวังหนึ่งข้อ คือกลุ่มตัวอย่างมีขนาดเล็กมาก"),
+  v("correlation","ความสัมพันธ์ (ทางสถิติ)","n.","There is a strong correlation between training and productivity.","การฝึกอบรมกับผลิตภาพมีความสัมพันธ์กันสูง"),
+  v("substantiate","ยืนยันด้วยหลักฐาน","v.","The claim has not been substantiated.","ข้อกล่าวอ้างนี้ยังไม่มีหลักฐานยืนยัน"),
+  v("inconclusive","ยังสรุปไม่ได้","adj.","The evidence remains inconclusive.","หลักฐานยังไม่พอจะสรุปได้"),
+  v("marginally","เพียงเล็กน้อย","adv.","Sales were marginally higher than last year.","ยอดขายสูงกว่าปีที่แล้วเพียงเล็กน้อย"),
+  v("attribute","ระบุว่าเป็นผลมาจาก","v.","The rise in costs can be attributed to higher fuel prices.","ต้นทุนที่เพิ่มขึ้นอาจมีสาเหตุมาจากราคาน้ำมันที่สูงขึ้น")
+ ],
+ grammar:{title:"Hedging: softening claims",
+  intro:["ในงานเขียนวิชาการและรายงานธุรกิจ การฟันธงเกินหลักฐาน เช่น This proves that… ทำให้ดูไม่น่าเชื่อถือ ผู้เขียนระดับสูงจึงใช้ <mark>hedging</mark> เพื่อบอกระดับความมั่นใจให้พอดีกับหลักฐานที่มี ไม่ใช่เพราะไม่มั่นใจ แต่เพราะ<mark>แม่นยำ</mark>",
+   "เครื่องมือหลักมี 4 กลุ่ม: <b>modal</b> (may, might, could, may well) · <b>กริยา</b> (appear, seem, tend to, suggest, indicate) · <b>คำวิเศษณ์และวลี</b> (arguably, largely, to some extent) · <b>โครงสร้าง It / There</b> (It would appear that…, There is some evidence to suggest that…)",
+   "คนไทยมักใช้ maybe กับทุกอย่าง ซึ่งเป็นภาษาพูดเกินไปสำหรับงานเขียน และมักใส่ are หน้า tend to เพราะแปลจาก ‘มีแนวโน้ม’ แต่ <mark>tend เป็นกริยา</mark> อีกข้อคืออย่าใส่ hedge ซ้อนกันจนไม่เหลือใจความ <mark>หนึ่งข้ออ้างใช้หนึ่ง hedge</mark> ก็พอ"],
+  head:["ประเภท","ตัวอย่างคำ","ตัวอย่างประโยค"],
+  rows:[["Modal","may, might, could, may well","This may well be the main cause."],["กริยา","appear, seem, tend to, suggest","Younger customers tend to prefer mobile apps."],["คำวิเศษณ์และวลี","arguably, largely, to some extent","This is arguably our most important market."],["โครงสร้าง It / There","It would appear that… / There is some evidence to suggest that…","It would appear that the campaign was successful."]],
+  ex:[["The decline in sales may well be due to seasonal factors.","ยอดขายที่ลดลงค่อนข้างเป็นไปได้ว่ามาจากปัจจัยตามฤดูกาล"],["There is some evidence to suggest that remote teams are more productive.","มีหลักฐานบางส่วนที่ชี้ว่าทีมที่ทำงานทางไกลมีผลิตภาพสูงกว่า"],["To some extent, the results were affected by the small sample size.","ผลลัพธ์ได้รับผลกระทบจากกลุ่มตัวอย่างที่เล็กอยู่บ้างในระดับหนึ่ง"]],
+  mist:[["Young people are tend to use mobile banking.","Young people tend to use mobile banking.","tend เป็นกริยา ไม่ต้องมี are นำหน้า"],["There is some evidences to suggest that…","There is some evidence to suggest that…","evidence เป็นคำนามนับไม่ได้ ไม่เติม s"],["This may well to be the reason.","This may well be the reason.","หลัง modal (may well) ใช้กริยารูปธรรมดา ไม่มี to"]]},
+ dialogue:{cast:{A:"Pim",B:"Richard"},lines:[
+  ["A","Richard, could you look at my conclusion before I send the report to the client?","ริชาร์ด ช่วยดูบทสรุปของฉันก่อนส่งรายงานให้ลูกค้าได้ไหม"],
+  ["B","Sure. Hmm, 'This proves that our training programme doubled productivity.' That's quite a strong claim.","ได้สิ อืม ‘ข้อมูลนี้พิสูจน์ว่าโครงการฝึกอบรมของเราทำให้ผลิตภาพเพิ่มเป็นสองเท่า’ เป็นข้อกล่าวอ้างที่แรงพอสมควรนะ"],
+  ["A","But productivity really did go up after the training.","แต่ผลิตภาพเพิ่มขึ้นจริงๆ หลังการอบรมนะ"],
+  ["B","It did, but correlation isn't causation. Other factors may well have played a part, like the new software.","ใช่ แต่ความสัมพันธ์ไม่ได้แปลว่าเป็นเหตุเป็นผลกัน ปัจจัยอื่นอาจมีส่วนด้วยก็ได้ เช่น ซอฟต์แวร์ใหม่"],
+  ["A","So how should I phrase it?","แล้วฉันควรเขียนยังไงดี"],
+  ["B","Something like: 'There is some evidence to suggest that the programme contributed to higher productivity.'","ประมาณว่า ‘มีหลักฐานบางส่วนที่ชี้ว่าโครงการนี้มีส่วนทำให้ผลิตภาพสูงขึ้น’"],
+  ["A","Doesn't that sound weak? The client wants clear answers.","ฟังดูไม่หนักแน่นหรือเปล่า ลูกค้าอยากได้คำตอบที่ชัดเจน"],
+  ["B","It sounds precise, not weak. Add a caveat about the small sample, and your findings will be much harder to challenge.","มันฟังแม่นยำต่างหาก ไม่ใช่อ่อน ใส่ข้อควรระวังเรื่องกลุ่มตัวอย่างที่เล็กไปด้วย แล้วจะไม่มีใครแย้งผลของคุณได้ง่ายๆ"]],
+  q:[mc("What is the problem with Pim's original conclusion?",["It is too long.","It claims more than the evidence shows.","It uses the wrong figures."],1),mc("According to Richard, what else might explain the rise in productivity?",["the new software","a pay rise","longer working hours"],0)]},
+ practice:[
+  mc("Younger employees ___ prefer flexible working hours.",["are tend to","tend to","tending to"],1,"tend เป็นกริยา ใช้ tend to + V ได้เลย ไม่ต้องมี are"),
+  mc("There is some evidence to ___ that the policy has reduced costs.",["suggest","suggests","suggesting"],0,"to + กริยารูปธรรมดา: evidence to suggest"),
+  fill("It would ___ that the new system has reduced errors. (ดูเหมือนว่า)","appear|seem","It would appear/seem that… เป็นการ hedge แบบทางการ"),
+  mc("The drop in sales ___ well be due to the rainy season.",["may","should","must"],0,"may well = ค่อนข้างเป็นไปได้ ส่วน must ฟันธงเกินไป"),
+  mc("ประโยคใดเหมาะกับรายงานวิชาการที่สุด",["This proves that exercise cures depression.","Maybe exercise is good for depression, I think.","Exercise appears to reduce symptoms of depression."],2,"appears to ฟังเป็นวิชาการและไม่อ้างเกินหลักฐาน"),
+  ord("Remote workers tend to report higher job satisfaction","พนักงานที่ทำงานทางไกลมักรายงานว่าพึงพอใจในงานมากกว่า","tend to + V ไม่ต้องมี are")],
+ quiz:[fill("To some ___, the results were affected by the small sample size.","extent"),mc("The results are ___, so we need more data before we decide.",["inconclusive","substantiated","marginally"],0),mc("This is ___ the most important issue facing the industry today.",["arguably","arguable","argue"],0)],
+ role:{th:"คุณนำเสนอผลวิจัยตลาดเบื้องต้นต่อหัวหน้า ครูจะถามจี้ให้ฟันธง ลองตอบอย่างระมัดระวังแต่ชัดเจน ด้วย It would appear that… / tend to / to some extent / may well",opener:"So, based on your preliminary research, will customers actually pay more for an eco-friendly version of our product?",
+  shadow:["It would appear that younger customers are willing to pay more.","There is some evidence to suggest that demand is growing.","To some extent, the results depend on the region.","This may well be our biggest opportunity this year."]},
+ writing:{th:"เขียนย่อหน้าสรุปผลการสำรวจ 120–160 คำ ใช้ hedging อย่างน้อย 4 แบบ และระบุข้อควรระวัง (caveat) หนึ่งข้อ",model:"The results of our customer survey suggest that demand for plant-based snacks is growing in Bangkok. Around sixty per cent of respondents under thirty said they had bought such products in the past month, whereas older respondents tended to be less interested. It would appear that price is the main barrier, as many participants stated that they would buy more if products were cheaper. There is also some evidence to suggest that packaging influences purchasing decisions, although this finding is arguably less reliable. One important caveat should be noted. The sample was relatively small and was largely drawn from office workers, so the results may not reflect the wider population. Nevertheless, the findings indicate that this market may well offer significant opportunities, and a larger study is recommended before any major investment is made."}},
+
+{id:"u23",lv:6,en:"Nuance in meaning",th:"ความต่างเล็กๆ ที่เปลี่ยนความหมาย",
+ vocab:[
+  v("imperative","จำเป็นอย่างยิ่ง ขาดไม่ได้","adj.","It is imperative that the data be kept confidential.","ข้อมูลต้องถูกเก็บเป็นความลับโดยเด็ดขาด"),
+  v("stipulate","กำหนดไว้เป็นเงื่อนไข","v.","The contract stipulates that payment be made within 30 days.","สัญญากำหนดว่าต้องชำระเงินภายใน 30 วัน"),
+  v("mandatory","ภาคบังคับ ต้องทำ","adj.","Safety training is mandatory for all new staff.","พนักงานใหม่ทุกคนต้องเข้าอบรมความปลอดภัย"),
+  v("discretion","ดุลยพินิจ","n.","Bonuses are paid at the manager's discretion.","โบนัสจ่ายตามดุลยพินิจของผู้จัดการ"),
+  v("contingency","เหตุไม่คาดฝัน (ที่ต้องเตรียมรับมือ)","n.","We need a contingency plan in case the supplier fails.","เราต้องมีแผนสำรองเผื่อซัพพลายเออร์ส่งของไม่ได้"),
+  v("waive","ยกเว้น (ค่าธรรมเนียม สิทธิ์)","v.","The bank agreed to waive the fee.","ธนาคารยอมยกเว้นค่าธรรมเนียมให้"),
+  v("compliance","การปฏิบัติตามกฎระเบียบ","n.","All branches must ensure compliance with the new data law.","ทุกสาขาต้องปฏิบัติตามกฎหมายข้อมูลฉบับใหม่"),
+  v("incumbent","เป็นหน้าที่ (ของใคร)","adj.","It is incumbent on managers to set an example.","ผู้จัดการมีหน้าที่ต้องทำตัวเป็นแบบอย่าง")
+ ],
+ grammar:{title:"The subjunctive and formal conditionals",
+  intro:["หลังคำที่แสดงความจำเป็นหรือข้อเรียกร้อง เช่น essential, vital, imperative, insist, recommend, suggest, demand ภาษาอังกฤษทางการใช้ <mark>subjunctive: กริยารูปธรรมดาไม่ผัน</mark> กับทุกประธาน เช่น It is essential that he <b>be</b> on time. / We recommend that she <b>take</b> the offer. รูปปฏิเสธใช้ <b>not + V</b> (that he not be late) ภาษาอังกฤษแบบบริติชใช้ should + V แทนได้ แต่รูปไม่ผันปลอดภัยที่สุดในงานเขียนทางการ คนไทยมักพูดว่า suggest him to… ซึ่งผิดเสมอ",
+   "<mark>would rather + ประธานอีกคน + past simple</mark> ใช้บอกอย่างสุภาพว่าอยากให้คนอื่นทำหรือไม่ทำอะไร: I'd rather you didn't mention it. ส่วน <mark>It's (high) time + ประธาน + past simple</mark> แปลว่า ‘ถึงเวลาแล้ว (ช้าไปด้วยซ้ำ)’: It's high time we updated the system. ใช้รูปอดีต แต่ความหมายเป็นปัจจุบัน",
+   "<mark>Conditional แบบตัด if</mark> ฟังสุภาพและทางการ ใช้บ่อยในอีเมลธุรกิจ: <b>Should you</b> need… (= If you need…), <b>Were it not for</b>… (= If it were not for…), <b>Had we</b> known… (= If we had known…)"],
+  head:["โครงสร้าง","ความหมาย","ตัวอย่าง"],
+  rows:[["It is essential / vital that + S + V","จำเป็นที่…","It is vital that every client receive a copy."],["insist / recommend / demand that + S + V","ยืนกราน / แนะนำ / เรียกร้องให้…","The auditor insisted that the report be revised."],["would rather + S + past simple","อยากให้ (คนอื่น)…","I'd rather you didn't share this yet."],["It's high time + S + past simple","ถึงเวลาแล้วที่…","It's high time we reviewed our pricing."],["Should you… / Were it not for… / Had I…","ถ้า… (ทางการ)","Should you need further information, please contact me."]],
+  ex:[["It is imperative that the contract be signed before Friday.","สัญญาต้องได้รับการลงนามก่อนวันศุกร์โดยเด็ดขาด"],["Were it not for your support, this project would not be possible.","ถ้าไม่มีการสนับสนุนจากคุณ โครงการนี้คงเกิดขึ้นไม่ได้"],["I'd rather you didn't forward this email to the client.","ฉันไม่อยากให้คุณส่งต่ออีเมลนี้ถึงลูกค้า"]],
+  mist:[["I suggest him to take the offer.","I suggest that he take the offer.","suggest ไม่ใช้โครงสร้าง suggest + คน + to V ต้องใช้ suggest that + ประธาน + กริยารูปธรรมดา"],["It's high time we update the system.","It's high time we updated the system.","หลัง It's high time ใช้ past simple แม้จะพูดถึงปัจจุบัน"],["I'd rather you don't tell anyone.","I'd rather you didn't tell anyone.","would rather + ประธานอีกคน ใช้ past simple"]]},
+ dialogue:{cast:{A:"Kanya",B:"Mark"},lines:[
+  ["A","Mark, have you seen the auditor's letter? They've stipulated that all customer data be stored locally by March.","มาร์ก เห็นจดหมายจากผู้ตรวจสอบหรือยัง เขากำหนดว่าข้อมูลลูกค้าทั้งหมดต้องจัดเก็บในประเทศภายในเดือนมีนาคม"],
+  ["B","I've seen it. Frankly, it's high time we moved our servers anyway.","เห็นแล้ว พูดตรงๆ ยังไงก็ถึงเวลาที่เราต้องย้ายเซิร์ฟเวอร์อยู่แล้ว"],
+  ["A","Agreed. But it's imperative that the migration be completed without any data loss.","เห็นด้วย แต่การย้ายระบบต้องเสร็จโดยไม่มีข้อมูลสูญหายเลยแม้แต่นิดเดียว"],
+  ["B","Of course. Were it not for the new IT team, I'd be far more worried.","แน่นอน ถ้าไม่ได้ทีมไอทีชุดใหม่ ผมคงกังวลกว่านี้มาก"],
+  ["A","One more thing. I'd rather you didn't mention the audit to the client until we have a plan.","อีกเรื่องหนึ่ง ฉันไม่อยากให้คุณบอกลูกค้าเรื่องการตรวจสอบจนกว่าเราจะมีแผนชัดเจน"],
+  ["B","Understood. Should they ask, I'll simply say we're upgrading our systems.","เข้าใจแล้ว ถ้าเขาถาม ผมจะบอกแค่ว่าเรากำลังอัปเกรดระบบ"],
+  ["A","Good. I'm also going to recommend that the board approve a contingency budget, just in case.","ดีค่ะ ฉันจะเสนอให้บอร์ดอนุมัติงบสำรองไว้ด้วย เผื่อมีอะไรผิดพลาด"],
+  ["B","Sensible. Had we done this last year, we'd have saved ourselves a lot of stress.","สมเหตุสมผล ถ้าเราทำแบบนี้ตั้งแต่ปีที่แล้ว คงไม่ต้องเครียดขนาดนี้"]],
+  q:[mc("What has the auditor required?",["that customer data be stored locally","that the company hire a new IT team","that the client be informed immediately"],0),mc("What does Kanya ask Mark not to do?",["move the servers","mention the audit to the client","approve the budget"],1)]},
+ practice:[
+  mc("It is essential that the report ___ checked by a lawyer before we send it.",["be","being","to be"],0,"หลัง It is essential that ใช้กริยารูปธรรมดา be กับทุกประธาน"),
+  mc("I'd rather you ___ the figures until they're confirmed.",["didn't share","don't share","won't share"],0,"would rather + ประธานอีกคน ใช้ past simple"),
+  fill("It's high time we ___ our pricing strategy. (review)","reviewed","It's high time + past simple"),
+  mc("___ you require any further information, please do not hesitate to contact me.",["Should","Would","Had"],0,"Should you… = If you… แบบทางการ"),
+  mc("___ it not for the new software, we would need twice as many staff.",["Were","Was","Had"],0,"Were it not for… = If it were not for… ใช้ were เสมอ"),
+  ord("It is vital that every employee complete the training","พนักงานทุกคนต้องผ่านการอบรมให้ครบ เป็นเรื่องสำคัญมาก","หลัง It is vital that ใช้กริยารูปธรรมดา complete ไม่เติม s")],
+ quiz:[fill("The contract ___ that payment be made within 30 days. (กำหนดไว้ ขึ้นต้นด้วย s)","stipulates|specifies|states|stipulated|specified|stated"),mc("We recommend that she ___ the offer until the terms are clear.",["not accept","not accepts","not to accept"],0),mc("Should you ___ any problems, please call our helpline.",["experience","experienced","to experience"],0)],
+ role:{th:"ครูรับบทลูกค้าที่ไม่พอใจเพราะรอคำตอบนาน คุณเป็นผู้จัดการ ตอบอย่างสุภาพและทางการ ใช้ It is essential that… / Should you… / It's high time… / Were it not for…",opener:"I've been waiting two weeks for a reply from your team. What exactly is going on?",
+  shadow:["I do apologise. It is essential that this be resolved today.","Should you need anything else, please contact me directly.","It's high time we improved our response times.","Were it not for your feedback, we wouldn't have noticed the problem."]},
+ writing:{th:"เขียนอีเมลทางการถึงทีมงาน 120–160 คำ แจ้งนโยบายใหม่ ใช้ subjunctive และ conditional แบบตัด if รวมกันอย่างน้อย 3 ครั้ง",model:"Dear all, following last month's compliance review, the management team has decided to introduce a new policy on the handling of client data. With immediate effect, it is essential that all client files be stored on the company server rather than on personal laptops. The auditors have also recommended that every employee complete the online data-protection course by 30 June. This training is mandatory, and exceptions will be made only at the discretion of your line manager. Frankly, it is high time we took these risks more seriously. Had it not been for the quick response of our IT team last year, a minor security incident could easily have become a major crisis. Should you have any questions about the new policy, please do not hesitate to contact me directly. Kind regards, Kanya"}},
+
+{id:"u24",lv:6,en:"Idiomatic fluency",th:"สำนวนและคำที่ใช้คู่กันอย่างเจ้าของภาษา",
+ vocab:[
+  v("bear in mind","พึงระลึกไว้ คำนึงถึง","phr.","Bear in mind that prices may change next year.","พึงระลึกไว้ว่าราคาอาจเปลี่ยนในปีหน้า"),
+  v("by and large","โดยรวม โดยทั่วไป","phr.","By and large, the launch went smoothly.","โดยรวมแล้ว การเปิดตัวเป็นไปอย่างราบรื่น"),
+  v("come to terms with","ทำใจยอมรับ","phr.","It took him months to come to terms with losing the contract.","เขาใช้เวลาหลายเดือนกว่าจะทำใจยอมรับที่เสียสัญญานั้นไป"),
+  v("a far cry from","ต่างลิบลับจาก","phr.","Our new office is a far cry from the tiny room we started in.","ออฟฟิศใหม่ต่างลิบลับจากห้องเล็กๆ ที่เราเริ่มต้น"),
+  v("beg the question","ทำให้เกิดคำถามตามมา","phr.","The delay begs the question of whether the plan was realistic.","ความล่าช้านี้ทำให้เกิดคำถามว่าแผนนั้นสมจริงตั้งแต่แรกหรือเปล่า"),
+  v("on the grounds that","ด้วยเหตุผลที่ว่า","phr.","The proposal was rejected on the grounds that it was too costly.","ข้อเสนอถูกปฏิเสธด้วยเหตุผลว่าแพงเกินไป"),
+  v("at stake","เป็นเดิมพัน ตกอยู่ในความเสี่ยง","phr.","With so many jobs at stake, we cannot afford to fail.","เมื่องานของคนจำนวนมากเป็นเดิมพัน เราจะพลาดไม่ได้"),
+  v("hit the ground running","เริ่มงานได้ทันทีอย่างเต็มที่","phr.","We need someone who can hit the ground running.","เราต้องการคนที่เริ่มงานแล้วลุยได้ทันที")
+ ],
+ grammar:{title:"Fixed expressions and collocations",
+  intro:["สำนวนตายตัว (fixed expressions) <mark>เปลี่ยนคำไม่ได้</mark> แม้คำใหม่จะมีความหมายใกล้เคียง เช่น by and large (ไม่ใช่ by and big), a far cry from (ไม่ใช่ a long cry from) คนไทยมักเดาคำหรือแปลจากภาษาไทยตรงตัว ทำให้ฟังแปลกทันที",
+   "สิ่งที่ผู้เรียนระดับสูงยังพลาดบ่อยคือ<mark>โครงสร้างที่ตามหลังสำนวน</mark>: come to terms <b>with</b> + คำนาม/V-ing · on the grounds <b>that</b> + ประโยค แต่ on the grounds <b>of</b> + คำนาม · bear in mind <b>that</b> + ประโยค หรือ bear + สิ่งนั้น + in mind",
+   "Collocation คือคำที่เจ้าของภาษาใช้คู่กันจนเป็นนิสัย เช่น <mark>meet</mark> a deadline, <mark>reach</mark> a conclusion, <mark>reach</mark> a consensus, <mark>raise</mark> a concern ส่วน beg the question ในภาษาพูดและข่าวแปลว่า ‘ทำให้เกิดคำถาม’ แต่ในงานวิชาการบางคนถือว่าใช้ผิดความหมายดั้งเดิม งานเขียนทางการจึงควรใช้ <b>raise the question</b> แทน"],
+  head:["สำนวน","ตามด้วย","ตัวอย่าง"],
+  rows:[["come to terms with","คำนาม / V-ing","She has come to terms with the decision."],["on the grounds that / of","that + ประโยค / of + คำนาม","He resigned on the grounds of ill health."],["bear in mind","that + ประโยค / bear sth in mind","Please bear this in mind when you reply."],["a far cry from","คำนาม / V-ing","Today's market is a far cry from what it was ten years ago."],["beg / raise the question","of whether… / of who…","This raises the question of who will pay."]],
+  ex:[["By and large, our clients are satisfied with the new service.","โดยรวมแล้ว ลูกค้าพอใจกับบริการใหม่"],["The loan was refused on the grounds that the company had too much debt.","เงินกู้ถูกปฏิเสธด้วยเหตุผลว่าบริษัทมีหนี้มากเกินไป"],["We finally reached a consensus after three hours of discussion.","ในที่สุดเราก็ได้ข้อสรุปร่วมกันหลังจากหารือกันสามชั่วโมง"]],
+  mist:[["We need to come to terms the new reality.","We need to come to terms with the new reality.","come to terms ต้องตามด้วย with เสมอ"],["He was dismissed on the grounds of he was often late.","He was dismissed on the grounds that he was often late.","ตามด้วยประโยคใช้ on the grounds that ส่วน of ตามด้วยคำนามเท่านั้น"],["We need to make a conclusion before Friday.","We need to reach a conclusion before Friday.","collocation ที่ถูกคือ reach / come to a conclusion ไม่ใช่ make"]]},
+ dialogue:{cast:{A:"Natt",B:"Helen"},lines:[
+  ["A","Helen, I heard we lost the Singapore tender. What happened?","เฮเลน ได้ยินว่าเราแพ้การประมูลที่สิงคโปร์ เกิดอะไรขึ้น"],
+  ["B","They rejected our bid on the grounds that our delivery timeline was too long.","เขาปฏิเสธข้อเสนอของเราด้วยเหตุผลว่ากำหนดส่งมอบนานเกินไป"],
+  ["A","That's disappointing. With so much at stake, the team worked incredibly hard on it.","น่าเสียดายจัง เดิมพันสูงขนาดนั้น ทีมทุ่มเทกับมันมากจริงๆ"],
+  ["B","They did, and by and large the proposal was excellent. But it does beg the question of whether we should have partnered with a local firm.","ใช่ และโดยรวมแล้วข้อเสนอก็ยอดเยี่ยม แต่มันก็ทำให้เกิดคำถามว่าเราควรจับมือกับบริษัทท้องถิ่นหรือเปล่า"],
+  ["A","True. To be honest, it's taken me a while to come to terms with it.","จริง พูดตรงๆ ผมใช้เวลาพักหนึ่งกว่าจะทำใจได้"],
+  ["B","That's understandable. Just bear in mind that last year we didn't even make the shortlist.","เข้าใจได้ แต่อย่าลืมว่าปีที่แล้วเราไม่ได้เข้ารอบสุดท้ายด้วยซ้ำ"],
+  ["A","Good point. Our position now is a far cry from where we were twelve months ago.","จริงครับ ตอนนี้สถานะของเราต่างจากเมื่อสิบสองเดือนก่อนลิบลับเลย"],
+  ["B","Exactly. And if we win the Jakarta project, the new team will need to hit the ground running.","ใช่เลย และถ้าเราได้โครงการที่จาการ์ตา ทีมใหม่ต้องพร้อมลุยตั้งแต่วันแรก"]],
+  q:[mc("Why was the bid rejected?",["The price was too high.","The delivery timeline was too long.","The proposal was badly written."],1),mc("What does Helen want Natt to remember?",["They didn't make the shortlist last year.","The Jakarta project has been cancelled.","The team needs more training."],0)]},
+ practice:[
+  mc("___, the feedback from the workshop was positive.",["By and large","By and big","By large"],0,"สำนวนตายตัว by and large เปลี่ยนคำไม่ได้"),
+  mc("The application was rejected on the grounds ___ it was incomplete.",["of","that","because"],1,"ตามด้วยประโยค (it was incomplete) ใช้ that"),
+  fill("It took the staff months to come to terms ___ the merger.","with","come to terms with ต้องมี with เสมอ"),
+  mc("The new headquarters is a far ___ from the small office where we started.",["cry","shout","call"],0,"สำนวนตายตัว a far cry from"),
+  mc("After a long discussion, the committee finally ___ a consensus.",["reached","did","made"],0,"collocation: reach a consensus"),
+  ord("Bear in mind that the budget is limited","พึงระลึกไว้ว่างบประมาณมีจำกัด","bear in mind that + ประโยค")],
+ quiz:[fill("With millions of baht ___ stake, we cannot afford any mistakes.","at"),mc("He resigned on the grounds ___ ill health.",["of","that","for"],0),mc("We need a manager who can hit the ground ___ from day one.",["running","walking","racing"],0)],
+ role:{th:"ครูรับบทเพื่อนร่วมงานชาวต่างชาติ คุยกันเรื่องโครงการที่เพิ่งจบไป ลองใช้สำนวนให้เป็นธรรมชาติ เช่น by and large, bear in mind, a far cry from, on the grounds that",opener:"So, now that the project's finally over, how do you think it went overall?",
+  shadow:["By and large, I think it went very well.","Bear in mind that we had half the usual budget.","The final result was a far cry from our first draft.","It does raise the question of how we plan future projects."]},
+ writing:{th:"เขียนย่อหน้าสรุปบทเรียนจากโครงการ (lessons learned) 120–160 คำ ใช้สำนวนและ collocation จากบทนี้อย่างน้อย 5 อย่าง",model:"Looking back on the Chiang Mai hotel project, I would say that, by and large, it was a success. We met every major deadline, and the final design was a far cry from the rough sketches we presented at the start. However, several lessons should be borne in mind for future projects. Firstly, the client initially rejected our budget on the grounds that it lacked detail, which cost us two weeks. This raises the question of whether we should involve our finance team earlier. Secondly, some team members found it difficult to come to terms with the frequent changes the client requested. With so much at stake, we should agree on a clear process for handling such requests. Finally, new staff joined halfway through and were expected to hit the ground running without proper training. In the long run, a short induction would save everyone time."}}
 ];
 
 const PLACEMENT=[
@@ -3472,10 +3636,10 @@ function viewPracticeHub(){
    +'<div style="margin-top:18px">'+dailyCard()+'</div>'
    +group("ฟังและพูด",
      card("pgo","shadow","ห้องฝึก Shadowing","ฟังแล้วพูดตามทีละประโยค จากบทสนทนา พอดแคสต์ บทอ่าน และประโยคพร้อมใช้ ปรับความเร็ว ซ่อนข้อความ"+(NB?" แอปฟังเสียงและให้คะแนน":""),"ฝึกแล้ว "+(stat("shadow").n||0)+" ประโยค")
-    +card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน "+DICT.reduce((n,d)=>n+d.items.length,0)+" ประโยค A1–C1","ทำแล้ว "+dict+" ประโยค")
+    +card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน "+DICT.reduce((n,d)=>n+d.items.length,0)+" ประโยค A1–C2","ทำแล้ว "+dict+" ประโยค")
     +card("pgo","sounds","ฝึกหูแยกเสียง","เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W, S/Z, เสียงท้ายคำ -s -ed, TH และ -teen/-ty",snd+" / "+SOUNDS.length+" ชุดเสียง")
     +card("pgo","numbers","ฟังตัวเลขและการสะกด","ราคา เวลา ปี เบอร์โทร และสะกดชื่อ จุดที่พลาดบ่อยในชีวิตจริงและข้อสอบ",nums+" / "+NUM_MODES.length+" ประเภท")
-    +card("pgo","pods","ห้องฟังพอดแคสต์","บทสนทนายาว "+PODS.length+" ตอน A2–C1 ฟังจับใจความ ตอบคำถาม แล้วเปิดบทพูดและคำแปล",Object.keys(stat("pod")).length+" / "+PODS.length+" ตอน")
+    +card("pgo","pods","ห้องฟังพอดแคสต์","บทสนทนายาว "+PODS.length+" ตอน A1–C2 ฟังจับใจความ ตอบคำถาม แล้วเปิดบทพูดและคำแปล",Object.keys(stat("pod")).length+" / "+PODS.length+" ตอน")
     +card("pgo","stress","ฝึกเน้นเสียงพยางค์","ฟังแล้วแตะพยางค์ที่ออกเสียงหนัก แก้นิสัยลงเสียงท้ายคำแบบไทย",stat("stress").best!=null?"ดีที่สุด "+stat("stress").best+"/10":STRESS.length+" คำ")
     +card("pgo","phrasebook","ประโยคพร้อมใช้ตามสถานการณ์","สนามบิน โรงแรม ร้านอาหาร ช้อปปิ้ง ถามทาง ที่ทำงาน หาหมอ โทรศัพท์",pbN+" / "+PHRASEBOOK.length+" หมวดทดสอบแล้ว")
     +card("pgo","scenes","สถานการณ์จำลองกับครู AI","คุยกับครู AI ใน "+SCENES.length+" สถานการณ์จริง เช่น สัมภาษณ์งาน สนามบิน หาหมอ ขอขึ้นเงินเดือน","ครูแก้ภาษาให้ทุกประโยค"," ai-only"))
@@ -3491,7 +3655,7 @@ function viewPracticeHub(){
     +card("go","review","ชุดคำศัพท์เพิ่มเติม",DECKS.length+" ชุด: TOEIC, IELTS, Phrasal verbs, Collocations, คำเชื่อม, สำนวน, ท่องเที่ยว, สุขภาพ และอื่นๆ รวมถึงเพิ่มคำของตัวเองได้","อยู่ในคลังแล้ว "+deckN+" / "+deckT+" คำ"))
    +group("ทบทวนและทดสอบ",
      card("pgo","mistakes","สมุดคำผิด","ข้อที่เคยตอบผิดจากบทเรียน สอบวัดระดับ และข้อสอบ TOEIC ฝึกซ้ำจนถูก",mis?mis+" ข้อรอฝึก":"ยังไม่มีข้อผิด",mis?" hot":"")
-    +card("pgo","lvtest","สอบรวมระดับ","ข้อสอบ 20 ข้อสุ่มจากทุกบทในระดับ A1–C1 เช็กว่ายังจำเนื้อหาได้ครบไหม","ผ่านแล้ว "+lvPass+" / "+LEVELS.length+" ระดับ")
+    +card("pgo","lvtest","สอบรวมระดับ","ข้อสอบ 20 ข้อสุ่มจากทุกบทในระดับ A1–C2 เช็กว่ายังจำเนื้อหาได้ครบไหม","ผ่านแล้ว "+lvPass+" / "+LEVELS.length+" ระดับ")
     +card("pgo","games","เกมฝึกภาษา","จับคู่คำศัพท์แข่งเวลา สะกดคำจากเสียง เรียงประโยค และเลือกความหมาย 60 วินาที","4 เกม"));
 }
 
@@ -4608,7 +4772,7 @@ BADGES.push(
  {id:"verbs",t:"กริยาแม่นยำ",d:"ทดสอบกริยา 3 ช่องได้ 10/10",ok:()=>(stat("verbs").best||0)>=10},
  {id:"nums",t:"หูไวตัวเลข",d:"ได้ 8/10 ขึ้นไปในการฟังตัวเลขครบทุกประเภท",ok:()=>NUM_MODES.every(m=>(stat("nums")[m[0]]||0)>=8)},
  {id:"pb",t:"พร้อมเดินทาง",d:"ทดสอบประโยคตามสถานการณ์ครบทุกหมวด",ok:()=>PHRASEBOOK.every(s=>stat("pb")[s.id]!=null)},
- {id:"lvall",t:"สอบรวมผ่านทุกระดับ",d:"สอบรวมระดับได้ 80% ขึ้นไปครบ A1–C1",ok:()=>LEVELS.every(lv=>(stat("lvtest")[lv.n]||0)>=80)}
+ {id:"lvall",t:"สอบรวมผ่านทุกระดับ",d:"สอบรวมระดับได้ 80% ขึ้นไปครบ A1–C2",ok:()=>LEVELS.every(lv=>(stat("lvtest")[lv.n]||0)>=80)}
 );
 
 const SACT={
@@ -5361,6 +5525,457 @@ const HACT={
   shjump:t=>{if(!SH) return; const was=SH.playing; shStop(); SH.i=+t.dataset.i; SH.done=false; render(); window.scrollTo({top:0,behavior:"smooth"}); if(was) shRun(true)}
 };
 
+/* ---------- round 8 content ---------- */
+PODS.push(
+ {id:"p9",lv:"A1",title:"At the Café",th:"สั่งเครื่องดื่มที่คาเฟ่",cast:{A:"Mia",B:"Leo"},
+  lines:[
+   ["A","Good morning! What can I get for you?","สวัสดีตอนเช้าค่ะ รับอะไรดีคะ"],
+   ["B","Hi. Can I have a coffee, please?","สวัสดีครับ ขอกาแฟหนึ่งแก้วครับ"],
+   ["A","Sure. Hot or iced?","ได้ค่ะ ร้อนหรือเย็นคะ"],
+   ["B","Iced, please. It's very hot today.","เย็นครับ วันนี้อากาศร้อนมาก"],
+   ["A","Small or large?","แก้วเล็กหรือแก้วใหญ่คะ"],
+   ["B","Large, please. And do you have any cake?","แก้วใหญ่ครับ แล้วมีเค้กไหมครับ"],
+   ["A","Yes. We have chocolate cake and banana cake.","มีค่ะ มีเค้กช็อกโกแลตกับเค้กกล้วยหอม"],
+   ["B","I'd like the banana cake, please. How much is that?","ขอเค้กกล้วยหอมครับ ทั้งหมดเท่าไหร่ครับ"],
+   ["A","That's six dollars. Is it for here or to go?","หกดอลลาร์ค่ะ ทานที่นี่หรือกลับบ้านคะ"],
+   ["B","For here, please. I want to sit by the window.","ทานที่นี่ครับ ผมอยากนั่งริมหน้าต่าง"],
+   ["A","No problem. Please sit down, and I'll bring it to you.","ได้เลยค่ะ เชิญนั่งก่อนนะคะ เดี๋ยวดิฉันยกไปให้"],
+   ["B","Thank you very much!","ขอบคุณมากครับ"]
+  ],
+  qs:[
+   {q:"What drink does Leo order?",o:["A small hot coffee","A large iced coffee","A cup of tea"],a:1,why:"ลีโอขอ “a coffee” แล้วตอบว่า “Iced, please” และ “Large, please” จึงเป็นกาแฟเย็นแก้วใหญ่"},
+   {q:"Which cake does Leo choose?",o:["Chocolate cake","Cheesecake","Banana cake"],a:2,why:"ลีโอพูดว่า “I'd like the banana cake, please.” ส่วนเค้กช็อกโกแลตมีขายแต่เขาไม่ได้เลือก"},
+   {q:"How much does Leo pay?",o:["Six dollars","Sixteen dollars","Two dollars"],a:0,why:"พนักงานบอกว่า “That's six dollars.”"},
+   {q:"Where will Leo eat and drink?",o:["At home","In the café, by the window","In his office"],a:1,why:"ลีโอตอบว่า “For here, please. I want to sit by the window.” แปลว่าเขาจะนั่งทานในร้าน"}
+  ]},
+ {id:"p10",lv:"A2",title:"At the Doctor's",th:"ไปหาหมอ",cast:{A:"Grace",B:"Ethan"},
+  lines:[
+   ["A","Good morning, Ethan. Please sit down. What's the problem today?","สวัสดีค่ะอีธาน เชิญนั่งค่ะ วันนี้เป็นอะไรมาคะ"],
+   ["B","Hello, Doctor. I've had a bad sore throat for three days, and I feel very tired.","สวัสดีครับคุณหมอ ผมเจ็บคอมากมาสามวันแล้ว แล้วก็รู้สึกเหนื่อยมาก"],
+   ["A","I see. Do you have a fever?","เข้าใจแล้วค่ะ มีไข้ไหมคะ"],
+   ["B","Yes, a little. Last night my temperature was thirty-eight degrees.","มีนิดหน่อยครับ เมื่อคืนวัดไข้ได้สามสิบแปดองศา"],
+   ["A","Are you coughing too?","ไอด้วยไหมคะ"],
+   ["B","Not much. But it hurts when I eat or drink.","ไม่ค่อยไอครับ แต่เวลากินหรือดื่มจะเจ็บ"],
+   ["A","Let me look at your throat. Open your mouth, please. Hmm, it's very red.","ขอหมอดูคอหน่อยนะคะ อ้าปากค่ะ อืม คอแดงมากเลย"],
+   ["B","Is it serious?","เป็นอะไรร้ายแรงไหมครับ"],
+   ["A","No, don't worry. It's a virus, so you don't need antibiotics. You need rest and lots of water.","ไม่ค่ะ ไม่ต้องกังวล เป็นเชื้อไวรัส เลยไม่จำเป็นต้องกินยาปฏิชีวนะ คุณต้องพักผ่อนและดื่มน้ำเยอะ ๆ"],
+   ["B","Can I go to work tomorrow? I have an important meeting.","พรุ่งนี้ผมไปทำงานได้ไหมครับ ผมมีประชุมสำคัญ"],
+   ["A","I think you should stay at home for two days. Can you join the meeting online?","หมอว่าคุณควรพักอยู่บ้านสองวันนะคะ เข้าประชุมทางออนไลน์ได้ไหมคะ"],
+   ["B","Yes, I think so. I can ask my manager.","น่าจะได้ครับ ผมจะลองถามหัวหน้าดู"],
+   ["A","Good. Take this medicine for the pain, two tablets three times a day after meals. If you don't feel better in five days, come back and see me.","ดีค่ะ กินยานี้แก้ปวดนะคะ ครั้งละสองเม็ด วันละสามครั้งหลังอาหาร ถ้าห้าวันแล้วยังไม่ดีขึ้น ให้กลับมาหาหมออีกครั้ง"],
+   ["B","OK. Thank you, Doctor.","ได้ครับ ขอบคุณครับคุณหมอ"]
+  ],
+  qs:[
+   {q:"Why does Ethan go to see the doctor?",o:["He has a sore throat and feels tired","He hurt his leg at work","He needs a health check for a new job"],a:0,why:"อีธานบอกว่า “I've had a bad sore throat for three days, and I feel very tired.”"},
+   {q:"What does the doctor say Ethan needs?",o:["Antibiotics","Rest and lots of water","An X-ray"],a:1,why:"หมอบอกว่า “you don't need antibiotics. You need rest and lots of water.”"},
+   {q:"How often should Ethan take the medicine?",o:["Twice a day before meals","Five times a day","Three times a day after meals"],a:2,why:"หมอบอกว่า “two tablets three times a day after meals” ส่วนเลขห้าคือจำนวนวันที่ควรกลับมาหาหมอถ้ายังไม่ดีขึ้น"},
+   {q:"What will Ethan probably do about his important meeting?",o:["Cancel it","Join it online","Go to the office anyway"],a:1,why:"หมอถามว่า “Can you join the meeting online?” และอีธานตอบว่า “Yes, I think so. I can ask my manager.”"}
+  ]},
+ {id:"p11",lv:"B1",title:"Flatmate Troubles",th:"ปัญหากับเพื่อนร่วมห้อง",cast:{A:"Chloe",B:"Ryan"},
+  lines:[
+   ["A","Ryan, have you got a minute? There's something I'd like to talk about.","ไรอัน ว่างสักนาทีไหม มีเรื่องที่ฉันอยากคุยด้วย"],
+   ["B","Sure, Chloe. Is something wrong?","ได้สิโคลอี้ มีอะไรหรือเปล่า"],
+   ["A","It's the kitchen. When I got home last night, the sink was full of dirty dishes again, and most of them weren't mine.","เรื่องห้องครัวน่ะ เมื่อคืนตอนฉันกลับถึงบ้าน อ่างล้างจานเต็มไปด้วยจานสกปรกอีกแล้ว แล้วส่วนใหญ่ก็ไม่ใช่ของฉันด้วย"],
+   ["B","Ah. Sorry about that. I had some friends round for dinner, and I was too tired to wash up afterwards.","อ๋อ ขอโทษนะ ผมชวนเพื่อนมากินข้าวเย็นที่บ้าน แล้วหลังจากนั้นก็เหนื่อยเกินกว่าจะล้างจาน"],
+   ["A","I understand, but it happens quite often. Yesterday I had to wash a pan before I could even start cooking.","ฉันเข้าใจนะ แต่มันเกิดขึ้นค่อนข้างบ่อย เมื่อวานฉันต้องล้างกระทะก่อนถึงจะเริ่มทำอาหารได้"],
+   ["B","That's fair. I didn't realise it was bothering you so much. What do you think we should do?","ก็จริงนะ ผมไม่รู้เลยว่ามันทำให้คุณรำคาญขนาดนี้ คุณว่าเราควรทำยังไงดี"],
+   ["A","Maybe we could make a cleaning rota. One week you do the kitchen and I do the bathroom, and then we swap.","เราอาจทำตารางเวรทำความสะอาดกันดีไหม สัปดาห์หนึ่งคุณทำครัว ฉันทำห้องน้ำ แล้วสัปดาห์ต่อไปก็สลับกัน"],
+   ["B","That sounds sensible. And what about the dishes?","ฟังดูสมเหตุสมผลดี แล้วเรื่องจานล่ะ"],
+   ["A","How about a simple rule: everyone washes their own dishes on the same day they use them.","ตั้งกฎง่าย ๆ ดีไหม ใครใช้จานก็ล้างของตัวเองภายในวันเดียวกันเลย"],
+   ["B","OK, I can do that. Actually, there's something I wanted to mention too.","โอเค ผมทำได้ จริง ๆ แล้วผมก็มีเรื่องอยากพูดเหมือนกัน"],
+   ["A","Go on.","ว่ามาเลย"],
+   ["B","Sometimes you talk on the phone quite loudly late at night, and my bedroom is right next to the living room. I start work at seven, so it's hard to sleep.","บางครั้งคุณคุยโทรศัพท์เสียงค่อนข้างดังตอนดึก ๆ แล้วห้องนอนผมก็อยู่ติดกับห้องนั่งเล่นเลย ผมเริ่มงานเจ็ดโมงเช้า เลยนอนหลับยาก"],
+   ["A","Oh, I'm so sorry. That's my sister in Canada. The time difference makes it difficult. I'll take her calls in my room from now on.","ตายแล้ว ขอโทษจริง ๆ นั่นพี่สาวฉันที่แคนาดาน่ะ เวลาต่างกันเลยลำบากหน่อย ต่อไปนี้ฉันจะไปคุยในห้องตัวเองนะ"],
+   ["B","Thanks. I'm glad we talked about this. Shall I write the rota and put it on the fridge?","ขอบคุณนะ ดีใจที่เราได้คุยกันเรื่องนี้ ให้ผมเขียนตารางเวรแล้วแปะไว้ที่ตู้เย็นไหม"],
+   ["A","Great idea. And let's have dinner together on Sunday. I'll cook, and you can wash up!","ดีเลย แล้ววันอาทิตย์มากินข้าวเย็นด้วยกันนะ ฉันทำอาหาร ส่วนคุณล้างจาน!"]
+  ],
+  qs:[
+   {q:"What is the conversation mainly about?",o:["Finding a new flatmate","Solving problems about living together","Planning a dinner party for friends"],a:1,why:"ทั้งสองคุยเรื่องปัญหาในห้องที่แชร์กัน ทั้งเรื่องจานสกปรกและเสียงคุยโทรศัพท์ตอนดึก แล้วตกลงทำ “a cleaning rota” ร่วมกัน"},
+   {q:"How does Ryan react when Chloe complains about the dishes?",o:["He apologises and agrees she has a point","He says the dishes belong to Chloe","He refuses to make a rota"],a:0,why:"ไรอันพูดว่า “Sorry about that.” และ “That's fair. I didn't realise it was bothering you so much.”"},
+   {q:"Why does Chloe make phone calls late at night?",o:["She works a night shift","Her friends call her after parties","Her sister lives in Canada, where the time is different"],a:2,why:"โคลอี้อธิบายว่า “That's my sister in Canada. The time difference makes it difficult.”"},
+   {q:"Why is the noise a problem for Ryan?",o:["He studies in the living room","His bedroom is next to the living room and he starts work early","He often has guests staying over"],a:1,why:"ไรอันบอกว่า “my bedroom is right next to the living room. I start work at seven, so it's hard to sleep.”"}
+  ]},
+ {id:"p12",lv:"B1",title:"Planning the Wedding",th:"วางแผนงานแต่งงาน",cast:{A:"Hannah",B:"Josh"},
+  lines:[
+   ["A","Josh, we really need to make some decisions about the wedding. It's only eight months away.","จอช เราต้องตัดสินใจเรื่องงานแต่งกันจริงจังแล้วนะ อีกแค่แปดเดือนเอง"],
+   ["B","I know. Let's start with the biggest question: how many people are we going to invite?","ผมรู้ เริ่มจากคำถามใหญ่ที่สุดก่อนเลย เราจะเชิญแขกกี่คน"],
+   ["A","My mum gave me a list of a hundred and twenty people. I've never met half of them.","แม่ฉันให้รายชื่อมาร้อยยี่สิบคน ครึ่งหนึ่งฉันไม่เคยเจอเลย"],
+   ["B","A hundred and twenty? Our budget is fifteen thousand dollars. We can't feed that many people and still have a nice venue.","ร้อยยี่สิบคนเลยเหรอ งบเรามีหนึ่งหมื่นห้าพันดอลลาร์ เราเลี้ยงคนเยอะขนาดนั้นแล้วยังได้สถานที่ดี ๆ ไม่ได้หรอก"],
+   ["A","I agree. I think eighty guests is the maximum. I'll talk to Mum this weekend. She won't be happy, but she'll understand.","ฉันเห็นด้วย ฉันว่าแปดสิบคนคือมากที่สุดแล้ว สุดสัปดาห์นี้ฉันจะคุยกับแม่ แม่คงไม่ค่อยพอใจ แต่ก็คงเข้าใจ"],
+   ["B","Good. Now, the venue. I really liked the hotel by the river, but it's quite expensive.","ดีเลย ต่อไปเรื่องสถานที่ ผมชอบโรงแรมริมแม่น้ำมาก แต่ค่อนข้างแพง"],
+   ["A","It's beautiful, but the garden at my aunt's farm is free, and it's big enough for eighty people.","ที่นั่นสวยก็จริง แต่สวนที่ฟาร์มของป้าฉันใช้ได้ฟรี แล้วก็กว้างพอสำหรับแปดสิบคนด้วย"],
+   ["B","That's true. But what if it rains?","จริงด้วย แต่ถ้าฝนตกล่ะ"],
+   ["A","We could hire a large tent. My cousin did that last year, and it only cost about a thousand dollars.","เราเช่าเต็นท์ใหญ่ได้ ลูกพี่ลูกน้องฉันก็ทำแบบนั้นเมื่อปีที่แล้ว เสียแค่ประมาณหนึ่งพันดอลลาร์เอง"],
+   ["B","That's much cheaper than the hotel. OK, I'm happy with the farm. What about food?","ถูกกว่าโรงแรมเยอะเลย โอเค ผมโอเคกับฟาร์ม แล้วเรื่องอาหารล่ะ"],
+   ["A","I'd love a buffet with Thai and Western dishes, so everyone can find something they like.","ฉันอยากได้บุฟเฟต์ที่มีทั้งอาหารไทยและอาหารฝรั่ง ทุกคนจะได้มีของที่ชอบกิน"],
+   ["B","Perfect. My grandparents don't eat spicy food, so that works well. And music?","เยี่ยมเลย ปู่ย่าผมไม่กินเผ็ด แบบนี้ก็ลงตัวพอดี แล้วดนตรีล่ะ"],
+   ["A","My friend Ploy plays in a band. She offered to play for us as a wedding present.","พลอยเพื่อนฉันเล่นอยู่ในวงดนตรี เธอเสนอว่าจะมาเล่นให้เป็นของขวัญแต่งงาน"],
+   ["B","Really? That's amazing. So we've saved money on the venue and the music. Maybe we can spend a bit more on the honeymoon.","จริงเหรอ สุดยอดไปเลย งั้นเราประหยัดค่าสถานที่กับค่าดนตรีไปได้ บางทีเราอาจเอาเงินไปใช้กับฮันนีมูนเพิ่มอีกหน่อย"],
+   ["A","Now you're talking! Let's start looking at beaches tonight.","นี่แหละที่อยากได้ยิน! คืนนี้มาเริ่มดูชายหาดกันเลย"]
+  ],
+  qs:[
+   {q:"Where will the wedding most likely take place?",o:["At a hotel by the river","In the garden at Hannah's aunt's farm","On a beach"],a:1,why:"ฮันนาห์เสนอสวนที่ฟาร์มของป้า และจอชตอบว่า “OK, I'm happy with the farm.” ส่วนชายหาดคือที่สำหรับฮันนีมูน"},
+   {q:"Why does Josh think a hundred and twenty guests is too many?",o:["The farm is too small","He doesn't know Hannah's family","It doesn't fit their budget"],a:2,why:"จอชบอกว่า “Our budget is fifteen thousand dollars. We can't feed that many people and still have a nice venue.”"},
+   {q:"What is their plan if it rains?",o:["Hire a large tent","Move to the hotel","Change the date"],a:0,why:"ฮันนาห์บอกว่า “We could hire a large tent.” และเสียเพียงประมาณหนึ่งพันดอลลาร์"},
+   {q:"How does Hannah feel about spending more money on the honeymoon?",o:["She thinks they should save it","She is excited about the idea","She wants to ask her mum first"],a:1,why:"ฮันนาห์ตอบว่า “Now you're talking! Let's start looking at beaches tonight.” แสดงว่าเธอตื่นเต้นและเห็นด้วยทันที"}
+  ]},
+ {id:"p13",lv:"B2",title:"The Missing Delivery",th:"โทรร้องเรียนเรื่องการจัดส่ง",cast:{A:"Laura",B:"Kevin"},
+  lines:[
+   ["A","Good afternoon, you're through to Brightway customer service. My name's Laura. How can I help you today?","สวัสดีค่ะ ฝ่ายบริการลูกค้าไบรต์เวย์ ดิฉันลอร่าค่ะ วันนี้มีอะไรให้ช่วยคะ"],
+   ["B","Hi, Laura. I'm calling about a washing machine I ordered. It was supposed to be delivered last Tuesday, and I've now taken two days off work waiting for it. Nobody has turned up either time.","สวัสดีครับลอร่า ผมโทรมาเรื่องเครื่องซักผ้าที่สั่งไว้ มันควรจะมาส่งตั้งแต่วันอังคารที่แล้ว และตอนนี้ผมลางานไปสองวันแล้วเพื่อรอ แต่ไม่มีใครมาเลยสักครั้ง"],
+   ["A","I'm really sorry to hear that. Could I take your order number, please, so I can look into it?","ต้องขออภัยจริง ๆ ค่ะ ขอเลขที่คำสั่งซื้อหน่อยได้ไหมคะ ดิฉันจะได้ตรวจสอบให้"],
+   ["B","It's four seven two nine one. And I have to say, I'm pretty frustrated. Each time, I got a text the evening before confirming the delivery, and then nothing happened.","สี่ เจ็ด สอง เก้า หนึ่งครับ และต้องบอกเลยว่าผมหงุดหงิดมาก ทุกครั้งผมได้ข้อความยืนยันการจัดส่งตั้งแต่ตอนเย็นวันก่อน แล้วก็ไม่มีอะไรเกิดขึ้นเลย"],
+   ["A","Thank you. I can see the order here. It looks like the delivery company marked it as failed on both days because they couldn't get into the building. Is there a gate or an entry code at your address?","ขอบคุณค่ะ ดิฉันเห็นคำสั่งซื้อแล้ว ดูเหมือนบริษัทขนส่งบันทึกว่าส่งไม่สำเร็จทั้งสองวัน เพราะเข้าไปในอาคารไม่ได้ ที่อยู่ของคุณมีประตูรั้วหรือรหัสผ่านเข้าอาคารไหมคะ"],
+   ["B","There's a gate, yes, but the code is in the delivery notes. I wrote it when I placed the order. I've just checked, and it's definitely there.","มีประตูรั้วครับ แต่รหัสอยู่ในหมายเหตุการจัดส่งแล้ว ผมเขียนไว้ตอนสั่งซื้อ เมื่อกี้ผมเพิ่งเช็ก มันอยู่ตรงนั้นแน่นอน"],
+   ["A","You're right, I can see it in the notes. It seems it wasn't passed on to the driver, which is our mistake, not yours. I do apologise.","คุณพูดถูกค่ะ ดิฉันเห็นในหมายเหตุแล้ว ดูเหมือนข้อมูลไม่ได้ถูกส่งต่อไปถึงคนขับ ซึ่งเป็นความผิดของเรา ไม่ใช่ของคุณ ต้องขออภัยด้วยจริง ๆ ค่ะ"],
+   ["B","Well, I appreciate you admitting that. But what happens now? I really can't take another day off.","ก็ขอบคุณที่ยอมรับนะครับ แต่แล้วจะเอายังไงต่อ ผมลางานอีกวันไม่ได้แล้วจริง ๆ"],
+   ["A","I completely understand. I can book a new delivery for this Saturday, between eight and twelve, and I'll call the delivery company myself to make sure they have the code. Would Saturday work for you?","เข้าใจเลยค่ะ ดิฉันจองการจัดส่งใหม่ให้ได้วันเสาร์นี้ ช่วงแปดโมงถึงเที่ยง และดิฉันจะโทรหาบริษัทขนส่งเองเพื่อให้แน่ใจว่าพวกเขาได้รหัสแล้ว วันเสาร์สะดวกไหมคะ"],
+   ["B","Saturday morning is fine. But to be honest, I'd like something more than just a new date. I've lost two days' pay because of this.","เช้าวันเสาร์ได้ครับ แต่พูดตรง ๆ ผมอยากได้อะไรมากกว่าแค่วันส่งใหม่ ผมเสียค่าแรงไปสองวันเพราะเรื่องนี้"],
+   ["A","That's reasonable. I'm afraid I'm not able to cover lost wages, but I can refund the forty dollar delivery charge in full, and I'll add a fifty dollar voucher to your account for the inconvenience.","สมเหตุสมผลค่ะ เสียดายที่ดิฉันชดเชยค่าแรงที่เสียไปไม่ได้ แต่ดิฉันคืนค่าจัดส่งสี่สิบดอลลาร์ให้เต็มจำนวนได้ และจะเพิ่มบัตรกำนัลห้าสิบดอลลาร์เข้าบัญชีของคุณเพื่อชดเชยความไม่สะดวกค่ะ"],
+   ["B","OK. That's better than nothing. Will the old machine be taken away as well? That was part of the original order.","โอเค ดีกว่าไม่ได้อะไรเลย แล้วจะขนเครื่องเก่าไปด้วยไหมครับ นั่นเป็นส่วนหนึ่งของคำสั่งซื้อตั้งแต่แรก"],
+   ["A","Yes, removing your old machine is included, and I've added a note to make that clear. You'll receive a confirmation email within the next hour.","ใช่ค่ะ รวมการขนเครื่องเก่าออกไปด้วย และดิฉันเพิ่มหมายเหตุให้ชัดเจนแล้ว คุณจะได้รับอีเมลยืนยันภายในหนึ่งชั่วโมงนี้ค่ะ"],
+   ["B","Right. And if it goes wrong again on Saturday?","ครับ แล้วถ้าวันเสาร์มีปัญหาอีกล่ะ"],
+   ["A","Then please call and ask for me directly. I'm putting my name and a reference number on your file, so you won't have to explain everything again.","ถ้าอย่างนั้นโทรมาแล้วขอสายดิฉันโดยตรงเลยค่ะ ดิฉันจะใส่ชื่อและเลขอ้างอิงไว้ในแฟ้มของคุณ คุณจะได้ไม่ต้องเล่าทุกอย่างใหม่อีกรอบ"],
+   ["B","Thanks, Laura. You've been very helpful, even if the company hasn't been.","ขอบคุณครับลอร่า คุณช่วยได้มากเลย ถึงบริษัทจะไม่ได้ช่วยอะไรก็ตาม"]
+  ],
+  qs:[
+   {q:"Why did the two deliveries fail?",o:["Kevin wasn't at home","The driver didn't receive the gate code","The washing machine was out of stock"],a:1,why:"ลอร่าอธิบายว่ารหัสอยู่ในหมายเหตุแล้ว แต่ “it wasn't passed on to the driver, which is our mistake” ส่วนเควินลางานรออยู่บ้านทั้งสองวัน"},
+   {q:"What does Laura offer Kevin as compensation?",o:["Payment for the wages he lost","A cheaper washing machine","A refund of the delivery charge and a voucher"],a:2,why:"ลอร่าบอกว่า “I'm not able to cover lost wages” แต่ “I can refund the forty dollar delivery charge in full, and I'll add a fifty dollar voucher”"},
+   {q:"Why does Laura put her name on Kevin's file?",o:["So she can get credit for solving the problem","So Kevin won't need to explain the whole story again","So the driver can contact her on Saturday"],a:1,why:"ลอร่าบอกว่าใส่ชื่อและเลขอ้างอิงไว้ “so you won't have to explain everything again”"},
+   {q:"How does Kevin feel at the end of the call?",o:["Grateful to Laura but still unhappy with the company","Furious and ready to cancel his order","Delighted with the company's service"],a:0,why:"เควินพูดว่า “You've been very helpful, even if the company hasn't been.” คือชื่นชมลอร่า แต่ยังไม่พอใจบริษัท"}
+  ]},
+ {id:"p14",lv:"B2",title:"Greener Ways to Travel",th:"เดินทางแบบรักษ์โลก",cast:{A:"Sophie",B:"Adam"},
+  lines:[
+   ["A","So, Adam, we still haven't decided how we're getting to Barcelona in June. Have you looked at the options?","อดัม เรายังไม่ได้ตัดสินใจเลยนะว่าเดือนมิถุนายนจะเดินทางไปบาร์เซโลนายังไง คุณดูตัวเลือกไว้บ้างหรือยัง"],
+   ["B","I have. Flying is obviously the quickest. It's about two hours from London, and the tickets are surprisingly cheap if we book now, around eighty pounds each.","ดูแล้ว เครื่องบินเร็วที่สุดอยู่แล้ว บินจากลอนดอนประมาณสองชั่วโมง แล้วตั๋วก็ถูกจนน่าแปลกใจถ้าจองตอนนี้ ประมาณคนละแปดสิบปอนด์"],
+   ["A","I know, but I read that a return flight like that produces several times more carbon than going by train. We've been trying to eat less meat and use the car less, so it feels a bit strange to just ignore that.","ฉันรู้ แต่ฉันอ่านเจอว่าเที่ยวบินไปกลับแบบนั้นปล่อยคาร์บอนมากกว่านั่งรถไฟหลายเท่า เราพยายามกินเนื้อสัตว์น้อยลงและใช้รถน้อยลงมาตลอด ถ้าจะมองข้ามเรื่องนี้ไปเฉย ๆ ก็รู้สึกแปลก ๆ"],
+   ["B","I get that. But the train takes most of a day. We'd have to change in Paris, and the tickets are nearly twice as expensive.","ผมเข้าใจ แต่รถไฟใช้เวลาเกือบทั้งวัน เราต้องเปลี่ยนขบวนที่ปารีส แล้วตั๋วก็แพงกว่าเกือบสองเท่า"],
+   ["A","That's true, but think about what flying actually involves. You've got the journey to the airport, security, waiting at the gate. Door to door, it's probably five or six hours anyway.","ก็จริง แต่ลองคิดดูว่าการบินจริง ๆ ต้องทำอะไรบ้าง ต้องเดินทางไปสนามบิน ผ่านจุดตรวจความปลอดภัย นั่งรอที่ประตูขึ้นเครื่อง นับตั้งแต่ออกจากบ้านจนถึงที่พัก ก็น่าจะห้าหกชั่วโมงอยู่ดี"],
+   ["B","Fair point. I hadn't really counted all that. And I suppose on the train we could actually relax, read, maybe have lunch in Paris.","มีเหตุผลนะ ผมไม่ได้นับตรงนั้นเลย แล้วบนรถไฟเราก็ได้พักผ่อนจริง ๆ อ่านหนังสือ หรืออาจแวะกินข้าวกลางวันที่ปารีส"],
+   ["A","Exactly. We could even make it part of the holiday. Spend a night in Paris on the way there, and then the journey isn't wasted time at all.","ใช่เลย เราทำให้มันเป็นส่วนหนึ่งของวันหยุดได้ด้วย แวะค้างที่ปารีสสักคืนระหว่างทาง แล้วการเดินทางก็จะไม่ใช่เวลาที่เสียเปล่าเลย"],
+   ["B","That would be nice, but it means an extra night of hotel costs. We need to be realistic about the budget.","ก็น่าสนุกนะ แต่แปลว่าต้องจ่ายค่าโรงแรมเพิ่มอีกคืน เราต้องมองงบประมาณตามความเป็นจริงด้วย"],
+   ["A","What if we took the train there and flew back? That way we'd halve the emissions compared with flying both ways, and we wouldn't lose a whole day at the end, when we have to get back to work.","ถ้าเรานั่งรถไฟไปแล้วบินกลับล่ะ แบบนั้นเราจะลดการปล่อยก๊าซได้ครึ่งหนึ่งเมื่อเทียบกับบินทั้งไปและกลับ และก็ไม่ต้องเสียเวลาทั้งวันตอนขากลับที่ต้องรีบกลับไปทำงาน"],
+   ["B","Hmm, that's a sensible compromise. Although if we're flying back anyway, some people would say we should buy carbon offsets.","อืม เป็นทางสายกลางที่สมเหตุสมผลดี แต่ถ้ายังไงก็ต้องบินกลับ บางคนก็จะบอกว่าเราควรซื้อคาร์บอนออฟเซ็ตชดเชย"],
+   ["A","I'm a bit sceptical about offsets, to be honest. Some schemes are good, but others promise to plant trees that never actually get planted. Cutting what you emit in the first place is far more reliable.","พูดตรง ๆ ฉันค่อนข้างกังขาเรื่องออฟเซ็ตนะ บางโครงการก็ดี แต่บางโครงการสัญญาว่าจะปลูกต้นไม้ที่สุดท้ายไม่เคยได้ปลูกจริง การลดการปล่อยตั้งแต่ต้นเชื่อถือได้มากกว่าเยอะ"],
+   ["B","That's a fair concern. What about when we're there? I'd assumed we'd rent a car to see the coast.","เป็นข้อกังวลที่มีเหตุผล แล้วตอนอยู่ที่นั่นล่ะ ผมนึกว่าเราจะเช่ารถขับเที่ยวชายฝั่ง"],
+   ["A","The regional trains along the coast are supposed to be excellent, and much cheaper than a rental car plus parking. We'd only need a car if we wanted to go somewhere really remote.","ได้ยินว่ารถไฟท้องถิ่นเลียบชายฝั่งดีมาก และถูกกว่าเช่ารถบวกค่าจอดเยอะเลย เราจะต้องใช้รถก็ต่อเมื่ออยากไปที่ที่ห่างไกลมาก ๆ เท่านั้น"],
+   ["B","All right, you've convinced me. Train out with a night in Paris, flight home, and public transport while we're there. I'll book the train tickets tonight before the prices go up.","โอเค คุณโน้มน้าวผมได้แล้ว ขาไปนั่งรถไฟและค้างปารีสหนึ่งคืน ขากลับบิน ส่วนตอนอยู่ที่นั่นใช้ขนส่งสาธารณะ คืนนี้ผมจะจองตั๋วรถไฟเลย ก่อนราคาจะขึ้น"],
+   ["A","Perfect. And I'll find us a little hotel in Paris. This is starting to feel like two holidays in one.","เยี่ยมเลย ส่วนฉันจะหาโรงแรมเล็ก ๆ ในปารีสให้ เริ่มรู้สึกเหมือนได้เที่ยวสองทริปในทริปเดียวแล้ว"]
+  ],
+  qs:[
+   {q:"What are Sophie and Adam mainly discussing?",o:["How to travel in a more environmentally friendly way","Whether to go to Barcelona or Paris for their holiday","How to find the cheapest hotel"],a:0,why:"ทั้งตอนเป็นการเปรียบเทียบเครื่องบิน รถไฟ ออฟเซ็ต และการเดินทางในพื้นที่ โดยโซฟีเริ่มจากประเด็นที่ว่าเครื่องบิน “produces several times more carbon than going by train” ส่วนบาร์เซโลนาเป็นจุดหมายที่ตัดสินใจไว้แล้ว"},
+   {q:"Why does Sophie think flying is not much faster than it seems?",o:["Flights to Barcelona are often delayed","Getting to the airport, security and waiting add several hours","The train goes directly to Barcelona without changes"],a:1,why:"โซฟีบอกว่า “the journey to the airport, security, waiting at the gate. Door to door, it's probably five or six hours anyway.”"},
+   {q:"What is Sophie's attitude towards carbon offsets?",o:["She thinks they are the best solution","She has never heard of them","She doubts that all schemes are reliable"],a:2,why:"โซฟีพูดว่า “I'm a bit sceptical about offsets” เพราะบางโครงการ “promise to plant trees that never actually get planted”"},
+   {q:"What do they finally decide?",o:["Fly both ways and rent a car","Take the train there and fly back","Take the train both ways and rent a car"],a:1,why:"อดัมสรุปว่า “Train out with a night in Paris, flight home, and public transport while we're there.” จึงไม่เช่ารถ"}
+  ]},
+ {id:"p15",lv:"C1",title:"AI and the Hiring Process",th:"จริยธรรมของปัญญาประดิษฐ์ในการคัดเลือกพนักงาน",cast:{A:"Nina",B:"Marcus"},
+  lines:[
+   ["A","Welcome to Work in Progress. I'm Nina, and today we're looking at a question that affects almost everyone who applies for a job: what happens when the first reader of your CV isn't a person at all? My guest is Marcus, who studies how organisations use automated tools in recruitment. Marcus, how widespread is this?","ยินดีต้อนรับสู่รายการ Work in Progress ฉันนีน่า วันนี้เราจะคุยเรื่องที่ส่งผลต่อแทบทุกคนที่สมัครงาน นั่นคือจะเกิดอะไรขึ้นเมื่อผู้อ่านเรซูเม่ของคุณคนแรกไม่ใช่มนุษย์เลย แขกรับเชิญของเราคือมาร์คัส ผู้ศึกษาว่าองค์กรต่าง ๆ ใช้เครื่องมืออัตโนมัติในการสรรหาคนอย่างไร มาร์คัสคะ เรื่องนี้แพร่หลายแค่ไหน"],
+   ["B","More widespread than most applicants realise. Large employers can receive thousands of applications for a single role, so many now use software to screen CVs, rank candidates, or even analyse recorded video interviews. For a lot of people, the first decision about their application is made by an algorithm.","แพร่หลายกว่าที่ผู้สมัครส่วนใหญ่คิดครับ นายจ้างรายใหญ่อาจได้รับใบสมัครหลายพันใบสำหรับตำแหน่งเดียว หลายแห่งจึงใช้ซอฟต์แวร์คัดกรองเรซูเม่ จัดอันดับผู้สมัคร หรือแม้แต่วิเคราะห์วิดีโอสัมภาษณ์ที่บันทึกไว้ สำหรับคนจำนวนมาก การตัดสินใจครั้งแรกเกี่ยวกับใบสมัครของพวกเขามาจากอัลกอริทึม"],
+   ["A","The usual argument in favour is that machines are more objective than tired, biased humans. Is there any truth in that?","ข้อโต้แย้งฝั่งสนับสนุนที่ได้ยินบ่อยคือ เครื่องจักรเป็นกลางกว่ามนุษย์ที่เหนื่อยล้าและมีอคติ ข้อนี้มีความจริงอยู่บ้างไหมคะ"],
+   ["B","There's some truth in it, which is what makes the issue so tricky. Human recruiters are demonstrably inconsistent. Studies have shown that identical CVs get different responses depending on the name at the top. In principle, a well-designed system could apply the same criteria to everyone. The problem lies in the phrase well-designed.","มีความจริงอยู่บ้างครับ และนั่นแหละที่ทำให้เรื่องนี้ซับซ้อน ผู้สรรหาที่เป็นมนุษย์ไม่คงเส้นคงวาอย่างเห็นได้ชัด งานวิจัยพบว่าเรซูเม่ที่เหมือนกันทุกประการได้รับการตอบกลับต่างกัน ขึ้นอยู่กับชื่อที่อยู่ด้านบน ตามหลักการแล้ว ระบบที่ออกแบบมาดีจะใช้เกณฑ์เดียวกันกับทุกคนได้ ปัญหาอยู่ที่คำว่าออกแบบมาดีนี่แหละ"],
+   ["A","Because the system learns from past decisions?","เพราะระบบเรียนรู้จากการตัดสินใจในอดีตใช่ไหมคะ"],
+   ["B","Exactly. If you train a model on who a company hired over the last ten years, and that company mostly hired men from a handful of universities, the model will quite reasonably conclude that those are the features of a good employee. It doesn't remove bias. It automates it, and then gives it a veneer of scientific neutrality.","ใช่เลยครับ ถ้าคุณฝึกโมเดลด้วยข้อมูลว่าบริษัทจ้างใครมาตลอดสิบปีที่ผ่านมา และบริษัทนั้นจ้างผู้ชายจากมหาวิทยาลัยไม่กี่แห่งเป็นส่วนใหญ่ โมเดลก็จะสรุปอย่างมีเหตุผลตามข้อมูลว่านั่นคือลักษณะของพนักงานที่ดี มันไม่ได้กำจัดอคติ แต่ทำให้อคติเป็นระบบอัตโนมัติ แล้วเคลือบมันด้วยภาพลักษณ์ของความเป็นกลางทางวิทยาศาสตร์"],
+   ["A","And presumably that's harder to challenge than a single biased manager.","และก็คงโต้แย้งได้ยากกว่าผู้จัดการที่มีอคติคนเดียวด้วย"],
+   ["B","Much harder. If a person rejects you unfairly, there's at least someone who can be asked to explain. With many of these systems, even the employer can't tell you precisely why one candidate scored higher than another. And scale matters too. One biased manager affects dozens of people. One biased system can affect hundreds of thousands.","ยากกว่ามากครับ ถ้ามนุษย์ปฏิเสธคุณอย่างไม่เป็นธรรม อย่างน้อยก็ยังมีคนที่ขอให้อธิบายได้ แต่กับระบบเหล่านี้หลายระบบ แม้แต่นายจ้างเองก็บอกไม่ได้แน่ชัดว่าทำไมผู้สมัครคนหนึ่งได้คะแนนสูงกว่าอีกคน และขนาดก็สำคัญด้วย ผู้จัดการที่มีอคติหนึ่งคนส่งผลต่อคนหลักสิบ แต่ระบบที่มีอคติหนึ่งระบบส่งผลต่อคนได้หลายแสนคน"],
+   ["A","What about the video analysis tools you mentioned? Some claim to assess personality from facial expressions or tone of voice.","แล้วเครื่องมือวิเคราะห์วิดีโอที่คุณพูดถึงล่ะคะ บางตัวอ้างว่าประเมินบุคลิกภาพได้จากสีหน้าหรือน้ำเสียง"],
+   ["B","Frankly, that's where I'd draw the line. The scientific basis for reading personality from someone's face is extremely weak, and these tools can penalise people for things that have nothing to do with the job, such as a disability, a regional accent, or simply being nervous on camera.","พูดตรง ๆ ตรงนั้นคือเส้นที่ผมจะไม่ยอมข้ามครับ หลักฐานทางวิทยาศาสตร์ที่รองรับการอ่านบุคลิกภาพจากใบหน้าอ่อนมาก และเครื่องมือเหล่านี้อาจลงโทษคนด้วยเรื่องที่ไม่เกี่ยวกับงานเลย เช่น ความพิการ สำเนียงท้องถิ่น หรือแค่ประหม่าหน้ากล้อง"],
+   ["A","So are you arguing that artificial intelligence shouldn't be used in hiring at all?","งั้นคุณกำลังบอกว่าไม่ควรใช้ปัญญาประดิษฐ์ในการจ้างงานเลยหรือคะ"],
+   ["B","No, and I think that position is increasingly unrealistic. What I'd argue for is three things. First, transparency, so that applicants know when an automated tool is involved. Second, regular independent audits to check whether outcomes differ across groups. And third, a genuine human decision at the end, not a manager who simply clicks approve on whatever the software recommends.","ไม่ครับ และผมคิดว่าจุดยืนแบบนั้นยิ่งวันยิ่งไม่สมจริง สิ่งที่ผมเรียกร้องมีสามข้อ ข้อแรกคือความโปร่งใส ให้ผู้สมัครรู้ว่ามีเครื่องมืออัตโนมัติเข้ามาเกี่ยวข้อง ข้อสองคือการตรวจสอบโดยหน่วยงานอิสระอย่างสม่ำเสมอ เพื่อดูว่าผลลัพธ์ต่างกันระหว่างกลุ่มคนหรือไม่ และข้อสามคือการตัดสินใจขั้นสุดท้ายโดยมนุษย์อย่างแท้จริง ไม่ใช่ผู้จัดการที่แค่กดอนุมัติตามที่ซอฟต์แวร์แนะนำ"],
+   ["A","That last point is interesting. Is there a risk that people simply defer to the machine?","ประเด็นสุดท้ายน่าสนใจค่ะ มีความเสี่ยงไหมที่คนจะแค่คล้อยตามเครื่องจักรไปเลย"],
+   ["B","A very real one. It's sometimes called automation bias. When a system presents a ranking with a confident score, people tend to assume it knows something they don't, even when their own judgement would have been better. So having a human in the loop only means something if that human feels able to disagree.","เสี่ยงจริงมากครับ บางทีเรียกว่าอคติจากระบบอัตโนมัติ เมื่อระบบแสดงอันดับพร้อมคะแนนที่ดูมั่นใจ คนมักคิดว่ามันรู้อะไรที่ตัวเองไม่รู้ แม้ในกรณีที่วิจารณญาณของตัวเองจะดีกว่า ดังนั้นการมีมนุษย์อยู่ในกระบวนการจะมีความหมายก็ต่อเมื่อคนคนนั้นรู้สึกว่ากล้าเห็นต่างได้"],
+   ["A","Marcus, thank you. That's a great deal for both employers and applicants to think about.","ขอบคุณค่ะมาร์คัส เป็นเรื่องที่ทั้งนายจ้างและผู้สมัครงานต้องคิดกันอีกมากเลย"]
+  ],
+  qs:[
+   {q:"What is Marcus's overall position on AI in hiring?",o:["It is always fairer than human recruiters","It should be banned completely","It can be used, but only with strong safeguards"],a:2,why:"มาร์คัสตอบว่าการไม่ใช้เลย “is increasingly unrealistic” แล้วเสนอสามข้อ คือ “transparency” “independent audits” และ “a genuine human decision at the end”"},
+   {q:"Why can a system trained on past hiring decisions be biased?",o:["It cannot read CVs accurately","It copies patterns from the company's previous, possibly unfair, hiring","It is deliberately designed to exclude certain groups"],a:1,why:"มาร์คัสอธิบายว่าถ้าบริษัท “mostly hired men from a handful of universities” โมเดลก็จะสรุปว่านั่นคือลักษณะของพนักงานที่ดี “It doesn't remove bias. It automates it.”"},
+   {q:"How does Marcus feel about tools that judge personality from video?",o:["He strongly objects because their scientific basis is weak","He thinks they are promising but need more testing","He believes they help nervous candidates"],a:0,why:"มาร์คัสพูดว่า “that's where I'd draw the line. The scientific basis for reading personality from someone's face is extremely weak” และบอกว่ามันอาจลงโทษคนที่ “simply being nervous on camera”"},
+   {q:"What does Marcus imply about having a human in the loop?",o:["Humans should rank candidates before the software does","It only helps if the person feels free to overrule the system","Managers should approve the software's choices quickly"],a:1,why:"มาร์คัสสรุปว่า “having a human in the loop only means something if that human feels able to disagree” และวิจารณ์ผู้จัดการที่ “simply clicks approve”"}
+  ]},
+ {id:"p16",lv:"C2",title:"The Future of Cities",th:"อนาคตของเมือง",cast:{A:"Helen",B:"Julian"},
+  lines:[
+   ["A","Welcome to The Long View. I'm Helen, and joining me is the urban historian Julian. Our subject today is the future of cities, which, depending on whom you ask, are either on the brink of a renaissance or quietly hollowing out. Julian, let me nail my colours to the mast straight away: I think the case for denser, walkable neighbourhoods has never been stronger. Where do you stand?","ยินดีต้อนรับสู่รายการ The Long View ฉันเฮเลน และร่วมรายการกับฉันวันนี้คือจูเลียน นักประวัติศาสตร์เมือง หัวข้อของเราวันนี้คืออนาคตของเมือง ซึ่งแล้วแต่ว่าคุณถามใคร ก็จะได้คำตอบว่ากำลังจะเข้าสู่ยุคฟื้นฟู หรือไม่ก็กำลังกลวงลงอย่างเงียบ ๆ จูเลียนคะ ขอประกาศจุดยืนตั้งแต่ต้นเลยว่า ฉันคิดว่าเหตุผลสนับสนุนย่านที่หนาแน่นและเดินได้สะดวกไม่เคยหนักแน่นเท่านี้มาก่อน แล้วคุณยืนอยู่ตรงไหนคะ"],
+   ["B","Somewhere rather more equivocal, I'm afraid. I don't quarrel with the destination, but I'm wary of the tone in which it's often sold. The fifteen-minute city, for instance, is a lovely idea on paper: everything you need within a short walk or cycle. But history is littered with planners who were utterly convinced they knew how other people ought to live, and the results were not always pretty.","คงอยู่ในจุดที่คลุมเครือกว่านั้นหน่อยครับ ผมไม่ได้ขัดแย้งกับเป้าหมายปลายทาง แต่ผมระแวงน้ำเสียงที่มักใช้ขายแนวคิดนี้ ยกตัวอย่างเมืองสิบห้านาที บนกระดาษเป็นแนวคิดที่งดงาม ทุกอย่างที่ต้องการอยู่ในระยะเดินหรือปั่นจักรยานไม่ไกล แต่ประวัติศาสตร์เต็มไปด้วยนักผังเมืองที่มั่นใจเต็มเปี่ยมว่าตัวเองรู้ดีว่าคนอื่นควรใช้ชีวิตอย่างไร และผลลัพธ์ก็ไม่ได้สวยงามเสมอไป"],
+   ["A","You're thinking of the post-war tower blocks and urban motorways, presumably. But surely the lesson there is that top-down schemes which bulldozed neighbourhoods were the problem, not density as such. Some of the most beloved places on earth, old Paris, parts of Tokyo, are extraordinarily dense.","คุณคงนึกถึงตึกสูงยุคหลังสงครามกับทางด่วนที่ตัดผ่านเมืองใช่ไหมคะ แต่บทเรียนจากตรงนั้นก็คือ ปัญหาอยู่ที่โครงการแบบสั่งการจากบนลงล่างที่ไถย่านชุมชนทิ้ง ไม่ใช่ความหนาแน่นในตัวมันเอง สถานที่ที่คนรักที่สุดบางแห่งบนโลก อย่างปารีสเก่าหรือบางย่านของโตเกียว ก็หนาแน่นเป็นพิเศษ"],
+   ["B","Granted, and that's a fair distinction. But here's the rub. The neighbourhoods everyone rhapsodises about evolved organically over centuries. You can't simply conjure that texture out of a masterplan. And when you do succeed in making a place delightful, you run headlong into the other problem: it becomes so desirable that the people it was meant for can no longer afford to live there.","ยอมรับครับ และเป็นการแยกแยะที่ยุติธรรม แต่ปัญหาอยู่ตรงนี้ ย่านที่ทุกคนพากันชื่นชมเหลือล้นนั้นค่อย ๆ วิวัฒน์ขึ้นเองตามธรรมชาติตลอดหลายศตวรรษ คุณเสกเนื้อสัมผัสแบบนั้นออกมาจากผังแม่บทไม่ได้ และถ้าคุณทำให้ที่ไหนน่าอยู่ได้สำเร็จ คุณก็จะชนเข้ากับอีกปัญหาเต็ม ๆ คือที่นั่นจะเป็นที่ต้องการมากจนคนที่ตั้งใจจะให้อยู่ไม่มีปัญญาจ่ายค่าอยู่อาศัยอีกต่อไป"],
+   ["A","Which is precisely why we need to build far more of it. Gentrification is, at root, a symptom of scarcity. If walkable neighbourhoods are in such short supply that they command eye-watering prices, the answer is to legalise more of them, not to pull up the drawbridge.","นั่นแหละคือเหตุผลที่เราต้องสร้างให้มากขึ้นอีกเยอะ การปรับปรุงย่านจนคนเดิมอยู่ไม่ได้นั้น โดยรากเหง้าแล้วเป็นอาการของความขาดแคลน ถ้าย่านที่เดินได้มีน้อยจนราคาพุ่งสูงลิบ คำตอบก็คือทำให้การสร้างย่านแบบนี้ถูกกฎหมายมากขึ้น ไม่ใช่ชักสะพานปิดประตูใส่คนอื่น"],
+   ["B","In theory, yes. In practice, supply responds glacially, and in the meantime long-standing residents are priced out. And let's be candid about who blocks new housing. It's rarely developers. It's existing homeowners who, perfectly understandably, don't want a six-storey building overshadowing their garden. Any vision that doesn't reckon with that politics is, frankly, wishful thinking.","ในทางทฤษฎีก็ใช่ครับ แต่ในทางปฏิบัติ อุปทานตอบสนองช้าเหมือนเต่าคลาน และระหว่างนั้นผู้อยู่อาศัยดั้งเดิมก็ถูกราคาบีบให้ออกไป และขอพูดกันตรง ๆ ว่าใครเป็นคนขวางการสร้างที่อยู่อาศัยใหม่ แทบไม่ใช่นักพัฒนาอสังหาฯ แต่เป็นเจ้าของบ้านเดิม ซึ่งเป็นเรื่องเข้าใจได้เลยที่พวกเขาไม่อยากให้ตึกหกชั้นมาบังแดดสวนของตัวเอง วิสัยทัศน์ใดที่ไม่คำนึงถึงการเมืองแบบนี้ พูดตรง ๆ ก็แค่ฝันลม ๆ แล้ง ๆ"],
+   ["A","I'll concede the politics are fiendish. But I'd argue the status quo is itself a choice, and a costly one. Car-dependent sprawl locks people into long commutes, isolates the elderly and the young, who can't drive, and quietly bankrupts local councils that have to maintain miles of roads and pipes for relatively few taxpayers.","ฉันยอมรับว่าการเมืองเรื่องนี้ยากสุด ๆ แต่ฉันขอเถียงว่าการปล่อยทุกอย่างไว้อย่างที่เป็นอยู่ก็เป็นทางเลือกแบบหนึ่ง และเป็นทางเลือกที่ต้องจ่ายแพงด้วย การขยายเมืองออกไปแบบที่ต้องพึ่งรถยนต์ทำให้คนติดอยู่กับการเดินทางไกล ทำให้ผู้สูงอายุและเด็กที่ขับรถไม่ได้โดดเดี่ยว และค่อย ๆ ทำให้ท้องถิ่นล้มละลาย เพราะต้องดูแลถนนและท่อยาวหลายไมล์เพื่อผู้เสียภาษีจำนวนไม่มาก"],
+   ["B","Oh, I don't dispute the fiscal argument for a moment. Where I'd push back is on the assumption that everyone secretly yearns for a flat above a bakery. Plenty of families move to the suburbs with their eyes wide open, for space, for gardens, for schools. Dismissing that as some kind of false consciousness isn't merely patronising, it's politically suicidal.","โอ้ ผมไม่ได้เถียงเรื่องเหตุผลทางการคลังเลยแม้แต่นิดเดียว จุดที่ผมจะแย้งคือสมมติฐานที่ว่าทุกคนแอบใฝ่ฝันอยากอยู่ห้องชุดเหนือร้านเบเกอรี่ ครอบครัวจำนวนมากย้ายไปชานเมืองโดยรู้ตัวดีทุกอย่าง เพื่อพื้นที่ เพื่อสวน เพื่อโรงเรียน การปัดตกเรื่องนี้ว่าเป็นแค่การหลงผิด ไม่ใช่แค่การดูถูกคนอื่น แต่ยังเป็นการฆ่าตัวตายทางการเมืองด้วย"],
+   ["A","That's fair, and I'd never advocate forcing anyone out of a suburb. My point is more modest. At the moment, in many cities, it's actually illegal to build the kind of mixed, compact neighbourhood people claim to want. Zoning rules mandate the suburban model. So it isn't so much a free market choice as a rigged one.","ยุติธรรมค่ะ และฉันไม่มีวันสนับสนุนให้บังคับใครย้ายออกจากชานเมือง ประเด็นของฉันเจียมตัวกว่านั้น ตอนนี้ในหลายเมือง การสร้างย่านแบบผสมผสานและกะทัดรัดอย่างที่คนบอกว่าอยากได้นั้นผิดกฎหมายจริง ๆ กฎผังเมืองบังคับให้ต้องเป็นแบบชานเมือง ดังนั้นมันจึงไม่ใช่ทางเลือกของตลาดเสรีเสียทีเดียว แต่เป็นเกมที่ถูกล็อกผลไว้แล้วมากกว่า"],
+   ["B","Now that I can wholeheartedly get behind. Loosening the rules so that corner shops, terraced houses and small apartment blocks can spring up gradually is a far cry from imposing a grand design. It's closer to letting the city grow the way the places we admire actually grew: incrementally, and a little untidily.","ข้อนี้แหละที่ผมสนับสนุนได้เต็มหัวใจ การผ่อนกฎให้ร้านหัวมุม บ้านแถว และอาคารอพาร์ตเมนต์เล็ก ๆ ค่อย ๆ ผุดขึ้นมานั้นต่างราวฟ้ากับเหวจากการยัดเยียดแผนการใหญ่โต มันใกล้เคียงกับการปล่อยให้เมืองเติบโตแบบเดียวกับที่สถานที่ซึ่งเราชื่นชมเติบโตมาจริง ๆ คือทีละน้อย และไม่ค่อยเป็นระเบียบนัก"],
+   ["A","So perhaps we've stumbled onto something like common ground: less grand vision, more permission. But what about the pandemic's legacy, with offices standing half empty in so many city centres?","ถ้าอย่างนั้นเราอาจบังเอิญเจอจุดร่วมบางอย่างแล้ว คือลดวิสัยทัศน์ยิ่งใหญ่ลง เพิ่มการอนุญาตให้มากขึ้น แต่แล้วมรดกจากโรคระบาดล่ะคะ ที่ออฟฟิศในใจกลางเมืองหลายแห่งว่างไปครึ่งหนึ่ง"],
+   ["B","I suspect the obituaries for the city centre were premature. Cities have weathered plagues, fires and the collapse of entire industries, and they've done so by reinventing themselves. Empty offices may well become homes, and a business district that people actually live in could turn out to be livelier than the one we've lost. The one thing a city cannot survive is being preserved in aspic.","ผมสงสัยว่าการประกาศข่าวมรณกรรมของใจกลางเมืองคงเร็วเกินไป เมืองต่าง ๆ ผ่านโรคระบาด ไฟไหม้ และการล่มสลายของอุตสาหกรรมทั้งภาคมาแล้ว และรอดมาได้ด้วยการปรับโฉมตัวเองใหม่ ออฟฟิศที่ว่างอาจกลายเป็นบ้าน และย่านธุรกิจที่มีคนอาศัยอยู่จริงอาจกลายเป็นย่านที่มีชีวิตชีวากว่าแบบที่เราสูญเสียไปก็ได้ สิ่งเดียวที่เมืองไม่มีทางรอดได้คือการถูกแช่แข็งไว้ไม่ให้เปลี่ยนแปลง"],
+   ["A","A fitting note to end on. Julian, thank you. It's been a pleasure to disagree with you, if only up to a point.","เป็นข้อคิดปิดท้ายที่เหมาะสมมากค่ะ ขอบคุณค่ะจูเลียน ดีใจที่ได้เห็นต่างกับคุณ แม้จะแค่ในระดับหนึ่งก็ตาม"]
+  ],
+  qs:[
+   {q:"Which best describes how the discussion develops?",o:["They begin close together and end sharply divided","They start from different emphases and find partial agreement on gradual reform","Julian abandons his scepticism entirely and adopts Helen's view"],a:1,why:"เฮเลนสรุปว่า “we've stumbled onto something like common ground: less grand vision, more permission” และปิดท้ายว่า “a pleasure to disagree with you, if only up to a point” แสดงว่าเห็นพ้องเพียงบางส่วน ไม่ได้เห็นตรงกันทั้งหมด"},
+   {q:"According to Julian, who most often blocks new housing?",o:["Existing homeowners who object to development near them","Developers who only want to build luxury flats","Planners who lack the necessary funding"],a:0,why:"จูเลียนพูดว่า “It's rarely developers. It's existing homeowners who, perfectly understandably, don't want a six-storey building overshadowing their garden.”"},
+   {q:"What is Julian's attitude towards assuming everyone secretly wants to live in a city flat?",o:["He agrees that most suburban families would prefer it","He thinks the evidence clearly supports it","He finds it condescending and politically self-defeating"],a:2,why:"จูเลียนบอกว่าการมองแบบนั้น “isn't merely patronising, it's politically suicidal” เพราะหลายครอบครัวย้ายไปชานเมือง “with their eyes wide open”"},
+   {q:"What does Julian mean when he says a city cannot survive being preserved in aspic?",o:["Historic buildings must be kept exactly as they are","A city declines if it is prevented from changing and adapting","City centres are becoming too expensive to maintain"],a:1,why:"ก่อนหน้านั้นจูเลียนบอกว่าเมืองรอดมาได้ “by reinventing themselves” และออฟฟิศว่างอาจกลายเป็นบ้าน การถูก “preserved in aspic” จึงหมายถึงถูกแช่แข็งไม่ให้เปลี่ยนแปลง ซึ่งเป็นสิ่งเดียวที่เมืองรอดไม่ได้"}
+  ]}
+);
+STORIES.push(
+ {id:"a1d",lv:"A1",title:"A Weekend at Grandma's",th:"สุดสัปดาห์ที่บ้านยาย",
+  paras:["Every Saturday, Mint and her brother Ton visit their grandma. Grandma lives in a small village near a river. The trip takes two hours by car.","Grandma's house is old. There is a big mango tree in the garden. In the morning, Mint helps Grandma water the plants. Ton feeds the chickens and collects the eggs.","In the afternoon, Grandma cooks green curry. It is spicy, but the children love it. In the evening, they sit outside and look at the stars. On Sunday, they go home. Mint always gives Grandma a big hug and says, \"See you next week!\""],
+  gloss:[["village","หมู่บ้าน"],["river","แม่น้ำ"],["trip","การเดินทาง"],["garden","สวน"],["chickens","ไก่"],["collects","เก็บ รวบรวม"],["spicy","เผ็ด"],["hug","การกอด"]],
+  qs:[{q:"How do the children go to Grandma's house?",o:["by train","by car","by boat"],a:1},{q:"What does Ton do in the morning?",o:["He waters the plants.","He cooks curry.","He feeds the chickens."],a:2},{q:"What do they do in the evening?",o:["They look at the stars.","They watch TV.","They swim in the river."],a:0}]},
+ {id:"a2d",lv:"A2",title:"My First Day at the Gym",th:"วันแรกที่ยิม",
+  paras:["Last month, Pim decided to join a gym near her office. She works at a desk all day, and her back often hurt. On Monday evening, she walked to the gym after work. She felt nervous because she didn't know anyone there.","At the front desk, a trainer called Jay showed her around. He explained how to use the running machines and the weights. \"Start slowly,\" he said. \"Don't try to do everything on the first day.\" Pim ran for fifteen minutes and then lifted some light weights. At the end, her legs were shaking.","The next morning, her whole body hurt, and she could hardly climb the stairs. But she went back on Wednesday and again on Friday. Now she goes three times a week, and her back feels much better."],
+  gloss:[["join","สมัครเป็นสมาชิก"],["nervous","ประหม่า กังวล"],["trainer","ครูฝึก เทรนเนอร์"],["explained","อธิบาย"],["weights","ลูกน้ำหนัก"],["lifted","ยก"],["shaking","สั่น"],["hardly","แทบจะไม่"]],
+  qs:[{q:"Why did Pim join the gym?",o:["Her back often hurt.","Her friend worked there.","She wanted to be a trainer."],a:0},{q:"What did Jay tell her?",o:["to run for an hour","to start slowly","to come every day"],a:1},{q:"How often does Pim go to the gym now?",o:["once a week","every day","three times a week"],a:2}]},
+ {id:"b1d",lv:"B1",title:"Electric Motorbikes Take Off",th:"มอเตอร์ไซค์ไฟฟ้ากำลังมาแรง",
+  paras:["In cities across Southeast Asia, the motorbike is the most common way to get around. In Bangkok, Hanoi and Jakarta, millions of people ride one to work, school and the market every day. Now a quiet change is happening on these busy roads: more and more riders are switching from petrol motorbikes to electric ones.","There are several reasons for this. Electric motorbikes are cheaper to run, because charging a battery costs much less than filling a tank with petrol. They also need less maintenance and make almost no noise. Some governments offer tax discounts to encourage people to buy them, hoping to reduce air pollution in crowded cities. In Taiwan, riders can even swap an empty battery for a full one at a machine in less than a minute.","However, not everyone is convinced. Many riders worry that the battery will run out on a long journey, and there are still not enough charging stations outside big cities. Electric models can also be more expensive to buy. Experts believe these problems will become smaller as technology improves, but for now the sound of petrol engines is still heard on most streets."],
+  gloss:[["switching","เปลี่ยน สลับ"],["petrol","น้ำมันเบนซิน"],["charging","การชาร์จไฟ"],["maintenance","การบำรุงรักษา"],["encourage","ส่งเสริม กระตุ้น"],["pollution","มลพิษ"],["swap","แลก สลับ"],["convinced","เชื่อมั่น ถูกโน้มน้าว"]],
+  qs:[{q:"What can riders in Taiwan do?",o:["buy motorbikes without tax","swap batteries quickly at a machine","charge their batteries for free"],a:1},{q:"Why do some governments offer tax discounts?",o:["to reduce air pollution","to sell more petrol","to build more roads"],a:0},{q:"What is one worry that riders have?",o:["Electric motorbikes are too noisy.","Electric motorbikes are too slow.","The battery may run out on a long journey."],a:2}]},
+ {id:"b2d",lv:"B2",title:"Can You Trust Online Reviews?",th:"เชื่อรีวิวออนไลน์ได้แค่ไหน",
+  paras:["Before choosing a restaurant, a hotel or even a dentist, most of us now check what strangers have written about it online. Research suggests that the majority of consumers read reviews before making a purchase, and many trust them almost as much as recommendations from friends. A single extra star on a popular website can noticeably increase a small business's income.","Yet reviews are not as reliable as they seem. People who are extremely happy or extremely angry are far more likely to write something than those who had an ordinary experience, so ratings tend to cluster at the top and bottom. Some businesses offer discounts in exchange for positive comments, while others have been caught paying for fake reviews. Psychologists also point to herd behaviour: once a product has many five-star ratings, later customers are influenced by them and rate it more generously.","So how should we use them? Experts advise reading the most detailed reviews rather than looking only at the average score, and paying attention to how the owner responds to complaints. A calm, helpful reply to a negative review can reveal more about a business than a hundred enthusiastic ones."],
+  gloss:[["consumers","ผู้บริโภค"],["purchase","การซื้อ"],["reliable","น่าเชื่อถือ"],["ordinary","ธรรมดา"],["fake","ปลอม"],["influenced","ได้รับอิทธิพล"],["generously","อย่างใจกว้าง"],["complaints","คำร้องเรียน"]],
+  qs:[{q:"Why do ratings tend to cluster at the top and bottom?",o:["Websites delete average reviews.","People with extreme experiences are more likely to write reviews.","Businesses only ask angry customers to write."],a:1},{q:"What does herd behaviour mean in this article?",o:["Later customers are influenced by earlier high ratings.","Owners reply to every review.","People prefer to travel in large groups."],a:0},{q:"What do experts advise?",o:["Trust only the average score.","Ignore all negative reviews.","Read detailed reviews and see how owners respond to complaints."],a:2}]},
+ {id:"c1c",lv:"C1",title:"The Loneliness Epidemic",th:"โรคระบาดแห่งความเหงา",
+  paras:["We are more connected than at any point in history. With a few taps on a screen, we can message a colleague on another continent or watch a friend's holiday unfold in real time. Paradoxically, however, surveys in many countries suggest that loneliness is on the rise, prompting some public health officials to describe it as an epidemic. The World Health Organization has even identified social isolation as a pressing global health concern.","The consequences are not merely emotional. Researchers have linked chronic loneliness to higher rates of heart disease, depression and dementia, and some estimate that its effect on life expectancy is comparable to that of smoking. Crucially, loneliness is not the same as being alone. Many people live by themselves and feel perfectly content, while others feel isolated despite being surrounded by family and colleagues. What matters is not the number of relationships we have, but whether they feel meaningful. Several trends appear to be fuelling the problem: people are marrying later, living in smaller households and moving away from the communities they grew up in, while remote work has removed many of the casual conversations that once filled the working day.","Tackling loneliness is complicated, partly because it carries a stigma that makes people reluctant to admit to it. Nevertheless, some governments have responded creatively. Both Britain and Japan have appointed ministers with responsibility for loneliness, and doctors in several countries now refer isolated patients to community groups, volunteering or art classes rather than simply prescribing medication, a practice known as social prescribing. Yet many experts argue that the most powerful remedies are also the simplest: a regular phone call, a conversation with a neighbour, or the willingness to reach out first."],
+  gloss:[["paradoxically","อย่างย้อนแย้ง"],["epidemic","โรคระบาด"],["isolation","การแยกตัวโดดเดี่ยว"],["chronic","เรื้อรัง"],["comparable","เทียบเคียงได้"],["meaningful","มีความหมาย"],["stigma","ตราบาป ความอับอายทางสังคม"],["reluctant","ไม่เต็มใจ ลังเล"]],
+  qs:[{q:"According to the article, what matters most about our relationships?",o:["how many we have","whether they feel meaningful","how often we see our family"],a:1},{q:"Which trend is mentioned as fuelling loneliness?",o:["remote work reducing casual conversations","more people marrying young","families living in larger households"],a:0},{q:"What is social prescribing?",o:["giving lonely patients stronger medication","training doctors to be friendlier","referring isolated patients to community activities"],a:2}]}
+);
+DICT.find(d=>d.lv==="A1").items.push(
+ ["My grandmother lives in a small village.","ยายของฉันอาศัยอยู่ในหมู่บ้านเล็กๆ"],
+ ["We eat rice with fish and vegetables.","เรากินข้าวกับปลาและผัก"],
+ ["The children are playing in the garden.","เด็กๆ กำลังเล่นอยู่ในสวน"],
+ ["Is there a pharmacy near here?","แถวนี้มีร้านขายยาไหม"],
+ ["I take the train to work every morning.","ฉันนั่งรถไฟไปทำงานทุกเช้า"]);
+DICT.find(d=>d.lv==="A2").items.push(
+ ["I bought a new phone because my old one was broken.","ฉันซื้อโทรศัพท์เครื่องใหม่เพราะเครื่องเก่าเสีย"],
+ ["She is taller than her older sister.","เธอสูงกว่าพี่สาวของเธอ"],
+ ["We stayed at a small hotel near the beach.","เราพักที่โรงแรมเล็กๆ ใกล้ชายหาด"],
+ ["Have you ever eaten durian?","คุณเคยกินทุเรียนไหม"],
+ ["I'm going to join a gym next month.","เดือนหน้าฉันจะไปสมัครยิม"]);
+DICT.find(d=>d.lv==="B1").items.push(
+ ["I have been waiting for the bus for twenty minutes.","ฉันรอรถเมล์มายี่สิบนาทีแล้ว"],
+ ["If it rains tomorrow, we will stay at home.","ถ้าพรุ่งนี้ฝนตก เราจะอยู่บ้าน"],
+ ["The restaurant that we tried last night was excellent.","ร้านอาหารที่เราไปลองเมื่อคืนอร่อยมาก"],
+ ["You don't have to bring anything to the party.","คุณไม่ต้องเอาอะไรมางานปาร์ตี้ก็ได้"],
+ ["My phone battery runs out very quickly these days.","ช่วงนี้แบตโทรศัพท์ของฉันหมดเร็วมาก"]);
+DICT.find(d=>d.lv==="B2").items.push(
+ ["By the time we arrived, the film had already started.","กว่าเราจะไปถึง หนังก็เริ่มไปแล้ว"],
+ ["The report needs to be checked before it is sent to the client.","รายงานต้องได้รับการตรวจก่อนส่งให้ลูกค้า"],
+ ["I would rather work from home than spend two hours commuting.","ฉันอยากทำงานที่บ้านมากกว่าเสียเวลาเดินทางไปกลับสองชั่วโมง"],
+ ["She might have missed the train, so we should wait a little longer.","เธออาจจะตกรถไฟ เราควรรออีกสักหน่อย"],
+ ["Online reviews can be misleading if you only look at the stars.","รีวิวออนไลน์อาจทำให้เข้าใจผิดได้ถ้าดูแค่จำนวนดาว"]);
+DICT.find(d=>d.lv==="C1").items.push(
+ ["Rarely have I met someone so dedicated to their work.","ฉันแทบไม่เคยเจอใครที่ทุ่มเทให้กับงานขนาดนี้"],
+ ["Were the company to raise its prices, many customers would leave.","หากบริษัทขึ้นราคา ลูกค้าจำนวนมากคงเลิกใช้บริการ"],
+ ["The proposal, while ambitious, fails to address the underlying problem.","ข้อเสนอนี้แม้จะมีความทะเยอทะยาน แต่ก็ไม่ได้แก้ที่ต้นเหตุของปัญหา"],
+ ["It is high time we reconsidered our approach to public transport.","ถึงเวลาแล้วที่เราต้องทบทวนแนวทางด้านขนส่งสาธารณะ"],
+ ["Loneliness can affect anyone, regardless of age or background.","ความเหงาเกิดขึ้นได้กับทุกคน ไม่ว่าจะอายุหรือภูมิหลังแบบไหน"]);
+DICT.push({lv:"C2",items:[
+ ["Little did they realise how serious the consequences of that decision would be.","พวกเขาไม่รู้เลยว่าผลของการตัดสินใจนั้นจะร้ายแรงเพียงใด"],
+ ["Such was the demand for tickets that the website crashed within minutes.","ความต้องการตั๋วสูงมากจนเว็บไซต์ล่มภายในไม่กี่นาที"],
+ ["The minister's remarks were widely interpreted as a thinly veiled criticism of the government.","คำพูดของรัฐมนตรีถูกตีความอย่างกว้างขวางว่าเป็นการวิจารณ์รัฐบาลแบบอ้อมๆ"],
+ ["Notwithstanding the setbacks, the team remained committed to the original deadline.","แม้จะเจออุปสรรค ทีมก็ยังยึดมั่นกับกำหนดส่งงานเดิม"],
+ ["Had it not been for her timely intervention, the negotiations would have collapsed.","หากเธอไม่เข้ามาช่วยได้ทันเวลา การเจรจาคงล่มไปแล้ว"],
+ ["The findings, though preliminary, cast doubt on several widely accepted assumptions.","ผลการศึกษาแม้จะเป็นเพียงข้อมูลเบื้องต้น แต่ก็ทำให้สมมติฐานหลายข้อที่ยอมรับกันทั่วไปถูกตั้งคำถาม"],
+ ["Under no circumstances should confidential documents be left unattended.","ไม่ว่ากรณีใดก็ตาม ห้ามวางเอกสารลับทิ้งไว้โดยไม่มีคนดูแล"],
+ ["It remains to be seen whether the new policy will have any lasting impact.","ยังต้องรอดูต่อไปว่านโยบายใหม่จะส่งผลในระยะยาวหรือไม่"],
+ ["She has an uncanny ability to put people at ease in even the most awkward situations.","เธอมีความสามารถพิเศษในการทำให้คนอื่นรู้สึกสบายใจ แม้ในสถานการณ์ที่น่าอึดอัดที่สุด"],
+ ["Far from solving the problem, the new regulations have merely shifted it elsewhere.","กฎระเบียบใหม่ไม่ได้แก้ปัญหาเลย เพียงแค่ย้ายปัญหาไปไว้ที่อื่น"]]});
+PHRASES.push(
+ ["What a coincidence!","บังเอิญจังเลย","You're from Khon Kaen too? What a coincidence!"],
+ ["I'll be right back.","เดี๋ยวกลับมานะ","Hold on, I'll be right back. I need to get my phone."],
+ ["Nice to meet you.","ยินดีที่ได้รู้จัก","Hi, I'm Nok. Nice to meet you."],
+ ["Congratulations!","ยินดีด้วยนะ","You passed your driving test? Congratulations!"],
+ ["Could you point me in the right direction?","ช่วยบอกทางหน่อยได้ไหม","I'm looking for the train station. Could you point me in the right direction?"],
+ ["That's too bad.","น่าเสียดายจัง","\"The concert was cancelled.\" \"Oh, that's too bad.\""],
+ ["I'm glad to hear that.","ดีใจที่ได้ยินอย่างนั้น","\"My mum is feeling much better now.\" \"I'm glad to hear that.\""],
+ ["Thanks for having me.","ขอบคุณที่ชวนมา/ต้อนรับ","Thanks for having me. The dinner was delicious."],
+ ["What have you been up to?","ช่วงนี้ทำอะไรอยู่บ้าง","Hey, long time no see! What have you been up to?"],
+ ["Nothing much.","ไม่มีอะไรมาก เรื่อยๆ","\"What are you doing this weekend?\" \"Nothing much. Just relaxing.\""],
+ ["I'll pass, thanks.","ขอผ่านดีกว่า ขอบคุณนะ","\"Do you want another beer?\" \"I'll pass, thanks. I'm driving.\""],
+ ["Count me in!","นับฉันด้วย เอาด้วย","You're going hiking on Sunday? Count me in!"],
+ ["Let me know if you need anything.","ต้องการอะไรบอกได้เลยนะ","I'll be in the next room. Let me know if you need anything."],
+ ["Do you have a minute?","ว่างสักครู่ไหม","Do you have a minute? I'd like to ask you about the report."],
+ ["Can we reschedule?","ขอเลื่อนนัดได้ไหม","I'm sorry, I'm not free on Tuesday. Can we reschedule?"],
+ ["Something came up.","มีธุระด่วนเข้ามา","Sorry, I can't meet you tonight. Something came up at work."],
+ ["I'll keep that in mind.","จะจำไว้นะ","Thanks for the advice. I'll keep that in mind."],
+ ["Let's touch base next week.","ค่อยคุยอัปเดตกันสัปดาห์หน้า","We don't need to decide today. Let's touch base next week."],
+ ["Could you send me the details?","ช่วยส่งรายละเอียดมาให้หน่อยได้ไหม","The workshop sounds great. Could you send me the details?"],
+ ["Just to be clear...","ขอทำความเข้าใจให้ชัดนะ","Just to be clear, the meeting is at nine, not ten, right?"],
+ ["Thanks for your patience.","ขอบคุณที่รอและเข้าใจ","The system is working again. Thanks for your patience."],
+ ["Sorry to keep you waiting.","ขอโทษที่ให้รอนะ","Sorry to keep you waiting. The traffic was terrible."],
+ ["That's so kind of you.","ใจดีมากเลย","You brought me soup? That's so kind of you."],
+ ["I really appreciate it.","ขอบคุณจริงๆ ซาบซึ้งมาก","Thanks for helping me move. I really appreciate it."],
+ ["You shouldn't have!","ไม่น่าลำบากเลย (ตอนได้รับของขวัญ)","A present for me? Oh, you shouldn't have!"],
+ ["I can't believe it!","ไม่อยากเชื่อเลย","We won the match? I can't believe it!"],
+ ["Are you serious?","พูดจริงเหรอ","\"The boss is leaving next month.\" \"Are you serious?\""],
+ ["Tell me about it.","ใช่เลย ฉันก็เจอมาเหมือนกัน","\"Mondays are so tiring.\" \"Tell me about it.\""],
+ ["I know, right?","ใช่ไหมล่ะ นั่นสิ","\"This mango is so sweet!\" \"I know, right?\""],
+ ["Fair enough.","ก็มีเหตุผล โอเค","\"I can't come because I have to work.\" \"Fair enough.\""],
+ ["Let's grab a coffee sometime.","ไว้ไปกินกาแฟด้วยกันนะ","It was great to see you. Let's grab a coffee sometime."],
+ ["I'll text you.","เดี๋ยวส่งข้อความหานะ","I'm not sure what time I'll finish. I'll text you."],
+ ["It's been a long day.","วันนี้เหนื่อยมาก ยาวนานจริงๆ","I'm going straight to bed. It's been a long day."],
+ ["How was your day?","วันนี้เป็นยังไงบ้าง","Hi, honey. How was your day?"],
+ ["Can I get you anything?","รับอะไรไหม","Please sit down. Can I get you anything? Tea or coffee?"],
+ ["I'll look into it.","เดี๋ยวจะตรวจสอบให้","Thanks for telling me about the problem. I'll look into it."],
+ ["Let's wrap it up.","สรุปแล้วจบกันเถอะ","We're almost out of time, so let's wrap it up."],
+ ["Please bear with me.","รบกวนรอสักครู่นะ","Please bear with me while I find your booking."],
+ ["Does that work for you?","สะดวกไหม โอเคไหม","How about Thursday at two? Does that work for you?"],
+ ["Keep the change.","ไม่ต้องทอน","Here's two hundred baht. Keep the change."],
+ ["Not too spicy, please.","ไม่เผ็ดมากนะ","I'd like a som tam, not too spicy, please."],
+ ["I owe you one.","ติดไว้ก่อน ครั้งหน้าจะตอบแทน","Thanks for covering my shift. I owe you one."],
+ ["What a relief!","โล่งอกไปที","The doctor said it's nothing serious. What a relief!"],
+ ["Well done!","เก่งมาก ทำได้ดี","You finished the whole project on time? Well done!"],
+ ["Same to you.","เช่นกันนะ","\"Have a great weekend!\" \"Thanks, same to you.\""],
+ ["Let's play it by ear.","ดูสถานการณ์ไปก่อนแล้วกัน","I don't know if it will rain, so let's play it by ear."],
+ ["Could you keep it down, please?","ช่วยเบาเสียงลงหน่อยได้ไหม","Sorry, I'm trying to study. Could you keep it down, please?"],
+ ["Sorry for the late reply.","ขอโทษที่ตอบช้านะ","Sorry for the late reply. I've been really busy this week."],
+ ["Let me double-check.","ขอตรวจสอบอีกรอบนะ","I think the meeting is at three, but let me double-check."],
+ ["Can I call you back?","ขอโทรกลับได้ไหม","I'm on the bus right now. Can I call you back?"]
+);
+GRAM_X.push(
+ {id:"rq",title:"Reported Questions",th:"เล่าคำถามของคนอื่น",
+  g:{title:"Reported Questions: He asked me where I lived",
+   intro:["เวลาเล่าว่าใครถามอะไร ประโยคคำถามจะ<mark>กลับเป็นลำดับประโยคบอกเล่า</mark> (ประธาน + กริยา) ไม่มี do/does/did และไม่มีเครื่องหมาย ?","คำถาม Yes/No ใช้ <mark>if หรือ whether</mark> เชื่อม ส่วนคำถามที่มี wh- ใช้คำ wh- นั้นเชื่อมเลย","ถ้ากริยาที่ใช้เล่าเป็นอดีต (asked, wanted to know) มักถอย tense หนึ่งขั้น เช่น live → lived, can → could, will → would คนไทยมักติดพูดว่า He asked me where do I live ซึ่งผิด"],
+   head:["คำถามตรง","เล่าต่อ (reported)"],rows:[["\"Where do you live?\"","He asked me where I lived."],["\"Are you busy?\"","She asked if I was busy."],["\"Can you help me?\"","He asked me if I could help him."],["\"What time will you arrive?\"","They asked what time I would arrive."],["\"Did you see the email?\"","My boss asked whether I had seen the email."]],
+   ex:[["The officer asked me where I was staying.","เจ้าหน้าที่ถามว่าฉันพักอยู่ที่ไหน"],["She wanted to know if I had any experience.","เธออยากรู้ว่าฉันมีประสบการณ์ไหม"],["My mum asked me why I was so late.","แม่ถามว่าทำไมฉันกลับดึกขนาดนี้"]],
+   mist:[["He asked me where do I work.","He asked me where I worked.","reported question ใช้ลำดับประโยคบอกเล่า ไม่ใส่ do/does/did"],["She asked me that I was hungry.","She asked me if I was hungry.","คำถาม Yes/No ใช้ if หรือ whether ไม่ใช้ that"],["They asked what time was it.","They asked what time it was.","ประธาน (it) ต้องมาก่อนกริยา (was)"]]},
+  quiz:[{t:"mc",q:"She asked me where ___.",o:["I lived","did I live","do I live"],a:0,w:"ใช้ลำดับประโยคบอกเล่า (I lived) และถอย tense"},{t:"mc",q:"He asked ___ I was free on Friday.",o:["that","if","what"],a:1,w:"คำถาม Yes/No ใช้ if หรือ whether"},{t:"mc",q:"\"Can you help me?\" → She asked me ___.",o:["if I could help her","can I help her","if could I help her"],a:0,w:"can → could และประธานมาก่อนกริยา"},{t:"mc",q:"The officer asked us what time ___.",o:["did we arrive","we had arrived","had we arrived"],a:1,w:"ประธาน we มาก่อนกริยา และ Past Simple ถอยเป็น Past Perfect"},{t:"mc",q:"\"Do you like spicy food?\" → He asked me ___ spicy food.",o:["do I like","if I liked","that I liked"],a:1,w:"คำถาม Yes/No ใช้ if + ลำดับบอกเล่า และ like → liked"}]},
+ {id:"wish",title:"wish / if only",th:"อยากให้เป็นอย่างอื่น / เสียดาย",
+  g:{title:"wish / if only",
+   intro:["wish และ if only ใช้พูดถึงสิ่งที่<mark>ไม่เป็นจริง</mark> และเราอยากให้เป็นอีกแบบ (if only ให้ความรู้สึกแรงกว่า)","อยากให้ปัจจุบันเปลี่ยน ใช้ <mark>wish + Past Simple</mark> (I wish I had more time.) ส่วนเสียดายเรื่องที่ผ่านไปแล้ว ใช้ <mark>wish + had + V3</mark>","อยากให้คนอื่นเปลี่ยนพฤติกรรมที่น่ารำคาญ ใช้ wish + would คนไทยมักใช้ wish แบบ hope เช่น I wish you get better ซึ่งผิด ต้องใช้ I hope you get better"],
+   head:["ความหมาย","รูปแบบ","ตัวอย่าง"],rows:[["อยากให้ตอนนี้เป็นอีกแบบ","wish + Past Simple","I wish I lived closer to work."],["อยากให้ตัวเองทำได้","wish + could","I wish I could speak Japanese."],["เสียดายเรื่องในอดีต","wish + had + V3","I wish I had studied harder."],["อยากให้คนอื่นเลิก/เริ่มทำ","wish + someone + would","I wish he would stop talking."],["หวังสิ่งที่เป็นไปได้","hope + Present/will","I hope you pass the exam."]],
+   ex:[["I wish I had a bigger flat.","อยากมีห้องที่ใหญ่กว่านี้จัง (ตอนนี้ห้องเล็ก)"],["If only I hadn't sent that email!","ไม่น่าส่งอีเมลนั้นไปเลย"],["I wish it would stop raining.","อยากให้ฝนหยุดตกเสียที"]],
+   mist:[["I wish I have more money.","I wish I had more money.","wish เรื่องปัจจุบันต้องใช้ Past Simple"],["I wish you have a nice trip.","I hope you have a nice trip.","อวยพรสิ่งที่เป็นไปได้ใช้ hope ไม่ใช้ wish"],["I wish I didn't eat so much last night.","I wish I hadn't eaten so much last night.","เสียดายเรื่องในอดีตใช้ had + V3"]]},
+  quiz:[{t:"mc",q:"I wish I ___ more time to study. (ตอนนี้ไม่มีเวลา)",o:["have","had","will have"],a:1,w:"wish เรื่องปัจจุบันใช้ Past Simple"},{t:"mc",q:"I wish I ___ to the party last night. Everyone said it was great.",o:["went","had gone","would go"],a:1,w:"เสียดายเรื่องเมื่อคืน (อดีต) ใช้ had + V3"},{t:"mc",q:"I wish my neighbour ___ playing loud music. It's so annoying!",o:["stops","would stop","has stopped"],a:1,w:"อยากให้คนอื่นเปลี่ยนพฤติกรรมที่น่ารำคาญใช้ would"},{t:"mc",q:"If only I ___ taller! Then I could reach the top shelf.",o:["am","were","will be"],a:1,w:"if only เรื่องปัจจุบันใช้ Past Simple (were ใช้ได้กับทุกประธาน)"},{t:"mc",q:"I wish I ___ swim. (ตอนนี้ว่ายน้ำไม่เป็น)",o:["can","could","will"],a:1,w:"can → could หลัง wish"}]},
+ {id:"futc",title:"Future Continuous & Future Perfect",th:"กำลังทำในอนาคต / จะทำเสร็จแล้ว",
+  g:{title:"Future Continuous & Future Perfect",
+   intro:["Future Continuous (<mark>will be + V-ing</mark>) ใช้บอกว่า ณ เวลาหนึ่งในอนาคต เรา<mark>กำลังทำ</mark>อะไรอยู่ เช่น This time tomorrow I'll be flying to Tokyo.","Future Perfect (<mark>will have + V3</mark>) ใช้บอกว่าก่อนถึงเวลาหนึ่งในอนาคต สิ่งนั้น<mark>จะเสร็จแล้ว</mark> มักมาคู่กับ by (by Friday, by the time…)","Will you be + V-ing…? ยังใช้ถามแผนของคนอื่นอย่างสุภาพได้ด้วย คนไทยมักใช้ will + V1 อย่างเดียวทุกกรณี จึงบอกไม่ได้ว่ากำลังทำหรือทำเสร็จแล้ว"],
+   head:["Tense","รูปแบบ","ตัวอย่าง"],rows:[["Future Continuous","will be + V-ing","At 9 p.m. I'll be watching the match."],["Future Perfect","will have + V3","By June, I'll have finished my degree."],["ถามแผนอย่างสุภาพ","Will you be + V-ing?","Will you be using the printer this afternoon?"],["by the time + Present","… will have + V3","By the time you get here, we'll have eaten."]],
+   ex:[["Don't call at eight — we'll be having dinner.","อย่าโทรตอนสองทุ่มนะ ตอนนั้นเรากำลังกินข้าวอยู่"],["By next year, I'll have worked here for five years.","พอถึงปีหน้า ฉันจะทำงานที่นี่ครบห้าปี"],["Will you be coming to the meeting tomorrow?","พรุ่งนี้คุณจะมาประชุมไหม (ถามแผนอย่างสุภาพ)"]],
+   mist:[["By Friday I will finish the report.","By Friday I will have finished the report.","by + เวลาในอนาคต เน้นว่าเสร็จแล้ว ใช้ will have + V3"],["By the time you will arrive, we'll have left.","By the time you arrive, we'll have left.","หลัง by the time / when ใช้ Present Simple แทน will"],["This time next week I will lie on the beach.","This time next week I will be lying on the beach.","กำลังทำอยู่ ณ เวลาหนึ่งในอนาคตใช้ will be + V-ing"]]},
+  quiz:[{t:"mc",q:"This time tomorrow, I ___ on a beach in Phuket.",o:["will lie","will be lying","will have lain"],a:1,w:"กำลังทำอยู่ ณ เวลาหนึ่งในอนาคต ใช้ will be + V-ing"},{t:"mc",q:"By the end of this year, I ___ here for ten years.",o:["will work","will be working","will have worked"],a:2,w:"by + ช่วงเวลาครบในอนาคต ใช้ will have + V3"},{t:"mc",q:"Please don't call me at 8. I ___ dinner with my family then.",o:["will be having","will have had","had"],a:0,w:"ตอนสองทุ่มกำลังกินข้าวอยู่ จึงไม่อยากให้โทรมา"},{t:"mc",q:"By the time you arrive, the film ___.",o:["will already start","will have already started","already starts"],a:1,w:"หนังเริ่มไปแล้วก่อนคุณมาถึง ใช้ will have + V3"},{t:"mc",q:"___ you be using the car tonight? I'd like to borrow it.",o:["Will","Have","Are"],a:0,w:"Will you be + V-ing? ใช้ถามแผนอย่างสุภาพ"}]},
+ {id:"caus",title:"Causative: have / get something done",th:"ให้คนอื่นทำให้",
+  g:{title:"Causative: have / get something done",
+   intro:["ภาษาไทยพูดว่า ฉันไปตัดผมมา แม้ช่างจะเป็นคนตัด แต่ภาษาอังกฤษถ้าพูดว่า I cut my hair แปลว่า<mark>ตัดเอง</mark>","ถ้าจ้างหรือให้คนอื่นทำให้ ใช้ <mark>have / get + สิ่งของ + V3</mark> เช่น I had my hair cut. (get เป็นภาษาพูดมากกว่า)","ใช้กับเรื่องไม่ดีที่เกิดกับเราก็ได้ เช่น She had her bag stolen. (กระเป๋าถูกขโมย)"],
+   head:["รูปแบบ","ตัวอย่าง","ความหมาย"],rows:[["have + object + V3","I had my car washed.","จ้างคนล้างรถ"],["get + object + V3","We're getting the roof repaired.","ให้ช่างซ่อมหลังคา"],["have + object + V3 (เรื่องไม่ดี)","He had his wallet stolen.","กระเป๋าสตางค์ถูกขโมย"],["need to have/get + object + V3","I need to get my eyes tested.","ต้องไปตรวจสายตา"]],
+   ex:[["I'm going to have my hair cut on Saturday.","วันเสาร์จะไปตัดผม"],["Where did you get your suit made?","ตัดสูทที่ไหนมา"],["We had a new air conditioner installed last week.","อาทิตย์ที่แล้วเราให้ช่างมาติดแอร์ใหม่"]],
+   mist:[["I cut my hair yesterday. (ไปร้านตัดผม)","I had my hair cut yesterday.","I cut my hair แปลว่าตัดเอง"],["I had my car repair.","I had my car repaired.","หลัง object ต้องเป็น V3"],["I had repaired my phone. (ให้ร้านซ่อม)","I had my phone repaired.","object ต้องอยู่ระหว่าง had กับ V3 ไม่งั้นกลายเป็น Past Perfect"]]},
+  quiz:[{t:"mc",q:"I ___ my hair cut yesterday.",o:["had","made","did"],a:0,w:"have + object + V3 = ให้คนอื่นทำให้"},{t:"mc",q:"We're getting the kitchen ___ next week.",o:["paint","painted","painting"],a:1,w:"get + object + V3"},{t:"mc",q:"Where do you usually ___ your car serviced?",o:["get","make","let"],a:0,w:"get + object + V3 ใช้ได้เหมือน have"},{t:"mc",q:"She had her phone ___ on the train.",o:["steal","stole","stolen"],a:2,w:"เรื่องไม่ดีที่เกิดกับเรา ใช้ have + object + V3"},{t:"mc",q:"Which sentence means a mechanic fixed the car?",o:["I fixed my car.","I had my car fixed.","I had fixed my car."],a:1,w:"had + my car + fixed = ให้ช่างซ่อม ส่วน I had fixed คือซ่อมเองแล้ว (Past Perfect)"}]},
+ {id:"prep",title:"Prepositions after adjectives & verbs",th:"บุพบทที่มากับคำคุณศัพท์และกริยา",
+  g:{title:"Dependent Prepositions: interested in, good at, depend on",
+   intro:["คำคุณศัพท์และกริยาหลายคำ<mark>ต้องมีบุพบทตัวเดิมตามมาเสมอ</mark> และมักไม่ตรงกับภาษาไทย จึงต้องจำเป็นคู่","คนไทยมักแปลตรงตัว เช่น แต่งงานกับ → married with (ผิด) ที่ถูกคือ <mark>married to</mark> หรือ ขึ้นอยู่กับ → depend of (ผิด) ที่ถูกคือ <mark>depend on</mark>","ถ้าหลังบุพบทเป็นกริยา ต้องเติม -ing เช่น interested in learning, good at cooking"],
+   head:["คำ + บุพบท","ตัวอย่าง"],rows:[["interested in","I'm interested in photography."],["good / bad at","She's good at solving problems."],["afraid of / proud of","He's afraid of heights."],["responsible for","Who is responsible for marketing?"],["married to / similar to","She's married to a doctor."],["depend on / rely on","It depends on the weather."],["listen to / belong to","This bag belongs to Nok."],["apologise for / pay for","I apologise for the delay."]],
+   ex:[["I'm not very good at remembering names.","ฉันไม่ค่อยเก่งเรื่องจำชื่อคน"],["Our plans depend on the weather.","แผนของเราขึ้นอยู่กับสภาพอากาศ"],["Who is responsible for this project?","ใครรับผิดชอบโปรเจกต์นี้"]],
+   mist:[["She is married with an engineer.","She is married to an engineer.","แต่งงานกับ ใช้ married to"],["It depends of the price.","It depends on the price.","depend ใช้คู่กับ on เสมอ"],["I'm interested in learn Chinese.","I'm interested in learning Chinese.","หลังบุพบท กริยาต้องเติม -ing"]]},
+  quiz:[{t:"mc",q:"She's very good ___ maths.",o:["in","at","on"],a:1,w:"good at = เก่งเรื่อง…"},{t:"mc",q:"Are you interested ___ joining our team?",o:["in","on","for"],a:0,w:"interested in + V-ing"},{t:"mc",q:"The price depends ___ the size.",o:["of","on","from"],a:1,w:"depend on = ขึ้นอยู่กับ"},{t:"mc",q:"Who is responsible ___ this project?",o:["of","for","to"],a:1,w:"responsible for = รับผิดชอบ"},{t:"mc",q:"My sister is married ___ a Japanese man.",o:["with","to","by"],a:1,w:"married to ไม่ใช่ married with"}]},
+ {id:"comp2",title:"Advanced Comparisons",th:"การเปรียบเทียบขั้นสูง",
+  g:{title:"Advanced Comparisons: the more…, as…as, twice as…",
+   intro:["<mark>the + comparative …, the + comparative …</mark> ใช้บอกว่าสิ่งหนึ่งเปลี่ยน อีกสิ่งก็เปลี่ยนตาม เช่น The more you read, the better your English gets. (ยิ่ง…ยิ่ง…)","<mark>as + adj + as</mark> ใช้บอกว่าเท่ากัน ส่วน not as…as แปลว่าไม่…เท่า ถ้าจะบอกว่ากี่เท่า ใช้ twice / three times + as…as","ถ้าจะเน้นว่าต่างกันมาก ใช้ <mark>much / far / a lot</mark> + comparative คนไทยมักใช้ very bigger ซึ่งผิด เพราะ very ใช้กับคำคุณศัพท์ธรรมดาเท่านั้น"],
+   head:["รูปแบบ","ตัวอย่าง"],rows:[["the + comp., the + comp.","The sooner we leave, the earlier we'll arrive."],["as + adj + as","Nok is as tall as her brother."],["not as + adj + as","This hotel isn't as clean as the last one."],["twice / three times as … as","The new flat is twice as big as the old one."],["much / far / a lot + comp.","Trains are much faster than buses."],["comp. + and + comp.","It's getting hotter and hotter."]],
+   ex:[["The more I practise, the more confident I feel.","ยิ่งฝึกมาก ยิ่งมั่นใจมากขึ้น"],["Rent in Bangkok is twice as expensive as in my hometown.","ค่าเช่าในกรุงเทพฯ แพงเป็นสองเท่าของบ้านเกิดฉัน"],["This laptop is far lighter than my old one.","แล็ปท็อปเครื่องนี้เบากว่าเครื่องเก่ามาก"]],
+   mist:[["More you study, more you learn.","The more you study, the more you learn.","โครงสร้าง ยิ่ง…ยิ่ง… ต้องมี the ทั้งสองส่วน"],["It's very cheaper here.","It's much cheaper here.","เน้น comparative ใช้ much/far/a lot ไม่ใช้ very"],["She is as tall than me.","She is as tall as me.","as…as ต้องใช้ as ทั้งสองตัว ไม่ใช้ than"]]},
+  quiz:[{t:"mc",q:"The more you practise, ___ you become.",o:["the more confident","more confident","the most confident"],a:0,w:"ยิ่ง…ยิ่ง… ใช้ the + comparative ทั้งสองส่วน"},{t:"mc",q:"This laptop is ___ that one. (ราคาเป็นสองเท่า)",o:["twice as expensive as","twice more expensive as","as twice expensive as"],a:0,w:"twice + as + adj + as"},{t:"mc",q:"Bangkok is ___ bigger than Chiang Mai.",o:["very","much","more"],a:1,w:"เน้น comparative ใช้ much/far/a lot"},{t:"mc",q:"My English isn't as good ___ yours.",o:["than","as","like"],a:1,w:"not as…as ใช้ as ทั้งสองตัว"},{t:"mc",q:"Prices are getting ___.",o:["higher and higher","more and more high","high and higher"],a:0,w:"comparative + and + comparative = ขึ้นเรื่อย ๆ"}]}
+);
+DECKS.push(
+ {id:"money",title:"เงินและการธนาคาร",th:"คำศัพท์เรื่องธนาคาร เงินกู้ การออม และการจัดการงบประมาณ",words:[
+  ["loan","เงินกู้","n.","We took out a loan to buy a new car.","เรากู้เงินมาซื้อรถคันใหม่"],
+  ["mortgage","สินเชื่อบ้าน / เงินกู้ซื้อบ้าน","n.","They'll pay off their mortgage in twenty years.","พวกเขาจะผ่อนบ้านหมดในยี่สิบปี"],
+  ["interest rate","อัตราดอกเบี้ย","n.","The bank has raised its interest rate again.","ธนาคารขึ้นอัตราดอกเบี้ยอีกแล้ว"],
+  ["deposit","ฝากเงิน / เงินมัดจำ","v./n.","I deposit part of my salary every month.","ฉันฝากเงินเดือนส่วนหนึ่งเข้าบัญชีทุกเดือน"],
+  ["withdraw","ถอนเงิน","v.","I need to withdraw some cash before we go.","ฉันต้องถอนเงินสดก่อนเราออกไป"],
+  ["balance","ยอดเงินคงเหลือ","n.","You can check your balance on the app.","คุณเช็กยอดเงินคงเหลือได้ในแอป"],
+  ["debt","หนี้","n.","He's trying hard to get out of debt.","เขาพยายามอย่างหนักที่จะปลดหนี้"],
+  ["instalment","เงินผ่อนแต่ละงวด","n.","You can pay for the phone in twelve monthly instalments.","คุณผ่อนโทรศัพท์ได้ 12 งวดรายเดือน"],
+  ["overdraft","การเบิกเงินเกินบัญชี","n.","I went into my overdraft at the end of the month.","ปลายเดือนฉันเบิกเงินเกินบัญชีไป"],
+  ["transfer","โอนเงิน","v./n.","Could you transfer the money to my account today?","ช่วยโอนเงินเข้าบัญชีฉันวันนี้ได้ไหม"],
+  ["expense","ค่าใช้จ่าย","n.","Rent is my biggest monthly expense.","ค่าเช่าเป็นค่าใช้จ่ายรายเดือนก้อนใหญ่ที่สุดของฉัน"],
+  ["income","รายได้","n.","She has a second income from teaching online.","เธอมีรายได้เสริมจากการสอนออนไลน์"],
+  ["savings account","บัญชีออมทรัพย์","n.","I opened a savings account for my daughter.","ฉันเปิดบัญชีออมทรัพย์ให้ลูกสาว"],
+  ["debit card","บัตรเดบิต","n.","Can I pay by debit card here?","ที่นี่จ่ายด้วยบัตรเดบิตได้ไหม"],
+  ["bank statement","รายการเดินบัญชี (สเตทเมนต์)","n.","The embassy asked for three months of bank statements.","สถานทูตขอสเตทเมนต์ย้อนหลังสามเดือน"],
+  ["fee","ค่าธรรมเนียม","n.","There's a small fee for using another bank's ATM.","กดเงินจากตู้ต่างธนาคารมีค่าธรรมเนียมเล็กน้อย"],
+  ["pay off","ชำระหนี้จนหมด","phr. v.","It took me three years to pay off my student loan.","ฉันใช้เวลาสามปีกว่าจะใช้หนี้ กยศ. หมด"],
+  ["save up","เก็บเงิน (เพื่อซื้อบางอย่าง)","phr. v.","I'm saving up for a trip to Japan.","ฉันกำลังเก็บเงินไปเที่ยวญี่ปุ่น"],
+  ["invest","ลงทุน","v.","More young people are investing in index funds.","คนรุ่นใหม่ลงทุนในกองทุนดัชนีมากขึ้น"],
+  ["owe","ติดเงิน / เป็นหนี้","v.","I still owe my brother 2,000 baht.","ฉันยังติดเงินพี่ชายอยู่ 2,000 บาท"]]},
+ {id:"home",title:"บ้านและชีวิตประจำวัน",th:"งานบ้าน เครื่องใช้ไฟฟ้า และ phrasal verbs ที่ใช้ในบ้าน",words:[
+  ["chores","งานบ้าน","n.","We share the chores equally at home.","ที่บ้านเราแบ่งงานบ้านกันเท่า ๆ กัน"],
+  ["do the laundry","ซักผ้า","phr.","I usually do the laundry on Sunday morning.","ปกติฉันซักผ้าเช้าวันอาทิตย์"],
+  ["vacuum","ดูดฝุ่น","v.","Could you vacuum the living room, please?","ช่วยดูดฝุ่นห้องนั่งเล่นหน่อยได้ไหม"],
+  ["dishwasher","เครื่องล้างจาน","n.","Just put the plates in the dishwasher.","เอาจานใส่เครื่องล้างจานได้เลย"],
+  ["washing machine","เครื่องซักผ้า","n.","The washing machine is making a strange noise.","เครื่องซักผ้ามีเสียงแปลก ๆ"],
+  ["microwave","ไมโครเวฟ / อุ่นด้วยไมโครเวฟ","n./v.","Microwave the soup for two minutes.","อุ่นซุปในไมโครเวฟสองนาที"],
+  ["iron","รีดผ้า / เตารีด","v./n.","I need to iron a shirt for tomorrow's interview.","ฉันต้องรีดเสื้อเชิ้ตสำหรับสัมภาษณ์พรุ่งนี้"],
+  ["mop","ถูพื้น / ไม้ถูพื้น","v./n.","Be careful — I've just mopped the floor.","ระวังนะ เพิ่งถูพื้นเสร็จ"],
+  ["sweep","กวาด","v.","She swept the leaves off the balcony.","เธอกวาดใบไม้ออกจากระเบียง"],
+  ["tidy up","เก็บกวาดให้เรียบร้อย","phr. v.","Let's tidy up before the guests arrive.","เก็บบ้านให้เรียบร้อยก่อนแขกมากันเถอะ"],
+  ["throw away","ทิ้ง","phr. v.","Don't throw away those boxes — we can reuse them.","อย่าทิ้งกล่องพวกนั้นนะ เอามาใช้ใหม่ได้"],
+  ["put away","เก็บเข้าที่","phr. v.","Please put away your toys after you play.","เล่นเสร็จแล้วเก็บของเล่นเข้าที่ด้วยนะ"],
+  ["plug in","เสียบปลั๊ก","phr. v.","Is the kettle plugged in?","กาต้มน้ำเสียบปลั๊กอยู่หรือเปล่า"],
+  ["unplug","ถอดปลั๊ก","v.","Unplug the iron when you've finished.","รีดผ้าเสร็จแล้วถอดปลั๊กเตารีดด้วย"],
+  ["leak","รั่ว / รอยรั่ว","v./n.","The tap in the bathroom is leaking again.","ก๊อกในห้องน้ำรั่วอีกแล้ว"],
+  ["utility bills","ค่าน้ำค่าไฟ (ค่าสาธารณูปโภค)","n.","Our utility bills are higher in the hot season.","ค่าน้ำค่าไฟของเราแพงขึ้นช่วงหน้าร้อน"],
+  ["take out the rubbish","เอาขยะไปทิ้ง","phr.","It's your turn to take out the rubbish.","ถึงตาเธอเอาขยะไปทิ้งแล้ว"],
+  ["clutter","ข้าวของรกรุงรัง","n.","There's too much clutter on my desk.","บนโต๊ะฉันมีของรกเต็มไปหมด"],
+  ["appliance","เครื่องใช้ไฟฟ้า","n.","We bought all our kitchen appliances in the sale.","เราซื้อเครื่องใช้ไฟฟ้าในครัวทั้งหมดช่วงลดราคา"],
+  ["flatmate","เพื่อนร่วมห้อง / รูมเมต","n.","My flatmate always leaves dirty dishes in the sink.","รูมเมตฉันชอบทิ้งจานสกปรกไว้ในซิงก์"]]},
+ {id:"phrasal2",title:"Phrasal verbs ชุด 2",th:"Phrasal verbs ที่ใช้บ่อยในชีวิตจริงและที่ทำงาน",words:[
+  ["put up with","อดทนกับ / ทนกับ","phr. v.","I can't put up with this noise any longer.","ฉันทนเสียงนี้ต่อไปไม่ไหวแล้ว"],
+  ["get over","หายจาก / ทำใจได้","phr. v.","It took her months to get over the flu.","เธอใช้เวลาหลายเดือนกว่าจะหายจากไข้หวัดใหญ่"],
+  ["come down with","เริ่มป่วยเป็น","phr. v.","I think I'm coming down with a cold.","ฉันว่าฉันกำลังจะเป็นหวัด"],
+  ["turn up","มาถึง / โผล่มา","phr. v.","Only five people turned up to the meeting.","มีคนมาประชุมแค่ห้าคน"],
+  ["look into","ตรวจสอบ / หาข้อมูล","phr. v.","We'll look into your complaint right away.","เราจะตรวจสอบเรื่องร้องเรียนของคุณทันที"],
+  ["come across","บังเอิญเจอ","phr. v.","I came across an old photo of my parents.","ฉันบังเอิญเจอรูปเก่าของพ่อแม่"],
+  ["work out","คิดหาทางออก / ออกกำลังกาย","phr. v.","We need to work out how to cut costs.","เราต้องคิดหาวิธีลดต้นทุน"],
+  ["set off","ออกเดินทาง","phr. v.","We set off for Chiang Mai at five in the morning.","เราออกเดินทางไปเชียงใหม่ตอนตีห้า"],
+  ["take after","หน้าตา/นิสัยเหมือน (พ่อแม่)","phr. v.","She takes after her father — they're both very calm.","เธอเหมือนพ่อ ทั้งคู่ใจเย็นมาก"],
+  ["cut down on","ลดปริมาณ","phr. v.","The doctor told me to cut down on sugar.","หมอบอกให้ลดน้ำตาล"],
+  ["run into","บังเอิญเจอ (คน)","phr. v.","I ran into my old teacher at the mall.","ฉันบังเอิญเจอครูเก่าที่ห้าง"],
+  ["catch up with","ตามให้ทัน / คุยอัปเดตกัน","phr. v.","Let's have lunch and catch up with each other's news.","ไปกินข้าวกลางวันแล้วอัปเดตชีวิตกันหน่อย"],
+  ["sort out","จัดการ / แก้ปัญหา","phr. v.","Don't worry, I'll sort out the problem with IT.","ไม่ต้องห่วง ฉันจะจัดการปัญหากับฝ่ายไอทีเอง"],
+  ["fall behind","ตามไม่ทัน / ล่าช้า","phr. v.","I fell behind with my work while I was sick.","ตอนป่วยงานฉันค้างไปเยอะ"],
+  ["get by","พอเอาตัวรอดได้","phr. v.","My Japanese is basic, but I can get by.","ภาษาญี่ปุ่นของฉันแค่พื้นฐาน แต่ก็พอเอาตัวรอดได้"],
+  ["look up to","นับถือ / ยกย่อง","phr. v.","Many young players look up to him.","นักกีฬารุ่นใหม่หลายคนยกย่องเขา"],
+  ["carry out","ดำเนินการ / ทำ (การสำรวจ ทดลอง)","phr. v.","The team carried out a survey of 500 customers.","ทีมทำแบบสำรวจลูกค้า 500 คน"],
+  ["count on","พึ่งพา / ไว้ใจ","phr. v.","You can always count on Nok to help.","ไว้ใจนกได้เสมอว่าจะช่วย"],
+  ["let down","ทำให้ผิดหวัง","phr. v.","I promised to help, and I won't let you down.","ฉันสัญญาว่าจะช่วย และจะไม่ทำให้เธอผิดหวัง"],
+  ["stand out","โดดเด่น","phr. v.","Your CV needs to stand out from the others.","เรซูเม่ของคุณต้องโดดเด่นกว่าคนอื่น"]]},
+ {id:"awl",title:"คำศัพท์วิชาการ (AWL)",th:"คำจาก Academic Word List ที่ใช้บ่อยในการเรียนและงานเขียนวิชาการ",words:[
+  ["approach","วิธีการ / แนวทาง","n.","We need a different approach to this problem.","เราต้องใช้วิธีการอื่นกับปัญหานี้"],
+  ["assess","ประเมิน","v.","Teachers assess students' progress every term.","ครูประเมินความก้าวหน้าของนักเรียนทุกเทอม"],
+  ["concept","แนวคิด / มโนทัศน์","n.","The concept of zero was a major step in mathematics.","แนวคิดเรื่องเลขศูนย์เป็นก้าวสำคัญของคณิตศาสตร์"],
+  ["consist of","ประกอบด้วย","v.","The course consists of ten online lessons.","คอร์สนี้ประกอบด้วยบทเรียนออนไลน์สิบบท"],
+  ["context","บริบท","n.","Try to guess the meaning from the context.","ลองเดาความหมายจากบริบท"],
+  ["derive","ได้มาจาก / มีที่มาจาก","v.","Many English words are derived from Latin.","คำภาษาอังกฤษหลายคำมีที่มาจากภาษาละติน"],
+  ["interpret","ตีความ","v.","Different readers may interpret the poem differently.","ผู้อ่านแต่ละคนอาจตีความบทกวีต่างกัน"],
+  ["involve","เกี่ยวข้องกับ / ต้องมี","v.","The job involves a lot of travelling.","งานนี้ต้องเดินทางบ่อย"],
+  ["occur","เกิดขึ้น","v.","Most accidents occur at home.","อุบัติเหตุส่วนใหญ่เกิดขึ้นในบ้าน"],
+  ["principle","หลักการ","n.","The basic principle is simple: spend less than you earn.","หลักการพื้นฐานง่าย ๆ คือใช้เงินให้น้อยกว่าที่หาได้"],
+  ["vary","แตกต่างกันไป","v.","Prices vary from shop to shop.","ราคาแตกต่างกันไปในแต่ละร้าน"],
+  ["adequate","เพียงพอ / พอใช้ได้","adj.","Make sure you get adequate sleep before the exam.","นอนให้พอก่อนสอบนะ"],
+  ["aspect","แง่มุม / ด้าน","n.","Cost is only one aspect of the decision.","ต้นทุนเป็นเพียงด้านหนึ่งของการตัดสินใจ"],
+  ["ensure","ทำให้แน่ใจ","v.","Please ensure that all windows are closed.","กรุณาตรวจให้แน่ใจว่าปิดหน้าต่างทุกบานแล้ว"],
+  ["framework","กรอบ / โครงร่าง","n.","The report provides a framework for future research.","รายงานนี้วางกรอบสำหรับการวิจัยในอนาคต"],
+  ["hypothesis","สมมติฐาน","n.","The results supported our hypothesis.","ผลการทดลองสนับสนุนสมมติฐานของเรา"],
+  ["implement","นำไปใช้ / ปฏิบัติตาม (แผน นโยบาย)","v.","The company will implement the new policy in May.","บริษัทจะเริ่มใช้นโยบายใหม่ในเดือนพฤษภาคม"],
+  ["perceive","รับรู้ / มองว่า","v.","Many people perceive online learning as less serious.","หลายคนมองว่าการเรียนออนไลน์จริงจังน้อยกว่า"],
+  ["sufficient","เพียงพอ","adj.","There isn't sufficient evidence to prove it.","หลักฐานยังไม่เพียงพอที่จะพิสูจน์เรื่องนี้"],
+  ["evaluate","ประเมินผล / วิเคราะห์คุณค่า","v.","We need to evaluate the results before we decide.","เราต้องประเมินผลก่อนตัดสินใจ"]]}
+);
+PHRASEBOOK.push(
+ {id:"bankpb",title:"ที่ธนาคาร",items:[["I'd like to open a savings account.","ขอเปิดบัญชีออมทรัพย์"],["I'd like to transfer money to this account.","ขอโอนเงินเข้าบัญชีนี้"],["What documents do I need?","ต้องใช้เอกสารอะไรบ้าง"],["Is there a fee for this?","มีค่าธรรมเนียมไหม"],["The ATM kept my card.","ตู้ ATM กลืนบัตรไป"],["I'd like to exchange some baht into euros.","ขอแลกเงินบาทเป็นยูโร"],["Could I have a copy of my bank statement?","ขอสำเนารายการเดินบัญชีหน่อย"],["I think there's a mistake on my account.","ฉันคิดว่าบัญชีของฉันมีรายการผิดพลาด"]]},
+ {id:"school",title:"มหาวิทยาลัย/โรงเรียน",items:[["When is the deadline for the assignment?","กำหนดส่งงานวันไหน"],["Could you explain that again, please?","ช่วยอธิบายอีกครั้งได้ไหม"],["Where can I find the library?","ห้องสมุดอยู่ที่ไหน"],["I'd like to make an appointment with my advisor.","ขอนัดพบอาจารย์ที่ปรึกษา"],["Can I get an extension on my essay?","ขอขยายเวลาส่งเรียงความได้ไหม"],["How much does this course count towards the final grade?","วิชานี้คิดเป็นกี่เปอร์เซ็นต์ของเกรดสุดท้าย"],["Is attendance compulsory?","ต้องเข้าเรียนทุกครั้งไหม"],["Which chapters will be on the exam?","ข้อสอบออกบทไหนบ้าง"]]},
+ {id:"emergency",title:"เหตุฉุกเฉินและตำรวจ",items:[["Help! Call an ambulance!","ช่วยด้วย เรียกรถพยาบาลที!"],["Where is the nearest police station?","สถานีตำรวจที่ใกล้ที่สุดอยู่ที่ไหน"],["My wallet has been stolen.","กระเป๋าสตางค์ของฉันถูกขโมย"],["I'd like to report a lost passport.","ขอแจ้งความหนังสือเดินทางหาย"],["There's been an accident.","เกิดอุบัติเหตุ"],["Someone is badly hurt.","มีคนบาดเจ็บสาหัส"],["I need a police report for my insurance.","ฉันต้องใช้ใบแจ้งความสำหรับบริษัทประกัน"],["Can I call my embassy?","ขอโทรหาสถานทูตได้ไหม"]]},
+ {id:"social",title:"งานเลี้ยงและเจอคนใหม่",items:[["Hi, I don't think we've met. I'm Ploy.","สวัสดีค่ะ เรายังไม่เคยเจอกันเลย ฉันชื่อพลอย"],["How do you know the host?","คุณรู้จักเจ้าภาพได้ยังไง"],["What do you do?","คุณทำงานอะไร"],["Have you tried the food? It's delicious.","ลองชิมอาหารหรือยัง อร่อยมาก"],["It was really nice talking to you.","ดีใจมากที่ได้คุยกัน"],["Shall we swap numbers?","แลกเบอร์กันไหม"],["Can I get you a drink?","ให้ฉันไปเอาเครื่องดื่มให้ไหม"],["Thanks for inviting me. I had a great time.","ขอบคุณที่ชวนนะ สนุกมาก"]]}
+);
+SCENES.push(
+ {id:"neighbour",title:"ขอให้เพื่อนบ้านลดเสียง",th:"เพื่อนบ้านเปิดเพลงเสียงดังทุกคืน คุณไปเคาะประตูขอให้เขาเบาเสียงลงอย่างสุภาพแต่หนักแน่น และหาข้อตกลงร่วมกัน",role:"a neighbour who often plays loud music late at night and is a little defensive at first",student:"a resident who lives next door and can't sleep",opener:"Oh, hi. Can I help you? Sorry, I can hardly hear you over the music."},
+ {id:"police",title:"แจ้งความของหาย",th:"กระเป๋าของคุณหายระหว่างเที่ยว ไปแจ้งความที่สถานีตำรวจ บอกรายละเอียดของที่หาย เวลาและสถานที่ และขอใบแจ้งความไปเคลมประกัน",role:"a police officer at a tourist police station",student:"a traveller whose bag was lost or stolen",opener:"Good afternoon. I'm Officer Davis. What seems to be the problem?"},
+ {id:"teacherpt",title:"ประชุมผู้ปกครองกับครู",th:"คุณมาประชุมกับครูประจำชั้นของลูก สอบถามผลการเรียนและพฤติกรรม และปรึกษาว่าจะช่วยลูกที่บ้านได้อย่างไร",role:"a primary school class teacher at an international school",student:"a parent attending a parent-teacher meeting",opener:"Hello, thank you for coming in today. Please have a seat. Your son has settled in really well this term, but there are a couple of things I'd like to talk about."},
+ {id:"negotiate",title:"ต่อรองราคากับซัพพลายเออร์",th:"คุณต้องสั่งสินค้าล็อตใหญ่ ต่อรองราคา ส่วนลด และเงื่อนไขการส่งของกับซัพพลายเออร์ให้ได้ข้อตกลงที่ดีที่สุด",role:"a sales manager at a packaging supplier who wants to keep prices high",student:"a purchasing officer at a Thai company placing a large order",opener:"Thanks for getting in touch. I've looked at your enquiry for 10,000 units. Our standard price is 12 baht per unit, including delivery within two weeks."},
+ {id:"networking",title:"คุยทำความรู้จักในงานสัมมนา",th:"คุณอยู่ในช่วงพักของงานสัมมนา เริ่มบทสนทนากับคนแปลกหน้า แนะนำตัว ถามเรื่องงานของเขา และขอติดต่อกันต่อ",role:"a friendly marketing consultant attending a business conference",student:"a professional attending the same conference",opener:"Great session, wasn't it? I'm Anna, by the way. Is this your first time at this conference?"},
+ {id:"hotelcomplain",title:"ห้องพักไม่ตรงกับที่จอง",th:"คุณจองห้องวิวทะเลเตียงใหญ่ แต่ได้ห้องเล็กที่มองเห็นลานจอดรถ อธิบายปัญหากับพนักงานต้อนรับอย่างสุภาพและขอเปลี่ยนห้องหรือค่าชดเชย",role:"a hotel front desk manager who is polite but says the hotel is almost full",student:"a guest whose room does not match the booking",opener:"Good evening. I understand there's an issue with your room. How can I help?"}
+);
+BADGES.push({id:"c2",t:"จบ C2",d:"ผ่านทุกบทระดับ Proficiency",ok:()=>lvDone(6)});
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -5459,7 +6074,7 @@ function lessonRow(i){
 
 /* ---------- views: course ---------- */
 function viewCourse(){
-  return '<h1 class="h1">หลักสูตรภาษาอังกฤษ</h1><p class="lede">5 ระดับ 20 บท เรียงจากง่ายไปยาก แต่ละบทปลดล็อกเมื่อสอบท้ายบทก่อนหน้าผ่าน 70% ถ้ามีพื้นฐานแล้ว <button class="btn btn-sm btn-ghost" style="padding:0 4px;min-height:0;color:var(--accent)" data-act="go" data-to="placement">ทำแบบทดสอบวัดระดับ</button> เพื่อข้ามบทได้</p>'
+  return '<h1 class="h1">หลักสูตรภาษาอังกฤษ</h1><p class="lede">6 ระดับ 24 บท เรียงจากง่ายไปยาก แต่ละบทปลดล็อกเมื่อสอบท้ายบทก่อนหน้าผ่าน 70% ถ้ามีพื้นฐานแล้ว <button class="btn btn-sm btn-ghost" style="padding:0 4px;min-height:0;color:var(--accent)" data-act="go" data-to="placement">ทำแบบทดสอบวัดระดับ</button> เพื่อข้ามบทได้</p>'
    +LEVELS.map(lv=>{
      const us=COURSE.filter(u=>u.lv===lv.n), d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;
      return '<section class="level"><div class="level-head"><span class="level-code">'+lv.code+'</span><div><h2 class="h3" lang="en">'+esc(lv.name)+'</h2><p class="muted">'+esc(lv.th)+' · ผ่าน '+d+'/'+us.length+' บท</p></div><div class="bar" role="img" aria-label="ความคืบหน้า '+d+' จาก '+us.length+'"><i style="width:'+(d/us.length*100)+'%"></i></div></div>'
