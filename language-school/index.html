@@ -4,11 +4,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Thai+Looped:wght@400;500;600&family=Itim&display=swap">
 <style>
 :root{
-  --paper:#F5F7FC; --surface:#FFFFFF; --ink:#18203A; --ink-2:#465071; --ink-3:#737D9C;
+  --paper:#F5F7FC; --surface:#FFFFFF; --ink:#18203A; --ink-2:#465071; --ink-3:#5F6989;
   --line:#E2E7F2; --margin:rgba(201,52,52,.32);
   --accent:#2D47C9; --accent-ink:#FFFFFF; --accent-soft:#E8EDFF;
-  --mark:#FFE36A; --star:#E0A800;
-  --red:#C93434; --red-soft:#FDEDED; --green:#1B7F52; --green-soft:#E2F4EB;
+  --mark:#FFE36A; --star:#A67C00;
+  --red:#C93434; --red-soft:#FDEDED; --green:#17744A; --green-soft:#E2F4EB;
   --shadow:0 1px 2px rgba(24,32,58,.05),0 6px 20px rgba(24,32,58,.06);
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
   --f-display:"Bai Jamjuree","IBM Plex Sans Thai Looped","Noto Sans Thai",system-ui,sans-serif;
@@ -536,6 +536,21 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 @media (max-width:520px){.vb-in{grid-template-columns:1fr}}
 .pb-item{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 .pb-item.playing{border-color:var(--accent);background:var(--accent-soft)}
+/* QA fixes: spacing, tap targets, phone tables */
+body{margin:0}
+.back{min-height:44px}
+.deck details summary{min-height:44px;display:flex;align-items:center}
+@media (max-width:1100px){html{scroll-padding-bottom:96px;scroll-padding-top:72px}}
+@media (min-width:861px) and (max-width:1100px){.xpass{max-height:calc(100vh - var(--topbar-h,60px) - 170px)}}
+.cd:not(.on):not(.fut){box-shadow:inset 0 0 0 1px var(--line);background:color-mix(in srgb,var(--ink-3) 22%,transparent)}
+.chart-hint{display:none;font-size:13px;color:var(--ink-3);margin-top:4px}
+@media (max-width:560px){.chart-hint{display:block}}
+@media (max-width:520px){
+  th,td{padding:8px 9px}
+  .rep-tbl th:nth-child(3),.rep-tbl td:nth-child(3),.rep-tbl th:nth-child(6),.rep-tbl td:nth-child(6),.rep-tbl th:nth-child(7),.rep-tbl td:nth-child(7){display:none}
+  .vb-tbl{font-size:14px}.vb-tbl th,.vb-tbl td{padding:7px 5px}
+  .vb-tbl td:last-child{min-width:5.5em}
+}
 /* touch screens: bigger speaker buttons, hide the tab bar while the keyboard is up */
 @media (pointer:coarse){.say,.mic{width:42px;height:42px}.mic svg{width:19px;height:19px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
 @media (max-width:1100px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
@@ -2727,7 +2742,7 @@ function lineSVG(ch){
   });
   const summary=ch.series.map(s=>s.name+" "+s.v.join(", ")).join("; ");
   return '<figure class="xchart"><figcaption><b lang="en">'+esc(ch.title)+'</b><span class="legend">'+ch.series.map((s,i)=>'<span lang="en"><i style="background:'+cols[i]+'"></i>'+esc(s.name)+'</span>').join("")+'</span></figcaption>'
-   +'<div class="chart-wrap"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(ch.title+" ("+ch.unit+") for "+ch.years.join(", ")+": "+summary)+'"><text x="'+pl+'" y="12" class="tick">'+esc(ch.unit)+'</text>'+g+'</svg></div></figure>';
+   +'<div class="chart-wrap"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(ch.title+" ("+ch.unit+") for "+ch.years.join(", ")+": "+summary)+'"><text x="'+pl+'" y="12" class="tick">'+esc(ch.unit)+'</text>'+g+'</svg></div><p class="chart-hint">เลื่อนกราฟไปทางขวาเพื่อดูให้ครบ →</p></figure>';
 }
 function chartSVG(ch){
   const W=640,H=320,pl=46,pr=14,pt=26,pb=38,max=70,iw=W-pl-pr,ih=H-pt-pb,bw=36,gap=2;
@@ -2744,7 +2759,7 @@ function chartSVG(ch){
   g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+(pt+ih)+'" y2="'+(pt+ih)+'" class="base"/>';
   const summary=ch.series.map(s=>s.name+" "+s.v.join("%, ")+"%").join("; ");
   return '<figure class="xchart"><figcaption><b lang="en">'+esc(ch.title)+'</b><span class="legend">'+ch.series.map((s,i)=>'<span lang="en"><i style="background:'+cols[i]+'"></i>'+esc(s.name)+'</span>').join("")+'</span></figcaption>'
-   +'<div class="chart-wrap"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(ch.title+" for "+ch.years.join(", ")+": "+summary)+'">'+g+'</svg></div></figure>';
+   +'<div class="chart-wrap"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(ch.title+" for "+ch.years.join(", ")+": "+summary)+'">'+g+'</svg></div><p class="chart-hint">เลื่อนกราฟไปทางขวาเพื่อดูให้ครบ →</p></figure>';
 }
 function cleanGrade(d){
   if(!d||typeof d!=="object"||!Array.isArray(d.criteria)) return null;
@@ -4015,7 +4030,7 @@ function settingsHTML(){
   const st=S.settings;
   let h='<section class="section"><h2 class="h3">ตั้งค่า</h2><div class="set-grid">'
    +'<div class="card"><b>ความเร็วเสียงอ่าน</b>'+seg("rate",[["slow","ช้า"],["normal","ปกติ"],["fast","เร็ว"]],st.rate||"normal")+'<p class="muted" style="font-size:13px;margin-top:8px">ปุ่ม "ฟังช้าๆ" ยังใช้ได้ตามเดิม</p></div>'
-   +'<div class="card"><b>สำเนียง</b>'+seg("accent",[["US","อเมริกัน"],["GB","อังกฤษ"]],st.accent||"US")+'<p class="muted" style="font-size:13px;margin-top:8px">ขึ้นกับเสียงที่มีในเครื่อง <button class="btn btn-sm btn-ghost" style="padding:0 4px;min-height:0;color:var(--accent)" data-act="say" data-text="Hello! This is how I sound. Have a lovely day.">ลองฟัง</button></p></div>'
+   +'<div class="card"><b>สำเนียง</b>'+seg("accent",[["US","อเมริกัน"],["GB","อังกฤษ"]],st.accent||"US")+'<p class="muted" style="font-size:13px;margin-top:8px">ขึ้นกับเสียงที่มีในเครื่อง <button class="btn btn-sm btn-ghost" style="color:var(--accent)" data-act="say" data-text="Hello! This is how I sound. Have a lovely day.">ลองฟัง</button></p></div>'
    +'<div class="card"><b>ภารกิจรายวัน</b>'+seg("goal",[["light","เบาๆ"],["normal","ปกติ"],["intense","เข้มข้น"]],st.goal||"normal")+'<p class="muted" style="font-size:13px;margin-top:8px">ทบทวน '+GOAL_N[st.goal||"normal"][0]+' คำ · เรียน '+GOAL_N[st.goal||"normal"][1]+' ขั้น · ฟังพิมพ์ '+GOAL_N[st.goal||"normal"][2]+' ประโยค</p></div>'
    +'</div>'
    +'<div class="card" style="margin-top:12px"><b>สำรองและกู้คืนข้อมูล</b><p class="muted" style="font-size:14px;margin-top:4px">คัดลอกรหัสสำรองเก็บไว้ (เช่น ส่งไลน์หาตัวเอง) แล้ววางกลับเพื่อย้ายความคืบหน้าไปเบราว์เซอร์หรือเครื่องอื่นได้</p>'
@@ -4429,6 +4444,7 @@ function render(){
   const V={home:viewHome,course:viewCourse,lesson:viewLesson,review:viewReview,teacher:viewTeacher,report:viewReport,placement:viewPlacement,exam:viewExamHub,examrun:viewExamRun,practice:viewPractice}[route.name]||viewHome;
   registerWords();
   $("#app").innerHTML=V();
+  const cs=$(".stepper .is-current"); if(cs){const sc=cs.parentElement; sc.scrollLeft+=cs.getBoundingClientRect().left-sc.getBoundingClientRect().left-(sc.clientWidth-cs.offsetWidth)/2}
   document.querySelectorAll(".nav button").forEach(b=>{
     const cur=b.dataset.to===route.name||(b.dataset.to==="course"&&(route.name==="lesson"||route.name==="placement"))||(b.dataset.to==="exam"&&route.name==="examrun");
     if(cur) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
@@ -4775,7 +4791,7 @@ function viewReport(){
      +'<td style="font-variant-numeric:tabular-nums">'+(r&&r.best?r.best+"%":"–")+'</td><td class="stars">'+(r&&r.stars?"★".repeat(r.stars)+"☆".repeat(3-r.stars):"")+'</td><td style="font-variant-numeric:tabular-nums">'+(r&&r.writing!=null?r.writing+"/10":"–")+'</td></tr>';}).join("");
   return '<h1 class="h1">สมุดพกของฉัน</h1><p class="lede">'+(NB?"ความคืบหน้าบันทึกไว้ในเครื่องนี้ ถ้าลบแอป ข้อมูลจะหายไปด้วย":cloud.on?"ความคืบหน้าบันทึกไว้กับบัญชีของคุณ เปิดจากเครื่องไหนก็เรียนต่อได้":"ความคืบหน้าบันทึกไว้ในเบราว์เซอร์นี้ ถ้าล้างข้อมูลเบราว์เซอร์ ข้อมูลจะหายไป")+'</p>'
    +'<div class="stats" style="margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><div><b>'+done.length+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+(avg?avg+"%":"–")+'</b><span>คะแนนเฉลี่ย</span></div><div><b>'+keys.length+'</b><span>คำศัพท์</span></div><div><b>'+keys.filter(k=>S.words[k].b>=4).length+'</b><span>จำได้แม่น</span></div><div><b>'+streak()+'</b><span>วันต่อเนื่อง</span></div><div><b>'+S.days.length+'</b><span>วันที่เข้าเรียน</span></div>'+(NB?'<div><b>'+(S.pron||0)+'</b><span>ประโยคที่พูดผ่าน</span></div>':'')+'</div>'
-   +'<section class="section"><h2 class="h3" style="margin-bottom:10px">ผลการเรียนรายบท</h2><div class="tbl-wrap"><table><thead><tr><th>บท</th><th>ชื่อบท</th><th>ระดับ</th><th>สถานะ</th><th>คะแนนสูงสุด</th><th>ดาว</th><th>การบ้านเขียน</th></tr></thead><tbody>'+table+'</tbody></table></div></section>'
+   +'<section class="section"><h2 class="h3" style="margin-bottom:10px">ผลการเรียนรายบท</h2><div class="tbl-wrap"><table class="rep-tbl"><thead><tr><th>บท</th><th>ชื่อบท</th><th>ระดับ</th><th>สถานะ</th><th>คะแนนสูงสุด</th><th>ดาว</th><th>การบ้านเขียน</th></tr></thead><tbody>'+table+'</tbody></table></div></section>'
    +'<section class="section"><div class="section-head"><h2 class="h3">ประกาศนียบัตร</h2><div class="name-field"><label for="cert-name" class="muted">ชื่อบนประกาศนียบัตร</label><input id="cert-name" value="'+esc(S.name)+'" placeholder="ชื่อของคุณ" maxlength="40"></div></div>'
    +(certs.length?'<div class="cert-grid">'+certs.map(lv=>{
       const us=COURSE.filter(u=>u.lv===lv.n), a=Math.round(us.reduce((s,u)=>s+S.lessons[u.id].best,0)/us.length);
