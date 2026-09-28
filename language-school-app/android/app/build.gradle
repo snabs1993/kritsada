@@ -7,8 +7,9 @@ android {
         applicationId "app.englishclass.home"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // CI builds count up so each new APK installs over the last one
+        versionCode 1 + (System.getenv("GITHUB_RUN_NUMBER") ?: "0").toInteger()
+        versionName "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -25,6 +26,10 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+            // sign with every scheme: some phones and installers still look for the v1 (JAR) signature
+            enableV1Signing true
+            enableV2Signing true
+            enableV3Signing true
         }
     }
     buildTypes {

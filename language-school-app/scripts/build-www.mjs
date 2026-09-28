@@ -79,7 +79,7 @@ const loader = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<style>html,body{margin:0;height:100%;background:#F5F7FC}@media (prefers-color-scheme:dark){html,body{background:#0F1320}}</style>
+<style>html,body{margin:0;height:100%;background:#F2F2F7}@media (prefers-color-scheme:dark){html,body{background:#000000}}</style>
 <script src="native.js"></script>
 </head>
 <body>
