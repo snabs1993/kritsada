@@ -1,0 +1,7 @@
+{
+  "name": "english-class-tests",
+  "private": true,
+  "description": "Browser tests for language-school/index.html",
+  "scripts": { "test": "node run-all.js" },
+  "devDependencies": { "playwright": "^1.47.0" }
+}
