@@ -689,6 +689,8 @@ h1,h2,h3{letter-spacing:-.02em}
 .lrow+.lrow::before{content:"";position:absolute;top:0;left:74px;right:0;border-top:.5px solid var(--sep)}
 @media (max-width:520px){.lrow+.lrow::before{left:62px}}
 .lrow[disabled]{opacity:.5}
+.lrow.is-locked .ltitle,.lrow.is-locked .lnum{opacity:.55}
+.lv-skip{padding:0;min-height:32px;margin-top:2px}
 .lnum{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--fill);color:var(--accent);font:700 13px/1 var(--f-num)}
 .ltitle b{font-family:var(--f-body);font-weight:600}
 .x-secs{gap:0;border-radius:18px;overflow:hidden;background:var(--paper-2)}
@@ -4760,7 +4762,7 @@ function lvItems(n){
 }
 function viewLvTests(){
   const st=stat("lvtest");
-  return pBack()+'<h1 class="h2" style="margin-top:8px">สอบรวมระดับ</h1><p class="lede">ข้อสอบ 20 ข้อสุ่มจากทุกบทในระดับเดียวกัน ใช้ทบทวนก่อนขึ้นระดับใหม่ หรือเช็กว่ายังจำเนื้อหาเก่าได้ไหม ได้ 80% ขึ้นไปถือว่าผ่าน</p>'
+  return pBack()+'<h1 class="h2" style="margin-top:8px">สอบรวมระดับ</h1><p class="lede">ข้อสอบ 20 ข้อสุ่มจากทุกบทในระดับเดียวกัน ใช้ทบทวน หรือใช้ข้ามระดับที่ง่ายเกินไป ได้ 80% ขึ้นไประบบจะนับว่าผ่านทุกบทในระดับนั้นและปลดล็อกระดับถัดไป</p>'
    +'<div class="lessons" style="margin-top:16px">'+LEVELS.map(lv=>{const us=COURSE.filter(u=>u.lv===lv.n), d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length, b=st[lv.n];
      return '<button class="lrow" data-act="pgo" data-id="lvtest.'+lv.n+'"><span class="lnum">'+lv.code+'</span><span class="ltitle"><b lang="en">'+esc(lv.name)+'</b><small>เรียนผ่านแล้ว '+d+'/'+us.length+' บท</small></span><span class="lstat">'+(b!=null?'<span class="chip'+(b>=80?' ok':'')+'">'+b+'%</span>':'')+'</span></button>'}).join("")+'</div>';
 }
@@ -4773,13 +4775,15 @@ function viewLvTest(n){
   }
   if(PRUN.done){
     const c=PRUN.results.filter(Boolean).length, pct=Math.round(c/PRUN.items.length*100);
-    return h+'<div class="card" style="margin-top:16px;max-width:680px"><div class="result"><div class="score-ring '+(pct>=80?"pass":"fail")+'"><div><b>'+pct+'%</b><span>ถูก '+c+'/'+PRUN.items.length+'</span></div></div><div><h2 class="h2">'+(pct>=80?"ผ่านสอบรวมระดับ "+lv.code:"ยังไม่ถึง 80%")+'</h2><p class="lede">'+(pct>=80?"ความรู้ระดับนี้แน่นแล้ว":"ข้อที่ผิดถูกจดลงสมุดคำผิดแล้ว ทบทวนแล้วลองใหม่")+'</p></div></div><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="lvstart" data-n="'+n+'">สอบอีกครั้ง</button></div></div>';
+    return h+'<div class="card" style="margin-top:16px;max-width:680px"><div class="result"><div class="score-ring '+(pct>=80?"pass":"fail")+'"><div><b>'+pct+'%</b><span>ถูก '+c+'/'+PRUN.items.length+'</span></div></div><div><h2 class="h2">'+(pct>=80?"ผ่านสอบรวมระดับ "+lv.code:"ยังไม่ถึง 80%")+'</h2><p class="lede">'+(pct>=80?"ความรู้ระดับนี้แน่นแล้ว ทุกบทในระดับนี้นับว่าผ่าน ไปเรียนระดับถัดไปได้เลย":"ข้อที่ผิดถูกจดลงสมุดคำผิดแล้ว ทบทวนแล้วลองใหม่")+'</p></div></div><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="lvstart" data-n="'+n+'">สอบอีกครั้ง</button></div></div>';
   }
   return h+'<div style="margin-top:16px">'+runnerHTML(PRUN)+'</div>';
 }
 function runnerDoneX(r,c,tot){
   const pct=Math.round(c/tot*100);
-  if(r.kind==="lvt"&&PRUN_META){const st=stat("lvtest"); st[PRUN_META.lv]=Math.max(st[PRUN_META.lv]||0,pct); S.xp+=c*3}
+  if(r.kind==="lvt"&&PRUN_META){const st=stat("lvtest"); st[PRUN_META.lv]=Math.max(st[PRUN_META.lv]||0,pct); S.xp+=c*3;
+    if(pct>=80){let n=0; COURSE.filter(u=>u.lv===PRUN_META.lv).forEach(u=>{const rr=rec(u.id); if(rr.done) return; rr.done=true; rr.skipped=true; rr.reached=5; rr.best=Math.max(rr.best||0,pct); rr.stars=Math.max(rr.stars||0,pct===100?3:pct>=85?2:1); rr.doneAt=Date.now(); n++});
+      if(n) toast("ผ่านระดับ "+LEVELS[PRUN_META.lv-1].code+" แล้ว ข้าม "+n+" บท ระดับถัดไปปลดล็อกแล้ว")}}
   if(r.kind==="pb"&&PRUN_META){const st=stat("pb"); st[PRUN_META.sit]=Math.max(st[PRUN_META.sit]||0,pct); S.xp+=c*2}
   if(r.kind==="tg"||r.kind==="wf"){const st=stat(r.kind); st.best=Math.max(st.best||0,c); S.xp+=c*2}
   bump("prac"); markDay(); save();
@@ -6137,6 +6141,7 @@ let teacherMode="talk";
 let resetAsk=false;
 const W={};   // writing drafts/results
 
+let TESTOUT=null; // unit id opened straight into its quiz to skip it
 function go(name,id){
   if(name==="shadow"){name="practice"; id=id?"shadow."+id:"shadow"}
   Speech.stop();
@@ -6150,9 +6155,11 @@ function go(name,id){
   if(name==="lesson"){
     const i=COURSE.findIndex(u=>u.id===id);
     if(i<0) return go("course");
-    if(!unlocked(i)){toast("ต้องผ่านบทก่อนหน้าก่อน หรือทำแบบทดสอบวัดระดับ");return}
+    const testOut=TESTOUT===id; TESTOUT=null;
+    if(!unlocked(i)&&!testOut){toast("บทนี้ยังล็อกอยู่ แตะบทนี้ในหน้าหลักสูตรเพื่อสอบข้าม");return}
     const r=rec(id);
     L={id,idx:i,step:r.done?0:Math.min(r.reached,5),vi:0,showTh:false,comp:{},practice:null,quiz:null,quizDone:null};
+    if(testOut&&!r.done){L.step=5; L.testout=true}
     if(L.step===0&&addWords(COURSE[i])) save()
   }
   if(name==="placement") P={runner:null,result:null};
@@ -6222,11 +6229,11 @@ function viewHome(){
 }
 function lessonRow(i){
   const u=COURSE[i], r=S.lessons[u.id], lock=!unlocked(i), done=r&&r.done;
-  const stat=lock?'<span class="chip lock">ล็อกอยู่</span>'
+  const stat=lock?'<span class="chip lock">ล็อกอยู่ · แตะเพื่อสอบข้าม</span>'
     :done?'<span class="chip ok">ผ่านแล้ว · '+r.best+'%</span><span class="stars" aria-label="'+r.stars+' ดาว">'+"★".repeat(r.stars)+"☆".repeat(3-r.stars)+'</span>'
     :(r&&r.reached>0)?'<span class="chip now">กำลังเรียน · '+STEPS[Math.min(r.reached,5)][1]+'</span>'
     :'<span class="chip now">พร้อมเรียน</span>';
-  return '<button class="lrow" data-act="open" data-id="'+u.id+'"'+(lock?' disabled aria-disabled="true"':'')+'><span class="lnum">U'+String(u.n).padStart(2,"0")+'</span><span class="ltitle"><b lang="en">'+esc(u.en)+'</b><small>'+esc(u.th)+' · '+esc(u.grammar.title)+'</small></span><span class="lstat">'+stat+'</span></button>';
+  return '<button class="lrow'+(lock?' is-locked':'')+'" data-act="'+(lock?'testout':'open')+'" data-id="'+u.id+'"'+(lock?' aria-label="'+esc(u.en)+' ล็อกอยู่ แตะเพื่อสอบข้ามบทนี้"':'')+'><span class="lnum">U'+String(u.n).padStart(2,"0")+'</span><span class="ltitle"><b lang="en">'+esc(u.en)+'</b><small>'+esc(u.th)+' · '+esc(u.grammar.title)+'</small></span><span class="lstat">'+stat+'</span></button>';
 }
 
 /* ---------- views: course ---------- */
@@ -6234,7 +6241,7 @@ function viewCourse(){
   return '<h1 class="h1">หลักสูตรภาษาอังกฤษ</h1><p class="lede">6 ระดับ 24 บท เรียงจากง่ายไปยาก แต่ละบทปลดล็อกเมื่อสอบท้ายบทก่อนหน้าผ่าน 70% ถ้ามีพื้นฐานแล้ว <button class="btn btn-sm btn-ghost" style="padding:0 4px;min-height:0;color:var(--accent)" data-act="go" data-to="placement">ทำแบบทดสอบวัดระดับ</button> เพื่อข้ามบทได้</p>'
    +LEVELS.map(lv=>{
      const us=COURSE.filter(u=>u.lv===lv.n), d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;
-     return '<section class="level"><div class="level-head"><span class="level-code">'+lv.code+'</span><div><h2 class="h3" lang="en">'+esc(lv.name)+'</h2><p class="muted">'+esc(lv.th)+' · ผ่าน '+d+'/'+us.length+' บท</p></div><div class="bar" role="img" aria-label="ความคืบหน้า '+d+' จาก '+us.length+'"><i style="width:'+(d/us.length*100)+'%"></i></div></div>'
+     return '<section class="level"><div class="level-head"><span class="level-code">'+lv.code+'</span><div><h2 class="h3" lang="en">'+esc(lv.name)+'</h2><p class="muted">'+esc(lv.th)+' · ผ่าน '+d+'/'+us.length+' บท</p>'+(d<us.length?'<button class="btn btn-sm btn-ghost lv-skip" data-act="pgo" data-id="lvtest.'+lv.n+'">ง่ายไป สอบข้ามทั้งระดับ</button>':'')+'</div><div class="bar" role="img" aria-label="ความคืบหน้า '+d+' จาก '+us.length+'"><i style="width:'+(d/us.length*100)+'%"></i></div></div>'
       +'<div class="lessons">'+us.map(u=>lessonRow(COURSE.indexOf(u))).join("")+'</div></section>';
    }).join("");
 }
@@ -6256,8 +6263,8 @@ function viewLesson(){
   return '<div class="lesson-head"><div><button class="back" data-act="go" data-to="course">← หลักสูตร</button>'
    +'<p class="eyebrow" style="margin-top:8px">UNIT '+u.n+' · '+lv.code+' '+esc(lv.name)+'</p>'
    +'<h1 class="h2" lang="en">'+esc(u.en)+'</h1><p class="th-sub">'+esc(u.th)+'</p></div>'
-   +'<button class="toggle" data-act="slow" aria-pressed="'+(S.settings.slow?"true":"false")+'">'+ICON.say.replace('<svg','<svg width="16" height="16"')+'เสียงพูดช้า</button></div>'
-   +'<div class="stepper" role="list">'+STEPS.map((s,i)=>'<button role="listitem" class="step'+(i===L.step?" is-current":"")+(i<maxStep||(r.done&&i!==L.step)?" is-done":"")+'" data-act="step" data-s="'+i+'"'+(i>maxStep?" disabled":"")+(i===L.step?' aria-current="step"':'')+'><span class="n">'+String(i+1).padStart(2,"0")+'</span>'+s[1]+'</button>').join("")+'</div>'
+   +'<div class="row" style="gap:8px">'+(!r.done&&key!=="quiz"?'<button class="btn btn-sm" data-act="skip-quiz">ง่ายไป ข้ามไปสอบท้ายบท</button>':'')+'<button class="toggle" data-act="slow" aria-pressed="'+(S.settings.slow?"true":"false")+'">'+ICON.say.replace('<svg','<svg width="16" height="16"')+'เสียงพูดช้า</button></div></div>'
+   +'<div class="stepper" role="list">'+STEPS.map((s,i)=>'<button role="listitem" class="step'+(i===L.step?" is-current":"")+(i<maxStep||(r.done&&i!==L.step)?" is-done":"")+'" data-act="step" data-s="'+i+'"'+(i===L.step?' aria-current="step"':'')+'><span class="n">'+String(i+1).padStart(2,"0")+'</span>'+s[1]+'</button>').join("")+'</div>'
    +'<section>'+body+'</section>'+foot;
 }
 function stageVocab(u){
@@ -6324,7 +6331,7 @@ function buildQuiz(u){
 function stageQuiz(u){
   if(L.quizDone) return quizResult(u);
   if(!L.quiz) L.quiz=newRunner(buildQuiz(u),"quiz");
-  return '<p class="muted" style="margin-bottom:14px">สอบท้ายบท '+L.quiz.items.length+' ข้อ ต้องได้ 70% ขึ้นไปจึงผ่าน</p>'+runnerHTML(L.quiz);
+  return (L.testout?'<div class="feedback ok" style="margin:0 0 14px"><b>สอบข้ามบท</b><span>ถ้าได้ 70% ขึ้นไป บทนี้จะนับว่าผ่าน และบทถัดไปจะปลดล็อก ถ้าไม่ผ่านก็เลือกเรียนขั้นไหนก่อนก็ได้จากแถบด้านบน</span></div>':'')+'<p class="muted" style="margin-bottom:14px">สอบท้ายบท '+L.quiz.items.length+' ข้อ ต้องได้ 70% ขึ้นไปจึงผ่าน</p>'+runnerHTML(L.quiz);
 }
 function quizResult(u){
   const q=L.quizDone, r=rec(u.id), pass=q.pct>=70, next=COURSE[L.idx+1];
@@ -6471,7 +6478,7 @@ function viewReview(){
       +(S.settings.rvType&&!R.revealed?'<div class="flash-th" style="font-size:22px">'+esc(w.th)+'</div>'+(w.ex?'<p class="flash-ex" lang="en" style="text-align:left;display:block">'+rvMask(w)+'</p>':'')
         :'<div class="flash-word" lang="en">'+esc(w.en)+'</div><div class="row" style="justify-content:center">'+sayBtn(w.en)+'</div>'+(S.settings.rvType&&R.typed!=null?'<div class="feedback '+(R.typedOk?"ok":"no")+'"><b>'+(R.typedOk?"พิมพ์ถูก!":"ยังไม่ถูก")+'</b><span>คุณพิมพ์: <span lang="en">'+esc(R.typed||"–")+'</span></span></div>':''))
       +(R.revealed?'<div class="flash-th">'+esc(w.th)+'</div>'+(w.ex?'<div class="flash-ex" style="text-align:left">'+sayBtn(w.ex)+'<div><p lang="en">'+esc(w.ex)+'</p>'+(w.exTh?'<p>'+esc(w.exTh)+'</p>':'')+'</div></div>':'')
-        +'<div class="grade-btns"><button class="btn" data-act="rv-grade" data-g="0">จำไม่ได้<small>เจออีกรอบวันนี้</small></button><button class="btn" data-act="rv-grade" data-g="1">พอจำได้<small>พรุ่งนี้</small></button><button class="btn btn-primary" data-act="rv-grade" data-g="2">จำได้แม่น<small style="color:inherit;opacity:.8">อีก '+INT[Math.min(s.b+1,6)]+' วัน</small></button></div>'
+        +'<div class="grade-btns"><button class="btn" data-act="rv-grade" data-g="0">จำไม่ได้<small>เจออีกรอบวันนี้</small></button><button class="btn" data-act="rv-grade" data-g="1">พอจำได้<small>พรุ่งนี้</small></button><button class="btn btn-primary" data-act="rv-grade" data-g="2">จำได้แม่น<small style="color:inherit;opacity:.8">อีก '+INT[Math.min(s.b+1,6)]+' วัน</small></button></div><button class="btn btn-sm btn-ghost" style="margin-top:8px" data-act="rv-grade" data-g="3">ง่ายไป ไม่ต้องทบทวนคำนี้อีก</button>'
         :S.settings.rvType?'<label class="sr" for="rv-in">พิมพ์คำศัพท์ภาษาอังกฤษ</label><input id="rv-in" class="dict-in" lang="en" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="พิมพ์คำภาษาอังกฤษจากความหมาย…"><div class="row" style="margin-top:12px;justify-content:center"><button class="btn btn-primary" data-act="rv-type-check">ตรวจ</button><button class="btn btn-ghost" data-act="rv-type-check" data-skip="1">ไม่รู้ ดูคำตอบ</button></div>'
         :'<p class="muted" style="margin-top:14px">นึกความหมายในใจก่อน แล้วกดดูคำตอบ</p><button class="btn btn-primary" style="margin-top:14px;width:100%" data-act="rv-reveal">ดูคำตอบ</button>')
       +'</div><button class="btn btn-ghost" style="margin-top:14px" data-act="rv-end">พอแค่นี้ก่อน</button></div>';
@@ -6570,11 +6577,13 @@ const ACT={
   say:t=>{Speech.stop();Speech.say(t.dataset.text,{slow:!!t.dataset.slow})},
   slow:()=>{S.settings.slow=!S.settings.slow;save();render()},
   step:t=>{
-    const s=+t.dataset.s, r=rec(L.id); if(s>(r.done?5:r.reached)) return;
+    const s=+t.dataset.s, r=rec(L.id);
     Speech.stop(); L.step=s;
     if(STEPS[s][0]==="quiz"&&L.quizDone&&!r.done){L.quizDone=null;L.quiz=null}
     render(); window.scrollTo(0,0);
   },
+  "skip-quiz":()=>{Speech.stop(); L.step=5; L.quiz=null; L.quizDone=null; render(); window.scrollTo(0,0)},
+  testout:t=>{TESTOUT=t.dataset.id; go("lesson",t.dataset.id); window.scrollTo(0,0)},
   "next-step":()=>{
     const r=rec(L.id); Speech.stop();
     if(L.step<5){L.step++; if(L.step>r.reached){r.reached=L.step; S.xp+=5; bump("step")} markDay(); save()}
@@ -6601,6 +6610,7 @@ const ACT={
     const g=+t.dataset.g, k=R.queue.shift(), s=S.words[k], now=Date.now();
     if(g===0){s.b=0;s.due=now;R.queue.push(k)}
     else if(g===1){s.b=Math.max(1,s.b);s.due=now+DAY}
+    else if(g===3){s.b=6;s.due=now+365*DAY;s.easy=true}
     else{s.b=Math.min(s.b+1,6);s.due=now+INT[s.b]*DAY}
     R.count++; R.revealed=false; R.typed=null; S.xp+=1; bump("review"); markDay(); save();
     if(!R.queue.length){R=null;toast("ทบทวนเสร็จแล้ว เก่งมาก")}
