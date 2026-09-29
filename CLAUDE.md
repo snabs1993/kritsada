@@ -7,9 +7,13 @@ The same lesson file runs in two places:
 - **Android app**: `language-school-app/` (Capacitor) wraps the same file. It is sideloaded
   as a release APK and receives lesson updates over the air (OTA).
 
-Every content change must reach both. Pushing to GitHub updates the app. Republish the web
-artifact in the same round when the Artifact tool is available; otherwise tell the user the web copy
-updates the next time they work in a claude.ai session.
+Every content change must reach both, in the same round:
+
+- **App:** push to GitHub; CI publishes the OTA update.
+- **Web:** republish `language-school/index.html` to the existing artifact
+  https://claude.ai/artifact/Q8KWFzvaNBNUWKDA5pVtXS. Pass that link as `url` so the same link is
+  updated rather than a new one created. If the Artifact tool isn't available, say so, and the web
+  copy will be updated next time.
 
 ## Layout
 
