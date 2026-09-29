@@ -4,7 +4,7 @@ const URL=APP+''; let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
 (async()=>{
   const b=await chromium.launch(); const errs=[]; const p=await b.newPage({viewport:{width:360,height:800}}); p.on('pageerror',e=>errs.push(String(e)));
   const hs=[];
-  const NEW=['xa1k','xa1l','xa1m','xa1n','xa2k','xa2l','xa2m','xa2n','xb1k','xb1l','xb1m','xb1n','xb2k','xb2l','xb2m','xb2n','xc1k','xc1l','xc1m','xc1n','xc2k','xc2l','xc2m','xc2n','xa1o','xa1p','xa1q','xa1r','xa1s','xa1t','xa1u','xa1v','xa2o','xa2p','xa2q','xa2r','xa2s','xa2t','xa2u','xa2v','xb1o','xb1p','xb1q','xb1r','xb1s','xb1t','xb1u','xb1v','xb2o','xb2p','xb2q','xb2r','xb2s','xb2t','xb2u','xb2v'];
+  const NEW=['xa1k','xa1l','xa1m','xa1n','xa2k','xa2l','xa2m','xa2n','xb1k','xb1l','xb1m','xb1n','xb2k','xb2l','xb2m','xb2n','xc1k','xc1l','xc1m','xc1n','xc2k','xc2l','xc2m','xc2n','xa1o','xa1p','xa1q','xa1r','xa1s','xa1t','xa1u','xa1v','xa2o','xa2p','xa2q','xa2r','xa2s','xa2t','xa2u','xa2v','xb1o','xb1p','xb1q','xb1r','xb1s','xb1t','xb1u','xb1v','xb2o','xb2p','xb2q','xb2r','xb2s','xb2t','xb2u','xb2v','xc1o','xc1p','xc1q','xc1r','xc1s','xc1t','xc1u','xc1v','xc2o','xc2p','xc2q','xc2r','xc2s','xc2t','xc2u','xc2v'];
   NEW.forEach(u=>hs.push('#lesson-'+u));
   for(let i=65;i<=76;i++)hs.push('#practice-pod.p'+i);
   ['a1k','a1l','a2k','a2l','b1l','b1m','b2k','b2l','c1j','c1k','c2e','c2f'].forEach(s=>hs.push('#practice-story.'+s));
