@@ -690,6 +690,7 @@ h1,h2,h3{letter-spacing:-.02em}
 @media (max-width:520px){.lrow+.lrow::before{left:62px}}
 .lrow[disabled]{opacity:.5}
 .lrow.is-locked .ltitle,.lrow.is-locked .lnum{opacity:.55}
+.chip.bonus{background:var(--accent-soft);color:var(--accent)}
 .lv-skip{padding:0;min-height:32px;margin-top:2px}
 .lnum{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--fill);color:var(--accent);font:700 13px/1 var(--f-num)}
 .ltitle b{font-family:var(--f-body);font-weight:600}
@@ -1799,7 +1800,11 @@ const PLACEMENT=[
 
 const STEPS=[["vocab","คำศัพท์"],["grammar","ครูสอน"],["dialogue","บทสนทนา"],["practice","ฝึกทำ"],["speak","ฝึกพูด"],["quiz","สอบท้ายบท"]];
 const WORDS={};
-COURSE.forEach((u,i)=>{u.n=i+1;u.vocab.forEach(w=>{WORDS[w.en]=Object.assign({unit:u.id},w)})});
+// bonus units (extra:true) sit after the core units of their level and are numbered 4.1, 4.2 …
+COURSE.sort((a,b)=>a.lv-b.lv||(a.extra?1:0)-(b.extra?1:0));
+(function(){let n=0,k=0; COURSE.forEach(u=>{if(u.extra){k++; u.n=n+"."+k} else {n++; k=0; u.n=n}})})();
+COURSE.forEach(u=>u.vocab.forEach(w=>{WORDS[w.en]=Object.assign({unit:u.id},w)}));
+function coreOf(n){return COURSE.filter(u=>u.lv===n&&!u.extra)}
 
 /* ---------- helpers ---------- */
 const $=(s,r)=>(r||document).querySelector(s);
@@ -1865,11 +1870,16 @@ async function initCloud(){
 function rec(id){return S.lessons[id]||(S.lessons[id]={reached:0,done:false,best:0,stars:0})}
 function isDone(i){const r=S.lessons[COURSE[i].id];return !!(r&&r.done)}
 function firstOfLevel(lv){return COURSE.findIndex(u=>u.lv===lv)}
-function unlocked(i){return i===0||isDone(i-1)||(S.placement.done&&i<=firstOfLevel(S.placement.level))}
+function prevCore(i){for(let j=i-1;j>=0;j--) if(!COURSE[j].extra) return j; return -1}
+function unlocked(i){
+  if(COURSE[i].extra) return unlocked(firstOfLevel(COURSE[i].lv)); // bonus units open with their level and never block the course
+  const p=prevCore(i); return p<0||isDone(p)||(S.placement.done&&i<=firstOfLevel(S.placement.level));
+}
 function nextIdx(){
   const st=S.placement.done?Math.max(0,firstOfLevel(S.placement.level)):0;
-  for(let i=st;i<COURSE.length;i++) if(unlocked(i)&&!isDone(i)) return i;
-  for(let i=0;i<st;i++) if(unlocked(i)&&!isDone(i)) return i;
+  for(let i=st;i<COURSE.length;i++) if(!COURSE[i].extra&&unlocked(i)&&!isDone(i)) return i;
+  for(let i=0;i<st;i++) if(!COURSE[i].extra&&unlocked(i)&&!isDone(i)) return i;
+  for(let i=COURSE.length-1;i>=0;i--) if(!COURSE[i].extra) return i;
   return COURSE.length-1;
 }
 function markDay(){const k=dayKey(); if(!S.days.includes(k)){S.days.push(k); if(S.days.length>400) S.days=S.days.slice(-400)}}
@@ -4166,7 +4176,7 @@ const BADGES=[
  {id:"i6",t:"IELTS 6.0+",d:"Overall band โดยประมาณ 6.0 ขึ้นไป",ok:()=>(ieltsOverall()||0)>=6},
  {id:"xp",t:"คะแนน 2,000",d:"สะสมคะแนนครบ 2,000",ok:()=>S.xp>=2000}
 ];
-function lvDone(n){const us=COURSE.filter(u=>u.lv===n); return us.length>0&&us.every(u=>S.lessons[u.id]&&S.lessons[u.id].done)}
+function lvDone(n){const us=coreOf(n); return us.length>0&&us.every(u=>S.lessons[u.id]&&S.lessons[u.id].done)}
 function maxStreak(){const s=stat("streak"); const now=streak(); if(now>(s.max||0)) s.max=now; return s.max||0}
 function checkBadges(){
   if(!Array.isArray(S.badges)) S.badges=[];
@@ -4893,7 +4903,7 @@ async function pbPlayAll(id){
 
 /* ---------- level tests ---------- */
 function lvItems(n){
-  const us=COURSE.filter(u=>u.lv===n);
+  const us=coreOf(n);
   return shuffle([].concat.apply([],us.map(u=>u.practice.concat(u.quiz)))).slice(0,20);
 }
 function viewLvTests(){
@@ -4918,7 +4928,7 @@ function viewLvTest(n){
 function runnerDoneX(r,c,tot){
   const pct=Math.round(c/tot*100);
   if(r.kind==="lvt"&&PRUN_META){const st=stat("lvtest"); st[PRUN_META.lv]=Math.max(st[PRUN_META.lv]||0,pct); S.xp+=c*3;
-    if(pct>=80){let n=0; COURSE.filter(u=>u.lv===PRUN_META.lv).forEach(u=>{const rr=rec(u.id); if(rr.done) return; rr.done=true; rr.skipped=true; rr.reached=5; rr.best=Math.max(rr.best||0,pct); rr.stars=Math.max(rr.stars||0,pct===100?3:pct>=85?2:1); rr.doneAt=Date.now(); n++});
+    if(pct>=80){let n=0; coreOf(PRUN_META.lv).forEach(u=>{const rr=rec(u.id); if(rr.done) return; rr.done=true; rr.skipped=true; rr.reached=5; rr.best=Math.max(rr.best||0,pct); rr.stars=Math.max(rr.stars||0,pct===100?3:pct>=85?2:1); rr.doneAt=Date.now(); n++});
       if(n) toast("ผ่านระดับ "+LEVELS[PRUN_META.lv-1].code+" แล้ว ข้าม "+n+" บท ระดับถัดไปปลดล็อกแล้ว")}}
   if(r.kind==="pb"&&PRUN_META){const st=stat("pb"); st[PRUN_META.sit]=Math.max(st[PRUN_META.sit]||0,pct); S.xp+=c*2}
   if(r.kind==="tg"||r.kind==="wf"){const st=stat(r.kind); st.best=Math.max(st.best||0,c); S.xp+=c*2}
@@ -6769,16 +6779,17 @@ function lessonRow(i){
     :done?'<span class="chip ok">ผ่านแล้ว · '+r.best+'%</span><span class="stars" aria-label="'+r.stars+' ดาว">'+"★".repeat(r.stars)+"☆".repeat(3-r.stars)+'</span>'
     :(r&&r.reached>0)?'<span class="chip now">กำลังเรียน · '+STEPS[Math.min(r.reached,5)][1]+'</span>'
     :'<span class="chip now">พร้อมเรียน</span>';
-  return '<button class="lrow'+(lock?' is-locked':'')+'" data-act="'+(lock?'testout':'open')+'" data-id="'+u.id+'"'+(lock?' aria-label="'+esc(u.en)+' ล็อกอยู่ แตะเพื่อสอบข้ามบทนี้"':'')+'><span class="lnum">U'+String(u.n).padStart(2,"0")+'</span><span class="ltitle"><b lang="en">'+esc(u.en)+'</b><small>'+esc(u.th)+' · '+esc(u.grammar.title)+'</small></span><span class="lstat">'+stat+'</span></button>';
+  const tag=u.extra?'<span class="chip bonus">บทเสริม</span>':'';
+  return '<button class="lrow'+(lock?' is-locked':'')+'" data-act="'+(lock?'testout':'open')+'" data-id="'+u.id+'"'+(lock?' aria-label="'+esc(u.en)+' ล็อกอยู่ แตะเพื่อสอบข้ามบทนี้"':'')+'><span class="lnum">U'+String(u.n).padStart(2,"0")+'</span><span class="ltitle"><b lang="en">'+esc(u.en)+'</b><small>'+esc(u.th)+' · '+esc(u.grammar.title)+'</small></span><span class="lstat">'+tag+stat+'</span></button>';
 }
 
 /* ---------- views: course ---------- */
 function viewCourse(){
-  return '<h1 class="h1">หลักสูตรภาษาอังกฤษ</h1><p class="lede">6 ระดับ 24 บท เรียงจากง่ายไปยาก แต่ละบทปลดล็อกเมื่อสอบท้ายบทก่อนหน้าผ่าน 70% ถ้ามีพื้นฐานแล้ว <button class="btn btn-sm btn-ghost" style="padding:0 4px;min-height:0;color:var(--accent)" data-act="go" data-to="placement">ทำแบบทดสอบวัดระดับ</button> เพื่อข้ามบทได้</p>'
+  return '<h1 class="h1">หลักสูตรภาษาอังกฤษ</h1><p class="lede">'+LEVELS.length+' ระดับ '+COURSE.filter(u=>!u.extra).length+' บทหลัก'+(COURSE.some(u=>u.extra)?' และบทเสริมอีก '+COURSE.filter(u=>u.extra).length+' บท (เลือกเรียนได้ ไม่ล็อกบทถัดไป)':'')+' เรียงจากง่ายไปยาก แต่ละบทปลดล็อกเมื่อสอบท้ายบทก่อนหน้าผ่าน 70% ถ้ามีพื้นฐานแล้ว <button class="btn btn-sm btn-ghost" style="padding:0 4px;min-height:0;color:var(--accent)" data-act="go" data-to="placement">ทำแบบทดสอบวัดระดับ</button> เพื่อข้ามบทได้</p>'
    +LEVELS.map(lv=>{
-     const us=COURSE.filter(u=>u.lv===lv.n), d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;
+     const all=COURSE.filter(u=>u.lv===lv.n), us=all.filter(u=>!u.extra), d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length, ex=all.length-us.length;
      return '<section class="level"><div class="level-head"><span class="level-code">'+lv.code+'</span><div><h2 class="h3" lang="en">'+esc(lv.name)+'</h2><p class="muted">'+esc(lv.th)+' · ผ่าน '+d+'/'+us.length+' บท</p>'+(d<us.length?'<button class="btn btn-sm btn-ghost lv-skip" data-act="pgo" data-id="lvtest.'+lv.n+'">ง่ายไป สอบข้ามทั้งระดับ</button>':'')+'</div><div class="bar" role="img" aria-label="ความคืบหน้า '+d+' จาก '+us.length+'"><i style="width:'+(d/us.length*100)+'%"></i></div></div>'
-      +'<div class="lessons">'+us.map(u=>lessonRow(COURSE.indexOf(u))).join("")+'</div></section>';
+      +'<div class="lessons">'+all.map(u=>lessonRow(COURSE.indexOf(u))).join("")+'</div></section>';
    }).join("");
 }
 
@@ -6870,7 +6881,7 @@ function stageQuiz(u){
   return (L.testout?'<div class="feedback ok" style="margin:0 0 14px"><b>สอบข้ามบท</b><span>ถ้าได้ 70% ขึ้นไป บทนี้จะนับว่าผ่าน และบทถัดไปจะปลดล็อก ถ้าไม่ผ่านก็เลือกเรียนขั้นไหนก่อนก็ได้จากแถบด้านบน</span></div>':'')+'<p class="muted" style="margin-bottom:14px">สอบท้ายบท '+L.quiz.items.length+' ข้อ ต้องได้ 70% ขึ้นไปจึงผ่าน</p>'+runnerHTML(L.quiz);
 }
 function quizResult(u){
-  const q=L.quizDone, r=rec(u.id), pass=q.pct>=70, next=COURSE[L.idx+1];
+  const q=L.quizDone, r=rec(u.id), pass=q.pct>=70, next=COURSE.slice(L.idx+1).find(x=>!x.extra);
   const w=W[u.id]||{text:""};
   let writing='<section class="section" style="margin-top:32px"><div class="notebook"><p class="eyebrow">การบ้านเขียน</p><h2 class="h3" style="margin-top:4px">'+esc(u.writing.th)+'</h2>'
     +'<label class="sr" for="w-'+u.id+'">คำตอบการบ้าน</label><textarea class="ta" id="w-'+u.id+'" data-w="'+u.id+'" style="margin-top:12px" placeholder="เขียนเป็นภาษาอังกฤษ…" lang="en">'+esc(w.text)+'</textarea>'
@@ -7055,7 +7066,7 @@ function viewReport(){
   const done=COURSE.filter((_,i)=>isDone(i)), scores=done.map(u=>S.lessons[u.id].best);
   const avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0;
   const keys=Object.keys(S.words).filter(k=>WORDS[k]);
-  const certs=LEVELS.filter(lv=>COURSE.filter(u=>u.lv===lv.n).every(u=>S.lessons[u.id]&&S.lessons[u.id].done));
+  const certs=LEVELS.filter(lv=>coreOf(lv.n).every(u=>S.lessons[u.id]&&S.lessons[u.id].done));
   const table=COURSE.map((u,i)=>{const r=S.lessons[u.id];
     return '<tr><td class="mono">U'+String(u.n).padStart(2,"0")+'</td><td><span lang="en">'+esc(u.en)+'</span><br><span class="muted" style="font-size:14px">'+esc(u.th)+'</span></td><td>'+LEVELS[u.lv-1].code+'</td>'
      +'<td>'+(r&&r.done?'<span class="chip ok">ผ่าน</span>':unlocked(i)?(r&&r.reached?'<span class="chip now">กำลังเรียน</span>':'<span class="chip">ยังไม่เริ่ม</span>'):'<span class="chip lock">ล็อก</span>')+'</td>'
@@ -7065,12 +7076,12 @@ function viewReport(){
    +'<section class="section"><h2 class="h3" style="margin-bottom:10px">ผลการเรียนรายบท</h2><div class="tbl-wrap"><table class="rep-tbl"><thead><tr><th>บท</th><th>ชื่อบท</th><th>ระดับ</th><th>สถานะ</th><th>คะแนนสูงสุด</th><th>ดาว</th><th>การบ้านเขียน</th></tr></thead><tbody>'+table+'</tbody></table></div></section>'
    +'<section class="section"><div class="section-head"><h2 class="h3">ประกาศนียบัตร</h2><div class="name-field"><label for="cert-name" class="muted">ชื่อบนประกาศนียบัตร</label><input id="cert-name" value="'+esc(S.name)+'" placeholder="ชื่อของคุณ" maxlength="40"></div></div>'
    +(certs.length?'<div class="cert-grid">'+certs.map(lv=>{
-      const us=COURSE.filter(u=>u.lv===lv.n), a=Math.round(us.reduce((s,u)=>s+S.lessons[u.id].best,0)/us.length);
+      const us=coreOf(lv.n), a=Math.round(us.reduce((s,u)=>s+S.lessons[u.id].best,0)/us.length);
       const at=Math.max.apply(null,us.map(u=>S.lessons[u.id].doneAt||0));
       let dt=""; try{dt=new Date(at||Date.now()).toLocaleDateString("th-TH",{day:"numeric",month:"long",year:"numeric"})}catch(e){}
       return '<div class="cert"><p class="eyebrow">ประกาศนียบัตรนี้ให้ไว้เพื่อแสดงว่า</p><div class="name">'+esc(S.name||"ผู้เรียน")+'</div><p>ได้สำเร็จหลักสูตรภาษาอังกฤษ</p><h3 lang="en">'+lv.code+' '+esc(lv.name)+'</h3><p class="muted">คะแนนเฉลี่ย '+a+'% · '+esc(dt)+'</p><span class="seal">'+lv.code+'<br>ผ่าน</span></div>';
     }).join("")+'</div>'
-    :'<div class="card"><p>ผ่านทุกบทในระดับเดียวกันครบ 4 บท เพื่อรับประกาศนียบัตรระดับนั้น</p><div class="stack" style="margin-top:14px;gap:10px">'+LEVELS.map(lv=>{const us=COURSE.filter(u=>u.lv===lv.n),d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;return '<div><div class="row" style="justify-content:space-between"><span>'+lv.code+' <span lang="en">'+esc(lv.name)+'</span></span><span class="muted">'+d+'/4</span></div><div class="bar"><i style="width:'+(d/4*100)+'%"></i></div></div>'}).join("")+'</div></div>')
+    :'<div class="card"><p>ผ่านทุกบทในระดับเดียวกันครบ 4 บท เพื่อรับประกาศนียบัตรระดับนั้น</p><div class="stack" style="margin-top:14px;gap:10px">'+LEVELS.map(lv=>{const us=coreOf(lv.n),d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;return '<div><div class="row" style="justify-content:space-between"><span>'+lv.code+' <span lang="en">'+esc(lv.name)+'</span></span><span class="muted">'+d+'/4</span></div><div class="bar"><i style="width:'+(d/4*100)+'%"></i></div></div>'}).join("")+'</div></div>')
    +'</section>'
    +xpChartHTML()+calendarHTML()+badgesHTML()+settingsHTML()
    +otaSection()
