@@ -25,7 +25,7 @@ const URL=APP+''; let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
   // review "too easy"
   await p.evaluate(()=>{const s=JSON.parse(localStorage.getItem('eng-class-v1')); s.words={"hello":{b:0,due:0},"name":{b:0,due:0}}; localStorage.setItem('eng-class-v1',JSON.stringify(s))});
   await open(p,'#review'); await p.click('[data-act="rv-start"]'); await p.click('[data-act="rv-reveal"]').catch(()=>{});
-  await p.click('[data-act="rv-grade"][data-g="3"]');
+  await p.click('[data-act="rv-easy"]');   // the "too easy" button now sits on the card itself (word_marks.test.js covers it in full)
   const w=await p.evaluate(()=>JSON.parse(localStorage.getItem('eng-class-v1')).words);
   console.log('easy word:', JSON.stringify(Object.entries(w).map(([k,v])=>[k,v.b,Math.round((v.due-Date.now())/864e5)])));
   await open(p,'#course'); await p.screenshot({path:OUT+'skip-course.png'});
