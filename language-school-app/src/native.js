@@ -6,15 +6,19 @@ import { App } from '@capacitor/app';
 import { Preferences } from '@capacitor/preferences';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { SpeechRecognition } from '@capgo/capacitor-speech-recognition';
+import { Translation, Language } from '@capacitor-mlkit/translation';
 
 const STORE_KEY = 'eng-class-v1';
 
 // ----- lesson updates -----
 // The app shell (this file and the native plugins) has an API version. A lesson bundle
 // says which shell version it needs; bundles that need a newer shell are skipped until
-// the app itself is reinstalled. Bump SHELL when index.html starts using a new API here,
-// and REQUIRES_SHELL in scripts/build-www.mjs at the same time.
-const SHELL = 1;
+// the app itself is reinstalled. Bump SHELL when index.html starts using a new API here.
+// Raise REQUIRES_SHELL in scripts/build-www.mjs only when index.html cannot run without
+// the new API; a feature that checks for its API (song mode checks NB.translate) can ship
+// to older apps and tell them to install the new one.
+// 2: translate (on-device en -> th) and fetchText (pages without CORS) for song mode.
+const SHELL = 2;
 const UPDATE_URL = 'https://github.com/snabs1993/kritsada/releases/download/lessons-latest/lessons.json';
 const BUNDLE_KEY = 'ota-bundle';
 const BAD_KEY = 'ota-bad';
@@ -205,6 +209,44 @@ function applyUpdate() {
   location.reload();
 }
 
+// ----- song mode -----
+// English -> Thai on the phone (Google ML Kit). The Thai model (~30 MB) downloads once,
+// then translation works offline. Returns one Thai line per input line ("" stays "").
+let thaiReady = null;
+async function translate(lines, onProgress) {
+  if (!thaiReady) thaiReady = Translation.downloadModel({ language: Language.Thai }).catch((e) => { thaiReady = null; throw e; });
+  await thaiReady;
+  const out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const text = String(lines[i] || '').trim();
+    if (!text) out.push('');
+    else {
+      const r = await Translation.translate({ text, sourceLanguage: Language.English, targetLanguage: Language.Thai });
+      out.push(r.text || '');
+    }
+    if (onProgress) onProgress(i + 1, lines.length);
+  }
+  return out;
+}
+
+// GET a web page as text through the native HTTP stack, which is not limited by CORS
+// (Spotify playlist embed pages, YouTube search results).
+async function fetchText(url) {
+  const res = await CapacitorHttp.get({
+    url,
+    responseType: 'text',
+    // a desktop browser identity: YouTube's mobile results page has a different layout
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36',
+      'Accept-Language': 'en-US,en;q=0.9',
+    },
+    connectTimeout: 10000,
+    readTimeout: 20000,
+  });
+  if (res.status !== 200) throw new Error('http ' + res.status);
+  return typeof res.data === 'string' ? res.data : JSON.stringify(res.data);
+}
+
 function onBack(handler) {
   App.addListener('backButton', handler);
 }
@@ -231,5 +273,7 @@ if (Capacitor.isNativePlatform()) {
     checkUpdate,
     pendingVersion,
     applyUpdate,
+    translate,
+    fetchText,
   };
 }

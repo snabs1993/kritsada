@@ -792,6 +792,17 @@ th,td{border-bottom:.5px solid var(--sep)}
 .goal-card .bar{height:10px}
 .xpc-col i{border-radius:6px 6px 2px 2px}
 @media (prefers-reduced-motion:reduce){.btn:active{transform:none}}
+.sg-frame{margin-top:12px}
+.sg-lyrics{margin-top:12px;max-height:52vh;overflow-y:auto;scroll-behavior:smooth;border-radius:14px;background:var(--card,#fff);padding:6px}
+.sg-line{display:block;width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:8px 10px;font:inherit;color:inherit;opacity:.55;cursor:pointer}
+.sg-line.on{opacity:1;background:rgba(0,113,227,.10)}
+.sg-line:disabled{opacity:.9;cursor:default}
+.sg-en{display:block;font-size:17px;font-weight:600;line-height:1.35}
+.sg-th{display:block;font-size:15px;line-height:1.4;margin-top:2px;color:var(--muted,#6e6e73)}
+.sg-offnote{display:none;padding:10px}
+.sub-en .sg-th,.sub-th .sg-en{display:none}
+.sub-th .sg-th{font-size:17px;color:inherit}
+.sub-off .sg-line{display:none}.sub-off .sg-offnote{display:block}
 </style>
 
 <header class="topbar">
@@ -9737,6 +9748,8 @@ function viewPractice(){
   if(id==="lvtest") return viewLvTests();
   if(id==="pods") return viewPods();
   if(id==="shadow") return viewShadowList();
+  if(id==="songs") return viewSongs();
+  if(id.indexOf("song.")===0) return viewSong(id.slice(5));
   if(id==="yt") return viewYtList();
   if(id.indexOf("yt.")===0) return viewYt(id.slice(3));
   if(id.indexOf("shadow.")===0) return viewShadow(id.slice(7));
@@ -9757,6 +9770,7 @@ function viewPracticeHub(){
   return '<h1 class="h1">ฝึกฝน</h1><p class="lede">แบบฝึกเสริมนอกบทเรียน ฝึกทีละทักษะ ทำวันละนิดสม่ำเสมอได้ผลกว่าทำทีเดียวเยอะๆ</p>'
    +'<div style="margin-top:18px">'+dailyCard()+'</div>'
    +group("ฟังและพูด",
+     card("pgo","songs","ฟังเพลง แปลเพลง","ฟังเพลงภาษาอังกฤษ เนื้อเพลงขึ้นตามจังหวะพร้อมคำแปลไทย เปิดหรือปิดซับได้ ดึงเพลย์ลิสต์จาก Spotify ได้"+(sgCan()?"":NB?" (ต้องลงแอปเวอร์ชันใหม่)":" (ใช้ได้ในแอป Android)"),(sgData().recent.length?"ฟังแล้ว "+sgData().recent.length+" เพลง":"เพลงใหม่"))+
      card("pgo","shadow","ห้องฝึก Shadowing","ฟังแล้วพูดตามทีละประโยค จากบทสนทนา พอดแคสต์ บทอ่าน และประโยคพร้อมใช้ ปรับความเร็ว ซ่อนข้อความ"+(NB?" แอปฟังเสียงและให้คะแนน":""),"ฝึกแล้ว "+(stat("shadow").n||0)+" ประโยค")
     +card("pgo","dictation","ฟังแล้วพิมพ์","ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์ไปพร้อมกัน "+DICT.reduce((n,d)=>n+d.items.length,0)+" ประโยค A1–C2","ทำแล้ว "+dict+" ประโยค")
     +card("pgo","sounds","ฝึกหูแยกเสียง","เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W, S/Z, เสียงท้ายคำ -s -ed, TH และ -teen/-ty",snd+" / "+SOUNDS.length+" ชุดเสียง")
@@ -15228,6 +15242,183 @@ STORIES.push(
   qs:[{q:"How is slowness usually perceived, according to the writer?",o:["as a sign of wisdom","as a deficiency","as a luxury only the rich can afford"],a:1},{q:"Why does the writer mention reading a novel at twice the speed?",o:["to show that some activities are degraded by acceleration","to recommend speed-reading","to criticise novelists"],a:0},{q:"What is the writer's main argument?",o:["All tasks should be done slowly.","Speed is always a sign of anxiety.","Pace should be chosen to fit the task rather than assumed."],a:2}]}
 );
 
+/* ---------- song mode: timed lyrics with Thai subtitles (Android app) ---------- */
+// Playlists come from a public Spotify playlist link (its embed page), timed lyrics from LRCLIB,
+// the song itself from a matching YouTube video, and each line is translated on the phone (NB.translate).
+// Lyrics, video choice and translations are cached per song in localStorage (SG_CACHE), not in the synced progress.
+const SG_CACHE="eng-class-songs", APK_URL="https://github.com/snabs1993/kritsada/releases/download/lessons-latest/english-class.apk";
+let SG=null, sgPlayer=null, sgTimer=null, SGF=null;
+function sgData(){if(!S.songs||typeof S.songs!=="object") S.songs={}; const d=S.songs; if(!Array.isArray(d.lists)) d.lists=[]; if(!d.tracks||typeof d.tracks!=="object") d.tracks={}; if(!Array.isArray(d.recent)) d.recent=[]; return d}
+function sgCan(){return !!(NB&&NB.translate&&NB.fetchText)}
+function sgCacheAll(){try{return JSON.parse(localStorage.getItem(SG_CACHE)||"{}")||{}}catch(e){return {}}}
+function sgCacheGet(id){return sgCacheAll()[id]||{}}
+function sgCachePut(id,v){try{const c=sgCacheAll(); c[id]=Object.assign(c[id]||{},v,{at:Date.now()}); const ks=Object.keys(c).sort((a,b)=>(c[a].at||0)-(c[b].at||0)); while(ks.length>80) delete c[ks.shift()]; localStorage.setItem(SG_CACHE,JSON.stringify(c))}catch(e){}}
+function sgId(a,t){let h=5381; const s=(a+"|"+t).toLowerCase(); for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))>>>0; return h.toString(36)}
+function sgAddTrack(t,a,secs){const id=sgId(a,t), d=sgData(); if(!d.tracks[id]) d.tracks[id]={t,a,secs:secs||0}; d.recent=[id].concat(d.recent.filter(x=>x!==id)).slice(0,30); return id}
+function sgSpotifyId(s){const m=String(s||"").match(/playlist[\/:]([A-Za-z0-9]{22})/); return m?m[1]:null}
+function sgParseSpotify(html){
+  const m=String(html).match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/); if(!m) return null;
+  try{const e=JSON.parse(m[1]).props.pageProps.state.data.entity;
+    return {name:e.name||e.title||"Spotify playlist",tracks:(e.trackList||[]).map(x=>({t:x.title,a:x.subtitle||"",secs:Math.round((x.duration||0)/1000)})).filter(x=>x.t)}}catch(e){return null}
+}
+// video id, length in seconds and title from a YouTube results page (desktop layout)
+function sgYtResults(html){
+  const out=[], seen=new Set();
+  for(const c of String(html).split(/"(?:videoRenderer|videoWithContextRenderer|compactVideoRenderer)":\{/).slice(1)){
+    const id=(c.match(/"videoId":"([A-Za-z0-9_-]{11})"/)||[])[1]; if(!id||seen.has(id)) continue; seen.add(id);
+    const len=(c.match(/"lengthText":\{.{0,240}?"(?:simpleText|text)":"(\d+(?::\d{2})+)"/)||[])[1];
+    out.push({id,secs:len?len.split(":").reduce((a,b)=>a*60+ +b,0):0,title:(c.match(/"(?:title|headline)":\{"runs":\[\{"text":"((?:[^"\\]|\\.)*)"/)||[])[1]||""});
+    if(out.length>=10) break;
+  }
+  return out;
+}
+function sgParseLrc(s){
+  const out=[];
+  String(s||"").split(/\r?\n/).forEach(line=>{const text=line.replace(/\[[^\]]*\]/g,"").trim(); for(const m of line.matchAll(/\[(\d+):(\d+(?:\.\d+)?)\]/g)) out.push({t:+m[1]*60+ +m[2],en:text})});
+  return out.sort((a,b)=>a.t-b.t);
+}
+function sgSub(){const v=S.settings.sgSub; return ["both","en","th","off"].includes(v)?v:"both"}
+
+function viewSongs(){
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">ฟังเพลง แปลเพลง</h1><p class="lede">ฟังเพลงภาษาอังกฤษพร้อมเนื้อเพลงที่ขึ้นตามจังหวะ มีคำแปลไทยใต้ทุกบรรทัด เลือกดูซับอังกฤษ ไทย หรือปิดซับได้ แตะบรรทัดไหนก็ข้ามไปฟังตรงนั้น</p>';
+  if(!sgCan()) return h+'<div class="card" style="margin-top:16px"><p><b>'+(NB?"ต้องลงแอปเวอร์ชันใหม่ก่อน":"ใช้ได้ในแอป Android")+'</b></p><p class="muted" style="margin-top:6px">'
+    +(NB?"โหมดเพลงต้องใช้ตัวแปลภาษาในเครื่อง ซึ่งมีในแอปเวอร์ชันใหม่ กดดาวน์โหลดแล้วลงทับแอปเดิม ความคืบหน้าและคำศัพท์ไม่หาย":"หน้าเว็บเปิดเพลงจาก YouTube และดึงเพลย์ลิสต์ไม่ได้ เปิดเมนูนี้ในแอป Android")+'</p>'
+    +(NB?'<a class="btn btn-primary" style="margin-top:12px" href="'+APK_URL+'">ดาวน์โหลดแอปเวอร์ชันใหม่</a>':'')+'</div>';
+  const d=sgData();
+  const row=(t,a,secs)=>'<button class="lrow" data-act="sgopen" data-t="'+esc(t)+'" data-a="'+esc(a)+'" data-s="'+(secs||0)+'"><span class="lnum">♪</span><span class="ltitle"><b lang="en">'+esc(t)+'</b><small lang="en">'+esc(a)+(secs?' · '+mmss(secs):'')+'</small></span></button>';
+  h+='<form class="card" data-form="sgfind" style="margin-top:16px"><label for="sg-q"><b>ค้นหาเพลง</b></label><div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="sg-q" class="dict-in" style="margin-top:0" lang="en" autocomplete="off" spellcheck="false" placeholder="ชื่อเพลง หรือ ชื่อเพลง + ศิลปิน" value="'+esc(SGF?SGF.q:"")+'"><button class="btn btn-primary" type="submit">ค้นหา</button></div>'
+    +(SGF&&SGF.busy?'<p class="muted" style="margin-top:8px">กำลังค้นหา…</p>':'')
+    +(SGF&&!SGF.busy&&SGF.res?(SGF.res.length?'<div class="lessons" style="margin-top:10px">'+SGF.res.map(x=>row(x.t,x.a,x.secs)).join("")+'</div>':'<p class="muted" style="margin-top:8px">ไม่เจอเพลงที่มีเนื้อเพลง ลองพิมพ์ชื่อเพลงให้ถูก หรือใส่ชื่อศิลปินด้วย</p>'):'')+'</form>';
+  h+='<form class="card" data-form="sgspot" style="margin-top:12px"><label for="sg-spot"><b>ดึงเพลย์ลิสต์จาก Spotify</b></label><div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="sg-spot" class="dict-in" style="margin-top:0" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://open.spotify.com/playlist/..."><button class="btn btn-primary" type="submit">ดึง</button></div><p class="muted" style="font-size:13.5px;margin-top:6px">ในแอป Spotify เปิดเพลย์ลิสต์ กด ⋯ → แชร์ → คัดลอกลิงก์ แล้วมาวางที่นี่ (เพลย์ลิสต์ต้องเป็นแบบสาธารณะ)</p></form>';
+  const rec=d.recent.filter(id=>d.tracks[id]);
+  if(rec.length) h+='<section class="section"><h2 class="h3">ฟังล่าสุด</h2><div class="lessons" style="margin-top:10px">'+rec.map(id=>{const x=d.tracks[id]; return row(x.t,x.a,x.secs)}).join("")+'</div></section>';
+  d.lists.forEach(p=>{h+='<section class="section"><details class="card"><summary><b>'+esc(p.name)+'</b> <span class="muted">· '+p.tracks.length+' เพลง</span></summary><div class="lessons" style="margin-top:10px">'+p.tracks.map(x=>row(x.t,x.a,x.secs)).join("")+'</div><button class="btn btn-sm btn-ghost" style="margin-top:8px" data-act="sgdellist" data-id="'+esc(p.id)+'">ลบเพลย์ลิสต์นี้</button></details></section>'});
+  return h;
+}
+function viewSong(id){
+  const tr=sgData().tracks[id];
+  if(!sgCan()||!tr) return viewSongs();
+  if(!SG||SG.id!==id){const c=sgCacheGet(id); SG={id,lines:c.lines||null,th:c.th||null,synced:c.synced!==false,vid:c.vid||null,alts:c.alts||[],off:c.off||0,status:"",err:"",cur:-1,started:false}}
+  const sub=sgSub();
+  const tabs='<div class="tabs" role="group" aria-label="ซับ">'+[["both","อังกฤษ + ไทย"],["en","อังกฤษ"],["th","ไทย"],["off","ปิดซับ"]].map(o=>'<button data-act="sgsub" data-v="'+o[0]+'" aria-pressed="'+(sub===o[0])+'">'+o[1]+'</button>').join("")+'</div>';
+  return pBack("songs","โหมดเพลง")+'<h1 class="h2" style="margin-top:8px" lang="en">'+esc(tr.t)+'</h1><p class="muted" lang="en">'+esc(tr.a)+'</p>'
+   +'<div class="yt-frame sg-frame" id="sg-slot" data-sid="'+esc(id)+'"><div id="sg-player"></div></div>'
+   +'<p class="muted" id="sg-status" style="margin-top:8px;min-height:1.3em">'+esc(SG.status)+'</p><p class="pen" id="sg-err"'+(SG.err?'':' hidden')+'>'+esc(SG.err)+'</p>'
+   +tabs
+   +'<div id="sg-lyrics" class="sg-lyrics sub-'+sub+'">'+sgLyricsHTML()+'</div>'
+   +'<div class="row" style="margin-top:10px;gap:6px;align-items:center"><span class="muted" style="font-size:14px">ซับไม่ตรงจังหวะ?</span><button class="btn btn-sm" data-act="sgoff" data-d="-0.5">ซับมาเร็วไป</button><button class="btn btn-sm" data-act="sgoff" data-d="0.5">ซับมาช้าไป</button><span class="muted" id="sg-offv" style="font-size:14px">'+sgOffText()+'</span></div>'
+   +'<details class="card" style="margin-top:14px"><summary>วิดีโอไม่ตรงเพลง หรือเล่นไม่ได้?</summary>'
+   +(SG.alts.length>1?'<p class="muted" style="margin-top:8px">ลองวิดีโออื่นที่เจอ:</p><div class="row" style="margin-top:6px">'+SG.alts.map((v,i)=>'<button class="btn btn-sm'+(v===SG.vid?' btn-primary':'')+'" data-act="sgalt" data-v="'+esc(v)+'">ตัวเลือก '+(i+1)+'</button>').join("")+'</div>':'')
+   +'<form data-form="sgvid" style="margin-top:10px"><label for="sg-vurl" class="muted">หรือวางลิงก์ YouTube ของเพลงนี้เอง</label><div class="row" style="margin-top:6px;flex-wrap:nowrap"><input id="sg-vurl" class="dict-in" style="margin-top:0" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://youtu.be/..."><button class="btn" type="submit">ใช้วิดีโอนี้</button></div></form></details>';
+}
+function sgOffText(){return SG&&SG.off?"ปรับแล้ว "+(SG.off>0?"+":"")+SG.off.toFixed(1)+" วิ":""}
+function sgLyricsHTML(){
+  if(!SG||!SG.lines) return '<p class="muted">'+(SG&&SG.err?"":"กำลังโหลดเนื้อเพลง…")+'</p>';
+  const head=SG.synced?'':'<p class="muted" style="margin-bottom:8px">เพลงนี้มีแต่เนื้อเพลง ไม่มีเวลากำกับ ซับจะไม่เลื่อนตามเพลง</p>';
+  return head+'<p class="sg-offnote muted">ซับปิดอยู่ ฟังอย่างเดียว ลองจับคำเองดู</p>'+SG.lines.map((l,i)=>{
+    const th=SG.th?SG.th[i]:"";
+    return '<button class="sg-line'+(i===SG.cur?' on':'')+'" id="sg-l'+i+'" data-act="sgseek" data-i="'+i+'"'+(l.t==null?' disabled':'')+'><span class="sg-en" lang="en">'+(l.en?esc(l.en):"♪")+'</span>'+(l.en&&th?'<span class="sg-th">'+esc(th)+'</span>':'')+'</button>'}).join("");
+}
+function sgPaint(){
+  if(!SG||!$("#sg-slot")||$("#sg-slot").dataset.sid!==SG.id) return;
+  const st=$("#sg-status"); if(st) st.textContent=SG.status;
+  const er=$("#sg-err"); if(er){er.textContent=SG.err; er.hidden=!SG.err}
+  const ly=$("#sg-lyrics"); if(ly) ly.innerHTML=sgLyricsHTML();
+}
+function sgKeep(){return route.name==="practice"&&SG&&route.id==="song."+SG.id&&sgPlayer&&!!document.querySelector('#sg-slot[data-sid="'+SG.id+'"]')}
+function sgEnter(){
+  if(!SG||!$("#sg-slot")) return;
+  if(!SG.started){SG.started=true; sgLoad(SG.id)}
+  else if(SG.vid&&!sgPlayer) sgMount();
+}
+async function sgLoad(id){
+  const tr=sgData().tracks[id], me=SG; if(!tr) return;
+  const set=o=>{if(SG!==me) return false; Object.assign(SG,o); sgPaint(); return true};
+  if(!SG.lines){
+    set({status:"กำลังหาเนื้อเพลง…"});
+    let lines=null, synced=false;
+    try{
+      const q="artist_name="+encodeURIComponent(tr.a)+"&track_name="+encodeURIComponent(tr.t);
+      let r=await fetch("https://lrclib.net/api/get?"+q+(tr.secs?"&duration="+tr.secs:"")), j=r.ok?await r.json():null;
+      if(!j||!(j.syncedLyrics||j.plainLyrics)){r=await fetch("https://lrclib.net/api/search?"+q); const arr=r.ok?await r.json():[]; j=arr.find(x=>x.syncedLyrics)||arr.find(x=>x.plainLyrics)||null}
+      if(j){synced=!!j.syncedLyrics; lines=synced?sgParseLrc(j.syncedLyrics):String(j.plainLyrics||"").split(/\r?\n/).map(en=>({t:null,en:en.trim()})); if(!tr.secs&&j.duration){tr.secs=Math.round(j.duration); save()}}
+    }catch(e){}
+    if(!lines||!lines.length){set({status:"",err:"หาเนื้อเพลงนี้ไม่เจอ ลองเพลงอื่น หรือค้นหาด้วยชื่อเพลงที่สะกดถูกต้อง"}); return}
+    sgCachePut(id,{lines,synced}); if(!set({lines,synced})) return;
+  }
+  if(!SG.vid){
+    set({status:"กำลังหาเพลงใน YouTube…"});
+    try{
+      const res=sgYtResults(await NB.fetchText("https://www.youtube.com/results?search_query="+encodeURIComponent(tr.a+" "+tr.t+" audio")));
+      const near=tr.secs?res.slice(0,8).filter(x=>x.secs).sort((x,y)=>Math.abs(x.secs-tr.secs)-Math.abs(y.secs-tr.secs))[0]:null;
+      const pick=near&&Math.abs(near.secs-tr.secs)<=6?near:res[0];
+      if(pick){const alts=[pick.id].concat(res.map(x=>x.id).filter(v=>v!==pick.id)).slice(0,6); sgCachePut(id,{vid:pick.id,alts}); if(!set({vid:pick.id,alts})) return}
+    }catch(e){}
+    if(SG!==me) return;
+    if(!SG.vid) set({err:"หาเพลงนี้ใน YouTube ไม่เจอ วางลิงก์ YouTube ของเพลงนี้เองได้ด้านล่าง"});
+    else if(route.name==="practice"&&route.id==="song."+id) render();   // shows the video choices; render() mounts the player
+  } else sgMount();
+  if(!SG.th){
+    set({status:"กำลังแปลเป็นไทย… ครั้งแรกแอปต้องดาวน์โหลดตัวแปลภาษาไทยราว 30 MB ผ่าน Wi-Fi เท่านั้น ถ้าใช้เน็ตมือถืออยู่ เนื้อเพลงอังกฤษขึ้นก่อน คำแปลจะตามมาเมื่อต่อ Wi-Fi"});
+    try{const th=await NB.translate(SG.lines.map(l=>l.en),(i,n)=>{if(SG===me){SG.status="กำลังแปลเป็นไทย "+i+"/"+n; const st=$("#sg-status"); if(st) st.textContent=SG.status}}); sgCachePut(id,{th}); set({th})}
+    catch(e){set({err:"แปลเป็นไทยไม่สำเร็จ ครั้งแรกต้องต่อ Wi-Fi เพื่อดาวน์โหลดตัวแปล แล้วเปิดเพลงนี้ใหม่อีกครั้ง"})}
+  }
+  set({status:""});
+}
+async function sgMount(){
+  const id=SG&&SG.id, vid=SG&&SG.vid; if(!vid||!$("#sg-player")) return;
+  try{await ytLoadApi()}catch(e){if(SG) {SG.err="โหลดตัวเล่น YouTube ไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่"; sgPaint()} return}
+  if(!SG||SG.id!==id||SG.vid!==vid||!$("#sg-player")) return;
+  try{if(sgPlayer&&sgPlayer.destroy) sgPlayer.destroy()}catch(e){}
+  clearInterval(sgTimer);
+  sgPlayer=new YT.Player("sg-player",{videoId:vid,width:"100%",height:"100%",playerVars:{playsinline:1,rel:0,modestbranding:1,origin:location.origin},
+    events:{onReady:()=>{clearInterval(sgTimer); sgTimer=setInterval(sgTick,250)},
+      onError:()=>{if(!SG||SG.vid!==vid) return; const nx=SG.alts[SG.alts.indexOf(vid)+1];
+        if(nx){SG.vid=nx; sgCachePut(SG.id,{vid:nx}); SG.status="วิดีโอนี้เล่นในแอปไม่ได้ กำลังลองตัวถัดไป…"; sgPaint(); sgMount()}
+        else{SG.err="วิดีโอเพลงนี้เล่นในแอปไม่ได้ วางลิงก์ YouTube อื่นของเพลงนี้ได้ด้านล่าง"; sgPaint()}}}});
+}
+function sgTick(){
+  if(!SG||!sgPlayer||!SG.lines||!SG.synced||!$("#sg-lyrics")){if(!$("#sg-slot")) clearInterval(sgTimer); return}
+  let t=0; try{t=sgPlayer.getCurrentTime()||0}catch(e){return}
+  t+=SG.off; let i=-1; for(let k=0;k<SG.lines.length;k++){if(SG.lines[k].t<=t) i=k; else break}
+  if(i===SG.cur) return;
+  const old=$("#sg-l"+SG.cur); if(old) old.classList.remove("on");
+  SG.cur=i; const el=$("#sg-l"+i), box=$("#sg-lyrics");
+  if(el){el.classList.add("on"); if(box) box.scrollTop=Math.max(0,el.offsetTop-box.offsetTop-box.clientHeight/3)}
+}
+function sgStop(){clearInterval(sgTimer); try{sgPlayer&&sgPlayer.pauseVideo()}catch(e){} sgPlayer=null}
+const MACT={
+  sgopen:t=>{const id=sgAddTrack(t.dataset.t,t.dataset.a,+t.dataset.s||0); save(); go("practice","song."+id)},
+  sgsub:t=>{S.settings.sgSub=t.dataset.v; save(); const ly=$("#sg-lyrics"); if(ly) ly.className="sg-lyrics sub-"+sgSub(); document.querySelectorAll('[data-act="sgsub"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===sgSub())))},
+  sgoff:t=>{if(!SG) return; SG.off=Math.round((SG.off+ +t.dataset.d)*10)/10; sgCachePut(SG.id,{off:SG.off}); SG.cur=-2; const v=$("#sg-offv"); if(v) v.textContent=sgOffText()},
+  sgseek:t=>{const l=SG&&SG.lines&&SG.lines[+t.dataset.i]; if(!l||l.t==null||!sgPlayer) return; try{sgPlayer.seekTo(Math.max(0,l.t-SG.off),true); sgPlayer.playVideo()}catch(e){}},
+  sgalt:t=>{if(!SG) return; SG.vid=t.dataset.v; SG.err=""; sgCachePut(SG.id,{vid:SG.vid}); sgStop(); render()},
+  sgdellist:t=>{const d=sgData(); d.lists=d.lists.filter(x=>x.id!==t.dataset.id); save(); render()}
+};
+async function sgSubmit(form){
+  if(form.matches('[data-form="sgfind"]')){
+    const q=(($("#sg-q")||{}).value||"").trim(); if(!q) return;
+    SGF={q,busy:true}; render();
+    try{const r=await fetch("https://lrclib.net/api/search?q="+encodeURIComponent(q)), arr=r.ok?await r.json():[], seen=new Set();
+      SGF.res=arr.filter(x=>x.syncedLyrics||x.plainLyrics).map(x=>({t:x.trackName,a:x.artistName,secs:Math.round(x.duration||0),synced:!!x.syncedLyrics})).sort((a,b)=>(b.synced?1:0)-(a.synced?1:0)).filter(x=>{const k=(x.t+"|"+x.a).toLowerCase(); if(seen.has(k)) return false; seen.add(k); return true}).slice(0,8)}
+    catch(e){SGF.res=null; toast("ค้นหาไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองใหม่")}
+    SGF.busy=false; if(route.name==="practice"&&route.id==="songs") render(); return true;
+  }
+  if(form.matches('[data-form="sgspot"]')){
+    const pid=sgSpotifyId(($("#sg-spot")||{}).value); if(!pid){toast("ลิงก์ไม่ถูกต้อง คัดลอกลิงก์เพลย์ลิสต์จากปุ่มแชร์ของ Spotify แล้ววางใหม่"); return true}
+    toast("กำลังดึงเพลย์ลิสต์…");
+    try{const p=sgParseSpotify(await NB.fetchText("https://open.spotify.com/embed/playlist/"+pid)); if(!p||!p.tracks.length) throw new Error("empty");
+      const d=sgData(); d.lists=[{id:pid,name:p.name,tracks:p.tracks.slice(0,300)}].concat(d.lists.filter(x=>x.id!==pid)).slice(0,20); save(); toast("เพิ่มเพลย์ลิสต์ "+p.name+" "+p.tracks.length+" เพลง"); if(route.name==="practice"&&route.id==="songs") render()}
+    catch(e){toast("ดึงเพลย์ลิสต์ไม่ได้ ตรวจว่าเป็นเพลย์ลิสต์สาธารณะ และต่ออินเทอร์เน็ตอยู่")}
+    return true;
+  }
+  if(form.matches('[data-form="sgvid"]')){
+    const v=ytParse(($("#sg-vurl")||{}).value); if(!v||!SG){toast("ลิงก์ไม่ถูกต้อง คัดลอกลิงก์จากปุ่มแชร์ของ YouTube แล้ววางใหม่"); return true}
+    SG.vid=v; SG.err=""; SG.alts=[v].concat(SG.alts.filter(x=>x!==v)).slice(0,6); sgCachePut(SG.id,{vid:v,alts:SG.alts}); sgStop(); render(); return true;
+  }
+  return false;
+}
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -15244,6 +15435,7 @@ function go(name,id){
   if(NB&&prActive) NB.stopListening();
   if(typeof SH!=="undefined"&&SH&&SH.playing) shStop();
   if(typeof YTS!=="undefined"&&YTS){if(YTS.running) ytStop(); ytPlayer=null}
+  if(typeof sgStop==="function") sgStop();
   if(NB&&name==="teacher") name="home";
   xTok++; if(X){if(X.playing&&X.mode==="exam"&&!X.submitted&&X.plays[X.playing]>0) X.plays[X.playing]--; X.playing=null}
   if(name==="practice"){storyTok++; if(!id||String(id).indexOf("gram.")!==0&&id!=="mistakes"){PRUN=null;PRUN_META=null} if(!id||String(id).indexOf("story.")!==0) ST=null}
@@ -15268,6 +15460,7 @@ function go(name,id){
 
 function render(){
   if(typeof ytKeep==="function"&&ytKeep()) return;
+  if(typeof sgKeep==="function"&&sgKeep()) return;
   const V={home:viewHome,course:viewCourse,lesson:viewLesson,review:viewReview,teacher:viewTeacher,report:viewReport,placement:viewPlacement,exam:viewExamHub,examrun:viewExamRun,practice:viewPractice}[route.name]||viewHome;
   registerWords();
   $("#app").innerHTML=V();
@@ -15282,6 +15475,7 @@ function render(){
   checkBadges();
   const tb=$(".topbar"); if(tb) document.documentElement.style.setProperty("--topbar-h",tb.offsetHeight+"px");
   if(NB&&route.name==="practice"&&String(route.id||"").indexOf("yt.")===0) ytMount();
+  if(NB&&route.name==="practice"&&String(route.id||"").indexOf("song.")===0) sgEnter();
 }
 function updateChrome(){
   const n=streak();
@@ -15734,12 +15928,13 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
 });
 document.addEventListener("submit",e=>{
+  if(e.target.matches('[data-form^="sg"]')){e.preventDefault(); sgSubmit(e.target); return}
   if(e.target.matches('[data-form="ytadd"]')){
     e.preventDefault(); const id=ytParse(($("#yt-url")||{}).value);
     if(!id){toast("ลิงก์ไม่ถูกต้อง คัดลอกลิงก์จากปุ่มแชร์ของ YouTube แล้ววางใหม่");return}
