@@ -21,6 +21,21 @@ let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
   await o.addInitScript(NATIVE); await open(o,'#practice-songs');
   const oldTxt=(await o.textContent('#app .card')).replace(/\s+/g,' ');
   if(!/ต้องลงแอปเวอร์ชันใหม่/.test(oldTxt)||!(await o.locator('a[href$="english-class.apk"]').count())) bad('old app message: '+oldTxt.slice(0,80));
+  // the app installed today (shell 1): Capacitor's own HTTP plugin + Google's web translator, no reinstall
+  const c=await b.newPage({viewport:{width:390,height:844}}); c.on('pageerror',e=>errs.push('shell1:'+e));
+  await c.route('https://lrclib.net/**',r=>r.fulfill({contentType:'application/json',body:JSON.stringify(LRC)}));
+  await c.addInitScript(NATIVE); await c.addInitScript(FAKEYT);
+  await c.addInitScript(SONGNB.replace(/EnglishClassNative\.fetchText=/,'const __get=').replace(/EnglishClassNative\.translate=[\s\S]*$/,'')
+    +`;window.__tr=0; window.Capacitor={Plugins:{CapacitorHttp:{get:async({url})=>{
+        if(url.includes("translate.googleapis.com")){__tr++; const q=decodeURIComponent(url.split("&q=")[1]); return {status:200,data:JSON.stringify([[[q.split("\\n").map(l=>"ไทย "+l).join("\\n"),q]]])}}
+        return {status:200,data:await __get(url)}}}}};`);
+  await open(c,'#practice-songs');
+  if(!(await c.locator('[data-form="sgspot"]').count())) bad('shell 1 app cannot use song mode');
+  await c.fill('#sg-spot','https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M'); await c.click('[data-form="sgspot"] button[type="submit"]');
+  await c.waitForSelector('details summary'); await c.click('details summary'); await c.click('details [data-act="sgopen"]');
+  await c.waitForFunction(()=>document.querySelectorAll('#sg-lyrics .sg-th').length>=3,null,{timeout:10000});
+  const th1=(await c.textContent('#sg-l3 .sg-th')).trim(); if(th1!=='ไทย Goodbye now') bad('shell 1 translation: '+th1);
+  if(!/rightLen002/.test(await c.textContent('#sg-player'))) bad('shell 1 video');
   // the new app
   const q=await b.newPage({viewport:{width:390,height:844}}); q.on('pageerror',e=>errs.push('new:'+e));
   await q.route('https://lrclib.net/**',r=>{const u=r.request().url(); r.fulfill({contentType:'application/json',body:JSON.stringify(u.includes('/api/search')?[LRC,Object.assign({},LRC,{trackName:"Hello Again",syncedLyrics:null})]:LRC)})});

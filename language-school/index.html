@@ -15244,12 +15244,32 @@ STORIES.push(
 
 /* ---------- song mode: timed lyrics with Thai subtitles (Android app) ---------- */
 // Playlists come from a public Spotify playlist link (its embed page), timed lyrics from LRCLIB,
-// the song itself from a matching YouTube video, and each line is translated on the phone (NB.translate).
+// the song itself from a matching YouTube video, and each line is translated on the phone (NB.translate, app shell 2).
+// Apps installed before shell 2 have neither, so pages go through Capacitor's built-in HTTP plugin and Thai comes
+// from Google's web translator (online, in chunks of 20 lines); the song page then suggests the new app for offline translation.
 // Lyrics, video choice and translations are cached per song in localStorage (SG_CACHE), not in the synced progress.
 const SG_CACHE="eng-class-songs", APK_URL="https://github.com/snabs1993/kritsada/releases/download/lessons-latest/english-class.apk";
 let SG=null, sgPlayer=null, sgTimer=null, SGF=null;
 function sgData(){if(!S.songs||typeof S.songs!=="object") S.songs={}; const d=S.songs; if(!Array.isArray(d.lists)) d.lists=[]; if(!d.tracks||typeof d.tracks!=="object") d.tracks={}; if(!Array.isArray(d.recent)) d.recent=[]; return d}
-function sgCan(){return !!(NB&&NB.translate&&NB.fetchText)}
+function sgHttp(){const c=window.Capacitor, p=c&&c.Plugins&&c.Plugins.CapacitorHttp; return p&&typeof p.get==="function"?p:null}
+function sgCan(){return !!(NB&&((NB.translate&&NB.fetchText)||sgHttp()))}
+function sgOffline(){return !!(NB&&NB.translate)}
+async function sgFetchText(url){
+  if(NB&&NB.fetchText) return NB.fetchText(url);
+  const p=sgHttp(); if(!p) throw new Error("no http");
+  const r=await p.get({url,responseType:"text",headers:{"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36","Accept-Language":"en-US,en;q=0.9"},connectTimeout:10000,readTimeout:20000});
+  if(r.status!==200) throw new Error("http "+r.status); return typeof r.data==="string"?r.data:JSON.stringify(r.data);
+}
+async function sgTranslate(lines,onP){
+  if(NB&&NB.translate) return NB.translate(lines,onP);
+  const out=lines.map(()=>""), todo=lines.map((l,i)=>[i,String(l||"").trim()]).filter(x=>x[1]);
+  for(let k=0;k<todo.length;k+=20){
+    const part=todo.slice(k,k+20), j=JSON.parse(await sgFetchText("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q="+encodeURIComponent(part.map(x=>x[1]).join("\n"))));
+    const th=(j[0]||[]).map(s=>s[0]||"").join("").split("\n");
+    part.forEach((x,m)=>{out[x[0]]=(th[m]||"").trim()}); if(onP) onP(Math.min(k+20,todo.length),todo.length);
+  }
+  return out;
+}
 function sgCacheAll(){try{return JSON.parse(localStorage.getItem(SG_CACHE)||"{}")||{}}catch(e){return {}}}
 function sgCacheGet(id){return sgCacheAll()[id]||{}}
 function sgCachePut(id,v){try{const c=sgCacheAll(); c[id]=Object.assign(c[id]||{},v,{at:Date.now()}); const ks=Object.keys(c).sort((a,b)=>(c[a].at||0)-(c[b].at||0)); while(ks.length>80) delete c[ks.shift()]; localStorage.setItem(SG_CACHE,JSON.stringify(c))}catch(e){}}
@@ -15284,6 +15304,7 @@ function viewSongs(){
   if(!sgCan()) return h+'<div class="card" style="margin-top:16px"><p><b>'+(NB?"ต้องลงแอปเวอร์ชันใหม่ก่อน":"ใช้ได้ในแอป Android")+'</b></p><p class="muted" style="margin-top:6px">'
     +(NB?"โหมดเพลงต้องใช้ตัวแปลภาษาในเครื่อง ซึ่งมีในแอปเวอร์ชันใหม่ กดดาวน์โหลดแล้วลงทับแอปเดิม ความคืบหน้าและคำศัพท์ไม่หาย":"หน้าเว็บเปิดเพลงจาก YouTube และดึงเพลย์ลิสต์ไม่ได้ เปิดเมนูนี้ในแอป Android")+'</p>'
     +(NB?'<a class="btn btn-primary" style="margin-top:12px" href="'+APK_URL+'">ดาวน์โหลดแอปเวอร์ชันใหม่</a>':'')+'</div>';
+  if(!sgOffline()) h+='<p class="muted" style="font-size:13.5px;margin-top:8px">แอปเวอร์ชันนี้แปลไทยผ่านอินเทอร์เน็ต ถ้าอยากให้แปลได้แม้ไม่มีเน็ต <a href="'+APK_URL+'">ลงแอปเวอร์ชันใหม่</a> ทับตัวเดิมได้ (ไม่บังคับ)</p>';
   const d=sgData();
   const row=(t,a,secs)=>'<button class="lrow" data-act="sgopen" data-t="'+esc(t)+'" data-a="'+esc(a)+'" data-s="'+(secs||0)+'"><span class="lnum">♪</span><span class="ltitle"><b lang="en">'+esc(t)+'</b><small lang="en">'+esc(a)+(secs?' · '+mmss(secs):'')+'</small></span></button>';
   h+='<form class="card" data-form="sgfind" style="margin-top:16px"><label for="sg-q"><b>ค้นหาเพลง</b></label><div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="sg-q" class="dict-in" style="margin-top:0" lang="en" autocomplete="off" spellcheck="false" placeholder="ชื่อเพลง หรือ ชื่อเพลง + ศิลปิน" value="'+esc(SGF?SGF.q:"")+'"><button class="btn btn-primary" type="submit">ค้นหา</button></div>'
@@ -15349,7 +15370,7 @@ async function sgLoad(id){
   if(!SG.vid){
     set({status:"กำลังหาเพลงใน YouTube…"});
     try{
-      const res=sgYtResults(await NB.fetchText("https://www.youtube.com/results?search_query="+encodeURIComponent(tr.a+" "+tr.t+" audio")));
+      const res=sgYtResults(await sgFetchText("https://www.youtube.com/results?search_query="+encodeURIComponent(tr.a+" "+tr.t+" audio")));
       const near=tr.secs?res.slice(0,8).filter(x=>x.secs).sort((x,y)=>Math.abs(x.secs-tr.secs)-Math.abs(y.secs-tr.secs))[0]:null;
       const pick=near&&Math.abs(near.secs-tr.secs)<=6?near:res[0];
       if(pick){const alts=[pick.id].concat(res.map(x=>x.id).filter(v=>v!==pick.id)).slice(0,6); sgCachePut(id,{vid:pick.id,alts}); if(!set({vid:pick.id,alts})) return}
@@ -15359,9 +15380,9 @@ async function sgLoad(id){
     else if(route.name==="practice"&&route.id==="song."+id) render();   // shows the video choices; render() mounts the player
   } else sgMount();
   if(!SG.th){
-    set({status:"กำลังแปลเป็นไทย… ครั้งแรกแอปต้องดาวน์โหลดตัวแปลภาษาไทยราว 30 MB ผ่าน Wi-Fi เท่านั้น ถ้าใช้เน็ตมือถืออยู่ เนื้อเพลงอังกฤษขึ้นก่อน คำแปลจะตามมาเมื่อต่อ Wi-Fi"});
-    try{const th=await NB.translate(SG.lines.map(l=>l.en),(i,n)=>{if(SG===me){SG.status="กำลังแปลเป็นไทย "+i+"/"+n; const st=$("#sg-status"); if(st) st.textContent=SG.status}}); sgCachePut(id,{th}); set({th})}
-    catch(e){set({err:"แปลเป็นไทยไม่สำเร็จ ครั้งแรกต้องต่อ Wi-Fi เพื่อดาวน์โหลดตัวแปล แล้วเปิดเพลงนี้ใหม่อีกครั้ง"})}
+    set({status:sgOffline()?"กำลังแปลเป็นไทย… ครั้งแรกแอปต้องดาวน์โหลดตัวแปลภาษาไทยราว 30 MB ผ่าน Wi-Fi เท่านั้น ถ้าใช้เน็ตมือถืออยู่ เนื้อเพลงอังกฤษขึ้นก่อน คำแปลจะตามมาเมื่อต่อ Wi-Fi":"กำลังแปลเป็นไทย…"});
+    try{const th=await sgTranslate(SG.lines.map(l=>l.en),(i,n)=>{if(SG===me){SG.status="กำลังแปลเป็นไทย "+i+"/"+n; const st=$("#sg-status"); if(st) st.textContent=SG.status}}); sgCachePut(id,{th}); set({th})}
+    catch(e){set({err:sgOffline()?"แปลเป็นไทยไม่สำเร็จ ครั้งแรกต้องต่อ Wi-Fi เพื่อดาวน์โหลดตัวแปล แล้วเปิดเพลงนี้ใหม่อีกครั้ง":"แปลเป็นไทยไม่สำเร็จ บริการแปลออนไลน์อาจปิดรับชั่วคราว ลองเปิดเพลงนี้ใหม่ภายหลัง ถ้าเป็นบ่อย ลงแอปเวอร์ชันใหม่ (ลิงก์ในหน้ารายการเพลง) จะแปลในเครื่องได้เสมอ"})}
   }
   set({status:""});
 }
@@ -15407,7 +15428,7 @@ async function sgSubmit(form){
   if(form.matches('[data-form="sgspot"]')){
     const pid=sgSpotifyId(($("#sg-spot")||{}).value); if(!pid){toast("ลิงก์ไม่ถูกต้อง คัดลอกลิงก์เพลย์ลิสต์จากปุ่มแชร์ของ Spotify แล้ววางใหม่"); return true}
     toast("กำลังดึงเพลย์ลิสต์…");
-    try{const p=sgParseSpotify(await NB.fetchText("https://open.spotify.com/embed/playlist/"+pid)); if(!p||!p.tracks.length) throw new Error("empty");
+    try{const p=sgParseSpotify(await sgFetchText("https://open.spotify.com/embed/playlist/"+pid)); if(!p||!p.tracks.length) throw new Error("empty");
       const d=sgData(); d.lists=[{id:pid,name:p.name,tracks:p.tracks.slice(0,300)}].concat(d.lists.filter(x=>x.id!==pid)).slice(0,20); save(); toast("เพิ่มเพลย์ลิสต์ "+p.name+" "+p.tracks.length+" เพลง"); if(route.name==="practice"&&route.id==="songs") render()}
     catch(e){toast("ดึงเพลย์ลิสต์ไม่ได้ ตรวจว่าเป็นเพลย์ลิสต์สาธารณะ และต่ออินเทอร์เน็ตอยู่")}
     return true;
