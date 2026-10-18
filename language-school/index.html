@@ -802,7 +802,14 @@ th,td{border-bottom:.5px solid var(--sep)}
 .sg-offnote{display:none;padding:10px}
 .sub-en .sg-th,.sub-th .sg-en{display:none}
 .sub-th .sg-th{font-size:17px;color:inherit}
-.sub-off .sg-line{display:none}.sub-off .sg-offnote{display:block}
+.sub-off .sg-line,.sub-off .sg-row{display:none}.sub-off .sg-offnote{display:block}
+.sg-row{display:flex;align-items:flex-start;gap:2px}.sg-row .sg-line{flex:1}
+.sent-btn{min-width:38px;font-size:17px}
+.sent-en{font-size:21px;font-weight:600;text-align:center;margin-top:8px;line-height:1.35}
+.sent-th{text-align:center;color:var(--muted,#6e6e73);margin-top:8px;line-height:1.45}
+.sent-list{list-style:none;padding:0;margin:10px 0 0}
+.sent-list li{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.sent-list li{flex-wrap:wrap}.sent-list li>div{flex:1;min-width:0}.sent-acts{display:flex;flex-wrap:wrap;justify-content:flex-end;flex-basis:100%;margin-top:-4px}
 </style>
 
 <header class="topbar">
@@ -10850,7 +10857,7 @@ function viewPbSit(id){
   const s=PHRASEBOOK.find(x=>x.id===id); if(!s) return viewPhrasebook();
   let h=pBack("phrasebook","ประโยคตามสถานการณ์")+'<h1 class="h2" style="margin-top:8px">'+esc(s.title)+'</h1>'
    +'<div class="row" style="margin-top:12px"><button class="btn btn-sm btn-primary" data-act="pbplay" data-id="'+id+'">'+ICON.say+'ฟังทั้งหมด</button><button class="btn btn-sm" data-act="pbquiz" data-id="'+id+'">ทดสอบ '+s.items.length+' ข้อ</button></div>'
-   +'<div class="stack pb-list" style="gap:8px;margin-top:14px">'+s.items.map((p,i)=>'<div class="sh-row pb-item" id="pb-'+i+'"><p><span lang="en" style="font-weight:600">'+esc(p[0])+'</span><br><span class="muted" style="font-size:14px">'+esc(p[1])+'</span></p>'+sayBtn(p[0],"ฟังประโยค")+'</div>').join("")+'</div>';
+   +'<div class="stack pb-list" style="gap:8px;margin-top:14px">'+s.items.map((p,i)=>'<div class="sh-row pb-item" id="pb-'+i+'"><p><span lang="en" style="font-weight:600">'+esc(p[0])+'</span><br><span class="muted" style="font-size:14px">'+esc(p[1])+'</span></p>'+sayBtn(p[0],"ฟังประโยค")+sentBtn(p[0],p[1],"pb")+'</div>').join("")+'</div>';
   if(PRUN&&PRUN_META&&PRUN_META.id==="pb."+id){
     h+='<section class="section"><h2 class="h3">ทดสอบ</h2>';
     if(PRUN.done){const c=PRUN.results.filter(Boolean).length; h+='<div class="card" style="margin-top:12px;max-width:680px"><h2 class="h2">ถูก '+c+'/'+PRUN.items.length+'</h2><div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="pbquiz" data-id="'+id+'">ทำอีกครั้ง</button></div></div>'}
@@ -11383,7 +11390,7 @@ function viewPod(id){
    +'<p class="muted" style="margin-top:4px">ผู้พูด: <span lang="en">'+esc(p.cast.A)+'</span> และ <span lang="en">'+esc(p.cast.B)+'</span></p>'
    +'<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="podplay">'+ICON.say+(PD.playing>=0?"หยุด":"ฟังทั้งตอน")+'</button>'
    +'<button class="btn btn-sm" data-act="podscript">'+(PD.script?"ซ่อนบทพูด":"ดูบทพูด")+'</button>'+(PD.script?'<button class="btn btn-sm btn-ghost" data-act="podth">'+(PD.th?"ซ่อนคำแปล":"แสดงคำแปล")+'</button>':'')+'</div>';
-  if(PD.script) h+='<ol class="dlg pod-dlg" style="margin-top:14px">'+p.lines.map((l,i)=>'<li id="pd-'+i+'" class="'+(l[0]==="A"?"a":"b")+(PD.playing===i?" playing":"")+'"><span class="who" lang="en">'+esc(p.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p>'+(PD.th?'<p class="tr">'+esc(l[2])+'</p>':'')+'</div>'+sayBtn(l[1],"ฟังช่วงนี้")+'</li>').join("")+'</ol>';
+  if(PD.script) h+='<ol class="dlg pod-dlg" style="margin-top:14px">'+p.lines.map((l,i)=>'<li id="pd-'+i+'" class="'+(l[0]==="A"?"a":"b")+(PD.playing===i?" playing":"")+'"><span class="who" lang="en">'+esc(p.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p>'+(PD.th?'<p class="tr">'+esc(l[2])+'</p>':'')+'</div>'+sayBtn(l[1],"ฟังช่วงนี้")+sentBtn(l[1],l[2],"pod")+'</li>').join("")+'</ol>';
   else h+='<div class="card pod-now" style="margin-top:14px"><p class="muted" id="pod-now">'+(PD.playing>=0?"กำลังฟังช่วงที่ "+(PD.playing+1)+"/"+p.lines.length:"กดฟังทั้งตอน ตั้งใจฟังใจความหลักก่อน แล้วค่อยตอบคำถามด้านล่าง")+'</p></div>';
   h+='<section class="comp"><h2 class="h3">คำถาม</h2>'+p.qs.map((q,qi)=>{const pick=PD.ans[qi];
      return '<p class="q" lang="en">'+(qi+1)+'. '+esc(q.q)+'</p><div class="opts">'+q.o.map((o,oi)=>{let c="opt"; if(pick!=null){if(oi===q.a) c+=" is-right"; else if(oi===pick) c+=" is-wrong"} return '<button class="'+c+'" data-act="podq" data-q="'+qi+'" data-o="'+oi+'"'+(pick!=null?" disabled":"")+' lang="en">'+esc(o)+'</button>'}).join("")+'</div>'+(pick!=null&&q.why?'<p class="muted" style="font-size:14px;margin-top:4px">'+esc(q.why)+'</p>':'')}).join("")
@@ -15338,7 +15345,7 @@ function sgLyricsHTML(){
   const head=SG.synced?'':'<p class="muted" style="margin-bottom:8px">เพลงนี้มีแต่เนื้อเพลง ไม่มีเวลากำกับ ซับจะไม่เลื่อนตามเพลง</p>';
   return head+'<p class="sg-offnote muted">ซับปิดอยู่ ฟังอย่างเดียว ลองจับคำเองดู</p>'+SG.lines.map((l,i)=>{
     const th=SG.th?SG.th[i]:"";
-    return '<button class="sg-line'+(i===SG.cur?' on':'')+'" id="sg-l'+i+'" data-act="sgseek" data-i="'+i+'"'+(l.t==null?' disabled':'')+'><span class="sg-en" lang="en">'+(l.en?esc(l.en):"♪")+'</span>'+(l.en&&th?'<span class="sg-th">'+esc(th)+'</span>':'')+'</button>'}).join("");
+    return '<div class="sg-row"><button class="sg-line'+(i===SG.cur?' on':'')+'" id="sg-l'+i+'" data-act="sgseek" data-i="'+i+'"'+(l.t==null?' disabled':'')+'><span class="sg-en" lang="en">'+(l.en?esc(l.en):"♪")+'</span>'+(l.en&&th?'<span class="sg-th">'+esc(th)+'</span>':'')+'</button>'+(l.en?sentBtn(l.en,th,"song"):'')+'</div>'}).join("");
 }
 function sgPaint(){
   if(!SG||!$("#sg-slot")||$("#sg-slot").dataset.sid!==SG.id) return;
@@ -15440,6 +15447,64 @@ async function sgSubmit(form){
   return false;
 }
 
+/* ---------- sentence review: saved sentences on the same spaced schedule as words ---------- */
+// A ☆ next to a sentence (lesson dialogues, grammar examples, podcasts, phrasebook, song lines) saves it here.
+// Sentences keep their own text in S.sents because they come from many places (song lines are not in the app).
+// Card: Thai meaning first, recall the English, then reveal and grade; "ง่ายไป" and "☆ ประโยคยาก" work like words.
+let SR=null, sentOpen=false;   // sentOpen keeps the saved-sentence list open after a button in it is tapped
+function sentData(){if(!S.sents||typeof S.sents!=="object") S.sents={}; return S.sents}
+function sentKey(en){return String(en||"").trim().replace(/\s+/g," ")}
+function sentBtn(en,th,src){const k=sentKey(en); if(!k) return ""; const s=sentData()[k];
+  return '<button class="btn btn-sm btn-ghost sent-btn" data-act="st-save" data-en="'+esc(k)+'" data-th="'+esc(th||"")+'" data-src="'+esc(src||"")+'" aria-pressed="'+!!s+'" aria-label="'+(s?"เก็บประโยคนี้แล้ว":"เก็บประโยคนี้ไว้ทบทวน")+'" title="เก็บประโยค">'+(s?"★":"☆")+'</button>'}
+function sentDue(){const now=Date.now(), d=sentData(); return Object.keys(d).filter(k=>!d[k].easy&&d[k].due<=now)}
+function sentHard(){const d=sentData(); return Object.keys(d).filter(k=>d[k].hard)}
+function sentAdd(en,th,src){const k=sentKey(en), d=sentData(); if(!k||d[k]) return false; d[k]={th:th||"",src:src||"",b:0,due:Date.now(),at:Date.now()}; return true}
+function sentFromLessons(){let n=0; COURSE.forEach(u=>{if(S.lessons[u.id]) u.grammar.ex.forEach(e=>{if(sentAdd(e[0],e[1],u.id)) n++})}); return n}
+function sentCardHTML(){
+  const k=SR.queue[0], s=sentData()[k];
+  return '<div class="review-card"><div class="row" style="justify-content:space-between"><p class="muted">ประโยค · เหลือ '+SR.queue.length+' · ทบทวนแล้ว '+SR.count+'</p></div><div class="flash" style="margin-top:10px">'
+   +'<div class="flash-top"><span class="mono">ประโยค</span><span class="mastery">'+[1,2,3,4,5,6].map(n=>'<i class="'+(n<=s.b?"on":"")+'"></i>').join("")+'</span></div>'
+   +'<div class="row" style="justify-content:center;gap:6px;margin-bottom:6px"><button class="btn btn-sm btn-ghost" data-act="st-hard" data-en="'+esc(k)+'" aria-pressed="'+!!s.hard+'">'+(s.hard?"★ ประโยคยากแล้ว":"☆ เก็บเป็นประโยคยาก")+'</button><button class="btn btn-sm btn-ghost" data-act="st-easy-now">ง่ายไป ไม่ต้องเอามาอีก</button></div>'
+   +(SR.revealed
+     ?'<p class="sent-en" lang="en">'+esc(k)+'</p><div class="row" style="justify-content:center">'+sayBtn(k)+'</div>'+(s.th?'<p class="sent-th">'+esc(s.th)+'</p>':'')
+      +'<div class="grade-btns"><button class="btn" data-act="st-grade" data-g="0">จำไม่ได้<small>เจออีกรอบวันนี้</small></button><button class="btn" data-act="st-grade" data-g="1">พอจำได้<small>พรุ่งนี้</small></button><button class="btn btn-primary" data-act="st-grade" data-g="2">จำได้แม่น<small style="color:inherit;opacity:.8">อีก '+INT[Math.min(s.b+1,6)]+' วัน</small></button></div>'
+     :(s.th?'<p class="sent-th" style="font-size:20px;color:inherit">'+esc(s.th)+'</p><p class="muted" style="margin-top:12px">พูดหรือนึกประโยคภาษาอังกฤษในใจ แล้วกดดูคำตอบ</p>'
+          :'<div class="row" style="justify-content:center;margin-top:8px">'+sayBtn(k,"ฟังประโยค")+'</div><p class="muted" style="margin-top:12px">ฟังแล้วนึกความหมาย แล้วกดดูคำตอบ</p>')
+      +'<button class="btn btn-primary" style="margin-top:14px;width:100%" data-act="st-reveal">ดูคำตอบ</button>')
+   +'</div><button class="btn btn-ghost" style="margin-top:14px" data-act="st-end">พอแค่นี้ก่อน</button></div>';
+}
+function sentSectionHTML(){
+  const d=sentData(), keys=Object.keys(d), due=sentDue(), hard=sentHard(), easyN=keys.filter(k=>d[k].easy).length;
+  let h='<section class="section"><h2 class="h3">ทบทวนประโยค</h2><p class="muted" style="margin-top:4px">กด ☆ ข้างประโยคในบทสนทนา ตัวอย่างไวยากรณ์ พอดแคสต์ ประโยคพร้อมใช้ หรือเนื้อเพลง เพื่อเก็บไว้ท่องทั้งประโยค ระบบนัดทบทวนแบบเดียวกับคำศัพท์</p>'
+    +'<div class="stats" style="margin-top:12px;max-width:560px"><div><b>'+due.length+'</b><span>ถึงรอบวันนี้</span></div><div><b>'+keys.length+'</b><span>ประโยคที่เก็บ</span></div><div><b>'+hard.length+'</b><span>ประโยคยาก</span></div></div>'
+    +'<div class="row" style="margin-top:12px">'+(due.length?'<button class="btn btn-primary" data-act="st-start">ทบทวนประโยค '+due.length+' ประโยค</button>':'')
+    +(hard.length?'<button class="btn" data-act="st-hardrun">ทบทวนประโยคยาก '+hard.length+'</button>':'')
+    +'<button class="btn btn-ghost" data-act="st-lessons">เพิ่มประโยคตัวอย่างจากบทที่เรียนแล้ว</button></div>';
+  if(keys.length) h+='<details class="card" style="margin-top:12px"'+(sentOpen?' open':'')+'><summary>ประโยคที่เก็บไว้ '+keys.length+' ประโยค'+(easyN?' (ง่ายไป '+easyN+')':'')+'</summary><ul class="sent-list">'
+    +keys.sort((a,b)=>(d[a].easy?1:0)-(d[b].easy?1:0)||(d[b].hard?1:0)-(d[a].hard?1:0)||d[a].due-d[b].due).map(k=>{const s=d[k];
+      return '<li>'+sayBtn(k)+'<div><p lang="en">'+esc(k)+'</p>'+(s.th?'<p class="muted">'+esc(s.th)+'</p>':'')+'</div><span class="sent-acts"><button class="btn btn-sm btn-ghost" data-act="st-hard" data-en="'+esc(k)+'" aria-pressed="'+!!s.hard+'" aria-label="ประโยคยาก">'+(s.hard?"★":"☆")+'</button><button class="btn btn-sm btn-ghost" data-act="st-easy" data-en="'+esc(k)+'" aria-pressed="'+!!s.easy+'">'+(s.easy?"เอาคืน":"ง่ายไป")+'</button><button class="btn btn-sm btn-ghost" data-act="st-del" data-en="'+esc(k)+'">ลบ</button></span></li>'}).join("")+'</ul></details>';
+  return h+'</section>';
+}
+function sentEasy(k){const s=sentData()[k]; if(!s) return; if(s.easy){s.easy=false;s.b=Math.min(s.b,3);s.due=Date.now();toast("เอาประโยคนี้กลับมาทบทวนแล้ว")} else {s.easy=true;s.hard=false;s.b=6;s.due=Date.now()+365*DAY;toast("ประโยคนี้จะไม่ถูกนำมาทบทวนอีก (กดคืนได้ในรายการ)")}}
+function sentHardT(k){const s=sentData()[k]; if(!s) return; s.hard=!s.hard; if(s.hard){s.easy=false; if(s.due>Date.now()+DAY) s.due=Date.now()+DAY} toast(s.hard?"เก็บเป็นประโยคยากแล้ว":"เอาออกจากประโยคยากแล้ว")}
+const STACT={
+  "st-save":t=>{const k=t.dataset.en, d=sentData();
+    if(d[k]){delete d[k]; toast("เอาประโยคนี้ออกจากรายการทบทวนแล้ว")} else {sentAdd(k,t.dataset.th,t.dataset.src); toast("เก็บประโยคไว้ทบทวนแล้ว")}
+    save(); const on=!!d[k]; document.querySelectorAll('.sent-btn').forEach(b=>{if(b.dataset.en===k){b.textContent=on?"★":"☆"; b.setAttribute("aria-pressed",String(on))}})},
+  "st-start":()=>{SR={queue:shuffle(sentDue()),revealed:false,count:0};render();window.scrollTo(0,0)},
+  "st-hardrun":()=>{SR={queue:shuffle(sentHard()),revealed:false,count:0};render();window.scrollTo(0,0)},
+  "st-reveal":()=>{if(!SR) return; SR.revealed=true; render(); Speech.say(SR.queue[0])},
+  "st-grade":t=>{if(!SR||!SR.queue.length) return; const g=+t.dataset.g, k=SR.queue.shift(), s=sentData()[k], now=Date.now();
+    if(s){if(g===0){s.b=0;s.due=now;SR.queue.push(k)} else if(g===1){s.b=Math.max(1,s.b);s.due=now+DAY} else {s.b=Math.min(s.b+1,6);s.due=now+INT[s.b]*DAY}}
+    SR.count++; SR.revealed=false; S.xp+=1; markDay(); save(); if(!SR.queue.length){SR=null; toast("ทบทวนประโยคเสร็จแล้ว เก่งมาก")} render()},
+  "st-easy-now":()=>{if(!SR||!SR.queue.length) return; const k=SR.queue.shift(); sentEasy(k); SR.count++; SR.revealed=false; save(); if(!SR.queue.length) SR=null; render()},
+  "st-hard":t=>{sentHardT(t.dataset.en); sentOpen=!SR; save(); render()},
+  "st-easy":t=>{sentEasy(t.dataset.en); sentOpen=true; save(); render()},
+  "st-del":t=>{delete sentData()[t.dataset.en]; sentOpen=true; save(); render()},
+  "st-end":()=>{SR=null; render()},
+  "st-lessons":()=>{const n=sentFromLessons(); save(); toast(n?"เพิ่ม "+n+" ประโยคจากบทที่เรียนแล้ว":"ประโยคจากบทที่เรียนแล้วอยู่ในรายการครบแล้ว"); render()}
+};
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -15472,7 +15537,7 @@ function go(name,id){
     if(L.step===0&&addWords(COURSE[i])) save()
   }
   if(name==="placement") P={runner:null,result:null};
-  if(name==="review") R=null;
+  if(name==="review"){R=null; SR=null}
   resetAsk=false;
   route={name,id:id||null};
   try{history.replaceState(null,"","#"+(name==="lesson"?"lesson-"+id:name==="examrun"?"exam-"+id:name==="practice"&&id?"practice-"+id:name))}catch(e){}
@@ -15599,14 +15664,14 @@ function stageGrammar(u){
    +g.intro.map(p=>'<p>'+p+'</p>').join("")
    +'<div class="tbl-wrap"><table><thead><tr>'+g.head.map(h=>'<th>'+esc(h)+'</th>').join("")+'</tr></thead><tbody>'
    +g.rows.map(r=>'<tr>'+r.map((c,i)=>'<td'+(i>0&&/[a-z]/i.test(c)?' lang="en"':'')+'>'+esc(c)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>'
-   +'<h3 class="h3">ประโยคตัวอย่าง</h3><ul class="ex-list">'+g.ex.map(e=>'<li>'+sayBtn(e[0])+'<div><p lang="en">'+esc(e[0])+'</p><p class="th">'+esc(e[1])+'</p></div></li>').join("")+'</ul>'
+   +'<h3 class="h3">ประโยคตัวอย่าง</h3><ul class="ex-list">'+g.ex.map(e=>'<li>'+sayBtn(e[0])+'<div><p lang="en">'+esc(e[0])+'</p><p class="th">'+esc(e[1])+'</p></div>'+sentBtn(e[0],e[1],"gram")+'</li>').join("")+'</ul>'
    +'<div class="mistakes"><h3>จุดที่คนไทยพูดผิดบ่อย</h3>'+g.mist.map(m=>'<div class="mist"><div class="x"><s lang="en">✗ '+esc(m[0])+'</s><span class="ok" lang="en">✓ '+esc(m[1])+'</span></div><div class="why">'+esc(m[2])+'</div></div>').join("")+'</div>'
    +'</article>';
 }
 function stageDialogue(u){
   const d=u.dialogue;
   return '<div class="row" style="justify-content:space-between;margin-bottom:16px"><div class="row"><button class="btn btn-primary" data-act="play-dlg">'+ICON.say+'ฟังทั้งบทสนทนา</button><button class="toggle" data-act="toggle-th" aria-pressed="'+L.showTh+'">แสดงคำแปล</button></div><span class="muted" style="font-size:14px">ฟังรอบแรกโดยไม่ดูคำแปล แล้วตอบคำถามด้านล่าง</span></div>'
-   +'<div class="card"><ul class="dlg">'+d.lines.map((l,i)=>'<li class="'+l[0]+'" id="dl-'+i+'"><span class="who">'+esc(d.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p>'+(L.showTh?'<p class="tr">'+esc(l[2])+'</p>':'')+pronResult(l[1])+'</div><div class="says">'+sayBtn(l[1])+micBtn(l[1])+'</div></li>').join("")+'</ul></div>'
+   +'<div class="card"><ul class="dlg">'+d.lines.map((l,i)=>'<li class="'+l[0]+'" id="dl-'+i+'"><span class="who">'+esc(d.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p>'+(L.showTh?'<p class="tr">'+esc(l[2])+'</p>':'')+pronResult(l[1])+'</div><div class="says">'+sayBtn(l[1])+micBtn(l[1])+sentBtn(l[1],l[2],u.id)+'</div></li>').join("")+'</ul></div>'
    +'<div class="comp"><h2 class="h3">ฟังแล้วตอบคำถาม</h2>'+d.q.map((q,qi)=>{
      const pick=L.comp[qi];
      return '<p class="q" lang="en">'+(qi+1)+'. '+esc(q.q)+'</p><div class="opts">'+q.o.map((o,oi)=>{
@@ -15783,6 +15848,7 @@ function viewPlacement(){
 
 /* ---------- views: review ---------- */
 function viewReview(){
+  if(SR&&SR.queue.length) return sentCardHTML();
   const keys=Object.keys(S.words).filter(k=>WORDS[k]);
   if(R&&R.queue.length){
     const w=WORDS[R.queue[0]], s=S.words[R.queue[0]];
@@ -15799,7 +15865,7 @@ function viewReview(){
   }
   const due=dueWords();
   const head='<h1 class="h1">ทบทวนคำศัพท์</h1><p class="lede">ระบบนัดทบทวนแบบเว้นระยะ คำที่จำได้แม่นจะเว้นห่างขึ้นเรื่อยๆ (1, 2, 4, 7, 15, 30 วัน) คำที่ลืมจะกลับมาเร็วขึ้น</p>';
-  if(!keys.length) return head+'<div class="card" style="margin-top:20px"><p><b>ยังไม่มีคำศัพท์ให้ทบทวน</b></p><p class="muted" style="margin-top:4px">เริ่มเรียนบทแรก คำศัพท์ในบทจะถูกเพิ่มที่นี่อัตโนมัติ</p><button class="btn btn-primary" style="margin-top:12px" data-act="open" data-id="'+COURSE[nextIdx()].id+'">เข้าห้องเรียน</button></div>'+decksHTML();
+  if(!keys.length) return head+'<div class="card" style="margin-top:20px"><p><b>ยังไม่มีคำศัพท์ให้ทบทวน</b></p><p class="muted" style="margin-top:4px">เริ่มเรียนบทแรก คำศัพท์ในบทจะถูกเพิ่มที่นี่อัตโนมัติ</p><button class="btn btn-primary" style="margin-top:12px" data-act="open" data-id="'+COURSE[nextIdx()].id+'">เข้าห้องเรียน</button></div>'+sentSectionHTML()+decksHTML();
   const mastered=keys.filter(k=>S.words[k].b>=4).length, hard=hardWords(), easyN=keys.filter(k=>S.words[k].easy).length;
   const rows=keys.slice().sort((a,b)=>(S.words[a].easy?1:0)-(S.words[b].easy?1:0)||S.words[a].due-S.words[b].due).map(k=>{
     const w=WORDS[k], s=S.words[k], days=Math.ceil((s.due-Date.now())/DAY);
@@ -15810,7 +15876,7 @@ function viewReview(){
     +(hard.length?'<div class="row" style="margin-top:10px"><button class="btn btn-primary" data-act="rv-hard">ทบทวนคำยาก '+hard.length+' คำ</button></div><ul class="deck-list" style="margin-top:10px">'+hard.map(k=>'<li>'+sayBtn(k)+'<span lang="en"><b>'+esc(k)+'</b></span><span class="muted">'+esc(WORDS[k].th)+'</span><button class="btn btn-sm btn-ghost" data-act="w-hard" data-w="'+esc(k)+'">เอาออก</button></li>').join("")+'</ul>':'<p style="margin-top:10px">ยังไม่มีคำยาก</p>')+'</section>';
   return head+'<div class="stats" style="margin-top:20px;max-width:560px"><div><b>'+due.length+'</b><span>ถึงรอบวันนี้</span></div><div><b>'+keys.length+'</b><span>คำที่เรียนแล้ว</span></div><div><b>'+mastered+'</b><span>จำได้แม่น</span></div></div>'
    +'<div class="row" style="margin-top:16px">'+(due.length?'<button class="btn btn-primary" data-act="rv-start">เริ่มทบทวน '+due.length+' คำ</button>':'<button class="btn btn-primary" data-act="rv-extra">ทบทวนเพิ่ม (สุ่ม 10 คำ)</button><span class="muted">วันนี้ทบทวนครบแล้ว</span>')+'</div>'
-   +hardSec
+   +hardSec+sentSectionHTML()
    +'<section class="section"><h2 class="h3" style="margin-bottom:10px">คลังคำศัพท์ของฉัน</h2>'+(easyN?'<p class="muted" style="margin:-4px 0 10px">ตั้งว่าง่ายไป '+easyN+' คำ (ไม่ถูกนำมาทบทวน กด “เอาคืน” ได้)</p>':'')+'<div class="tbl-wrap"><table><thead><tr><th>คำศัพท์</th><th>ความหมาย</th><th>ความจำ</th><th>ทบทวนครั้งถัดไป</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div></section>'+decksHTML();
 }
 
@@ -15949,7 +16015,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
