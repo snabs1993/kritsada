@@ -810,6 +810,7 @@ th,td{border-bottom:.5px solid var(--sep)}
 .sent-list{list-style:none;padding:0;margin:10px 0 0}
 .sent-list li{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06)}
 .sent-list li{flex-wrap:wrap}.sent-list li>div{flex:1;min-width:0}.sent-acts{display:flex;flex-wrap:wrap;justify-content:flex-end;flex-basis:100%;margin-top:-4px}
+.bz-turn{margin-top:12px;padding:12px;border-radius:12px;background:rgba(127,127,127,.08)}.bz-turn.you{background:rgba(0,113,227,.10)}
 </style>
 
 <header class="topbar">
@@ -9755,6 +9756,8 @@ function viewPractice(){
   if(id==="lvtest") return viewLvTests();
   if(id==="pods") return viewPods();
   if(id==="shadow") return viewShadowList();
+  if(id==="biz") return viewBizList();
+  if(id.indexOf("biz.")===0) return viewBiz(id.slice(4));
   if(id==="songs") return viewSongs();
   if(id.indexOf("song.")===0) return viewSong(id.slice(5));
   if(id==="yt") return viewYtList();
@@ -9776,6 +9779,7 @@ function viewPracticeHub(){
   const group=(title,cards)=>'<section class="section p-group"><h2 class="h3">'+title+'</h2><div class="p-grid">'+cards+'</div></section>';
   return '<h1 class="h1">ฝึกฝน</h1><p class="lede">แบบฝึกเสริมนอกบทเรียน ฝึกทีละทักษะ ทำวันละนิดสม่ำเสมอได้ผลกว่าทำทีเดียวเยอะๆ</p>'
    +'<div style="margin-top:18px">'+dailyCard()+'</div>'
+    +group("ภาษาอังกฤษในที่ทำงาน",card("pgo","biz","Business English","บทสนทนาในที่ทำงาน "+BIZ.length+" บท 6 หมวด: แนะนำตัว คนในที่ทำงาน นัดหมาย คุยเล่น ลางาน การประชุม มีโหมดฝึกเล่นบทบาทที่แอปพูดอีกฝ่ายให้","ทำแบบทดสอบแล้ว "+Object.keys(bizStat().done).length+" บท"))
    +group("ฟังและพูด",
      card("pgo","songs","ฟังเพลง แปลเพลง","ฟังเพลงภาษาอังกฤษ เนื้อเพลงขึ้นตามจังหวะพร้อมคำแปลไทย เปิดหรือปิดซับได้ ดึงเพลย์ลิสต์จาก Spotify ได้"+(sgCan()?"":NB?" (ต้องลงแอปเวอร์ชันใหม่)":" (ใช้ได้ในแอป Android)"),(sgData().recent.length?"ฟังแล้ว "+sgData().recent.length+" เพลง":"เพลงใหม่"))+
      card("pgo","shadow","ห้องฝึก Shadowing","ฟังแล้วพูดตามทีละประโยค จากบทสนทนา พอดแคสต์ บทอ่าน และประโยคพร้อมใช้ ปรับความเร็ว ซ่อนข้อความ"+(NB?" แอปฟังเสียงและให้คะแนน":""),"ฝึกแล้ว "+(stat("shadow").n||0)+" ประโยค")
@@ -15505,6 +15509,1547 @@ const STACT={
   "st-lessons":()=>{const n=sentFromLessons(); save(); toast(n?"เพิ่ม "+n+" ประโยคจากบทที่เรียนแล้ว":"ประโยคจากบทที่เรียนแล้วอยู่ในรายการครบแล้ว"); render()}
 };
 
+/* ---------- business English: 6 themes x 5 lessons + a review per theme ---------- */
+// Content is original (topics follow a common business-English syllabus). Each lesson:
+// {id,theme,title,th,intro, cast:{A,B}, lines:[[A|B,en,th]], vocab:[[en,th,pos,ex,exTh]], phrases:[[en,th,note]],
+//  talk:[{q,a}] questions about the role play with model answers, you:[{th,starter}] talk-about-yourself prompts,
+//  quiz:[{q,o:[3],a,why}]}. Add lessons with BIZ.push(...) before the "business English UI" block.
+const BIZ_THEMES=[[1,"Talking About Yourself","พูดเรื่องตัวเอง"],[2,"People at Work","คนในที่ทำงาน"],[3,"Appointments","นัดหมาย"],[4,"Small Talk","คุยเล่นในที่ทำงาน"],[5,"Being Absent","ลางานและการหยุดงาน"],[6,"Meetings","การประชุม"]];
+const BIZ=[];
+BIZ.push(
+ {id:"b1",theme:1,title:"Introducing Yourself",th:"แนะนำตัวในงานธุรกิจ",
+  intro:"แนะนำตัวกับคนที่เพิ่งเจอในงานสัมมนาหรือการประชุม บอกชื่อ บริษัท ตำแหน่ง และถามกลับอย่างสุภาพ ใช้ work for + บริษัท, work in + แผนก, work as + ตำแหน่ง",
+  cast:{A:"Ploy",B:"Daniel"},
+  lines:[
+   ["B","Good morning. I don't think we've met. I'm Daniel.","สวัสดีครับ ผมว่าเรายังไม่เคยเจอกัน ผมชื่อแดเนียลครับ"],
+   ["A","Good morning, Daniel. I'm Ploy. Nice to meet you.","สวัสดีค่ะแดเนียล ดิฉันชื่อพลอย ยินดีที่ได้รู้จักค่ะ"],
+   ["B","Nice to meet you too. Which company do you work for?","ยินดีที่ได้รู้จักเช่นกันครับ คุณทำงานที่บริษัทไหนครับ"],
+   ["A","I work for Siam Logistics. I work in the finance department as an accountant. And you?","ดิฉันทำงานที่สยามโลจิสติกส์ค่ะ อยู่ฝ่ายการเงิน เป็นนักบัญชีค่ะ แล้วคุณล่ะคะ"],
+   ["B","I'm a consultant. I help companies make their warehouses more efficient.","ผมเป็นที่ปรึกษาครับ ช่วยบริษัทต่างๆ ให้คลังสินค้าทำงานได้มีประสิทธิภาพขึ้น"],
+   ["A","That sounds interesting. How long have you been a consultant?","ฟังดูน่าสนใจนะคะ คุณเป็นที่ปรึกษามานานแค่ไหนแล้วคะ"],
+   ["B","About six years. Before that, I was an engineer at a car factory.","ประมาณหกปีครับ ก่อนหน้านั้นผมเป็นวิศวกรที่โรงงานรถยนต์"],
+   ["A","Really? Where are you from, Daniel?","จริงเหรอคะ คุณมาจากไหนคะแดเนียล"],
+   ["B","I'm from Melbourne, but I've lived in Bangkok for three years. Where did you study?","ผมมาจากเมลเบิร์นครับ แต่อยู่กรุงเทพฯ มาสามปีแล้ว คุณเรียนจบจากที่ไหนครับ"],
+   ["A","I graduated from Chulalongkorn University. I studied accounting.","ดิฉันจบจากจุฬาลงกรณ์มหาวิทยาลัยค่ะ เรียนบัญชีค่ะ"],
+   ["B","Here's my business card. Let's keep in touch.","นี่นามบัตรของผมครับ ติดต่อกันไว้นะครับ"],
+   ["A","Thank you. Here's mine. It was nice talking to you.","ขอบคุณค่ะ นี่ของดิฉันค่ะ ยินดีที่ได้คุยกันนะคะ"]],
+  vocab:[
+   ["accountant","นักบัญชี","n.","Our accountant checks every invoice before we pay it.","นักบัญชีของเราตรวจใบแจ้งหนี้ทุกใบก่อนเราจ่าย"],
+   ["consultant","ที่ปรึกษา","n.","The company hired a consultant to cut costs.","บริษัทจ้างที่ปรึกษามาช่วยลดต้นทุน"],
+   ["department","แผนก ฝ่าย","n.","She works in the marketing department.","เธอทำงานอยู่ฝ่ายการตลาด"],
+   ["business card","นามบัตร","n.","Always carry business cards to a seminar.","พกนามบัตรไปงานสัมมนาเสมอ"],
+   ["graduate from","เรียนจบจาก","phr.","He graduated from Kasetsart University in 2015.","เขาเรียนจบจากมหาวิทยาลัยเกษตรศาสตร์ในปี 2015"],
+   ["keep in touch","ติดต่อกันไว้","phr.","It was great to meet you. Let's keep in touch.","ดีใจที่ได้เจอ ติดต่อกันไว้นะ"],
+   ["efficient","มีประสิทธิภาพ","adj.","The new system is faster and more efficient.","ระบบใหม่เร็วกว่าและมีประสิทธิภาพมากกว่า"],
+   ["seminar","งานสัมมนา","n.","I met many useful people at the seminar.","ฉันได้เจอคนที่มีประโยชน์หลายคนที่งานสัมมนา"]],
+  phrases:[
+   ["I don't think we've met.","ผมว่าเรายังไม่เคยเจอกันนะครับ","ใช้เปิดบทสนทนากับคนแปลกหน้าในงานอย่างสุภาพ"],
+   ["I work for (company).","ฉันทำงานที่ (บริษัท)","work for + ชื่อบริษัท"],
+   ["I work in the (department) department.","ฉันอยู่ฝ่าย…","work in + แผนก"],
+   ["I work as a/an (job).","ฉันทำงานเป็น…","work as + a/an + ตำแหน่ง อย่าลืม a/an"],
+   ["I graduated from (university).","ฉันจบจาก…","graduate from + สถานที่"],
+   ["It was nice talking to you.","ยินดีที่ได้คุยด้วย","ใช้ตอนจบบทสนทนา"]],
+  talk:[
+   {q:"Which company does Ploy work for?",a:"Ploy works for Siam Logistics. She works in the finance department as an accountant."},
+   {q:"What does Daniel do?",a:"He's a consultant. He helps companies make their warehouses more efficient."},
+   {q:"Where is Daniel from?",a:"He's from Melbourne, but he has lived in Bangkok for three years."},
+   {q:"Where did Ploy graduate from?",a:"She graduated from Chulalongkorn University."}],
+  you:[
+   {th:"บอกว่าคุณทำงานที่ไหน ฝ่ายอะไร ตำแหน่งอะไร",starter:"I work for … I work in the … department as a/an …"},
+   {th:"บอกว่าคุณจบจากที่ไหน เรียนอะไร",starter:"I graduated from … I studied …"},
+   {th:"แนะนำตัวกับคนที่เพิ่งเจอในงานสัมมนา",starter:"Good morning. I don't think we've met. I'm …"}],
+  quiz:[
+   {q:"I work ___ a bank in Silom.",o:["for","as","in"],a:0,why:"work for + ชื่อบริษัทหรือองค์กร"},
+   {q:"She works ___ an engineer.",o:["for","as","on"],a:1,why:"work as + ตำแหน่ง"},
+   {q:"He graduated ___ Mahidol University.",o:["at","in","from"],a:2,why:"graduate from + มหาวิทยาลัย"},
+   {q:"What do you say at the end of a conversation?",o:["It was nice talking to you.","I don't think we've met.","Which company do you work for?"],a:0,why:"It was nice talking to you. ใช้ตอนจะแยกกัน"}]}
+);
+BIZ.push(
+{id:"b2",theme:1,title:"Talking About Your Family",th:"พูดเรื่องครอบครัว",
+  intro:"คุยเรื่องครอบครัวกับเพื่อนร่วมงานตอนพักเที่ยง บอกว่าแต่งงานหรือยัง มีลูกกี่คน พ่อแม่อยู่ที่ไหน ใช้ I'm married with…, My parents live…, look after และ take after",
+  cast:{A:"Nok",B:"Mark"},
+  lines:[
+   ["B","Nok, is that a photo of your family on your desk?","นก นั่นรูปครอบครัวคุณบนโต๊ะเหรอครับ"],
+   ["A","Yes, it is. That's my husband, and those are our two children.","ใช่ค่ะ นั่นสามีดิฉัน แล้วก็ลูกสองคนของเราค่ะ"],
+   ["B","They look lovely. How old are they?","น่ารักจังครับ อายุเท่าไหร่แล้วครับ"],
+   ["A","My son is eight and my daughter is five. Do you have any children, Mark?","ลูกชายแปดขวบ ลูกสาวห้าขวบค่ะ คุณมีลูกหรือยังคะมาร์ก"],
+   ["B","Not yet. I got married last year, so we're still enjoying life as a couple.","ยังครับ ผมเพิ่งแต่งงานเมื่อปีที่แล้ว เลยยังใช้ชีวิตคู่กันสองคนอยู่ครับ"],
+   ["A","Congratulations! Is your wife from England too?","ยินดีด้วยค่ะ ภรรยาคุณมาจากอังกฤษเหมือนกันเหรอคะ"],
+   ["B","No, she's Thai. She's from Chiang Mai, and her whole family still lives there.","เปล่าครับ เธอเป็นคนไทย มาจากเชียงใหม่ ครอบครัวเธอยังอยู่ที่นั่นกันหมดครับ"],
+   ["A","So you visit Chiang Mai quite often?","งั้นคุณก็ไปเชียงใหม่บ่อยสิคะ"],
+   ["B","About once a month. Her parents are very kind to me. What about your parents?","เดือนละครั้งครับ พ่อแม่เธอใจดีกับผมมาก แล้วพ่อแม่คุณล่ะครับ"],
+   ["A","They live with us. My mother looks after the kids while my husband and I are at work.","ท่านอยู่กับเราค่ะ แม่ดิฉันช่วยดูแลลูกๆ ตอนที่ดิฉันกับสามีไปทำงานค่ะ"],
+   ["B","That's really helpful. In my country, grandparents usually live on their own.","ดีมากเลยครับ ที่ประเทศผม ปู่ย่าตายายมักจะอยู่กันเองครับ"],
+   ["A","In Thailand, many families still live together. It's quite normal for us.","ที่ไทย หลายครอบครัวยังอยู่ด้วยกันค่ะ เป็นเรื่องปกติสำหรับเรา"],
+   ["B","I like that. Actually, my parents are coming to visit next month.","ผมชอบแบบนั้นนะครับ จริงๆ แล้วพ่อแม่ผมจะมาเที่ยวเดือนหน้าครับ"],
+   ["A","That's great. You should take them to Chiang Mai to meet your wife's family.","ดีจังเลยค่ะ คุณน่าพาท่านไปเชียงใหม่ ไปเจอครอบครัวภรรยาคุณนะคะ"]],
+  vocab:[
+   ["married","แต่งงานแล้ว","adj.","He's married with three children.","เขาแต่งงานแล้วและมีลูกสามคน"],
+   ["look after","ดูแล","phr.","Who looks after your kids when you travel for work?","ใครดูแลลูกคุณตอนคุณไปทำงานต่างจังหวัด"],
+   ["grandparents","ปู่ย่าตายาย","n.","My grandparents still live in the countryside.","ปู่ย่าตายายของฉันยังอยู่ต่างจังหวัด"],
+   ["relative","ญาติ","n.","Most of my relatives live in Nakhon Ratchasima.","ญาติส่วนใหญ่ของฉันอยู่ที่นครราชสีมา"],
+   ["only child","ลูกคนเดียว","n.","I'm an only child, so I'm very close to my parents.","ฉันเป็นลูกคนเดียว เลยสนิทกับพ่อแม่มาก"],
+   ["take after","หน้าตาหรือนิสัยเหมือน (พ่อแม่)","phr.","She takes after her father. They're both very calm.","เธอเหมือนพ่อ ทั้งคู่ใจเย็นมาก"],
+   ["extended family","ครอบครัวใหญ่ (รวมญาติ)","n.","We have a big dinner with the extended family every New Year.","เรากินข้าวกับญาติๆ ทั้งครอบครัวใหญ่ทุกปีใหม่"],
+   ["get along with","เข้ากันได้ดีกับ","phr.","I get along with my sister better now that we're older.","ฉันเข้ากับพี่สาวได้ดีขึ้นตอนที่เราโตขึ้น"]],
+  phrases:[
+   ["I'm married with (two) children.","ฉันแต่งงานแล้ว มีลูก (สอง) คน","married with + จำนวนลูก ใช้บอกสถานะครอบครัวสั้นๆ"],
+   ["Do you have any brothers or sisters?","คุณมีพี่น้องไหม","ถามเรื่องพี่น้อง ใช้ any เพราะเป็นคำถาม"],
+   ["I'm an only child.","ฉันเป็นลูกคนเดียว","ตอบเมื่อไม่มีพี่น้อง อย่าลืม an"],
+   ["My parents live (with us / in …).","พ่อแม่ฉันอยู่ (กับเรา / ที่…)","live with + คน, live in + สถานที่"],
+   ["(He) looks after the kids.","(เขา) ดูแลลูกๆ","look after + คน ใช้บอกว่าใครช่วยดูแล"],
+   ["I take after my (mother).","ฉันเหมือน (แม่)","บอกว่านิสัยหรือหน้าตาเหมือนใครในครอบครัว"]],
+  talk:[
+   {q:"How many children does Nok have?",a:"She has two children. Her son is eight and her daughter is five."},
+   {q:"Where is Mark's wife from?",a:"She's Thai. She's from Chiang Mai, and her family still lives there."},
+   {q:"Who looks after Nok's children while she is at work?",a:"Her mother looks after them, because Nok's parents live with her family."},
+   {q:"Who is coming to visit Mark next month?",a:"His parents are coming to visit him next month."}],
+  you:[
+   {th:"เล่าว่าครอบครัวคุณมีใครบ้าง",starter:"There are … people in my family. I have …"},
+   {th:"บอกว่าพ่อแม่คุณอยู่ที่ไหน และคุณได้เจอท่านบ่อยแค่ไหน",starter:"My parents live in … I visit them …"},
+   {th:"บอกว่าคุณเหมือนใครในครอบครัว",starter:"I take after my … because we both …"}],
+  quiz:[
+   {q:"She's married ___ two children.",o:["with","and","of"],a:0,why:"married with + จำนวนลูก เป็นสำนวนตายตัว"},
+   {q:"My mother ___ my kids when I'm at work.",o:["looks for","looks after","looks at"],a:1,why:"look after = ดูแล ส่วน look for = หา, look at = มอง"},
+   {q:"I don't have any brothers or sisters. I'm ___.",o:["a single child","an alone child","an only child"],a:2,why:"ลูกคนเดียวใช้ an only child"},
+   {q:"He has the same calm personality as his father. He ___ his father.",o:["takes off","takes after","takes over"],a:1,why:"take after = เหมือนพ่อแม่ ส่วน take off = ถอด/ขึ้นบิน, take over = รับช่วงต่อ"}]},
+
+ {id:"b3",theme:1,title:"Talking About Your Interests",th:"พูดเรื่องงานอดิเรกและความสนใจ",
+  intro:"คุยเรื่องงานอดิเรกกับเพื่อนร่วมงานหลังเลิกงาน บอกว่าชอบทำอะไรในเวลาว่าง ใช้ I'm into…, I'm keen on…, In my spare time I… และ How often do you…?",
+  cast:{A:"Kevin",B:"Fah"},
+  lines:[
+   ["B","Kevin, you always leave at six on Tuesdays. Do you have a class?","เควิน คุณกลับหกโมงเย็นทุกวันอังคารเลย มีเรียนอะไรหรือเปล่าคะ"],
+   ["A","Yes, I'm learning Thai cooking. I've been going for about three months now.","ใช่ครับ ผมเรียนทำอาหารไทยอยู่ครับ ไปมาได้ประมาณสามเดือนแล้วครับ"],
+   ["B","That's cool! What's your favourite dish so far?","เจ๋งเลยค่ะ ตอนนี้ชอบทำเมนูไหนที่สุดคะ"],
+   ["A","Green curry. It's hard to get the taste right, but I'm getting better.","แกงเขียวหวานครับ ทำให้รสชาติพอดียาก แต่ผมก็ทำได้ดีขึ้นเรื่อยๆ ครับ"],
+   ["B","You'll have to cook for the team one day!","วันหนึ่งคุณต้องทำให้ทีมกินบ้างแล้วนะคะ"],
+   ["A","Maybe when I'm a bit more confident. What do you do in your spare time, Fah?","ไว้ผมมั่นใจกว่านี้อีกหน่อยนะครับ แล้วฟ้าทำอะไรในเวลาว่างครับ"],
+   ["B","I'm really into running. I run in Lumpini Park three times a week.","ฉันชอบวิ่งมากค่ะ วิ่งที่สวนลุมพินีสัปดาห์ละสามครั้งค่ะ"],
+   ["A","Wow. Have you ever run a marathon?","ว้าว เคยวิ่งมาราธอนไหมครับ"],
+   ["B","Only a half marathon so far. I'm training for a full one in December.","ตอนนี้เคยแค่ฮาล์ฟมาราธอนค่ะ กำลังซ้อมเพื่อวิ่งฟูลมาราธอนเดือนธันวาคมค่ะ"],
+   ["A","That's impressive. I'm not keen on running, but I love hiking.","เก่งมากครับ ผมไม่ค่อยชอบวิ่ง แต่ผมชอบเดินป่ามากครับ"],
+   ["B","Hiking is great too. There are some nice trails in Khao Yai.","เดินป่าก็ดีนะคะ ที่เขาใหญ่มีเส้นทางสวยๆ หลายเส้นเลยค่ะ"],
+   ["A","I've heard that. Maybe we could get a group together and go one weekend.","ผมก็ได้ยินมาครับ บางทีเราน่าจะชวนกันไปเป็นกลุ่มสักสุดสัปดาห์นะครับ"],
+   ["B","Good idea. I'll ask a few people in our team.","ดีเลยค่ะ เดี๋ยวฉันลองถามคนในทีมสักสองสามคนค่ะ"]],
+  vocab:[
+   ["hobby","งานอดิเรก","n.","My hobby is growing vegetables on my balcony.","งานอดิเรกของฉันคือปลูกผักที่ระเบียง"],
+   ["spare time","เวลาว่าง","n.","In my spare time, I watch old movies.","เวลาว่างฉันดูหนังเก่าๆ"],
+   ["be into","ชอบ หลงใหล","phr.","My manager is really into golf.","หัวหน้าฉันชอบตีกอล์ฟมาก"],
+   ["be keen on","สนใจ อยากทำ","phr.","I'm not very keen on loud music.","ฉันไม่ค่อยชอบเพลงเสียงดัง"],
+   ["take up","เริ่มทำ (งานอดิเรกใหม่)","phr.","She took up yoga to reduce stress.","เธอเริ่มเล่นโยคะเพื่อลดความเครียด"],
+   ["marathon","การวิ่งมาราธอน","n.","He finished his first marathon in under five hours.","เขาวิ่งมาราธอนครั้งแรกจบในเวลาไม่ถึงห้าชั่วโมง"],
+   ["hiking","การเดินป่า","n.","We went hiking in Doi Inthanon last weekend.","เราไปเดินป่าที่ดอยอินทนนท์เมื่อสุดสัปดาห์ที่แล้ว"],
+   ["confident","มั่นใจ","adj.","After a few lessons, I felt more confident on stage.","หลังเรียนไปไม่กี่ครั้ง ฉันรู้สึกมั่นใจบนเวทีมากขึ้น"]],
+  phrases:[
+   ["What do you do in your spare time?","เวลาว่างคุณทำอะไร","คำถามเปิดเรื่องงานอดิเรกที่สุภาพและเป็นธรรมชาติ"],
+   ["I'm really into (running).","ฉันชอบ (วิ่ง) มาก","be into + คำนาม/V-ing ใช้ในบทสนทนาสบายๆ"],
+   ["I'm not keen on (…).","ฉันไม่ค่อยชอบ…","ปฏิเสธแบบนุ่มนวล ไม่แรงเท่า I hate"],
+   ["I (run) three times a week.","ฉัน (วิ่ง) สัปดาห์ละสามครั้ง","บอกความถี่ด้วย once / twice / three times a week"],
+   ["I've been (learning …) for (three months).","ฉัน (เรียน…) มา (สามเดือน) แล้ว","บอกว่าทำมานานแค่ไหนและยังทำอยู่"],
+   ["Have you ever (…)?","คุณเคย…ไหม","ถามประสบการณ์ ตามด้วย V3"]],
+  talk:[
+   {q:"What is Kevin learning on Tuesdays?",a:"He's learning Thai cooking. He has been going for about three months."},
+   {q:"What is Kevin's favourite dish to cook?",a:"His favourite dish is green curry, but it's hard to get the taste right."},
+   {q:"How often does Fah go running?",a:"She runs in Lumpini Park three times a week."},
+   {q:"What do Kevin and Fah plan to do?",a:"They plan to get a group together and go hiking in Khao Yai one weekend."}],
+  you:[
+   {th:"เล่าว่าคุณทำอะไรในเวลาว่าง",starter:"In my spare time, I'm really into …"},
+   {th:"บอกว่าคุณทำงานอดิเรกนั้นบ่อยแค่ไหนและทำมานานเท่าไร",starter:"I … times a week. I've been doing it for …"},
+   {th:"บอกสิ่งที่คุณไม่ค่อยชอบทำ",starter:"I'm not very keen on … because …"}],
+  quiz:[
+   {q:"What do you do in your ___ time?",o:["extra","free-of","spare"],a:2,why:"spare time = เวลาว่าง เป็นคำที่ใช้คู่กันเสมอ"},
+   {q:"I'm really ___ photography these days.",o:["into","onto","at"],a:0,why:"be into + สิ่งที่ชอบ"},
+   {q:"I go swimming ___ a week.",o:["two times of","twice","two"],a:1,why:"สองครั้งต่อสัปดาห์ใช้ twice a week"},
+   {q:"She ___ yoga last year and now she does it every morning.",o:["took up","took off","took in"],a:0,why:"take up = เริ่มทำกิจกรรมหรืองานอดิเรกใหม่"}]},
+
+ {id:"b4",theme:1,title:"Talking About Your Job",th:"พูดเรื่องงานที่ทำ",
+  intro:"ผู้จัดการจากสำนักงานใหญ่สิงคโปร์มาเยี่ยมโรงงานในไทย ถามหัวหน้างานว่าทำอะไรบ้าง ฝึกอธิบายหน้าที่ด้วย I'm responsible for…, I'm in charge of…, I report to… และ My main duty is…",
+  cast:{A:"Somchai",B:"Laura"},
+  lines:[
+   ["B","Hi, I'm Laura from the Singapore office. Could you tell me a bit about your job?","สวัสดีค่ะ ฉันลอร่าจากสำนักงานสิงคโปร์ค่ะ ช่วยเล่าเรื่องงานของคุณให้ฟังหน่อยได้ไหมคะ"],
+   ["A","Of course. I'm Somchai, a production supervisor. I'm in charge of the packing line.","ได้ครับ ผมสมชาย เป็นหัวหน้างานฝ่ายผลิตครับ ดูแลไลน์แพ็กสินค้าครับ"],
+   ["B","How many people work on your team?","ทีมของคุณมีกี่คนคะ"],
+   ["A","Twenty-four people. We work in two shifts, so I have twelve on each shift.","ยี่สิบสี่คนครับ เราทำงานสองกะ แต่ละกะมีสิบสองคนครับ"],
+   ["B","What are your main duties?","หน้าที่หลักของคุณมีอะไรบ้างคะ"],
+   ["A","I'm responsible for planning the work and making sure we meet our daily targets.","ผมรับผิดชอบวางแผนงาน และดูให้เราทำได้ตามเป้าแต่ละวันครับ"],
+   ["B","Do you check the quality of the products too?","คุณตรวจคุณภาพสินค้าด้วยไหมคะ"],
+   ["A","Not directly. The quality control team does that, but I work closely with them.","ไม่ได้ตรวจเองครับ ทีมควบคุมคุณภาพเป็นคนตรวจ แต่ผมทำงานใกล้ชิดกับพวกเขาครับ"],
+   ["B","Who do you report to?","คุณรายงานตรงกับใครคะ"],
+   ["A","I report to the factory manager, Khun Wichai. We have a short meeting every morning.","ผมรายงานกับผู้จัดการโรงงาน คุณวิชัยครับ เราประชุมสั้นๆ ทุกเช้าครับ"],
+   ["B","What do you like most about your job?","คุณชอบอะไรในงานนี้มากที่สุดคะ"],
+   ["A","I like solving problems. Every day is different, so I never get bored.","ผมชอบแก้ปัญหาครับ แต่ละวันไม่เหมือนกัน ผมเลยไม่เคยเบื่อครับ"],
+   ["B","That's great to hear. Do you ever work overtime?","ดีจังเลยค่ะ คุณต้องทำโอทีบ้างไหมคะ"],
+   ["A","Sometimes, when we have a big order. But usually I finish by five.","บางครั้งครับ ตอนที่มีออร์เดอร์ใหญ่ แต่ปกติผมเลิกงานห้าโมงเย็นครับ"]],
+  vocab:[
+   ["supervisor","หัวหน้างาน","n.","Ask your supervisor before you change the schedule.","ถามหัวหน้างานก่อนเปลี่ยนตารางงาน"],
+   ["in charge of","ดูแล เป็นผู้รับผิดชอบหลัก","phr.","Khun Suda is in charge of the new branch.","คุณสุดาเป็นคนดูแลสาขาใหม่"],
+   ["responsible for","รับผิดชอบ","phr.","I'm responsible for paying our suppliers.","ฉันรับผิดชอบเรื่องจ่ายเงินซัพพลายเออร์"],
+   ["report to","รายงานตรงต่อ (หัวหน้า)","phr.","All sales staff report to the sales director.","พนักงานขายทุกคนรายงานตรงต่อผู้อำนวยการฝ่ายขาย"],
+   ["shift","กะ (ช่วงเวลาทำงาน)","n.","I'm on the night shift this week.","สัปดาห์นี้ฉันเข้ากะกลางคืน"],
+   ["duty","หน้าที่","n.","Answering customer emails is one of my duties.","การตอบอีเมลลูกค้าเป็นหนึ่งในหน้าที่ของฉัน"],
+   ["quality control","การควบคุมคุณภาพ","n.","Every product goes through quality control before shipping.","สินค้าทุกชิ้นต้องผ่านการควบคุมคุณภาพก่อนส่ง"],
+   ["overtime","การทำงานล่วงเวลา (โอที)","n.","We did a lot of overtime before the holiday.","เราทำโอทีเยอะมากก่อนวันหยุด"]],
+  phrases:[
+   ["I'm in charge of (…).","ฉันดูแล…","in charge of + งาน/ทีม ใช้บอกว่าเราคุมส่วนไหน"],
+   ["I'm responsible for (…ing).","ฉันรับผิดชอบ…","responsible for + คำนาม/V-ing"],
+   ["I report to (the …).","ฉันรายงานตรงกับ…","บอกว่าหัวหน้าของเราคือใคร ไม่ต้องมี my ก็ได้ถ้าใช้ตำแหน่ง"],
+   ["My main duties are (…).","หน้าที่หลักของฉันคือ…","ตามด้วยรายการงาน คั่นด้วย and"],
+   ["I work closely with (…).","ฉันทำงานใกล้ชิดกับ…","บอกว่าประสานงานกับทีมไหนบ่อย"],
+   ["What do you like most about your job?","คุณชอบอะไรในงานมากที่สุด","คำถามเปิดให้อีกฝ่ายเล่าเรื่องงานในแง่ดี"]],
+  talk:[
+   {q:"What is Somchai's job?",a:"He's a production supervisor. He's in charge of the packing line."},
+   {q:"How many people work on his team?",a:"Twenty-four people work on his team, twelve on each shift."},
+   {q:"Who does Somchai report to?",a:"He reports to the factory manager, Khun Wichai."},
+   {q:"What does Somchai like most about his job?",a:"He likes solving problems, and every day is different."}],
+  you:[
+   {th:"อธิบายว่าคุณดูแลหรือรับผิดชอบงานอะไร",starter:"I'm in charge of … I'm also responsible for …"},
+   {th:"บอกว่าคุณรายงานกับใคร และทำงานใกล้ชิดกับทีมไหน",starter:"I report to … and I work closely with …"},
+   {th:"บอกว่าคุณชอบอะไรในงานมากที่สุด",starter:"What I like most about my job is …"}],
+  quiz:[
+   {q:"I'm responsible ___ training new staff.",o:["of","for","to"],a:1,why:"responsible for + งานที่รับผิดชอบ"},
+   {q:"Who do you report ___?",o:["with","at","to"],a:2,why:"report to + หัวหน้า"},
+   {q:"She's ___ charge of the marketing team.",o:["in","on","at"],a:0,why:"in charge of เป็นสำนวนตายตัว"},
+   {q:"Which question asks about someone's main tasks?",o:["Who do you report to?","How many people are on your team?","What are your main duties?"],a:2,why:"duties = หน้าที่ ถามว่าทำงานอะไรเป็นหลัก"}]},
+
+ {id:"b5",theme:1,title:"Describing Your Background",th:"เล่าประวัติและภูมิหลัง",
+  intro:"หัวหน้าโปรเจกต์คุยกับสมาชิกใหม่ในทีมเรื่องที่มาที่ไป เติบโตที่ไหน เรียนอะไร เคยทำงานที่ไหนมาก่อน ใช้ I grew up in…, I majored in…, After graduating, I… และ I spent (two years) in…",
+  cast:{A:"Anna",B:"Tanawat"},
+  lines:[
+   ["A","Welcome to the team, Tanawat. Tell me a little about yourself.","ยินดีต้อนรับสู่ทีมนะคะธนวัฒน์ เล่าเรื่องตัวเองให้ฟังหน่อยสิคะ"],
+   ["B","Thank you. Well, I grew up in Khon Kaen and moved to Bangkok for university.","ขอบคุณครับ ผมโตที่ขอนแก่น แล้วย้ายมากรุงเทพฯ ตอนเข้ามหาวิทยาลัยครับ"],
+   ["A","What did you study?","คุณเรียนอะไรมาคะ"],
+   ["B","I majored in civil engineering. After graduating, I did an internship with a construction company.","ผมเรียนเอกวิศวกรรมโยธาครับ เรียนจบแล้วก็ไปฝึกงานกับบริษัทก่อสร้างครับ"],
+   ["A","And after the internship?","แล้วหลังฝึกงานล่ะคะ"],
+   ["B","They offered me a full-time job, so I stayed there for four years.","บริษัทเสนองานประจำให้ ผมเลยอยู่ที่นั่นสี่ปีครับ"],
+   ["A","Your CV says you also worked abroad. Where was that?","ในประวัติบอกว่าคุณเคยทำงานต่างประเทศด้วย ที่ไหนเหรอคะ"],
+   ["B","In Japan. I spent two years in Osaka on a project for a railway company.","ญี่ปุ่นครับ ผมอยู่โอซาก้าสองปี ทำโปรเจกต์ให้บริษัทรถไฟครับ"],
+   ["A","That must have been a great experience. Do you speak Japanese?","คงเป็นประสบการณ์ที่ดีมากเลยนะคะ คุณพูดภาษาญี่ปุ่นได้ไหมคะ"],
+   ["B","A little. Enough for daily life, but we used English at work.","นิดหน่อยครับ พอใช้ในชีวิตประจำวัน แต่ที่ทำงานเราใช้ภาษาอังกฤษครับ"],
+   ["A","Why did you decide to come back to Thailand?","ทำไมคุณถึงตัดสินใจกลับมาเมืองไทยคะ"],
+   ["B","I wanted to be closer to my family, and I wanted to grow my career here.","ผมอยากอยู่ใกล้ครอบครัว และอยากเติบโตในสายงานที่นี่ครับ"],
+   ["A","Well, your experience will be very useful on this project.","ประสบการณ์ของคุณจะมีประโยชน์มากกับโปรเจกต์นี้แน่ๆ ค่ะ"],
+   ["B","Thanks. I'm really looking forward to working with everyone.","ขอบคุณครับ ผมตั้งตารอที่จะได้ทำงานกับทุกคนเลยครับ"]],
+  vocab:[
+   ["grow up","เติบโต (ในวัยเด็ก)","phr.","I grew up in a small fishing village near Rayong.","ฉันโตมาในหมู่บ้านชาวประมงเล็กๆ ใกล้ระยอง"],
+   ["major in","เรียนเอก","phr.","She majored in economics at university.","เธอเรียนเอกเศรษฐศาสตร์ที่มหาวิทยาลัย"],
+   ["degree","ปริญญา","n.","He has a master's degree in business.","เขาจบปริญญาโทด้านธุรกิจ"],
+   ["internship","การฝึกงาน","n.","My internship at the bank lasted three months.","ฉันฝึกงานที่ธนาคารสามเดือน"],
+   ["full-time","เต็มเวลา (งานประจำ)","adj.","After the trial period, they gave me a full-time position.","หลังช่วงทดลองงาน เขาให้ฉันเป็นพนักงานประจำ"],
+   ["abroad","ต่างประเทศ","adv.","Many engineers want to work abroad for a few years.","วิศวกรหลายคนอยากไปทำงานต่างประเทศสักสองสามปี"],
+   ["CV","ประวัติย่อ (เรซูเม่)","n.","Please send your CV to the HR department.","กรุณาส่งประวัติย่อของคุณไปที่ฝ่ายบุคคล"],
+   ["career","อาชีพการงาน สายงาน","n.","She started her career as a sales assistant.","เธอเริ่มต้นสายงานจากการเป็นผู้ช่วยฝ่ายขาย"]],
+  phrases:[
+   ["I grew up in (…).","ฉันโตที่…","เล่าว่าเติบโตที่ไหน ใช้ V2 grew"],
+   ["I majored in (…).","ฉันเรียนเอก…","major in + สาขาวิชา"],
+   ["After graduating, I (…).","หลังเรียนจบ ฉัน…","After + V-ing ใช้เล่าเหตุการณ์ต่อเนื่อง"],
+   ["I spent (two years) in (…).","ฉันใช้เวลา (สองปี) ที่…","spend + เวลา + in + สถานที่ ใช้เล่าช่วงชีวิต"],
+   ["Tell me a little about yourself.","เล่าเรื่องตัวเองให้ฟังหน่อย","ใช้เปิดบทสนทนากับคนใหม่หรือในการสัมภาษณ์"],
+   ["I'm looking forward to (working with …).","ฉันตั้งตารอที่จะ (ได้ทำงานกับ…)","look forward to + V-ing ไม่ใช่ V1"]],
+  talk:[
+   {q:"Where did Tanawat grow up?",a:"He grew up in Khon Kaen and moved to Bangkok for university."},
+   {q:"What did Tanawat major in?",a:"He majored in civil engineering."},
+   {q:"What did he do in Japan?",a:"He spent two years in Osaka working on a project for a railway company."},
+   {q:"Why did he come back to Thailand?",a:"He wanted to be closer to his family and grow his career in Thailand."}],
+  you:[
+   {th:"เล่าว่าคุณโตที่ไหนและเรียนอะไรมา",starter:"I grew up in … I majored in …"},
+   {th:"เล่าว่าหลังเรียนจบคุณทำงานอะไรมาบ้าง",starter:"After graduating, I worked as … I spent … years …"},
+   {th:"บอกว่าคุณอยากให้สายงานของคุณไปทางไหน",starter:"In the future, I'd like to grow my career in …"}],
+  quiz:[
+   {q:"She majored ___ marketing.",o:["in","on","at"],a:0,why:"major in + สาขาวิชา"},
+   {q:"After ___, he joined a bank.",o:["graduate","graduated","graduating"],a:2,why:"หลัง after ใช้ V-ing"},
+   {q:"I ___ three years in Germany for work.",o:["took","spent","passed"],a:1,why:"spend + เวลา + in + สถานที่ ใช้เล่าว่าใช้ช่วงเวลาหนึ่งอยู่ที่ไหน"},
+   {q:"I'm looking forward ___ with you.",o:["to work","to working","for working"],a:1,why:"look forward to + V-ing (to ตรงนี้เป็นบุพบท จึงตามด้วย V-ing)"}]},
+
+ {id:"b6",theme:2,title:"Making Friends at Work",th:"ผูกมิตรกับเพื่อนร่วมงาน",
+  intro:"พนักงานใหม่สัปดาห์แรกในออฟฟิศกรุงเทพฯ เพื่อนร่วมงานชวนไปกินข้าวและพาเดินดูออฟฟิศ ฝึกชวนและรับคำชวนด้วย Would you like to join us…?, Why don't you come along? และ Let me know if you need anything",
+  cast:{A:"Mai",B:"Tom"},
+  lines:[
+   ["A","Hi, you must be Tom. I'm Mai from the design team. How are you settling in?","สวัสดีค่ะ คุณคงเป็นทอมใช่ไหมคะ ฉันชื่อใหม่ อยู่ทีมออกแบบค่ะ ปรับตัวเป็นยังไงบ้างคะ"],
+   ["B","Hi, Mai. Pretty well, thanks. Everyone's been very friendly.","สวัสดีครับใหม่ ก็ดีครับ ขอบคุณครับ ทุกคนเป็นกันเองมากครับ"],
+   ["A","Good to hear. Some of us are going to lunch now. Would you like to join us?","ดีจังค่ะ พวกเรากำลังจะไปกินข้าวกลางวัน อยากไปด้วยกันไหมคะ"],
+   ["B","I'd love to, thanks. I don't really know where to eat around here yet.","ไปด้วยครับ ขอบคุณครับ ผมยังไม่ค่อยรู้เลยว่าแถวนี้กินที่ไหนดีครับ"],
+   ["A","The canteen downstairs is cheap, but there's a great noodle shop across the street.","โรงอาหารชั้นล่างราคาถูกค่ะ แต่ร้านก๋วยเตี๋ยวฝั่งตรงข้ามอร่อยมากค่ะ"],
+   ["B","Noodles sound perfect. Do you usually eat together as a team?","ก๋วยเตี๋ยวก็เข้าท่าครับ ปกติทีมกินข้าวด้วยกันเหรอครับ"],
+   ["A","Most days, yes. It's a good way to get to know people from other teams too.","เกือบทุกวันค่ะ เป็นวิธีที่ดีที่จะได้รู้จักคนจากทีมอื่นด้วยค่ะ"],
+   ["B","That's nice. In my last company, everyone ate at their desks.","ดีจังครับ ที่บริษัทเก่าของผม ทุกคนกินข้าวที่โต๊ะตัวเองครับ"],
+   ["A","Not here! Oh, and we play badminton every Thursday after work. Why don't you come along?","ที่นี่ไม่เป็นแบบนั้นค่ะ อ้อ เราตีแบดทุกวันพฤหัสหลังเลิกงานด้วยนะคะ มาด้วยกันสิคะ"],
+   ["B","I'm not very good, but I'd be happy to try.","ผมตีไม่ค่อยเก่ง แต่ยินดีลองครับ"],
+   ["A","Don't worry, it's just for fun. After lunch, I can show you around the office.","ไม่ต้องห่วงค่ะ เล่นกันสนุกๆ หลังกินข้าว ฉันพาเดินดูออฟฟิศให้ได้นะคะ"],
+   ["B","That would be really helpful. Thanks, Mai.","ช่วยได้มากเลยครับ ขอบคุณครับใหม่"],
+   ["A","No problem. Let me know if you need anything.","ไม่เป็นไรค่ะ ถ้าต้องการอะไรบอกได้เลยนะคะ"]],
+  vocab:[
+   ["colleague","เพื่อนร่วมงาน","n.","I often have lunch with my colleagues from accounting.","ฉันมักกินข้าวกลางวันกับเพื่อนร่วมงานจากฝ่ายบัญชี"],
+   ["settle in","ปรับตัวเข้ากับที่ใหม่","phr.","It took me a few weeks to settle in at the new office.","ฉันใช้เวลาสองสามสัปดาห์ในการปรับตัวที่ออฟฟิศใหม่"],
+   ["canteen","โรงอาหาร (ในที่ทำงาน)","n.","The canteen serves rice dishes for forty baht.","โรงอาหารมีข้าวราดแกงขายจานละสี่สิบบาท"],
+   ["come along","ไปด้วยกัน มาด้วย","phr.","We're going for coffee. Do you want to come along?","พวกเรากำลังจะไปกินกาแฟ อยากไปด้วยไหม"],
+   ["newcomer","คนใหม่","n.","The team made the newcomers feel welcome.","ทีมทำให้คนใหม่รู้สึกเป็นที่ต้อนรับ"],
+   ["show around","พาเดินดูรอบๆ","phr.","Could you show our visitors around the factory?","ช่วยพาแขกเดินดูรอบโรงงานหน่อยได้ไหม"],
+   ["friendly","เป็นมิตร เป็นกันเอง","adj.","The people in the IT team are very friendly.","คนในทีมไอทีเป็นกันเองมาก"],
+   ["lunch break","เวลาพักกลางวัน","n.","Our lunch break is from twelve to one.","เวลาพักกลางวันของเราคือเที่ยงถึงบ่ายโมง"]],
+  phrases:[
+   ["How are you settling in?","ปรับตัวเป็นยังไงบ้าง","ถามคนใหม่ด้วยความใส่ใจในช่วงสัปดาห์แรกๆ"],
+   ["Would you like to join us (for lunch)?","อยากไป (กินข้าว) ด้วยกันไหม","ชวนอย่างสุภาพ ตอบรับว่า I'd love to"],
+   ["Why don't you come along?","มาด้วยกันสิ","ชวนแบบเป็นกันเอง ไม่ได้ถามว่าทำไม"],
+   ["I'd love to, thanks.","ไปด้วยสิ ขอบคุณนะ","ตอบรับคำชวนอย่างเป็นมิตร"],
+   ["I can show you around (the office).","เดี๋ยวพาเดินดู (ออฟฟิศ) ให้","เสนอช่วยคนใหม่ show + คน + around + สถานที่"],
+   ["Let me know if you need anything.","ต้องการอะไรบอกได้เลยนะ","ใช้ตอนจบบทสนทนาเพื่อแสดงว่ายินดีช่วย"]],
+  talk:[
+   {q:"Which team is Mai in?",a:"She's in the design team."},
+   {q:"Where do they decide to have lunch?",a:"They decide to go to the noodle shop across the street."},
+   {q:"What did people do at lunch in Tom's last company?",a:"Everyone ate at their desks."},
+   {q:"What does Mai invite Tom to do on Thursdays?",a:"She invites him to play badminton with the team after work."}],
+  you:[
+   {th:"ชวนเพื่อนร่วมงานใหม่ไปกินข้าวกลางวัน",starter:"Some of us are going to lunch. Would you like to …"},
+   {th:"เล่าว่าทีมของคุณทำกิจกรรมอะไรด้วยกันบ้าง",starter:"In my team, we usually … together."},
+   {th:"เล่าว่าตอนเริ่มงานใหม่ คุณปรับตัวยังไง",starter:"When I started at my company, I …"}],
+  quiz:[
+   {q:"Someone invites you to lunch. What's a friendly reply?",o:["Why don't you come along?","Let me show you around.","I'd love to, thanks."],a:2,why:"I'd love to ใช้ตอบรับคำชวน ส่วนอีกสองตัวเลือกเป็นการชวนหรือเสนอเอง"},
+   {q:"How are you settling ___?",o:["on","in","up"],a:1,why:"settle in = ปรับตัวเข้ากับที่ใหม่"},
+   {q:"We're going to the gym after work. Why don't you come ___?",o:["along","around","away"],a:0,why:"come along = ไปด้วยกัน"},
+   {q:"Mai offers to help Tom find his way. Which phrase does she use?",o:["I'd be happy to try.","Everyone's been very friendly.","I can show you around the office."],a:2,why:"show (someone) around = พาเดินดูรอบๆ"}]},
+
+ {id:"b7",theme:2,title:"Getting to Know Each Other",th:"ทำความรู้จักกันให้มากขึ้น",
+  intro:"เพื่อนร่วมงานต่างสาขาเดินทางไปพบลูกค้าที่สิงคโปร์ด้วยกันเป็นครั้งแรก คุยถามเรื่องงานและชีวิตเพื่อสนิทกันขึ้น ใช้ How long have you been with…?, Have you ever…?, What's it like…? และ Where are you originally from?",
+  cast:{A:"Ben",B:"Jira"},
+  lines:[
+   ["A","So, Jira, how long have you been with the company?","จิรา คุณอยู่บริษัทนี้มานานแค่ไหนแล้วครับ"],
+   ["B","Almost five years. I started in the Chiang Mai branch and transferred to Bangkok last year.","เกือบห้าปีค่ะ เริ่มที่สาขาเชียงใหม่ แล้วย้ายมากรุงเทพฯ เมื่อปีที่แล้วค่ะ"],
+   ["A","Oh, so you're originally from the north?","อ้อ งั้นคุณเป็นคนเหนือเหรอครับ"],
+   ["B","Actually, no. I'm originally from Phuket. What about you, Ben?","จริงๆ ไม่ใช่ค่ะ ฉันเป็นคนภูเก็ต แล้วเบนล่ะคะ"],
+   ["A","I'm from Manchester. I've been in the Kuala Lumpur office for about two years.","ผมมาจากแมนเชสเตอร์ครับ อยู่ออฟฟิศกัวลาลัมเปอร์มาประมาณสองปีครับ"],
+   ["B","What's it like living in Kuala Lumpur?","อยู่กัวลาลัมเปอร์เป็นยังไงบ้างคะ"],
+   ["A","I really like it. The food is amazing, but the commute can be terrible.","ผมชอบมากครับ อาหารอร่อยมาก แต่การเดินทางไปทำงานบางทีแย่มากครับ"],
+   ["B","Same in Bangkok! It takes me an hour to get to work.","กรุงเทพฯ ก็เหมือนกันค่ะ ฉันใช้เวลาชั่วโมงหนึ่งกว่าจะถึงที่ทำงาน"],
+   ["A","Have you ever been to Singapore before?","คุณเคยมาสิงคโปร์มาก่อนไหมครับ"],
+   ["B","Only once, on a business trip three years ago. I didn't have time to see anything.","ครั้งเดียวค่ะ ตอนมาทำงานเมื่อสามปีก่อน ไม่มีเวลาเที่ยวอะไรเลยค่ะ"],
+   ["A","Maybe we'll have some free time after the client meeting tomorrow.","บางทีหลังประชุมลูกค้าพรุ่งนี้เราอาจมีเวลาว่างบ้างนะครับ"],
+   ["B","I hope so. I'd love to try the hawker food.","หวังว่าอย่างนั้นค่ะ ฉันอยากลองอาหารแผงลอยที่นี่มากเลยค่ะ"],
+   ["A","Me too. It seems we have a lot in common!","ผมก็เหมือนกันครับ ดูเหมือนเรามีอะไรเหมือนกันเยอะเลยนะครับ"],
+   ["B","We do. I'm glad we're on this trip together.","ใช่ค่ะ ดีใจที่ได้มาทริปนี้ด้วยกันนะคะ"]],
+  vocab:[
+   ["branch","สาขา","n.","Our company has twelve branches across Thailand.","บริษัทเรามีสิบสองสาขาทั่วประเทศไทย"],
+   ["transfer","ย้าย (ที่ทำงาน สาขา)","v.","He was transferred to the Hat Yai office last month.","เขาถูกย้ายไปออฟฟิศหาดใหญ่เมื่อเดือนที่แล้ว"],
+   ["originally","เดิมที โดยกำเนิด","adv.","My manager is originally from Laos.","หัวหน้าฉันเป็นคนลาวโดยกำเนิด"],
+   ["commute","การเดินทางไปทำงาน","n.","My commute is much shorter since I moved near the BTS.","การเดินทางไปทำงานของฉันสั้นลงมากตั้งแต่ย้ายมาอยู่ใกล้บีทีเอส"],
+   ["business trip","การเดินทางไปทำงาน (ต่างถิ่น)","n.","I'm going on a business trip to Hanoi next week.","สัปดาห์หน้าฉันจะไปทำงานที่ฮานอย"],
+   ["have in common","มีอะไรเหมือนกัน","phr.","We have a lot in common. We both love football.","เรามีอะไรเหมือนกันเยอะ เราชอบฟุตบอลทั้งคู่"],
+   ["amazing","ยอดเยี่ยม น่าทึ่ง","adj.","The view from the top floor is amazing.","วิวจากชั้นบนสุดสวยมาก"],
+   ["hawker food","อาหารแผงลอย","n.","You can find cheap hawker food near the office.","หาอาหารแผงลอยราคาถูกได้แถวออฟฟิศ"]],
+  phrases:[
+   ["How long have you been with the company?","คุณอยู่บริษัทนี้มานานแค่ไหนแล้ว","ใช้ be with + บริษัท ฟังเป็นมืออาชีพกว่า work at"],
+   ["Where are you originally from?","คุณเป็นคนที่ไหนโดยกำเนิด","ถามบ้านเกิด ต่างจากที่อยู่ตอนนี้"],
+   ["What's it like (living in …)?","(อยู่ที่…) เป็นยังไงบ้าง","ขอให้อีกฝ่ายเล่าความรู้สึกหรือประสบการณ์"],
+   ["Have you ever been to (…)?","คุณเคยไป…ไหม","been to = เคยไปแล้วกลับมา"],
+   ["It takes me (an hour) to get to work.","ฉันใช้เวลา (ชั่วโมงหนึ่ง) ไปทำงาน","It takes + คน + เวลา + to + V"],
+   ["We have a lot in common.","เรามีอะไรเหมือนกันเยอะ","ใช้เมื่อค้นพบว่าชอบหรือเจออะไรคล้ายกัน"]],
+  talk:[
+   {q:"How long has Jira been with the company?",a:"She has been with the company for almost five years."},
+   {q:"Where is Jira originally from?",a:"She's originally from Phuket."},
+   {q:"What does Ben think about living in Kuala Lumpur?",a:"He really likes it. The food is amazing, but the commute can be terrible."},
+   {q:"What would Jira like to do in Singapore?",a:"She would like to try the hawker food."}],
+  you:[
+   {th:"บอกว่าคุณอยู่บริษัทมานานแค่ไหนและเคยย้ายสาขาไหม",starter:"I've been with my company for … I started in …"},
+   {th:"เล่าว่าคุณเดินทางไปทำงานยังไงและใช้เวลาเท่าไร",starter:"It takes me … to get to work. I usually go by …"},
+   {th:"ถามเพื่อนร่วมงานคนใหม่เพื่อทำความรู้จัก",starter:"Where are you originally from? What's it like …?"}],
+  quiz:[
+   {q:"How long have you been ___ the company?",o:["to","with","on"],a:1,why:"be with + บริษัท = ทำงานที่บริษัทนั้น"},
+   {q:"I live in Bangkok, but I'm ___ from Udon Thani.",o:["originally","early","firstly"],a:0,why:"originally from = เป็นคนที่นั่นโดยกำเนิด"},
+   {q:"Have you ever ___ to Japan?",o:["go","went","been"],a:2,why:"Have you ever been to…? ใช้ V3 คือ been"},
+   {q:"___ me forty minutes to get to the office.",o:["I take","It spends","It takes"],a:2,why:"It takes + คน + เวลา + to + V"}]},
+
+ {id:"b8",theme:2,title:"Expressing Gratitude",th:"กล่าวขอบคุณ",
+  intro:"เพื่อนร่วมงานฝ่ายไอทีช่วยกู้ไฟล์งานก่อนประชุมลูกค้า จึงไปขอบคุณอย่างจริงใจ ฝึกพูด Thank you so much for…, I really appreciate…, I couldn't have done it without you และการตอบรับคำขอบคุณ",
+  cast:{A:"Pim",B:"Raj"},
+  lines:[
+   ["A","Raj, do you have a minute? I just wanted to say thank you for yesterday.","ราช ว่างสักครู่ไหมคะ ฉันอยากมาขอบคุณเรื่องเมื่อวานค่ะ"],
+   ["B","Oh, no problem at all. Did the meeting go well?","อ๋อ ไม่เป็นไรเลยครับ ประชุมไปได้ดีไหมครับ"],
+   ["A","It went really well. The client signed the contract this morning!","ดีมากเลยค่ะ ลูกค้าเซ็นสัญญาเมื่อเช้านี้เองค่ะ"],
+   ["B","That's fantastic news. Congratulations!","ข่าวดีมากเลยครับ ยินดีด้วยครับ"],
+   ["A","Thanks. But honestly, I couldn't have done it without you. You saved all my files.","ขอบคุณค่ะ แต่พูดจริงๆ ถ้าไม่มีคุณ ฉันคงทำไม่ได้ คุณกู้ไฟล์ทั้งหมดให้ฉันไว้ค่ะ"],
+   ["B","I'm glad I could help. It wasn't too difficult to recover them.","ดีใจที่ช่วยได้ครับ กู้คืนไม่ได้ยากเท่าไหร่ครับ"],
+   ["A","Maybe not for you, but I was really worried. I really appreciate you staying late.","สำหรับคุณอาจไม่ยาก แต่ฉันกังวลมากเลยค่ะ ขอบคุณจริงๆ ที่อยู่ช่วยจนดึกค่ะ"],
+   ["B","Don't mention it. That's what colleagues are for.","ไม่ต้องพูดถึงเลยครับ เพื่อนร่วมงานก็ต้องช่วยกันครับ"],
+   ["A","I got you this coffee and some cake. It's just a small thank you.","ฉันซื้อกาแฟกับขนมเค้กมาให้ค่ะ เป็นคำขอบคุณเล็กๆ น้อยๆ ค่ะ"],
+   ["B","That's very thoughtful of you. You didn't have to do that.","คุณใส่ใจมากเลยครับ ไม่ต้องลำบากก็ได้ครับ"],
+   ["A","I wanted to. I'm really grateful. I owe you one.","ฉันอยากทำค่ะ ซาบซึ้งใจจริงๆ ค่ะ ติดหนี้คุณครั้งหนึ่งนะคะ"],
+   ["B","It was my pleasure. Just remember to back up your files next time!","ยินดีครับ แต่ครั้งหน้าอย่าลืมสำรองไฟล์ไว้ด้วยนะครับ"]],
+  vocab:[
+   ["appreciate","ซาบซึ้ง ขอบคุณ","v.","I really appreciate your quick reply.","ขอบคุณมากที่ตอบกลับเร็ว"],
+   ["grateful","รู้สึกขอบคุณ","adj.","We're grateful for all your support this year.","เราขอบคุณสำหรับการสนับสนุนทั้งหมดของคุณในปีนี้"],
+   ["owe","ติดค้าง เป็นหนี้","v.","Thanks for covering my shift. I owe you.","ขอบคุณที่เข้ากะแทนนะ ติดหนี้ไว้ก่อน"],
+   ["favour","ความช่วยเหลือ (ที่ขอจากคนอื่น)","n.","Could you do me a favour and check this email?","ช่วยอะไรหน่อยได้ไหม ช่วยตรวจอีเมลนี้ให้หน่อย"],
+   ["thoughtful","มีน้ำใจ ใส่ใจคนอื่น","adj.","It was thoughtful of her to send flowers.","เธอใส่ใจมากที่ส่งดอกไม้มา"],
+   ["recover","กู้คืน","v.","IT managed to recover the deleted data.","ฝ่ายไอทีกู้ข้อมูลที่ถูกลบคืนมาได้"],
+   ["back up","สำรอง (ข้อมูล)","phr.","Back up your work at the end of every day.","สำรองงานของคุณทุกวันตอนเลิกงาน"],
+   ["contract","สัญญา","n.","Please read the contract carefully before you sign it.","กรุณาอ่านสัญญาให้ละเอียดก่อนเซ็น"]],
+  phrases:[
+   ["Thank you so much for (…).","ขอบคุณมากสำหรับ…","for + คำนาม/V-ing บอกว่าขอบคุณเรื่องอะไร"],
+   ["I really appreciate (your help / you staying late).","ฉันซาบซึ้งใน (ความช่วยเหลือของคุณ)","appreciate + สิ่งที่ได้รับ ไม่ต้องมี for"],
+   ["I couldn't have done it without you.","ถ้าไม่มีคุณ ฉันคงทำไม่สำเร็จ","ขอบคุณแบบให้เครดิตอีกฝ่ายเต็มที่"],
+   ["I owe you one.","ติดหนี้ไว้ครั้งหนึ่งนะ","ภาษาพูดเป็นกันเอง หมายถึงพร้อมช่วยคืน"],
+   ["Don't mention it. / It was my pleasure.","ไม่เป็นไรเลย / ยินดีมาก","ตอบรับคำขอบคุณ It was my pleasure สุภาพกว่า"],
+   ["That's very thoughtful of you.","คุณใส่ใจมากเลย","ตอบเมื่อมีคนให้ของหรือทำอะไรให้เรา"]],
+  talk:[
+   {q:"Why does Pim thank Raj?",a:"She thanks him because he recovered all her files before the client meeting."},
+   {q:"What happened this morning?",a:"The client signed the contract this morning."},
+   {q:"What does Pim give Raj?",a:"She gives him a coffee and some cake as a small thank you."},
+   {q:"What advice does Raj give Pim?",a:"He tells her to back up her files next time."}],
+  you:[
+   {th:"ขอบคุณเพื่อนร่วมงานที่เคยช่วยคุณ",starter:"Thank you so much for … I really appreciate …"},
+   {th:"เล่าเรื่องที่มีคนช่วยงานคุณจนสำเร็จ",starter:"Once, my colleague helped me … I couldn't have done it without …"},
+   {th:"ตอบเมื่อมีคนขอบคุณคุณ",starter:"Don't mention it. I'm glad I could …"}],
+  quiz:[
+   {q:"I really appreciate ___.",o:["your help","for your help","you for helping"],a:0,why:"appreciate + สิ่งที่ได้รับ ไม่ต้องใส่ for"},
+   {q:"Someone says ‘Thank you so much.’ What's a polite reply?",o:["I owe you one.","It was my pleasure.","I'm really grateful."],a:1,why:"It was my pleasure ใช้ตอบรับคำขอบคุณ ส่วนอีกสองตัวเลือกคือการขอบคุณเอง"},
+   {q:"Thank you so much ___ staying late.",o:["to","about","for"],a:2,why:"ขอบคุณเรื่องอะไรใช้ Thank you for + V-ing"},
+   {q:"Which sentence means ‘I'll help you in return one day’?",o:["I owe you one.","Don't mention it.","You didn't have to do that."],a:0,why:"I owe you one = ติดหนี้ไว้ พร้อมช่วยคืน"}]},
+
+ {id:"b9",theme:2,title:"Apologizing",th:"กล่าวขอโทษ",
+  intro:"พนักงานส่งไฟล์ผิดให้ซัพพลายเออร์และส่งรายงานช้า จึงไปขอโทษหัวหน้าและบอกวิธีแก้ ฝึกพูด I'm sorry for…, I apologize for…, It was my fault, It won't happen again และการตอบรับคำขอโทษ",
+  cast:{A:"David",B:"Kanya"},
+  lines:[
+   ["A","Khun Kanya, have you got a moment? I need to apologize for something.","คุณกันยาครับ ขอเวลาสักครู่ได้ไหมครับ ผมต้องขอโทษเรื่องหนึ่งครับ"],
+   ["B","Sure, David. What happened?","ได้ค่ะเดวิด เกิดอะไรขึ้นคะ"],
+   ["A","I sent the wrong price list to our supplier yesterday. It was my fault.","เมื่อวานผมส่งรายการราคาผิดไปให้ซัพพลายเออร์ครับ เป็นความผิดของผมเองครับ"],
+   ["B","I see. Did they notice?","อ๋อ แล้วเขาสังเกตเห็นไหมคะ"],
+   ["A","Yes, they called this morning. I've already sent the correct file and said sorry for the confusion.","สังเกตครับ เขาโทรมาเมื่อเช้า ผมส่งไฟล์ที่ถูกไปแล้ว และขอโทษที่ทำให้สับสนแล้วครับ"],
+   ["B","Good. Thank you for fixing it so quickly.","ดีค่ะ ขอบคุณที่แก้ไขเร็วนะคะ"],
+   ["A","Also, I'm sorry that the monthly report is late. I'll finish it by four this afternoon.","แล้วก็ ขอโทษที่รายงานประจำเดือนส่งช้าครับ ผมจะทำเสร็จภายในบ่ายสี่โมงวันนี้ครับ"],
+   ["B","That's fine. Four o'clock is okay. Is everything all right? This isn't like you.","ไม่เป็นไรค่ะ สี่โมงก็ได้ค่ะ ทุกอย่างโอเคไหมคะ ปกติคุณไม่เป็นแบบนี้นะคะ"],
+   ["A","I've had too many things to do this week, and I didn't double-check the attachment.","สัปดาห์นี้ผมมีงานเยอะเกินไปครับ เลยไม่ได้ตรวจไฟล์แนบซ้ำครับ"],
+   ["B","Don't worry, mistakes happen. But tell me when you have too much work.","ไม่ต้องกังวลค่ะ ความผิดพลาดเกิดขึ้นได้ แต่ถ้างานเยอะเกินไปบอกฉันนะคะ"],
+   ["A","I will. I apologize for the inconvenience. It won't happen again.","ได้ครับ ขอโทษที่ทำให้ลำบากครับ จะไม่เกิดขึ้นอีกครับ"],
+   ["B","Apology accepted. Let's talk about your workload on Monday.","รับคำขอโทษค่ะ วันจันทร์เรามาคุยเรื่องปริมาณงานของคุณกันนะคะ"]],
+  vocab:[
+   ["apologize","ขอโทษ","v.","The airline apologized for the delay.","สายการบินขอโทษที่เที่ยวบินล่าช้า"],
+   ["fault","ความผิด","n.","It wasn't your fault. The system crashed.","ไม่ใช่ความผิดของคุณ ระบบล่มเอง"],
+   ["confusion","ความสับสน","n.","Sorry for the confusion. The meeting is in Room B.","ขอโทษที่ทำให้สับสน ประชุมอยู่ที่ห้องบี"],
+   ["inconvenience","ความไม่สะดวก ความลำบาก","n.","We're sorry for any inconvenience caused by the repairs.","ขออภัยในความไม่สะดวกจากการซ่อมแซม"],
+   ["double-check","ตรวจซ้ำ","v.","Always double-check the figures before you send them.","ตรวจตัวเลขซ้ำทุกครั้งก่อนส่ง"],
+   ["attachment","ไฟล์แนบ","n.","I forgot to add the attachment to my email.","ฉันลืมแนบไฟล์ไปกับอีเมล"],
+   ["supplier","ผู้จัดส่งสินค้า ซัพพลายเออร์","n.","We buy our paper from a local supplier.","เราซื้อกระดาษจากซัพพลายเออร์ในพื้นที่"],
+   ["workload","ปริมาณงาน","n.","My workload is heavy at the end of every quarter.","ปริมาณงานของฉันหนักทุกสิ้นไตรมาส"]],
+  phrases:[
+   ["I'm sorry for (…ing). / I'm sorry that (…).","ขอโทษที่…","sorry for + คำนาม/V-ing หรือ sorry that + ประโยค"],
+   ["I apologize for (the inconvenience).","ขออภัยใน (ความไม่สะดวก)","สุภาพและเป็นทางการกว่า I'm sorry ใช้กับลูกค้าหรือหัวหน้า"],
+   ["It was my fault.","เป็นความผิดของผมเอง","ยอมรับผิดตรงๆ ทำให้คนฟังเชื่อใจ"],
+   ["It won't happen again.","จะไม่เกิดขึ้นอีก","สัญญาว่าจะระวัง ใช้ตอนท้ายคำขอโทษ"],
+   ["I'll (finish it by four).","ผมจะ (ทำเสร็จภายในสี่โมง)","บอกวิธีแก้ไขหลังขอโทษ"],
+   ["Don't worry, mistakes happen. / Apology accepted.","ไม่ต้องกังวล ผิดพลาดกันได้ / รับคำขอโทษ","ใช้ตอบรับคำขอโทษ"]],
+  talk:[
+   {q:"What mistake did David make?",a:"He sent the wrong price list to the supplier."},
+   {q:"What did David do to fix the problem?",a:"He sent the correct file and said sorry for the confusion."},
+   {q:"When will David finish the monthly report?",a:"He will finish it by four this afternoon."},
+   {q:"What does Kanya want to talk about on Monday?",a:"She wants to talk about David's workload."}],
+  you:[
+   {th:"ขอโทษหัวหน้าที่ส่งงานช้า และบอกว่าจะแก้อย่างไร",starter:"I'm sorry that … is late. I'll …"},
+   {th:"เล่าความผิดพลาดที่คุณเคยทำในที่ทำงานและสิ่งที่ได้เรียนรู้",starter:"Once, I … by mistake. Now I always …"},
+   {th:"ตอบเพื่อนร่วมงานที่มาขอโทษคุณ",starter:"Don't worry, mistakes happen. Just …"}],
+  quiz:[
+   {q:"I apologize ___ the late reply.",o:["to","about","for"],a:2,why:"apologize for + เรื่องที่ขอโทษ (apologize to + คน)"},
+   {q:"Which sentence is a promise after an apology?",o:["It won't happen again.","It was my fault.","Apology accepted."],a:0,why:"It won't happen again = สัญญาว่าจะไม่เกิดอีก"},
+   {q:"I'm sorry ___ the meeting room wasn't ready.",o:["for","that","to"],a:1,why:"sorry that + ประโยคเต็ม"},
+   {q:"Which phrase is the most formal way to say sorry to a customer?",o:["My bad.","We apologize for the inconvenience.","Oops, sorry about that."],a:1,why:"We apologize for the inconvenience เป็นทางการ ส่วนอีกสองตัวเลือกเป็นภาษาพูดเล่นๆ"}]},
+
+ {id:"b10",theme:2,title:"Giving Compliments",th:"ชมเชยผู้อื่น",
+  intro:"ผู้จัดการภูมิภาคชมทีมงานหลังจัดบูธในงานแสดงสินค้าได้ดี ฝึกชมอย่างจริงใจและเจาะจง ใช้ You did a great job on…, I was really impressed by… และการรับคำชมอย่างสุภาพ เช่น That's very kind of you to say",
+  cast:{A:"Sarah",B:"Ton"},
+  lines:[
+   ["A","Ton, I just walked past our booth. You did a great job on it!","ต้น ฉันเพิ่งเดินผ่านบูธของเรามา คุณทำได้ดีมากเลยค่ะ"],
+   ["B","Thank you, Sarah. That's very kind of you to say.","ขอบคุณครับซาร่าห์ คุณพูดแบบนี้ผมดีใจมากครับ"],
+   ["A","I mean it. The design is really creative, and it's much bigger than last year's.","ฉันพูดจริงนะคะ ดีไซน์สร้างสรรค์มาก และใหญ่กว่าปีที่แล้วเยอะเลยค่ะ"],
+   ["B","The whole team helped. Ploy came up with the idea for the lights.","ทีมช่วยกันทั้งหมดครับ พลอยเป็นคนคิดไอเดียเรื่องไฟครับ"],
+   ["A","Please tell her I love it. Lots of visitors stopped to take photos.","ฝากบอกเธอด้วยนะคะว่าฉันชอบมาก ผู้เข้าชมหยุดถ่ายรูปกันเยอะเลยค่ะ"],
+   ["B","I will. She'll be really happy to hear that.","ได้ครับ เธอต้องดีใจมากแน่ๆ ครับ"],
+   ["A","And I was really impressed by your product demo this morning.","แล้วฉันก็ประทับใจการสาธิตสินค้าของคุณเมื่อเช้ามากค่ะ"],
+   ["B","Really? I was a bit nervous. There were so many people watching.","จริงเหรอครับ ผมตื่นเต้นนิดหน่อยครับ คนดูเยอะมาก"],
+   ["A","It didn't show at all. You explained everything clearly and answered every question.","ไม่เห็นเลยนะคะ คุณอธิบายทุกอย่างชัดเจน และตอบทุกคำถามได้หมดค่ะ"],
+   ["B","Thanks. I practised a lot last week, so I'm glad it paid off.","ขอบคุณครับ ผมซ้อมเยอะเมื่อสัปดาห์ก่อน ดีใจที่ได้ผลครับ"],
+   ["A","It definitely did. We already have twenty new contacts from today.","ได้ผลแน่นอนค่ะ วันนี้เราได้รายชื่อผู้ติดต่อใหม่แล้วยี่สิบรายค่ะ"],
+   ["B","That's great news. By the way, I like your new glasses. They suit you.","ข่าวดีมากเลยครับ ว่าแต่ แว่นใหม่ของคุณสวยนะครับ เข้ากับคุณดีครับ"],
+   ["A","Oh, thank you! I wasn't sure about them, but now I feel better.","โอ้ ขอบคุณค่ะ ตอนแรกไม่แน่ใจเลย ตอนนี้รู้สึกดีขึ้นแล้วค่ะ"]],
+  vocab:[
+   ["compliment","คำชม","n.","She gave me a nice compliment on my report.","เธอชมรายงานของฉันอย่างน่ารัก"],
+   ["impressed","ประทับใจ","adj.","The client was impressed by our fast service.","ลูกค้าประทับใจบริการที่รวดเร็วของเรา"],
+   ["creative","สร้างสรรค์","adj.","We need a creative idea for the new ad.","เราต้องการไอเดียสร้างสรรค์สำหรับโฆษณาใหม่"],
+   ["booth","บูธ (ในงานแสดงสินค้า)","n.","Our booth is next to the main entrance.","บูธของเราอยู่ติดกับทางเข้าหลัก"],
+   ["trade fair","งานแสดงสินค้า","n.","We meet many new buyers at the trade fair every year.","เราได้เจอผู้ซื้อรายใหม่หลายรายที่งานแสดงสินค้าทุกปี"],
+   ["demo","การสาธิต","n.","Can you give the customer a quick demo of the app?","ช่วยสาธิตแอปให้ลูกค้าดูแบบเร็วๆ หน่อยได้ไหม"],
+   ["pay off","ได้ผล คุ้มค่า","phr.","All our hard work finally paid off.","ความพยายามทั้งหมดของเราได้ผลในที่สุด"],
+   ["suit","เหมาะกับ เข้ากับ (คน)","v.","That colour really suits you.","สีนั้นเข้ากับคุณมาก"]],
+  phrases:[
+   ["You did a great job on (…).","คุณทำ…ได้ดีมาก","ชมผลงาน job on + งานที่ทำ เจาะจงชื่องานจะจริงใจกว่า"],
+   ["I was really impressed by (…).","ฉันประทับใจ…มาก","impressed by/with + สิ่งที่ประทับใจ"],
+   ["(It) really suits you.","เข้ากับคุณมาก","ชมเสื้อผ้า ทรงผม แว่น อย่างสุภาพ"],
+   ["That's very kind of you to say.","คุณใจดีมากที่พูดแบบนั้น","รับคำชมอย่างสุภาพ ไม่ปฏิเสธคำชม"],
+   ["I'm glad you like it.","ดีใจที่คุณชอบ","ตอบรับคำชมแบบง่ายๆ"],
+   ["The whole team helped.","ทีมช่วยกันทั้งหมด","แบ่งเครดิตให้ทีมเมื่อได้รับคำชม"]],
+  talk:[
+   {q:"What does Sarah like about the booth?",a:"She thinks the design is really creative, and it's much bigger than last year's."},
+   {q:"Whose idea were the lights?",a:"Ploy came up with the idea for the lights."},
+   {q:"How did Ton feel during the product demo?",a:"He felt a bit nervous because so many people were watching."},
+   {q:"What compliment does Ton give Sarah?",a:"He says he likes her new glasses and that they suit her."}],
+  you:[
+   {th:"ชมผลงานของเพื่อนร่วมงานอย่างเจาะจง",starter:"You did a great job on … I really liked …"},
+   {th:"ตอบเมื่อหัวหน้าชมงานของคุณ",starter:"Thank you. That's very kind of you to say. The whole team …"},
+   {th:"เล่าถึงคำชมที่คุณได้รับแล้วรู้สึกดี",starter:"Once, my manager told me … and I felt …"}],
+  quiz:[
+   {q:"You did a great job ___ the presentation.",o:["to","on","at"],a:1,why:"do a great job on + งานที่ทำ"},
+   {q:"Your manager praises your work. What's a polite reply?",o:["No, it was bad.","I know, I'm the best.","That's very kind of you to say."],a:2,why:"รับคำชมอย่างสุภาพ ไม่ปฏิเสธและไม่อวด"},
+   {q:"I was really ___ by your demo.",o:["impressed","impressing","impressive"],a:0,why:"คนที่รู้สึกประทับใจใช้ impressed (-ed = ความรู้สึก)"},
+   {q:"That jacket really ___ you.",o:["fits on","matches to","suits"],a:2,why:"suit + คน = เข้ากับคนนั้น ไม่ต้องมีบุพบท"}]},
+
+{id:"b11",theme:3,title:"Telling Time",th:"การบอกเวลา",
+  intro:"นัดเวลาประชุมทางวิดีโอกับสำนักงานต่างประเทศที่อยู่คนละเขตเวลา ฝึกบอกเวลาแบบ half past, a quarter to/past และพูดว่าที่ไหนเร็วหรือช้ากว่าเรากี่ชั่วโมง",
+  cast:{A:"Nok",B:"Mark"},
+  lines:[
+   ["B","Nok, what time is it now? My phone has died.","นก ตอนนี้กี่โมงแล้วครับ โทรศัพท์ผมแบตหมด"],
+   ["A","It's twenty past two. Why? Are you in a hurry?","บ่ายสองโมงยี่สิบค่ะ ทำไมเหรอคะ รีบอยู่เหรอคะ"],
+   ["B","I have a video call with the London office this afternoon. What time is it in London now?","ผมมีวิดีโอคอลกับสำนักงานลอนดอนบ่ายนี้ครับ ตอนนี้ที่ลอนดอนกี่โมงครับ"],
+   ["A","In winter, London is seven hours behind Bangkok. So it's twenty past seven in the morning there.","ช่วงหน้าหนาวลอนดอนช้ากว่ากรุงเทพฯ เจ็ดชั่วโมงค่ะ ที่นั่นเลยเป็นเจ็ดโมงยี่สิบเช้าค่ะ"],
+   ["B","Then the call can't be too early. Their office opens at half past eight.","งั้นคอลเช้าเกินไปไม่ได้ ออฟฟิศเขาเปิดแปดโมงครึ่งครับ"],
+   ["A","How about a quarter past four our time? That's a quarter past nine in London.","แล้วสี่โมงสิบห้าเวลาบ้านเราล่ะคะ ตรงกับเก้าโมงสิบห้าที่ลอนดอนค่ะ"],
+   ["B","Good idea. The meeting room is free from four until six.","ความคิดดีครับ ห้องประชุมว่างตั้งแต่สี่โมงถึงหกโมงครับ"],
+   ["A","Great. How long will the call take?","ดีเลยค่ะ คอลจะใช้เวลานานแค่ไหนคะ"],
+   ["B","About forty-five minutes. We should finish by five o'clock.","ประมาณสี่สิบห้านาทีครับ น่าจะเสร็จก่อนห้าโมงครับ"],
+   ["A","Perfect. I usually leave at half past five, so I can join you.","พอดีเลยค่ะ ปกติดิฉันกลับห้าโมงครึ่ง เลยเข้าร่วมด้วยได้ค่ะ"],
+   ["B","Thanks, Nok. Can you send them an invitation for four fifteen, Bangkok time?","ขอบคุณครับนก ช่วยส่งคำเชิญไปที่สี่โมงสิบห้า เวลากรุงเทพฯ ได้ไหมครับ"],
+   ["A","Sure. I'll add both time zones so nobody gets confused.","ได้ค่ะ ดิฉันจะใส่ทั้งสองเขตเวลา จะได้ไม่มีใครสับสนค่ะ"]],
+  vocab:[
+   ["time zone","เขตเวลา","n.","Our team works in three different time zones.","ทีมของเราทำงานอยู่ในสามเขตเวลาที่ต่างกัน"],
+   ["local time","เวลาท้องถิ่น","n.","The flight lands at six in the evening, local time.","เที่ยวบินลงจอดหกโมงเย็นตามเวลาท้องถิ่น"],
+   ["ahead of","เร็วกว่า (เวลา)","phr.","Tokyo is two hours ahead of Bangkok.","โตเกียวเร็วกว่ากรุงเทพฯ สองชั่วโมง"],
+   ["sharp","ตรงเวลาเป๊ะ","adv.","The training starts at nine o'clock sharp.","การอบรมเริ่มเก้าโมงตรงเป๊ะ"],
+   ["noon","เที่ยงวัน","n.","Please send me the report before noon.","กรุณาส่งรายงานให้ฉันก่อนเที่ยง"],
+   ["midnight","เที่ยงคืน","n.","The system update runs at midnight.","ระบบจะอัปเดตตอนเที่ยงคืน"],
+   ["working hours","เวลาทำงาน","n.","Our working hours are from half past eight to half past five.","เวลาทำงานของเราคือแปดโมงครึ่งถึงห้าโมงครึ่ง"],
+   ["invitation","คำเชิญ","n.","I've sent everyone a calendar invitation for Friday.","ฉันส่งคำเชิญในปฏิทินให้ทุกคนสำหรับวันศุกร์แล้ว"]],
+  phrases:[
+   ["What time is it?","ตอนนี้กี่โมงแล้ว","ถามเวลาแบบทั่วไป สุภาพขึ้นใช้ Excuse me, do you have the time?"],
+   ["It's half past (hour).","…โมงครึ่ง","half past nine = เก้าโมงครึ่ง"],
+   ["It's a quarter past / to (hour).","…โมงสิบห้า / อีกสิบห้านาที…โมง","a quarter past three = สามโมงสิบห้า · a quarter to three = สองโมงสี่สิบห้า"],
+   ["It's (minutes) past / to (hour).","…โมง…นาที / อีก…นาที…โมง","นาทีที่ 1–30 ใช้ past · นาทีที่ 31–59 ใช้ to นับถอยจากชั่วโมงถัดไป"],
+   ["(Place) is (number) hours ahead of / behind us.","…เร็วกว่า / ช้ากว่าเรา…ชั่วโมง","ใช้อธิบายความต่างของเวลาเวลานัดคนต่างประเทศ"],
+   ["We should finish by (time).","น่าจะเสร็จก่อน…","by + เวลา = ไม่เกินเวลานั้น"],
+   ["at (time) sharp","ตรง…เป๊ะ","เน้นว่าต้องตรงเวลา เช่น at nine sharp"]],
+  talk:[
+   {q:"What time is it when Mark asks Nok?",a:"It's twenty past two in the afternoon."},
+   {q:"Why can't the call be too early?",a:"Because the London office opens at half past eight."},
+   {q:"What time is the call in Bangkok and in London?",a:"It's at a quarter past four in Bangkok and a quarter past nine in London."},
+   {q:"How long will the call take?",a:"It will take about forty-five minutes, so they should finish by five o'clock."}],
+  you:[
+   {th:"บอกเวลาที่คุณเริ่มงานและเลิกงานโดยใช้ half past / a quarter to",starter:"I usually start work at … and leave at …"},
+   {th:"เล่าว่าคุณเคยติดต่อคนที่อยู่คนละเขตเวลาไหม เวลาต่างกันเท่าไร",starter:"I sometimes talk to people in … It's … hours ahead of / behind Bangkok."},
+   {th:"บอกว่าคุณมักกินข้าวกลางวันกี่โมง",starter:"I usually have lunch at …"}],
+  quiz:[
+   {q:"8:30 in words is ___.",o:["half past eight","half past nine","half to nine"],a:0,why:"half past + ชั่วโมงนั้น = ชั่วโมงนั้นครึ่ง 8:30 จึงเป็น half past eight"},
+   {q:"2:45 in words is ___.",o:["a quarter past two","a quarter to three","a quarter to two"],a:1,why:"อีกสิบห้านาทีจะสามโมง จึงเป็น a quarter to three"},
+   {q:"Tokyo is two hours ___ Bangkok. When it's ten in Bangkok, it's twelve in Tokyo.",o:["behind","later","ahead of"],a:2,why:"เวลาที่โตเกียวมากกว่า จึงใช้ ahead of (เร็วกว่า) · behind คือช้ากว่า"},
+   {q:"The meeting starts at nine ___. Please don't be late.",o:["clock","sharp","exact"],a:1,why:"at nine sharp = เก้าโมงตรงเป๊ะ ใช้ sharp วางหลังเวลา"}]},
+
+ {id:"b12",theme:3,title:"Running Late",th:"ไปสาย",
+  intro:"โทรบอกลูกค้าว่าจะไปถึงสายเพราะรถติด ฝึกขอโทษ บอกสาเหตุ และบอกเวลาที่คาดว่าจะถึง เช่น I'm running late. / I should be there by …",
+  cast:{A:"Fon",B:"James"},
+  lines:[
+   ["A","Hello, James? It's Fon from Bangkok Packaging. I'm really sorry, but I'm running late.","สวัสดีค่ะเจมส์ ฝนจากบางกอกแพ็กเกจจิ้งค่ะ ขอโทษจริง ๆ นะคะ ดิฉันจะไปสายค่ะ"],
+   ["B","Oh, don't worry. What happened?","อ้อ ไม่เป็นไรครับ เกิดอะไรขึ้นครับ"],
+   ["A","There's been an accident on the expressway, and the traffic is hardly moving.","มีอุบัติเหตุบนทางด่วนค่ะ รถแทบไม่ขยับเลยค่ะ"],
+   ["B","That's terrible. How late do you think you'll be?","แย่จังครับ คิดว่าจะสายประมาณเท่าไรครับ"],
+   ["A","About twenty minutes, maybe half an hour. I should be there by half past ten.","ประมาณยี่สิบนาที อาจถึงครึ่งชั่วโมงค่ะ น่าจะถึงไม่เกินสิบโมงครึ่งค่ะ"],
+   ["B","That's fine. I have some emails to answer, so I'll wait for you in the lobby.","ได้ครับ ผมมีอีเมลต้องตอบอยู่ เดี๋ยวรอคุณที่ล็อบบี้ครับ"],
+   ["A","Thank you for understanding. Do you still have time after eleven?","ขอบคุณที่เข้าใจนะคะ หลังสิบเอ็ดโมงคุณยังมีเวลาไหมคะ"],
+   ["B","I have another meeting at twelve, so we'll have about an hour. That's enough.","ผมมีประชุมอีกนัดตอนเที่ยงครับ เราจะมีเวลาประมาณหนึ่งชั่วโมง พอครับ"],
+   ["A","Good. I'll send you a message if the traffic gets worse.","ดีค่ะ ถ้ารถติดหนักกว่านี้ ดิฉันจะส่งข้อความไปบอกนะคะ"],
+   ["B","OK. Drive safely, and don't rush.","โอเคครับ ขับรถปลอดภัยนะครับ ไม่ต้องรีบครับ"],
+   ["A","I will. Sorry again for the delay.","ค่ะ ขอโทษอีกครั้งที่ทำให้ล่าช้านะคะ"],
+   ["B","No problem at all. See you soon.","ไม่มีปัญหาเลยครับ แล้วเจอกันครับ"]],
+  vocab:[
+   ["run late","ไปสาย ช้ากว่ากำหนด","phr.","The meeting is running late, so I'll call you after lunch.","ประชุมเลยเวลาไป เดี๋ยวฉันโทรหาหลังมื้อเที่ยงนะ"],
+   ["traffic jam","รถติด","n.","I was stuck in a traffic jam for an hour.","ฉันติดอยู่ในรถติดหนึ่งชั่วโมง"],
+   ["delay","ความล่าช้า / ทำให้ล่าช้า","n./v.","There was a short delay because of the rain.","มีความล่าช้าเล็กน้อยเพราะฝนตก"],
+   ["held up","ติดขัด ถูกถ่วงไว้","phr.","Sorry I'm late. I was held up at the bank.","ขอโทษที่มาสาย ฉันติดธุระอยู่ที่ธนาคาร"],
+   ["rush","รีบ","v.","Don't rush. We can start when you arrive.","ไม่ต้องรีบนะ เราเริ่มตอนคุณมาถึงก็ได้"],
+   ["on my way","กำลังไป อยู่ระหว่างทาง","phr.","I’m on my way. I’ll be there in ten minutes.","ฉันกำลังไป อีกสิบนาทีถึง"],
+   ["stuck","ติดอยู่ ไปไหนไม่ได้","adj.","We were stuck in the lift for ten minutes.","เราติดอยู่ในลิฟต์สิบนาที"],
+   ["lobby","ล็อบบี้ โถงทางเข้า","n.","Let's meet in the hotel lobby at nine.","เจอกันที่ล็อบบี้โรงแรมตอนเก้าโมงนะ"]],
+  phrases:[
+   ["I'm sorry, but I'm running late.","ขอโทษนะ แต่จะไปสาย","โทรบอกล่วงหน้าทันทีที่รู้ว่าจะสาย เป็นมารยาทที่ดี"],
+   ["I'm stuck in traffic.","ติดอยู่ในรถติด","be stuck in + สถานที่หรือสถานการณ์"],
+   ["I should be there by (time).","น่าจะถึงไม่เกิน…","บอกเวลาที่คาดว่าจะถึงให้อีกฝ่ายวางแผนได้"],
+   ["How late do you think you'll be?","คิดว่าจะสายประมาณเท่าไร","ใช้ถามอีกฝ่ายที่โทรมาบอกว่าจะสาย"],
+   ["Thank you for understanding.","ขอบคุณที่เข้าใจ","ใช้ขอบคุณคนที่ไม่ถือโทษ"],
+   ["Sorry to keep you waiting.","ขอโทษที่ให้รอ","พูดตอนไปถึงแล้วอีกฝ่ายรออยู่"],
+   ["Don't worry. Take your time.","ไม่เป็นไร ไม่ต้องรีบ","ตอบคนที่ขอโทษว่าจะสาย"]],
+  talk:[
+   {q:"Why is Fon running late?",a:"There's been an accident on the expressway, and the traffic is hardly moving."},
+   {q:"How late will she be?",a:"About twenty minutes, maybe half an hour. She should be there by half past ten."},
+   {q:"Where will James wait for her?",a:"He'll wait for her in the lobby and answer some emails."},
+   {q:"Why will they only have about an hour?",a:"Because James has another meeting at twelve."}],
+  you:[
+   {th:"เล่าครั้งที่คุณไปทำงานหรือไปประชุมสาย และสาเหตุ",starter:"Once I was late for … because …"},
+   {th:"ฝึกโทรบอกหัวหน้าว่าคุณจะเข้าประชุมสาย",starter:"Hi, it's … I'm sorry, but I'm running late. I should be there by …"}],
+  quiz:[
+   {q:"I'm sorry, I'm ___ late. I'll be there in ten minutes.",o:["run","ran","running"],a:2,why:"be + running late = กำลังจะไปสาย ใช้รูป -ing"},
+   {q:"Sorry to keep you ___.",o:["waiting","wait","to wait"],a:0,why:"keep + คน + -ing = ทำให้ใครทำอะไรต่อไป · keep you waiting = ทำให้คุณต้องรอ"},
+   {q:"The train was ___ for forty minutes because of a power cut.",o:["rushed","delayed","lated"],a:1,why:"be delayed = ล่าช้า · late เป็นคำคุณศัพท์ ไม่มีรูป lated"},
+   {q:"Someone calls to say they will be late. What do you say?",o:["Don't worry. Take your time.","Hurry up, please.","You're running late."],a:0,why:"Don't worry. Take your time. ตอบอย่างสุภาพว่าไม่เป็นไร ไม่ต้องรีบ"}]},
+
+ {id:"b13",theme:3,title:"Making an Appointment",th:"การขอนัดหมาย",
+  intro:"พนักงานขายโทรขอนัดผู้จัดการสำนักงานเพื่อนำเสนอสินค้า ฝึกเสนอวันเวลา ปฏิเสธอย่างสุภาพ และทวนนัดให้ชัดเจน เช่น When would suit you? / How about …?",
+  cast:{A:"Somchai",B:"Laura"},
+  lines:[
+   ["A","Good morning. Could I speak to Laura Bennett, please?","สวัสดีครับ ขอสายคุณลอร่า เบนเน็ตต์ครับ"],
+   ["B","Speaking. How can I help you?","พูดอยู่ค่ะ มีอะไรให้ช่วยคะ"],
+   ["A","This is Somchai from Comfort Office Furniture. I'd like to make an appointment to show you our new office chairs.","ผมสมชายจากคอมฟอร์ตออฟฟิศเฟอร์นิเจอร์ครับ อยากขอนัดพบเพื่อแนะนำเก้าอี้สำนักงานรุ่นใหม่ครับ"],
+   ["B","Oh, yes. Your colleague mentioned you last week. When would suit you?","อ๋อ ค่ะ เพื่อนร่วมงานของคุณเคยพูดถึงเมื่อสัปดาห์ก่อนค่ะ คุณสะดวกวันไหนคะ"],
+   ["A","Are you free next Tuesday morning?","วันอังคารหน้าช่วงเช้า คุณว่างไหมครับ"],
+   ["B","I'm afraid I'm busy on Tuesday. I have training all day. How about Wednesday?","เสียดายค่ะ วันอังคารไม่ว่าง มีอบรมทั้งวันค่ะ วันพุธดีไหมคะ"],
+   ["A","Wednesday is fine. What time is good for you?","วันพุธได้ครับ เวลาไหนสะดวกครับ"],
+   ["B","Is ten o'clock OK? I have another meeting at half past eleven.","สิบโมงได้ไหมคะ ดิฉันมีประชุมอีกนัดตอนสิบเอ็ดโมงครึ่งค่ะ"],
+   ["A","Ten o'clock is perfect. The presentation takes about an hour. Should I bring some samples?","สิบโมงพอดีเลยครับ การนำเสนอใช้เวลาประมาณหนึ่งชั่วโมง ควรเอาตัวอย่างไปด้วยไหมครับ"],
+   ["B","Yes, please. Bring one or two chairs so my team can try them.","เอามาด้วยค่ะ เอามาสักหนึ่งหรือสองตัว ทีมดิฉันจะได้ลองนั่งค่ะ"],
+   ["A","Certainly. So that's Wednesday at ten o'clock, at your office on Rama Four Road.","ได้เลยครับ สรุปเป็นวันพุธสิบโมง ที่ออฟฟิศของคุณบนถนนพระรามสี่นะครับ"],
+   ["B","That's right. Please ask for me at reception on the fifth floor.","ถูกต้องค่ะ ถามหาดิฉันที่แผนกต้อนรับชั้นห้านะคะ"],
+   ["A","Thank you, Laura. I'll send you an email to confirm. See you on Wednesday.","ขอบคุณครับลอร่า ผมจะส่งอีเมลยืนยันนะครับ แล้วพบกันวันพุธครับ"],
+   ["B","See you then. Goodbye.","แล้วพบกันค่ะ สวัสดีค่ะ"]],
+  vocab:[
+   ["appointment","การนัดหมาย","n.","I have an appointment with the bank manager at two.","ฉันมีนัดกับผู้จัดการธนาคารตอนบ่ายสอง"],
+   ["fully booked","ตารางเต็ม จองเต็ม","phr.","I’m sorry, Mr Tan is fully booked until Thursday.","ขออภัย คุณแทนตารางเต็มถึงวันพฤหัส"],
+   ["available","ว่าง พร้อม","adj.","Ms Lee isn't available this week. She's on a business trip.","คุณลีไม่ว่างสัปดาห์นี้ เธอไปทำงานต่างจังหวัด"],
+   ["confirm","ยืนยัน","v.","Please confirm the time by email.","กรุณายืนยันเวลาทางอีเมล"],
+   ["sample","ตัวอย่างสินค้า","n.","The supplier sent us free samples of the new paper.","ซัพพลายเออร์ส่งตัวอย่างกระดาษรุ่นใหม่มาให้ฟรี"],
+   ["reception","แผนกต้อนรับ","n.","Please leave the package at reception.","กรุณาฝากพัสดุไว้ที่แผนกต้อนรับ"],
+   ["schedule","ตารางงาน กำหนดการ","n.","My schedule is very full this month.","ตารางงานของฉันแน่นมากเดือนนี้"],
+   ["time slot","ช่วงเวลาที่จัดไว้","n.","The only free time slot is Thursday at three.","ช่วงเวลาที่ว่างมีแค่วันพฤหัสบ่ายสามโมง"]],
+  phrases:[
+   ["I'd like to make an appointment to (verb).","อยากขอนัดเพื่อ…","บอกจุดประสงค์ของการนัดตั้งแต่ต้น"],
+   ["When would suit you?","คุณสะดวกเมื่อไร","ให้อีกฝ่ายเลือกเวลาก่อน สุภาพมาก"],
+   ["Are you free on (day)?","วัน…คุณว่างไหม","on + วัน · in the morning/afternoon + ช่วงเวลา"],
+   ["I'm afraid I'm busy on (day).","เสียดายว่าวัน…ไม่ว่าง","I'm afraid ทำให้การปฏิเสธนุ่มนวลขึ้น"],
+   ["How about (day/time)?","…ดีไหม","เสนอทางเลือกใหม่ ตามด้วยคำนาม"],
+   ["So that's (day) at (time).","สรุปเป็นวัน…เวลา…","ทวนนัดก่อนวางสายเพื่อกันความผิดพลาด"],
+   ["I'll send you an email to confirm.","จะส่งอีเมลยืนยันให้","ใช้ปิดการนัดหมายอย่างมืออาชีพ"]],
+  talk:[
+   {q:"Why does Somchai call Laura?",a:"He wants to make an appointment to show her the new office chairs."},
+   {q:"Why can't Laura meet on Tuesday?",a:"Because she has training all day."},
+   {q:"When and where is the appointment?",a:"It's on Wednesday at ten o'clock, at Laura's office on Rama Four Road."},
+   {q:"What should Somchai bring?",a:"He should bring one or two chairs so Laura's team can try them."}],
+  you:[
+   {th:"ฝึกโทรขอนัดลูกค้าหรือหัวหน้าเพื่อคุยเรื่องงาน",starter:"I'd like to make an appointment to talk about … Are you free on …?"},
+   {th:"ปฏิเสธเวลาที่อีกฝ่ายเสนอ แล้วเสนอเวลาใหม่",starter:"I'm afraid I'm busy on … How about …?"},
+   {th:"บอกว่าสัปดาห์นี้ตารางงานของคุณเป็นอย่างไร",starter:"This week my schedule is … On … I have …"}],
+  quiz:[
+   {q:"Let's meet ___ Wednesday.",o:["in","on","at"],a:1,why:"on + วัน เช่น on Wednesday"},
+   {q:"When would ___ you?",o:["fit","good","suit"],a:2,why:"When would suit you? = คุณสะดวกเมื่อไร ใช้กริยา suit"},
+   {q:"Which sentence says no politely?",o:["I'm afraid I'm busy on Friday.","I'm free on Friday.","Friday suits me."],a:0,why:"I'm afraid … ใช้ปฏิเสธอย่างสุภาพ อีกสองประโยคเป็นการตอบรับ"},
+   {q:"Can you come ___ ten o'clock?",o:["on","in","at"],a:2,why:"at + เวลาที่ระบุ เช่น at ten o'clock"}]},
+
+ {id:"b14",theme:3,title:"Postponing an Appointment",th:"การเลื่อนนัด",
+  intro:"ผู้จัดการโครงการต้องเดินทางด่วน จึงโทรขอเลื่อนนัดกับซัพพลายเออร์ ฝึกขอเลื่อนอย่างสุภาพและตกลงเวลาใหม่ ใช้ postpone, move … to …, bring forward",
+  cast:{A:"Anna",B:"Krit"},
+  lines:[
+   ["A","Hi Krit, it's Anna. Do you have a minute?","สวัสดีค่ะกฤษ แอนนาค่ะ มีเวลาสักครู่ไหมคะ"],
+   ["B","Sure, Anna. What's up?","ได้ครับแอนนา มีอะไรครับ"],
+   ["A","It's about our meeting on Thursday afternoon. I'm afraid I need to postpone it.","เรื่องนัดประชุมบ่ายวันพฤหัสค่ะ ดิฉันคงต้องขอเลื่อนออกไปค่ะ"],
+   ["B","Oh, I see. Is everything all right?","อ๋อ เข้าใจครับ ทุกอย่างเรียบร้อยดีไหมครับ"],
+   ["A","Yes, but my manager has asked me to fly to Singapore for an urgent client meeting.","เรียบร้อยค่ะ แต่ผู้จัดการขอให้ดิฉันบินไปสิงคโปร์ ประชุมลูกค้าเรื่องด่วนค่ะ"],
+   ["B","No problem. When will you be back?","ไม่มีปัญหาครับ จะกลับมาเมื่อไรครับ"],
+   ["A","On Monday. Could we move the meeting to next Tuesday or Wednesday?","วันจันทร์ค่ะ เราเลื่อนประชุมไปวันอังคารหรือวันพุธหน้าได้ไหมคะ"],
+   ["B","Let me check my diary. Tuesday is full, but Wednesday afternoon is free.","ขอผมดูตารางนัดก่อนนะครับ วันอังคารเต็มแล้ว แต่บ่ายวันพุธว่างครับ"],
+   ["A","Great. Shall we say two o'clock on Wednesday, same place?","ดีเลยค่ะ งั้นบ่ายสองโมงวันพุธ ที่เดิมดีไหมคะ"],
+   ["B","That works for me. It also gives me more time to finish the price list.","ได้ครับ แบบนี้ผมก็มีเวลาทำรายการราคาให้เสร็จมากขึ้นด้วยครับ"],
+   ["A","Perfect. Sorry for the short notice, Krit.","เยี่ยมเลยค่ะ ขอโทษที่แจ้งกระชั้นชิดนะคะกฤษ"],
+   ["B","Don't worry. These things happen. Have a good trip.","ไม่เป็นไรครับ เรื่องแบบนี้เกิดขึ้นได้ เดินทางปลอดภัยนะครับ"],
+   ["A","Thanks. I'll update the meeting invitation today.","ขอบคุณค่ะ วันนี้ดิฉันจะแก้นัดในปฏิทินให้นะคะ"],
+   ["B","Thanks, Anna. See you next Wednesday.","ขอบคุณครับแอนนา เจอกันวันพุธหน้าครับ"]],
+  vocab:[
+   ["postpone","เลื่อนออกไป","v.","We had to postpone the launch until next month.","เราต้องเลื่อนการเปิดตัวไปเป็นเดือนหน้า"],
+   ["put off","เลื่อนออกไป (ภาษาพูด)","phr.","Can we put off the meeting until Friday?","เราเลื่อนประชุมไปวันศุกร์ได้ไหม"],
+   ["reschedule","กำหนดเวลาใหม่","v.","The dentist rescheduled my appointment for next week.","หมอฟันเลื่อนนัดของฉันไปสัปดาห์หน้า"],
+   ["bring forward","เลื่อนให้เร็วขึ้น","phr.","The deadline has been brought forward to Monday.","กำหนดส่งถูกเลื่อนให้เร็วขึ้นเป็นวันจันทร์"],
+   ["be back","กลับมา","phr.","The manager is in Japan. She’ll be back on Monday.","ผู้จัดการอยู่ญี่ปุ่น เธอจะกลับมาวันจันทร์"],
+   ["diary","สมุดนัดหมาย ตารางนัด","n.","I'll put the meeting in my diary.","ฉันจะจดนัดประชุมไว้ในตารางนัด"],
+   ["short notice","แจ้งกระชั้นชิด","n.","Thank you for coming at such short notice.","ขอบคุณที่มาแม้จะแจ้งกระชั้นชิดขนาดนี้"],
+   ["price list","รายการราคา","n.","Could you send me your latest price list?","ช่วยส่งรายการราคาล่าสุดให้หน่อยได้ไหม"]],
+  phrases:[
+   ["I'm afraid I need to postpone our meeting.","เกรงว่าต้องขอเลื่อนนัดประชุม","เปิดเรื่องอย่างสุภาพ แล้วบอกเหตุผลสั้น ๆ"],
+   ["Could we move the meeting to (day)?","เลื่อนประชุมไปวัน…ได้ไหม","move + สิ่งที่นัด + to + วันเวลาใหม่"],
+   ["Can we bring it forward to (day)?","เลื่อนให้เร็วขึ้นเป็นวัน…ได้ไหม","bring forward = เลื่อนมาเร็วขึ้น ตรงข้ามกับ postpone"],
+   ["Let me check my diary.","ขอดูตารางนัดก่อน","ขอเวลาเช็กก่อนตอบรับ"],
+   ["Shall we say (time) on (day)?","งั้นเป็น…วัน…ดีไหม","เสนอเวลาใหม่ให้ชัดเจน"],
+   ["That works for me.","สะดวกครับ/ค่ะ","ตอบรับเวลาที่อีกฝ่ายเสนอ"],
+   ["Sorry for the short notice.","ขอโทษที่แจ้งกระชั้นชิด","ใช้เมื่อเปลี่ยนนัดใกล้วันจริง"]],
+  talk:[
+   {q:"Why does Anna call Krit?",a:"She calls to postpone their meeting on Thursday afternoon."},
+   {q:"Why does she have to postpone it?",a:"Her manager has asked her to fly to Singapore for an urgent client meeting."},
+   {q:"When is the new meeting?",a:"It's at two o'clock next Wednesday, in the same place."},
+   {q:"Why is the change good for Krit?",a:"It gives him more time to finish the price list."}],
+  you:[
+   {th:"ฝึกโทรขอเลื่อนนัดกับลูกค้า พร้อมบอกเหตุผล",starter:"I'm afraid I need to postpone our meeting on … because …"},
+   {th:"เสนอวันเวลาใหม่ให้อีกฝ่ายเลือก",starter:"Could we move it to … or …?"}],
+  quiz:[
+   {q:"‘Postpone’ means ___.",o:["move to a later time","move to an earlier time","cancel completely"],a:0,why:"postpone = เลื่อนออกไปทีหลัง ไม่ใช่ยกเลิก"},
+   {q:"Could we ___ the meeting to Friday?",o:["postpone off","delay up","move"],a:2,why:"move + สิ่งที่นัด + to + วันใหม่ · postpone off และ delay up ไม่มีในภาษาอังกฤษ"},
+   {q:"The client is arriving early, so we need to ___ the meeting to Monday.",o:["put off","bring forward","call off"],a:1,why:"bring forward = เลื่อนให้เร็วขึ้น · put off = เลื่อนออกไป · call off = ยกเลิก"},
+   {q:"Which reply accepts a new time?",o:["That works for me.","I'm afraid I can't.","Let me cancel it."],a:0,why:"That works for me. = เวลานี้สะดวก ใช้ตอบรับ"}]},
+
+ {id:"b15",theme:3,title:"Cancelling an Appointment",th:"การยกเลิกนัด",
+  intro:"ผู้ช่วยผู้บริหารโทรยกเลิกนัดทานข้าวกับพาร์ตเนอร์ต่างชาติเพราะเจ้านายป่วย ฝึกยกเลิกอย่างสุภาพ แสดงความเห็นใจ และเสนอทางเลือกอื่น เช่น Could we … instead?",
+  cast:{A:"Wanida",B:"Kevin"},
+  lines:[
+   ["A","Good afternoon, Kevin. This is Wanida, Khun Prasert's assistant.","สวัสดีค่ะเควิน วนิดาค่ะ ผู้ช่วยของคุณประเสริฐค่ะ"],
+   ["B","Hello, Wanida. Are we still on for dinner tomorrow?","สวัสดีครับวนิดา พรุ่งนี้มื้อค่ำยังนัดกันเหมือนเดิมใช่ไหมครับ"],
+   ["A","That's why I'm calling. I'm very sorry, but we have to cancel the dinner.","ที่โทรมาก็เรื่องนี้ค่ะ ขอโทษมากนะคะ แต่เราต้องยกเลิกมื้อค่ำค่ะ"],
+   ["B","Oh, that's a shame. What's the problem?","โอ้ น่าเสียดายครับ มีปัญหาอะไรครับ"],
+   ["A","Khun Prasert is sick. His doctor told him to rest for a few days.","คุณประเสริฐไม่สบายค่ะ หมอให้พักสองสามวันค่ะ"],
+   ["B","I'm sorry to hear that. Please tell him I hope he gets well soon.","เสียใจด้วยครับ ฝากบอกเขาว่าขอให้หายเร็ว ๆ นะครับ"],
+   ["A","Thank you, I will. Did you book a table at the restaurant?","ขอบคุณค่ะ จะบอกให้นะคะ คุณจองโต๊ะที่ร้านอาหารไว้หรือเปล่าคะ"],
+   ["B","Yes, but don't worry. I'll call them and cancel the booking.","จองไว้ครับ แต่ไม่ต้องห่วง ผมจะโทรไปยกเลิกการจองเองครับ"],
+   ["A","Thank you. Khun Prasert still wants to discuss the contract before you fly home.","ขอบคุณค่ะ คุณประเสริฐยังอยากคุยเรื่องสัญญาก่อนคุณบินกลับค่ะ"],
+   ["B","I'm leaving on Friday evening. Could we have a video call instead?","ผมจะกลับเย็นวันศุกร์ครับ เปลี่ยนเป็นวิดีโอคอลแทนได้ไหมครับ"],
+   ["A","That's a good idea. Would Friday morning at nine be convenient?","ความคิดดีค่ะ วันศุกร์เก้าโมงเช้าสะดวกไหมคะ"],
+   ["B","Yes, that's fine. Please send me the link.","ได้ครับ ส่งลิงก์มาให้ด้วยนะครับ"],
+   ["A","I will. Again, I apologise for any inconvenience.","ได้ค่ะ ขออภัยอีกครั้งในความไม่สะดวกนะคะ"],
+   ["B","Not at all. These things can't be helped.","ไม่เลยครับ เรื่องแบบนี้ช่วยไม่ได้ครับ"]],
+  vocab:[
+   ["cancel","ยกเลิก","v.","They cancelled the flight because of the storm.","เขายกเลิกเที่ยวบินเพราะพายุ"],
+   ["call off","ยกเลิก (ภาษาพูด)","phr.","The outdoor party was called off because of the rain.","งานเลี้ยงกลางแจ้งถูกยกเลิกเพราะฝนตก"],
+   ["booking","การจอง","n.","I made a booking for six people at the restaurant.","ฉันจองโต๊ะสำหรับหกคนที่ร้านอาหาร"],
+   ["that’s a shame","น่าเสียดาย","phr.","The concert was cancelled? That’s a shame.","คอนเสิร์ตถูกยกเลิกเหรอ น่าเสียดายจัง"],
+   ["convenient","สะดวก","adj.","Is it convenient to call you after lunch?","โทรหาคุณหลังมื้อเที่ยงสะดวกไหม"],
+   ["rest","พักผ่อน","v.","The doctor told her to rest at home for two days.","หมอบอกให้เธอพักผ่อนที่บ้านสองวัน"],
+   ["instead","แทน","adv.","The manager was busy, so I met her assistant instead.","ผู้จัดการไม่ว่าง ฉันเลยพบผู้ช่วยของเธอแทน"],
+   ["get well","หายป่วย","phr.","We sent him flowers and a card saying ‘Get well soon’.","เราส่งดอกไม้และการ์ดเขียนว่า ‘หายไว ๆ นะ’ ไปให้เขา"]],
+  phrases:[
+   ["I'm very sorry, but we have to cancel (event).","ขอโทษมาก แต่เราต้องยกเลิก…","ขอโทษก่อน แล้วค่อยบอกว่ายกเลิก ฟังนุ่มนวลกว่า"],
+   ["Are we still on for (event)?","…ยังนัดกันเหมือนเดิมใช่ไหม","ใช้เช็กว่านัดยังเหมือนเดิมหรือไม่"],
+   ["That's a shame.","น่าเสียดาย","ตอบเมื่อได้ยินว่านัดถูกยกเลิก"],
+   ["I'm sorry to hear that.","เสียใจด้วย","ตอบเมื่อได้ยินข่าวไม่ดี เช่น มีคนป่วย"],
+   ["Could we (do something) instead?","…แทนได้ไหม","เสนอทางเลือกอื่นแทนนัดที่ยกเลิก"],
+   ["Would (time) be convenient?","…สะดวกไหม","ใช้ convenient กับเวลา ไม่ใช่ comfortable"],
+   ["I apologise for any inconvenience.","ขออภัยในความไม่สะดวก","ประโยคทางการ ใช้ทั้งพูดและเขียนอีเมล"]],
+  talk:[
+   {q:"Why does Wanida call Kevin?",a:"She calls to cancel the dinner with Khun Prasert."},
+   {q:"Why is the dinner cancelled?",a:"Because Khun Prasert is sick and his doctor told him to rest."},
+   {q:"What will Kevin do about the restaurant?",a:"He'll call the restaurant and cancel the booking."},
+   {q:"What do they arrange instead?",a:"They arrange a video call on Friday morning at nine."}],
+  you:[
+   {th:"ฝึกโทรยกเลิกนัดกับลูกค้า บอกเหตุผล และขอโทษ",starter:"I'm very sorry, but we have to cancel … because …"},
+   {th:"เสนอทางเลือกอื่นแทนนัดที่ถูกยกเลิก",starter:"Could we … instead? Would … be convenient?"},
+   {th:"เล่าครั้งที่มีคนยกเลิกนัดกับคุณ แล้วคุณทำอย่างไร",starter:"Once a … cancelled our meeting, so I …"}],
+  quiz:[
+   {q:"We have to ___ the trip because of the storm.",o:["call on","call up","call off"],a:2,why:"call off = ยกเลิก · call on = แวะเยี่ยม · call up = โทรหา"},
+   {q:"I apologise for any ___.",o:["inconvenient","inconvenience","convenient"],a:1,why:"หลัง any ต้องใช้คำนาม inconvenience (ความไม่สะดวก)"},
+   {q:"Someone says their manager is sick. You say: ___",o:["I'm sorry to hear that.","That works for me.","Are we still on?"],a:0,why:"I'm sorry to hear that. ใช้แสดงความเห็นใจเมื่อได้ยินข่าวไม่ดี"},
+   {q:"Is Friday ___ for you?",o:["inconvenience","convenient","comfortable"],a:1,why:"เวลาที่สะดวกใช้ convenient · comfortable หมายถึงสบายตัว ใช้กับเวลาไม่ได้"}]},
+
+ {id:"b16",theme:4,title:"Weather",th:"คุยเรื่องอากาศ",
+  intro:"คุยเล่นเรื่องฝนและอากาศร้อนชื้นกับเพื่อนร่วมงานชาวต่างชาติที่เพิ่งย้ายมาไทย ฝึกบรรยายอากาศ ถามพยากรณ์อากาศ และใช้ be used to",
+  cast:{A:"Sarah",B:"Ton"},
+  lines:[
+   ["B","Morning, Sarah. You look a bit wet!","อรุณสวัสดิ์ครับซาร่า ดูเปียกนิดหน่อยนะครับ"],
+   ["A","Morning, Ton. It started pouring when I got off the Skytrain.","อรุณสวัสดิ์ค่ะต้น ฝนเทลงมาตอนดิฉันลงจากรถไฟฟ้าพอดีค่ะ"],
+   ["B","That happens a lot at this time of year. It's the rainy season.","ช่วงนี้ของปีเป็นแบบนี้บ่อยครับ หน้าฝนครับ"],
+   ["A","How long does the rainy season last?","หน้าฝนนานแค่ไหนคะ"],
+   ["B","Usually from May until October. It often rains hard in the late afternoon.","ปกติตั้งแต่พฤษภาคมถึงตุลาคมครับ ฝนมักตกหนักช่วงบ่ายแก่ ๆ ครับ"],
+   ["A","Back home in Toronto, it's getting cold now. Here it's so hot and humid.","ที่บ้านดิฉันที่โทรอนโต ตอนนี้เริ่มหนาวแล้วค่ะ ที่นี่ทั้งร้อนทั้งชื้นมากเลยค่ะ"],
+   ["B","Do you like the hot weather?","คุณชอบอากาศร้อนไหมครับ"],
+   ["A","I love the sunshine, but I'm not used to the humidity yet.","ชอบแดดค่ะ แต่ยังไม่ชินกับความชื้นค่ะ"],
+   ["B","Don't worry. November and December are much cooler and drier. That's the best time of year.","ไม่ต้องห่วงครับ พฤศจิกายนกับธันวาคมเย็นกว่าและแห้งกว่ามาก เป็นช่วงที่ดีที่สุดของปีครับ"],
+   ["A","That sounds lovely. What's the weather forecast for today?","ฟังดูดีจังค่ะ พยากรณ์อากาศวันนี้ว่ายังไงคะ"],
+   ["B","More thunderstorms this evening. If I were you, I'd leave a little early.","เย็นนี้จะมีพายุฝนฟ้าคะนองอีกครับ ถ้าเป็นผม ผมจะกลับเร็วหน่อยครับ"],
+   ["A","Good advice. I'll keep an umbrella in my desk from now on!","คำแนะนำดีค่ะ ต่อไปนี้ดิฉันจะเก็บร่มไว้ที่โต๊ะเลยค่ะ"]],
+  vocab:[
+   ["humid","ชื้น อบอ้าว","adj.","Bangkok is very humid in April.","กรุงเทพฯ อบอ้าวมากในเดือนเมษายน"],
+   ["pour","(ฝน) เทลงมา ตกหนัก","v.","It's pouring outside. Take an umbrella.","ข้างนอกฝนตกหนักมาก เอาร่มไปด้วย"],
+   ["rainy season","หน้าฝน","n.","Many roads flood during the rainy season.","ถนนหลายสายน้ำท่วมในหน้าฝน"],
+   ["weather forecast","พยากรณ์อากาศ","n.","The weather forecast says it will be sunny tomorrow.","พยากรณ์อากาศบอกว่าพรุ่งนี้แดดจะออก"],
+   ["thunderstorm","พายุฝนฟ้าคะนอง","n.","The flight was delayed by a thunderstorm.","เที่ยวบินล่าช้าเพราะพายุฝนฟ้าคะนอง"],
+   ["flood","น้ำท่วม","n./v.","The street outside our office floods every time it rains hard.","ถนนหน้าออฟฟิศน้ำท่วมทุกครั้งที่ฝนตกหนัก"],
+   ["be used to","เคยชินกับ","phr.","I'm used to working late, so it doesn't bother me.","ฉันชินกับการทำงานดึกแล้ว เลยไม่รู้สึกลำบาก"],
+   ["sunshine","แสงแดด","n.","Let's have lunch outside and enjoy the sunshine.","ไปกินข้าวกลางวันข้างนอกรับแสงแดดกันเถอะ"]],
+  phrases:[
+   ["Lovely day, isn't it?","อากาศดีนะ","ประโยคเปิดคุยเล่นยอดนิยม ใช้ได้กับทุกคน"],
+   ["It's pouring (with rain).","ฝนตกหนักมาก","pour ใช้กับฝนที่ตกหนักเหมือนเทน้ำ"],
+   ["It's so hot and humid today.","วันนี้ร้อนและชื้นมาก","บ่นเรื่องอากาศแบบเป็นกันเอง"],
+   ["What's the weather like in (place)?","อากาศที่…เป็นอย่างไร","ถามเรื่องอากาศของบ้านเกิดหรือเมืองอื่น"],
+   ["What's the forecast for (day)?","พยากรณ์อากาศ…ว่าอย่างไร","ถามล่วงหน้าเพื่อวางแผนเดินทาง"],
+   ["I'm not used to (noun / -ing) yet.","ยังไม่ชินกับ…","be used to + คำนามหรือ -ing ไม่ใช่กริยาช่องหนึ่ง"],
+   ["It looks like rain.","ท่าทางฝนจะตก","ใช้ตอนเห็นเมฆครึ้ม"]],
+  talk:[
+   {q:"Why is Sarah wet?",a:"It started pouring when she got off the Skytrain."},
+   {q:"How long does the rainy season last?",a:"It usually lasts from May until October."},
+   {q:"What is Sarah not used to?",a:"She isn't used to the humidity yet."},
+   {q:"What is the forecast for this evening?",a:"There will be more thunderstorms, so Ton thinks she should leave a little early."}],
+  you:[
+   {th:"เล่าว่าอากาศในเมืองของคุณเป็นอย่างไรในแต่ละฤดู",starter:"In my city, it's usually … in … and … in …"},
+   {th:"บอกว่าคุณชอบอากาศแบบไหน และไม่ชินกับอะไร",starter:"I like … weather, but I'm not used to …"}],
+  quiz:[
+   {q:"It's raining very hard. It's ___.",o:["pour","pouring","poured"],a:1,why:"It's pouring. ใช้ present continuous บอกว่าฝนกำลังตกหนักตอนนี้"},
+   {q:"Hot air with a lot of water in it is ___.",o:["humid","dry","chilly"],a:0,why:"humid = ชื้น · dry = แห้ง · chilly = หนาวเย็น"},
+   {q:"I'm not used to ___ in such hot weather.",o:["work","worked","working"],a:2,why:"be used to + -ing หรือคำนาม จึงใช้ working"},
+   {q:"What's the weather ___ in Chiang Mai in December?",o:["likes","as","like"],a:2,why:"What's … like? = เป็นอย่างไร ใช้ like เป็นบุพบท"}]},
+
+ {id:"b17",theme:4,title:"Food",th:"คุยเรื่องอาหาร",
+  intro:"พาเพื่อนร่วมงานจากสำนักงานต่างประเทศไปกินข้าวกลางวัน ฝึกแนะนำอาหาร ถามเรื่องรสชาติและสิ่งที่ไม่กิน และพูดว่าใครเป็นคนเลี้ยง เช่น Lunch is on me.",
+  cast:{A:"Ken",B:"Nan"},
+  lines:[
+   ["B","Ken, are you hungry? There's a great noodle shop around the corner.","เคน หิวไหมคะ มีร้านก๋วยเตี๋ยวอร่อยอยู่ตรงหัวมุมค่ะ"],
+   ["A","I'm starving. I skipped breakfast this morning.","หิวมากเลยครับ เช้านี้ผมไม่ได้กินข้าวเช้าครับ"],
+   ["B","Then let's go. Have you tried boat noodles yet?","งั้นไปกันค่ะ เคยลองก๋วยเตี๋ยวเรือหรือยังคะ"],
+   ["A","No, I haven't. What are they like?","ยังเลยครับ เป็นยังไงครับ"],
+   ["B","They're small bowls of noodles in a rich, dark soup. Most people order three or four bowls.","เป็นก๋วยเตี๋ยวชามเล็ก ๆ น้ำซุปเข้มข้นสีเข้มค่ะ คนส่วนใหญ่สั่งสามสี่ชามค่ะ"],
+   ["A","Sounds delicious. Are they very spicy? I can't eat a lot of chilli.","ฟังดูอร่อยครับ เผ็ดมากไหมครับ ผมกินพริกได้ไม่มากครับ"],
+   ["B","Don't worry. I'll ask them to make yours mild.","ไม่ต้องห่วงค่ะ เดี๋ยวดิฉันบอกให้เขาทำของคุณไม่เผ็ดค่ะ"],
+   ["A","Thank you. Is there anything you don't eat, Nan?","ขอบคุณครับ มีอะไรที่คุณไม่กินไหมครับแนน"],
+   ["B","I don't eat beef, but I love seafood. What do you usually eat in Tokyo?","ดิฉันไม่กินเนื้อวัวค่ะ แต่ชอบอาหารทะเล ปกติที่โตเกียวคุณกินอะไรคะ"],
+   ["A","Mostly rice and fish. But I eat a lot of convenience store food when I'm busy!","ส่วนใหญ่ข้าวกับปลาครับ แต่ตอนยุ่งก็กินอาหารร้านสะดวกซื้อเยอะเลยครับ"],
+   ["B","Same here! After lunch, would you like to try a Thai dessert?","เหมือนกันเลยค่ะ กินข้าวเสร็จอยากลองขนมไทยไหมคะ"],
+   ["A","Definitely. I've heard mango sticky rice is amazing.","แน่นอนครับ ได้ยินว่าข้าวเหนียวมะม่วงอร่อยมากครับ"],
+   ["B","It is. Lunch is on me today, by the way.","ใช่ค่ะ ว่าแต่มื้อนี้ดิฉันเลี้ยงเองนะคะ"],
+   ["A","That's very kind. Then the coffee is on me.","ใจดีจังครับ งั้นกาแฟผมเลี้ยงเองครับ"]],
+  vocab:[
+   ["starving","หิวมาก","adj.","Let's order now. I'm starving.","สั่งเลยเถอะ ฉันหิวมาก"],
+   ["skip","ข้าม งด (มื้ออาหาร)","v.","Try not to skip lunch when you're busy.","พยายามอย่าอดมื้อเที่ยงแม้จะยุ่ง"],
+   ["spicy","เผ็ด","adj.","This curry is too spicy for me.","แกงนี้เผ็ดเกินไปสำหรับฉัน"],
+   ["mild","ไม่เผ็ด รสอ่อน","adj.","Could I have the mild version, please?","ขอแบบไม่เผ็ดได้ไหม"],
+   ["delicious","อร่อยมาก","adj.","The grilled fish was delicious.","ปลาย่างอร่อยมาก"],
+   ["seafood","อาหารทะเล","n.","Hua Hin is famous for fresh seafood.","หัวหินมีชื่อเรื่องอาหารทะเลสด"],
+   ["dessert","ของหวาน","n.","Would you like dessert, or just coffee?","รับของหวานไหม หรือแค่กาแฟ"],
+   ["vegetarian","คนกินมังสวิรัติ / มังสวิรัติ","n./adj.","Two people on the team are vegetarian.","ในทีมมีสองคนที่กินมังสวิรัติ"]],
+  phrases:[
+   ["Have you tried (food) yet?","เคยลอง…หรือยัง","ใช้ present perfect ถามประสบการณ์"],
+   ["What is it like? / What are they like?","เป็นอย่างไร","ถามลักษณะหรือรสชาติ"],
+   ["I can't eat (very) spicy food.","กินเผ็ดมากไม่ได้","บอกข้อจำกัดเรื่องอาหารอย่างสุภาพ"],
+   ["Is there anything you don't eat?","มีอะไรที่ไม่กินไหม","ถามก่อนพาแขกไปกินข้าว เป็นมารยาทที่ดี"],
+   ["Would you like to try (food)?","อยากลอง…ไหม","ชวนอย่างสุภาพ"],
+   ["Lunch is on me.","มื้อเที่ยงนี้ฉันเลี้ยง","on me = ฉันจ่ายเอง"],
+   ["I'm starving.","หิวมาก","ภาษาพูดแบบเป็นกันเอง"]],
+  talk:[
+   {q:"Why is Ken so hungry?",a:"Because he skipped breakfast this morning."},
+   {q:"What are boat noodles like?",a:"They're small bowls of noodles in a rich, dark soup."},
+   {q:"What doesn't Nan eat?",a:"She doesn't eat beef, but she loves seafood."},
+   {q:"Who pays for lunch and who pays for the coffee?",a:"Nan pays for lunch, and Ken pays for the coffee."}],
+  you:[
+   {th:"แนะนำอาหารไทยที่คุณชอบให้เพื่อนต่างชาติ",starter:"Have you tried … yet? It's … and …"},
+   {th:"บอกว่าคุณมักกินอะไรเป็นมื้อกลางวันวันทำงาน",starter:"On workdays I usually have … for lunch."},
+   {th:"บอกว่ามีอาหารอะไรที่คุณไม่กินหรือกินไม่ได้",starter:"I don't eat … and I can't eat …"}],
+  quiz:[
+   {q:"Food that is not very spicy is ___.",o:["mild","hot","rich"],a:0,why:"mild = รสอ่อน ไม่เผ็ด · hot ในเรื่องอาหารแปลว่าเผ็ด"},
+   {q:"Put your wallet away. Lunch is ___ me today.",o:["for","on","by"],a:1,why:"be on me = ฉันเลี้ยง ใช้บุพบท on"},
+   {q:"Have you ___ durian yet?",o:["try","trying","tried"],a:2,why:"Have you + กริยาช่องสาม (present perfect) จึงใช้ tried"},
+   {q:"A person who doesn't eat meat or fish is a ___.",o:["vegetarian","vegetable","chef"],a:0,why:"vegetarian = คนกินมังสวิรัติ · vegetable = ผัก"}]},
+
+ {id:"b18",theme:4,title:"Hobbies",th:"คุยเรื่องงานอดิเรก",
+  intro:"คุยกับเพื่อนร่วมงานเรื่องสิ่งที่ทำช่วงสุดสัปดาห์และงานอดิเรก ฝึกถามความถี่ บอกความชอบ และเล่าว่าเริ่มทำเมื่อไร ใช้ be into, take up, How often …?",
+  cast:{A:"Ben",B:"Aom"},
+  lines:[
+   ["A","Hi Aom, how was your weekend?","สวัสดีครับออม สุดสัปดาห์เป็นยังไงบ้างครับ"],
+   ["B","Busy but fun. I went to my baking class on Saturday.","ยุ่งแต่สนุกค่ะ วันเสาร์ไปเรียนทำขนมอบมาค่ะ"],
+   ["A","Baking? I didn't know you were into that.","ทำขนมอบเหรอครับ ไม่ยักรู้ว่าคุณชอบด้วย"],
+   ["B","I took it up last year. I find it really relaxing after a long week.","เริ่มทำเมื่อปีที่แล้วค่ะ รู้สึกผ่อนคลายมากหลังทำงานมาทั้งสัปดาห์ค่ะ"],
+   ["A","What did you make this time?","รอบนี้ทำอะไรครับ"],
+   ["B","Banana bread. I brought some for the team. It's in the kitchen.","ขนมปังกล้วยค่ะ เอามาฝากทีมด้วย อยู่ในครัวค่ะ"],
+   ["A","Great, I'll have some later. I spent Sunday morning running in Lumpini Park.","เยี่ยมเลยครับ เดี๋ยวไปกิน ผมใช้เช้าวันอาทิตย์วิ่งที่สวนลุมพินีครับ"],
+   ["B","How often do you go running?","คุณไปวิ่งบ่อยแค่ไหนคะ"],
+   ["A","Three or four times a week. I'm training for a half marathon in December.","สัปดาห์ละสามสี่ครั้งครับ ผมกำลังซ้อมวิ่งฮาล์ฟมาราธอนเดือนธันวาคมครับ"],
+   ["B","Wow, that's impressive. I'm not very good at sports.","ว้าว เก่งจังค่ะ ดิฉันเล่นกีฬาไม่ค่อยเก่งค่ะ"],
+   ["A","Neither was I at first. Some people from the office run together on Wednesday evenings. You should join us!","ตอนแรกผมก็ไม่เก่งครับ มีคนในออฟฟิศวิ่งด้วยกันทุกเย็นวันพุธ มาด้วยกันสิครับ"],
+   ["B","Maybe I will. But only if you all try my cakes afterwards!","อาจจะไปค่ะ แต่ทุกคนต้องลองเค้กของดิฉันหลังวิ่งนะคะ"]],
+  vocab:[
+   ["be good at","เก่ง ถนัด","phr.","She’s good at drawing, so she designs our posters.","เธอวาดรูปเก่ง เลยออกแบบโปสเตอร์ให้เรา"],
+   ["go running","ไปวิ่ง","phr.","I go running before work when it isn’t too hot.","ฉันไปวิ่งก่อนทำงานถ้าอากาศไม่ร้อนเกินไป"],
+   ["afterwards","หลังจากนั้น","adv.","We played badminton and had dinner afterwards.","เราเล่นแบดมินตันแล้วกินข้าวเย็นกันหลังจากนั้น"],
+   ["join","เข้าร่วม","v.","Would you like to join our football team?","อยากเข้าร่วมทีมฟุตบอลของเราไหม"],
+   ["relaxing","ทำให้ผ่อนคลาย","adj.","Swimming after work is very relaxing.","ว่ายน้ำหลังเลิกงานทำให้ผ่อนคลายมาก"],
+   ["beginner","มือใหม่","n.","This yoga class is perfect for beginners.","คลาสโยคะนี้เหมาะกับมือใหม่มาก"],
+   ["train","ฝึกซ้อม","v.","She trains at the gym every morning before work.","เธอฝึกซ้อมที่ยิมทุกเช้าก่อนไปทำงาน"],
+   ["bake","อบ (ขนม)","v.","I bake cookies for my colleagues every Christmas.","ฉันอบคุกกี้ให้เพื่อนร่วมงานทุกคริสต์มาส"]],
+  phrases:[
+   ["How was your weekend?","สุดสัปดาห์เป็นอย่างไรบ้าง","ประโยคเปิดคุยเล่นยอดนิยมเช้าวันจันทร์"],
+   ["What do you do in your spare time?","เวลาว่างทำอะไร","ถามเรื่องงานอดิเรกแบบสุภาพ"],
+   ["I'm (really) into (noun / -ing).","ชอบ…มาก","ภาษาพูด เป็นกันเองกว่า I like"],
+   ["I took up (hobby) (time) ago.","เริ่ม…เมื่อ…ที่แล้ว","take up ใช้กับการเริ่มงานอดิเรกหรือกีฬาใหม่"],
+   ["How often do you (verb)?","…บ่อยแค่ไหน","ตอบด้วย once/twice/three times a week"],
+   ["I find it (adjective).","รู้สึกว่ามัน…","find + it + คำคุณศัพท์ บอกความรู้สึกต่อสิ่งนั้น"],
+   ["You should join us!","มาด้วยกันสิ","ชวนเพื่อนร่วมงานแบบเป็นกันเอง"]],
+  talk:[
+   {q:"What did Aom do on Saturday?",a:"She went to her baking class and made banana bread."},
+   {q:"Why does Aom like baking?",a:"She finds it really relaxing after a long week."},
+   {q:"How often does Ben go running?",a:"He goes running three or four times a week."},
+   {q:"What does Ben invite Aom to do?",a:"He invites her to run with people from the office on Wednesday evenings."}],
+  you:[
+   {th:"เล่าว่าเวลาว่างคุณชอบทำอะไร และทำบ่อยแค่ไหน",starter:"In my spare time I'm really into … I do it … times a week."},
+   {th:"เล่าว่าคุณเริ่มงานอดิเรกนี้เมื่อไรและทำไม",starter:"I took up … … ago because …"},
+   {th:"เล่าว่าสุดสัปดาห์ที่แล้วคุณทำอะไร",starter:"Last weekend I …"}],
+  quiz:[
+   {q:"I took ___ yoga last year.",o:["on","in","up"],a:2,why:"take up = เริ่มทำงานอดิเรกหรือกีฬาใหม่"},
+   {q:"She's very good ___ painting, so she joined an art class.",o:["at","in","for"],a:0,why:"เก่งเรื่องอะไร ใช้ be good at"},
+   {q:"How ___ do you go swimming? — Twice a week.",o:["long","often","many"],a:1,why:"How often ถามความถี่ ตอบด้วย twice a week"},
+   {q:"I find cooking very ___.",o:["relax","relaxing","relaxed"],a:1,why:"สิ่งที่ทำให้ผ่อนคลายใช้ -ing (relaxing) · relaxed ใช้กับคนที่รู้สึกผ่อนคลาย"}]},
+
+ {id:"b19",theme:4,title:"Transportation",th:"คุยเรื่องการเดินทาง",
+  intro:"คุยกับเพื่อนร่วมงานว่ามาทำงานอย่างไร ใช้เวลานานแค่ไหน และแนะนำวิธีเดินทางที่ดีกว่า ฝึก How long does it take? / I take the … / It depends on …",
+  cast:{A:"Lisa",B:"Pong"},
+  lines:[
+   ["A","Pong, how do you get to work every day?","ป้อง ทุกวันคุณมาทำงานยังไงคะ"],
+   ["B","I take the Skytrain from On Nut, then I walk for about five minutes.","ผมนั่งรถไฟฟ้าจากอ่อนนุชครับ แล้วเดินต่ออีกประมาณห้านาทีครับ"],
+   ["A","How long does it take?","ใช้เวลานานแค่ไหนคะ"],
+   ["B","About thirty-five minutes door to door. What about you?","ประมาณสามสิบห้านาทีจากบ้านถึงที่ทำงานครับ แล้วคุณล่ะครับ"],
+   ["A","I've been driving, but the traffic is awful. Yesterday it took me over an hour.","ดิฉันขับรถมาค่ะ แต่รถติดแย่มาก เมื่อวานใช้เวลาเกินชั่วโมงค่ะ"],
+   ["B","Where do you live?","คุณอยู่ที่ไหนครับ"],
+   ["A","Near Lat Phrao. There's an underground station close to my condo, but I've never used it.","แถวลาดพร้าวค่ะ มีสถานีรถไฟใต้ดินใกล้คอนโด แต่ไม่เคยใช้เลยค่ะ"],
+   ["B","You should try it. You can change to the Skytrain at Chatuchak Park and get here quickly.","ลองดูสิครับ ไปเปลี่ยนเป็นรถไฟฟ้าที่สวนจตุจักรแล้วมาถึงได้เร็วครับ"],
+   ["A","Is it crowded in the rush hour?","ชั่วโมงเร่งด่วนคนเยอะไหมคะ"],
+   ["B","Very crowded, but at least it's on time. I usually read on my phone during the journey.","เยอะมากครับ แต่อย่างน้อยก็ตรงเวลา ผมมักอ่านอะไรในโทรศัพท์ระหว่างเดินทางครับ"],
+   ["A","That sounds better than sitting in traffic. How much is the fare?","ฟังดีกว่านั่งรถติดนะคะ ค่าโดยสารเท่าไรคะ"],
+   ["B","It depends on the distance, but it's cheaper than petrol and parking.","ขึ้นอยู่กับระยะทางครับ แต่ถูกกว่าค่าน้ำมันกับค่าที่จอดรถครับ"],
+   ["A","OK, I'll try it tomorrow. Thanks for the tip!","โอเคค่ะ พรุ่งนี้จะลองดูค่ะ ขอบคุณที่แนะนำนะคะ"],
+   ["B","No problem. Get a travel card so you don't have to queue for tickets.","ไม่เป็นไรครับ ทำบัตรเดินทางไว้ จะได้ไม่ต้องต่อคิวซื้อตั๋วครับ"]],
+  vocab:[
+   ["underground","รถไฟใต้ดิน","n.","The underground is the fastest way to get across the city.","รถไฟใต้ดินเป็นทางที่เร็วที่สุดในการข้ามเมือง"],
+   ["rush hour","ชั่วโมงเร่งด่วน","n.","Try to avoid the expressway during rush hour.","พยายามเลี่ยงทางด่วนช่วงชั่วโมงเร่งด่วน"],
+   ["fare","ค่าโดยสาร","n.","The bus fare went up last month.","ค่าโดยสารรถเมล์ขึ้นราคาเมื่อเดือนที่แล้ว"],
+   ["crowded","คนแน่น","adj.","The train was so crowded that I couldn't move.","รถไฟคนแน่นจนฉันขยับตัวไม่ได้"],
+   ["journey","การเดินทาง (แต่ละเที่ยว)","n.","The journey to the factory takes about two hours.","การเดินทางไปโรงงานใช้เวลาประมาณสองชั่วโมง"],
+   ["queue","ต่อคิว / แถวคิว","v./n.","We had to queue for twenty minutes at the ticket office.","เราต้องต่อคิวยี่สิบนาทีที่ช่องขายตั๋ว"],
+   ["door to door","จากต้นทางถึงปลายทาง","phr.","It's forty minutes door to door by motorbike taxi.","นั่งวินมอเตอร์ไซค์จากบ้านถึงที่หมายสี่สิบนาที"],
+   ["petrol","น้ำมันรถ","n.","Petrol is getting more expensive every year.","น้ำมันรถแพงขึ้นทุกปี"]],
+  phrases:[
+   ["How do you get to work?","มาทำงานอย่างไร","ถามวิธีเดินทาง ตอบด้วย I take … / I drive / I walk"],
+   ["I take the (Skytrain / bus) to (place).","นั่ง…ไป…","take the + ยานพาหนะสาธารณะ"],
+   ["How long does it take?","ใช้เวลานานแค่ไหน","ตอบด้วย It takes (me) about …"],
+   ["It takes me about (time).","ฉันใช้เวลาประมาณ…","take + คน + เวลา"],
+   ["Change to the (line) at (station).","เปลี่ยนไปสาย…ที่สถานี…","ใช้บอกทางเปลี่ยนสายรถไฟ"],
+   ["It depends on (noun).","ขึ้นอยู่กับ…","depend on ใช้ on เสมอ"],
+   ["Is it crowded in the rush hour?","ชั่วโมงเร่งด่วนคนแน่นไหม","ถามสภาพการเดินทางก่อนลองใช้"]],
+  talk:[
+   {q:"How does Pong get to work?",a:"He takes the Skytrain from On Nut, then walks for about five minutes."},
+   {q:"How long does Pong's journey take?",a:"It takes about thirty-five minutes door to door."},
+   {q:"Why does Lisa want to change how she travels?",a:"Because the traffic is awful. Yesterday it took her over an hour to drive."},
+   {q:"Why should Lisa get a travel card?",a:"So she doesn't have to queue for tickets."}],
+  you:[
+   {th:"เล่าว่าคุณมาทำงานอย่างไร และใช้เวลานานแค่ไหน",starter:"I take the … to work. It takes me about …"},
+   {th:"เปรียบเทียบวิธีเดินทางสองแบบที่คุณเคยใช้",starter:"… is faster than …, but …"}],
+  quiz:[
+   {q:"How long does it ___ you to get to work?",o:["spend","take","use"],a:1,why:"It takes + คน + เวลา ใช้กริยา take กับเวลาที่ใช้เดินทาง"},
+   {q:"I go to work ___ Skytrain.",o:["with","in","by"],a:2,why:"by + ยานพาหนะ (ไม่มี the) เช่น by Skytrain, by bus"},
+   {q:"The time when many people travel to and from work is the ___.",o:["rush hour","fare","journey"],a:0,why:"rush hour = ชั่วโมงเร่งด่วน"},
+   {q:"The money you pay for a bus or train ride is the ___.",o:["tip","change","fare"],a:2,why:"fare = ค่าโดยสาร · tip = ทิป · change = เงินทอน"}]},
+
+ {id:"b20",theme:4,title:"The Workplace",th:"คุยเรื่องที่ทำงาน",
+  intro:"พาพนักงานใหม่เดินดูสำนักงาน แนะนำโต๊ะ ล็อกเกอร์ ห้องประชุม และคนที่ต้องติดต่อเมื่อมีปัญหา ฝึก Let me show you around. / Where can I …? / What's it like working here?",
+  cast:{A:"Joy",B:"Peter"},
+  lines:[
+   ["A","Welcome to the team, Peter. Let me show you around the office.","ยินดีต้อนรับสู่ทีมค่ะปีเตอร์ เดี๋ยวพาเดินดูออฟฟิศนะคะ"],
+   ["B","Thanks, Joy. It's a lot bigger than I expected.","ขอบคุณครับจอย ใหญ่กว่าที่คิดไว้เยอะเลยครับ"],
+   ["A","We have the whole floor. It's open-plan, so there aren't many walls.","เราใช้ทั้งชั้นเลยค่ะ เป็นแบบโอเพ่นแพลน เลยไม่ค่อยมีผนังกั้นค่ะ"],
+   ["B","Do I have my own desk?","ผมมีโต๊ะของตัวเองไหมครับ"],
+   ["A","No, we use hot desks. You can sit anywhere, but please clear your desk before you go home.","ไม่มีค่ะ เราใช้โต๊ะแบบไม่ประจำ นั่งตรงไหนก็ได้ แต่ต้องเก็บโต๊ะให้เรียบร้อยก่อนกลับบ้านนะคะ"],
+   ["B","OK. Where can I keep my things?","ครับ แล้วผมเก็บของได้ที่ไหนครับ"],
+   ["A","There are lockers next to the lifts. And over here is the pantry. The coffee is free.","มีล็อกเกอร์อยู่ข้างลิฟต์ค่ะ ตรงนี้เป็นห้องครัวเล็ก กาแฟฟรีค่ะ"],
+   ["B","That's good news! What about meeting rooms?","ข่าวดีเลยครับ แล้วห้องประชุมล่ะครับ"],
+   ["A","There are four. You can book them on the company app.","มีสี่ห้องค่ะ จองได้ทางแอปของบริษัทค่ะ"],
+   ["B","And if the printer stops working, who should I ask?","ถ้าเครื่องพิมพ์เสีย ผมควรถามใครครับ"],
+   ["A","Call the IT help desk. Their number is on the notice board.","โทรหาฝ่ายช่วยเหลือไอทีค่ะ เบอร์อยู่บนบอร์ดประกาศค่ะ"],
+   ["B","Great. So what's it like working here?","ดีครับ แล้วทำงานที่นี่เป็นยังไงบ้างครับ"],
+   ["A","Everyone's friendly, and we often have lunch together. I'm sure you'll like it.","ทุกคนเป็นกันเองค่ะ เราไปกินข้าวกลางวันด้วยกันบ่อย คุณต้องชอบแน่ค่ะ"],
+   ["B","I think I will. Thanks for the tour.","ผมก็ว่าอย่างนั้นครับ ขอบคุณที่พาชมนะครับ"]],
+  vocab:[
+   ["open-plan","แบบเปิดโล่ง ไม่มีผนังกั้น","adj.","Some people find open-plan offices too noisy.","บางคนรู้สึกว่าออฟฟิศแบบเปิดโล่งเสียงดังเกินไป"],
+   ["hot desk","โต๊ะทำงานแบบไม่ประจำ","n.","Our sales team uses hot desks because they're often out.","ทีมขายของเราใช้โต๊ะแบบไม่ประจำเพราะออกนอกออฟฟิศบ่อย"],
+   ["pantry","ห้องครัวเล็กในสำนักงาน","n.","There's fresh fruit in the pantry every Monday.","ทุกวันจันทร์มีผลไม้สดในห้องครัวเล็ก"],
+   ["locker","ตู้ล็อกเกอร์","n.","Please don't leave valuables in your locker overnight.","กรุณาอย่าทิ้งของมีค่าไว้ในล็อกเกอร์ข้ามคืน"],
+   ["notice board","บอร์ดประกาศ","n.","The holiday list is on the notice board.","รายการวันหยุดอยู่บนบอร์ดประกาศ"],
+   ["help desk","ฝ่ายช่วยเหลือ (ด้านไอที)","n.","If you forget your password, call the help desk.","ถ้าลืมรหัสผ่าน ให้โทรหาฝ่ายช่วยเหลือ"],
+   ["tidy","เรียบร้อย / จัดให้เรียบร้อย","adj./v.","Please keep the meeting rooms tidy.","กรุณาดูแลห้องประชุมให้เรียบร้อย"],
+   ["facilities","สิ่งอำนวยความสะดวก","n.","The new building has great facilities, including a gym.","อาคารใหม่มีสิ่งอำนวยความสะดวกดีมาก รวมถึงยิมด้วย"]],
+  phrases:[
+   ["Welcome to the team.","ยินดีต้อนรับสู่ทีม","พูดกับพนักงานใหม่วันแรก"],
+   ["Let me show you around.","เดี๋ยวพาเดินชมนะ","เสนอพาเดินดูสถานที่"],
+   ["It's (much) bigger than I expected.","…กว่าที่คิดไว้","comparative + than I expected บอกความประหลาดใจ"],
+   ["Where can I (verb)?","…ได้ที่ไหน","ถามสถานที่หรือวิธีทำในที่ทำงานใหม่"],
+   ["Who should I ask if (problem)?","ถ้า…ควรถามใคร","ถามคนที่ต้องติดต่อเมื่อมีปัญหา"],
+   ["You can book (room) on (system).","จอง…ได้ทาง…","อธิบายวิธีใช้ระบบในสำนักงาน"],
+   ["What's it like working here?","ทำงานที่นี่เป็นอย่างไร","What's it like + -ing ถามความรู้สึกต่อสิ่งที่ทำ"]],
+  talk:[
+   {q:"Does Peter have his own desk?",a:"No, he doesn't. The office uses hot desks, so he can sit anywhere."},
+   {q:"Where can Peter keep his things?",a:"He can keep them in the lockers next to the lifts."},
+   {q:"How can he book a meeting room?",a:"He can book one on the company app."},
+   {q:"What is it like working there?",a:"Everyone's friendly, and they often have lunch together."}],
+  you:[
+   {th:"บรรยายที่ทำงานของคุณให้คนอื่นฟัง",starter:"My office is … We have … and …"},
+   {th:"บอกว่าการทำงานที่บริษัทของคุณเป็นอย่างไร",starter:"Working at … is … because …"},
+   {th:"ฝึกพาพนักงานใหม่เดินดูออฟฟิศ",starter:"Welcome to the team. Let me show you around. Over here is …"}],
+  quiz:[
+   {q:"An office with no walls between the desks is ___.",o:["open-plan","a hot desk","a pantry"],a:0,why:"open-plan = แบบเปิดโล่งไม่มีผนังกั้น"},
+   {q:"Let me show you ___ the office.",o:["at","around","into"],a:1,why:"show + คน + around + สถานที่ = พาเดินชม"},
+   {q:"What's it like ___ here?",o:["work","to working","working"],a:2,why:"What's it like + -ing? ถามว่าการทำสิ่งนั้นเป็นอย่างไร"},
+   {q:"A small kitchen in an office is a ___.",o:["pantry","locker","lobby"],a:0,why:"pantry = ห้องครัวเล็กในสำนักงาน · locker = ตู้เก็บของ · lobby = โถงทางเข้า"}]},
+
+{id:"b21",theme:5,title:"Calling in Sick",th:"โทรลาป่วย",
+  intro:"โทรหาหัวหน้าเพื่อแจ้งลาป่วย บอกอาการ และบอกว่าใครจะดูแลงานแทน ใช้ I'm calling to let you know…, I won't be able to come in today และ … can cover for me",
+  cast:{A:"Nok",B:"Mark"},
+  lines:[
+   ["B","Hello, this is Mark speaking.","สวัสดีครับ มาร์กพูดครับ"],
+   ["A","Hi Mark, it's Nok. I'm sorry to call so early.","สวัสดีค่ะมาร์ก นกเองค่ะ ขอโทษที่โทรมาเช้าขนาดนี้นะคะ"],
+   ["B","No problem. Is everything all right?","ไม่เป็นไรครับ ทุกอย่างโอเคไหมครับ"],
+   ["A","Not really. I'm calling to let you know I won't be able to come in today. I've got a high fever.","ไม่ค่อยค่ะ ดิฉันโทรมาแจ้งว่าวันนี้เข้างานไม่ได้ค่ะ มีไข้สูงค่ะ"],
+   ["B","Oh, I'm sorry to hear that. Have you seen a doctor?","แย่จังครับ ไปหาหมอหรือยังครับ"],
+   ["A","Not yet. I'm going to the clinic this morning. I'll send you the medical certificate later.","ยังค่ะ เช้านี้จะไปคลินิกค่ะ แล้วจะส่งใบรับรองแพทย์ให้ทีหลังนะคะ"],
+   ["B","Thanks. Is there anything urgent on your desk today?","ขอบคุณครับ วันนี้มีงานด่วนอะไรค้างอยู่ไหมครับ"],
+   ["A","Yes, the supplier report is due at three. Ton can cover for me. I've already emailed him the file.","มีค่ะ รายงานซัพพลายเออร์ต้องส่งตอนบ่ายสามโมง ต้นช่วยทำแทนได้ค่ะ ดิฉันส่งไฟล์ให้เขาทางอีเมลแล้วค่ะ"],
+   ["B","Great. I'll let him know. What about your two o'clock meeting with the client?","ดีครับ เดี๋ยวผมบอกเขาให้ แล้วประชุมกับลูกค้าตอนบ่ายสองล่ะครับ"],
+   ["A","Could you ask Jane to move it to Thursday? I should be better by then.","รบกวนให้เจนเลื่อนเป็นวันพฤหัสได้ไหมคะ ถึงตอนนั้นน่าจะดีขึ้นแล้วค่ะ"],
+   ["B","Sure. Just focus on getting some rest, and don't check your email.","ได้ครับ พักผ่อนให้เต็มที่นะครับ ไม่ต้องเช็กอีเมลครับ"],
+   ["A","Thank you, Mark. I'll keep you updated.","ขอบคุณค่ะมาร์ก แล้วจะแจ้งอาการให้ทราบเรื่อยๆ นะคะ"],
+   ["B","Take care, and get well soon.","ดูแลตัวเองนะครับ หายไวๆ ครับ"]],
+  vocab:[
+   ["sick leave","ลาป่วย","n.","You can take thirty days of sick leave a year.","คุณลาป่วยได้ปีละสามสิบวัน"],
+   ["fever","ไข้","n.","She stayed at home because she had a fever.","เธออยู่บ้านเพราะมีไข้"],
+   ["symptom","อาการ (ของโรค)","n.","Tell the doctor about all your symptoms.","บอกหมอเรื่องอาการทั้งหมดของคุณ"],
+   ["medical certificate","ใบรับรองแพทย์","n.","HR needs a medical certificate for two or more days off sick.","ฝ่ายบุคคลต้องการใบรับรองแพทย์ถ้าลาป่วยสองวันขึ้นไป"],
+   ["cover for","ทำงานแทน (ชั่วคราว)","phr.","Can you cover for me at the front desk this afternoon?","บ่ายนี้ช่วยอยู่เคาน์เตอร์แทนฉันได้ไหม"],
+   ["clinic","คลินิก","n.","There's a small clinic next to our office.","มีคลินิกเล็กๆ อยู่ข้างออฟฟิศของเรา"],
+   ["get some rest","พักผ่อน","phr.","You look tired. Go home and get some rest.","คุณดูเหนื่อย กลับบ้านไปพักผ่อนเถอะ"],
+   ["contagious","ติดต่อได้ แพร่เชื้อได้","adj.","Please stay home if your cold is contagious.","ถ้าหวัดของคุณติดต่อได้ กรุณาอยู่บ้าน"]],
+  phrases:[
+   ["I'm calling to let you know (that) …","โทรมาแจ้งให้ทราบว่า…","เปิดเรื่องตรงๆ อย่างสุภาพเวลาโทรแจ้งหัวหน้า"],
+   ["I won't be able to come in today.","วันนี้เข้างานไม่ได้","come in = เข้ามาที่ทำงาน ฟังเป็นธรรมชาติกว่า go to work"],
+   ["I've got a (fever / bad cold / stomach ache).","ฉันเป็น (ไข้ / หวัดหนัก / ปวดท้อง)","บอกอาการด้วย I've got + a + อาการ"],
+   ["(Name) can cover for me.","(ชื่อ) ช่วยทำงานแทนฉันได้","บอกหัวหน้าว่าใครจะดูแลงานแทน หัวหน้าจะสบายใจขึ้น"],
+   ["I'll send you the medical certificate later.","จะส่งใบรับรองแพทย์ให้ทีหลัง","หลายบริษัทขอใบรับรองแพทย์เมื่อลาป่วย"],
+   ["I'll keep you updated.","จะแจ้งความคืบหน้าให้ทราบเรื่อยๆ","ใช้ปิดท้ายการโทรแจ้งเรื่องต่างๆ"],
+   ["Get well soon.","หายไวๆ นะ","ใช้พูดกับคนที่ป่วย"]],
+  talk:[
+   {q:"Why can't Nok come to work today?",a:"She can't come to work because she has a high fever."},
+   {q:"Who will cover for Nok?",a:"Ton will cover for her. She has already emailed him the supplier report file."},
+   {q:"What will happen to the client meeting?",a:"Jane will move the meeting to Thursday."},
+   {q:"What does Mark tell Nok to do?",a:"He tells her to rest and not to check her email."}],
+  you:[
+   {th:"โทรบอกหัวหน้าว่าวันนี้คุณไม่สบาย เข้างานไม่ได้",starter:"I'm calling to let you know I won't be able to come in today. I've got …"},
+   {th:"บอกว่าใครจะช่วยดูงานของคุณแทน",starter:"… can cover for me. I've already sent him/her …"},
+   {th:"เล่าถึงครั้งล่าสุดที่คุณลาป่วย",starter:"The last time I took sick leave was … because I had …"}],
+  quiz:[
+   {q:"I'm calling to let you know I won't be able to come ___ today.",o:["in","on","at"],a:0,why:"come in = เข้ามาที่ทำงาน"},
+   {q:"Ton can cover ___ me while I'm sick.",o:["with","for","to"],a:1,why:"cover for + คน = ทำงานแทนคนนั้นชั่วคราว"},
+   {q:"What do you say to a colleague who is ill?",o:["Well done.","Get well soon.","Enjoy your meal."],a:1,why:"Get well soon. = หายไวๆ ใช้กับคนป่วย"},
+   {q:"Many companies ask for a ___ when you are sick for two days or more.",o:["business plan","price list","medical certificate"],a:2,why:"medical certificate = ใบรับรองแพทย์ ใช้ยืนยันการลาป่วย"}]},
+
+ {id:"b22",theme:5,title:"Taking a Personal Leave",th:"ขอลากิจ",
+  intro:"ขอลากิจกับหัวหน้า บอกเหตุผลสั้นๆ วันที่ต้องการลา และวางแผนงานก่อนลา ใช้ I'd like to ask for a personal day…, Would that be possible? และ take + วัน + off",
+  cast:{A:"Somchai",B:"Linda"},
+  lines:[
+   ["A","Linda, do you have a minute?","ลินดาครับ ขอเวลาสักครู่ได้ไหมครับ"],
+   ["B","Sure, Somchai. What's up?","ได้ค่ะสมชาย มีอะไรคะ"],
+   ["A","I'd like to ask for a personal day next Friday. Would that be possible?","ผมอยากขอลากิจวันศุกร์หน้าครับ พอจะได้ไหมครับ"],
+   ["B","Let me check the calendar. Can I ask what it's for?","ขอดูปฏิทินก่อนนะคะ ขอถามได้ไหมคะว่าลาไปทำอะไร"],
+   ["A","My father is having a small operation, and I need to take him to the hospital.","พ่อผมต้องผ่าตัดเล็กครับ ผมต้องพาท่านไปโรงพยาบาล"],
+   ["B","Of course. Family comes first. How many days do you need?","ได้แน่นอนค่ะ ครอบครัวต้องมาก่อน ต้องการกี่วันคะ"],
+   ["A","Just one day. I'll be back on Monday.","แค่วันเดียวครับ วันจันทร์ผมกลับมาทำงานครับ"],
+   ["B","That's fine. You still have four days of personal leave this year.","ได้ค่ะ ปีนี้คุณยังเหลือวันลากิจอีกสี่วันค่ะ"],
+   ["A","Thank you. I'll finish the sales figures by Thursday, so nothing is left waiting.","ขอบคุณครับ ผมจะทำตัวเลขยอดขายให้เสร็จภายในวันพฤหัส จะได้ไม่มีงานค้างครับ"],
+   ["B","Good. Please fill in the leave form in the HR system today, and I'll approve it.","ดีค่ะ กรอกแบบฟอร์มลาในระบบ HR วันนี้นะคะ แล้วดิฉันจะอนุมัติให้ค่ะ"],
+   ["A","Will do. Should I tell the team as well?","ได้ครับ ผมควรบอกทีมด้วยไหมครับ"],
+   ["B","Yes, and set an out-of-office reply on your email.","ควรค่ะ แล้วตั้งข้อความตอบกลับอัตโนมัติในอีเมลด้วยนะคะ"],
+   ["A","I will. Thanks for being so understanding, Linda.","ได้ครับ ขอบคุณที่เข้าใจนะครับลินดา"],
+   ["B","No problem. I hope your father's operation goes well.","ไม่เป็นไรค่ะ ขอให้การผ่าตัดของคุณพ่อราบรื่นนะคะ"]],
+  vocab:[
+   ["personal leave","ลากิจ","n.","I used one day of personal leave to move house.","ฉันใช้วันลากิจหนึ่งวันเพื่อย้ายบ้าน"],
+   ["day off","วันหยุด วันลา","n.","I'm taking a day off on Friday.","ฉันจะลาหยุดวันศุกร์"],
+   ["approve","อนุมัติ","v.","The manager approved my request this morning.","ผู้จัดการอนุมัติคำขอของฉันเมื่อเช้านี้"],
+   ["leave form","แบบฟอร์มขอลา","n.","Send the leave form to HR at least three days before.","ส่งแบบฟอร์มขอลาให้ฝ่ายบุคคลล่วงหน้าอย่างน้อยสามวัน"],
+   ["operation","การผ่าตัด","n.","After the operation, she needed two weeks to rest.","หลังผ่าตัด เธอต้องพักสองสัปดาห์"],
+   ["out-of-office reply","ข้อความตอบกลับอัตโนมัติเมื่อไม่อยู่","n.","My out-of-office reply gives my colleague's phone number.","ข้อความตอบกลับอัตโนมัติของฉันให้เบอร์โทรของเพื่อนร่วมงานไว้"],
+   ["in advance","ล่วงหน้า","phr.","Please ask for leave at least one week in advance.","กรุณาขอลาล่วงหน้าอย่างน้อยหนึ่งสัปดาห์"],
+   ["remaining","ที่เหลืออยู่","adj.","How many remaining leave days do I have?","ฉันเหลือวันลาอีกกี่วัน"]],
+  phrases:[
+   ["Do you have a minute?","ขอเวลาสักครู่ได้ไหม","เปิดเรื่องกับหัวหน้าอย่างสุภาพก่อนจะขออะไร"],
+   ["I'd like to ask for a personal day on (day).","อยากขอลากิจวัน…","ask for + สิ่งที่ขอ สุภาพกว่า I want"],
+   ["Would that be possible?","พอจะเป็นไปได้ไหม","ต่อท้ายคำขอให้ฟังนุ่มนวลขึ้น"],
+   ["I need to take (day) off to …","ต้องลาวัน…เพื่อ…","take + วัน + off = ลาหยุดวันนั้น"],
+   ["I'll be back on (day).","จะกลับมาทำงานวัน…","บอกวันกลับเพื่อให้ทีมวางแผนได้"],
+   ["I'll finish … by (day).","จะทำ…ให้เสร็จภายในวัน…","by + เวลา = ไม่เกิน แสดงความรับผิดชอบต่องาน"],
+   ["Thanks for being so understanding.","ขอบคุณที่เข้าใจ","ใช้ขอบคุณหัวหน้าที่อนุญาตให้ลา"]],
+  talk:[
+   {q:"Why does Somchai need a personal day?",a:"He needs to take his father to the hospital for a small operation."},
+   {q:"When will he be back at work?",a:"He will be back at work on Monday."},
+   {q:"What will he do before his day off?",a:"He will finish the sales figures by Thursday."},
+   {q:"What does Linda ask him to do?",a:"She asks him to fill in the leave form, tell the team and set an out-of-office reply."}],
+  you:[
+   {th:"ขอลากิจกับหัวหน้า บอกวันและเหตุผล",starter:"Do you have a minute? I'd like to ask for a personal day on … because …"},
+   {th:"บอกว่าก่อนลาคุณจะทำงานอะไรให้เสร็จ",starter:"Before my day off, I'll finish … by …"}],
+  quiz:[
+   {q:"I need to take next Friday ___.",o:["off","out","away"],a:0,why:"take + วัน + off = ลาหยุดวันนั้น"},
+   {q:"Please fill ___ the leave form today.",o:["of","in","at"],a:1,why:"fill in = กรอก (แบบฟอร์ม)"},
+   {q:"Which request is the most polite?",o:["Give me Friday off.","I take Friday off.","Would it be possible to take Friday off?"],a:2,why:"Would it be possible…? เป็นการขอที่สุภาพ เหมาะกับการพูดกับหัวหน้า"},
+   {q:"My manager will ___ my leave request.",o:["approve","apply","appear"],a:0,why:"approve = อนุมัติ"}]},
+
+ {id:"b23",theme:5,title:"Going On a Vacation",th:"ไปพักร้อน",
+  intro:"เล่าแผนพักร้อนให้เพื่อนร่วมงานฟัง และฝากงานก่อนไป ใช้ I'll be away from … to …, I'm going to … และ Could you look after … while I'm away?",
+  cast:{A:"Mai",B:"Kevin"},
+  lines:[
+   ["B","Mai, I heard you're going on vacation soon.","ไหม ได้ยินว่าคุณจะไปพักร้อนเร็วๆ นี้เหรอครับ"],
+   ["A","Yes! I'll be away from the twelfth to the twentieth. I'm going to Japan with my sister.","ใช่ค่ะ ดิฉันจะไม่อยู่ตั้งแต่วันที่สิบสองถึงยี่สิบ จะไปญี่ปุ่นกับพี่สาวค่ะ"],
+   ["B","Lucky you! Have you booked everything?","โชคดีจัง จองทุกอย่างหรือยังครับ"],
+   ["A","The flights and hotels, yes. We're going to visit Osaka and Kyoto.","ตั๋วเครื่องบินกับโรงแรมจองแล้วค่ะ เราจะไปโอซากากับเกียวโตค่ะ"],
+   ["B","Sounds great. So who's handling your clients while you're away?","ฟังดูดีมากเลย แล้วใครจะดูแลลูกค้าของคุณระหว่างที่คุณไม่อยู่ครับ"],
+   ["A","Actually, I wanted to ask you about that. Could you look after Global Foods for me?","จริงๆ ก็อยากถามคุณเรื่องนี้อยู่ค่ะ ช่วยดูแลลูกค้า Global Foods ให้ได้ไหมคะ"],
+   ["B","Sure, I can do that. Is there anything I need to know?","ได้ครับ มีอะไรที่ผมต้องรู้ไหมครับ"],
+   ["A","Their order usually comes in on Monday. I'll write a handover note with all the details.","ปกติเขาจะส่งออร์เดอร์มาวันจันทร์ค่ะ ดิฉันจะเขียนบันทึกส่งต่องานพร้อมรายละเอียดทั้งหมดให้ค่ะ"],
+   ["B","Perfect. Will you be checking your email?","เยี่ยมเลย คุณจะเช็กอีเมลไหมครับ"],
+   ["A","Only once a day. But if it's an emergency, you can send me a message.","วันละครั้งค่ะ แต่ถ้ามีเรื่องฉุกเฉิน ส่งข้อความหาดิฉันได้เลยค่ะ"],
+   ["B","Don't worry. I'll try not to bother you. Just relax and enjoy the trip.","ไม่ต้องห่วงครับ ผมจะพยายามไม่รบกวน พักผ่อนและเที่ยวให้สนุกนะครับ"],
+   ["A","Thanks, Kevin. I'll bring you back some Japanese snacks.","ขอบคุณค่ะเควิน เดี๋ยวจะซื้อขนมญี่ปุ่นมาฝากนะคะ"]],
+  vocab:[
+   ["vacation","การพักร้อน การไปเที่ยวพักผ่อน","n.","We're going on vacation to Phuket in April.","เราจะไปพักร้อนที่ภูเก็ตในเดือนเมษายน"],
+   ["annual leave","วันลาพักร้อนประจำปี","n.","Staff get ten days of annual leave a year.","พนักงานได้วันลาพักร้อนปีละสิบวัน"],
+   ["book","จอง","v.","I booked a hotel near the beach.","ฉันจองโรงแรมใกล้ชายหาด"],
+   ["itinerary","กำหนดการเดินทาง","n.","Please send me your itinerary before you leave.","กรุณาส่งกำหนดการเดินทางให้ฉันก่อนคุณออกเดินทาง"],
+   ["handover note","บันทึกส่งต่องาน","n.","Her handover note explained every open task.","บันทึกส่งต่องานของเธออธิบายงานที่ยังค้างทุกงาน"],
+   ["be away","ไม่อยู่ (ลาหรือเดินทาง)","phr.","I'll be away next week, so please email Kevin.","สัปดาห์หน้าฉันไม่อยู่ กรุณาส่งอีเมลหาเควินนะ"],
+   ["emergency","เหตุฉุกเฉิน","n.","Only call me if there's an emergency.","โทรหาฉันเฉพาะตอนมีเหตุฉุกเฉินเท่านั้น"],
+   ["souvenir","ของที่ระลึก ของฝาก","n.","He brought back souvenirs for the whole team.","เขาซื้อของฝากมาให้ทั้งทีม"]],
+  phrases:[
+   ["I'll be away from (date) to (date).","จะไม่อยู่ตั้งแต่…ถึง…","บอกช่วงวันที่ลาให้ชัดเจน"],
+   ["I'm going to (place) with (person).","จะไปที่…กับ…","be going to = แผนที่ตัดสินใจไว้แล้ว"],
+   ["Who's handling … while you're away?","ใครจะดูแล…ระหว่างที่คุณไม่อยู่","while + ประโยค = ระหว่างที่"],
+   ["Could you look after … for me?","ช่วยดูแล…ให้หน่อยได้ไหม","ขอให้เพื่อนร่วมงานรับงานแทนอย่างสุภาพ"],
+   ["I'll write a handover note.","จะเขียนบันทึกส่งต่องาน","ควรทำก่อนลานานๆ คนรับงานจะไม่ต้องโทรถาม"],
+   ["If it's an emergency, you can …","ถ้ามีเรื่องฉุกเฉิน คุณ…ได้","บอกช่องทางติดต่อไว้สำหรับเรื่องด่วนจริงๆ เท่านั้น"],
+   ["Enjoy the trip!","เที่ยวให้สนุกนะ","อวยพรคนที่กำลังจะไปเที่ยว"]],
+  talk:[
+   {q:"Where is Mai going?",a:"She's going to Japan with her sister. They're going to visit Osaka and Kyoto."},
+   {q:"How long will she be away?",a:"She'll be away from the twelfth to the twentieth."},
+   {q:"What will Kevin do while she is away?",a:"He will look after the Global Foods account."},
+   {q:"How can Kevin contact Mai in an emergency?",a:"He can send her a message."}],
+  you:[
+   {th:"เล่าแผนพักร้อนครั้งหน้าของคุณ",starter:"I'm going to … I'll be away from … to …"},
+   {th:"ขอให้เพื่อนร่วมงานช่วยดูแลงานระหว่างที่คุณไม่อยู่",starter:"Could you look after … while I'm away? I'll write …"},
+   {th:"เล่าว่าตอนพักร้อนคุณเช็กอีเมลงานไหม",starter:"When I'm on vacation, I …"}],
+  quiz:[
+   {q:"I'll be away ___ the twelfth to the twentieth.",o:["between","from","since"],a:1,why:"from … to … = ตั้งแต่…ถึง… (between ต้องคู่กับ and)"},
+   {q:"Who will look ___ your clients while you're away?",o:["after","for","at"],a:0,why:"look after = ดูแล"},
+   {q:"Before a long leave, you should write a ___ for your colleague.",o:["shopping list","handover note","birthday card"],a:1,why:"handover note = บันทึกส่งต่องาน"},
+   {q:"What do you say to someone who is going on a trip?",o:["Get well soon.","Congratulations on your promotion.","Enjoy the trip!"],a:2,why:"Enjoy the trip! = เที่ยวให้สนุกนะ"}]},
+
+ {id:"b24",theme:5,title:"Catching Up",th:"ตามงานหลังกลับจากลา",
+  intro:"กลับมาทำงานหลังลาหยุด ถามเพื่อนร่วมงานว่าระหว่างที่ไม่อยู่มีอะไรเกิดขึ้นบ้าง ใช้ What did I miss?, Can you fill me in? และ While you were away, …",
+  cast:{A:"Arthit",B:"Sarah"},
+  lines:[
+   ["B","Welcome back, Arthit! How was your trip to Chiang Mai?","ยินดีต้อนรับกลับค่ะอาทิตย์ ไปเชียงใหม่เป็นยังไงบ้างคะ"],
+   ["A","It was wonderful, thanks. Cool weather and great food. So, what did I miss?","ดีมากเลยครับ ขอบคุณครับ อากาศเย็น อาหารอร่อย แล้วผมพลาดอะไรไปบ้างครับ"],
+   ["B","Quite a lot, actually. While you were away, the launch date for the new app moved.","เยอะเหมือนกันค่ะ ระหว่างที่คุณไม่อยู่ วันเปิดตัวแอปใหม่เลื่อนไปแล้วค่ะ"],
+   ["A","Really? Can you fill me in?","จริงเหรอครับ ช่วยเล่ารายละเอียดให้ฟังหน่อยได้ไหมครับ"],
+   ["B","The testing team found some bugs, so the launch is now on the first of next month.","ทีมทดสอบเจอข้อผิดพลาดบางอย่าง ตอนนี้เลยเลื่อนเปิดตัวไปวันที่หนึ่งเดือนหน้าค่ะ"],
+   ["A","That gives us two more weeks. Anything else?","งั้นเรามีเวลาเพิ่มอีกสองสัปดาห์ มีอะไรอีกไหมครับ"],
+   ["B","We also have a new designer, Ken. He started on Tuesday, and he sits next to you.","เรามีดีไซเนอร์คนใหม่ชื่อเคนด้วยค่ะ เริ่มงานวันอังคาร นั่งข้างคุณเลยค่ะ"],
+   ["A","Great, I'll go and say hello. Did anyone call about the Lotus project?","ดีครับ เดี๋ยวผมไปทักทาย มีใครโทรมาเรื่องโปรเจกต์โลตัสไหมครับ"],
+   ["B","Yes, their manager called twice. She wants to discuss the budget with you.","มีค่ะ ผู้จัดการฝั่งนั้นโทรมาสองครั้ง เขาอยากคุยเรื่องงบประมาณกับคุณค่ะ"],
+   ["A","OK, I'll call her back this morning. I also have over two hundred emails to go through.","โอเคครับ เช้านี้ผมจะโทรกลับ แล้วยังมีอีเมลกว่าสองร้อยฉบับต้องไล่อ่านด้วยครับ"],
+   ["B","Don't worry. Most of them are just updates. I've put the important ones in a summary for you.","ไม่ต้องห่วงค่ะ ส่วนใหญ่เป็นแค่อัปเดต ดิฉันสรุปฉบับสำคัญไว้ให้แล้วค่ะ"],
+   ["A","You're a lifesaver, Sarah. Thanks for keeping things running.","คุณช่วยชีวิตผมไว้เลยซาร่าห์ ขอบคุณที่ช่วยให้งานเดินต่อนะครับ"]],
+  vocab:[
+   ["catch up on","ตามงานหรือเรื่องที่ค้าง","phr.","I came in early to catch up on my emails.","ฉันมาทำงานเช้าเพื่อตามอ่านอีเมลที่ค้าง"],
+   ["fill someone in","เล่ารายละเอียดให้ (ใคร) ฟัง","phr.","Can you fill me in on yesterday's meeting?","ช่วยเล่าเรื่องประชุมเมื่อวานให้ฉันฟังหน่อยได้ไหม"],
+   ["launch date","วันเปิดตัว","n.","The launch date is the first of June.","วันเปิดตัวคือวันที่หนึ่งมิถุนายน"],
+   ["bug","ข้อผิดพลาดในโปรแกรม","n.","The team fixed three bugs before the update.","ทีมแก้ข้อผิดพลาดสามจุดก่อนอัปเดต"],
+   ["budget","งบประมาณ","n.","We need to stay within the budget.","เราต้องใช้เงินไม่เกินงบประมาณ"],
+   ["call back","โทรกลับ","phr.v.","She's in a meeting. Can she call you back?","เธอติดประชุมอยู่ ให้เธอโทรกลับได้ไหม"],
+   ["go through","ไล่ดู ตรวจทีละรายการ","phr.v.","Let's go through the contract together.","มาไล่ดูสัญญาด้วยกันเถอะ"],
+   ["summary","บทสรุป","n.","Please write a short summary of the report.","กรุณาเขียนสรุปรายงานสั้นๆ"]],
+  phrases:[
+   ["Welcome back!","ยินดีต้อนรับกลับ","ทักคนที่กลับมาจากลาหยุดหรือเดินทาง"],
+   ["What did I miss?","ฉันพลาดอะไรไปบ้าง","ถามสั้นๆ แบบเป็นกันเองเมื่อกลับมาทำงาน"],
+   ["Can you fill me in (on …)?","ช่วยเล่า (เรื่อง…) ให้ฟังหน่อย","fill + คน + in on + เรื่อง"],
+   ["While you were away, …","ระหว่างที่คุณไม่อยู่ …","ใช้เล่าเรื่องที่เกิดขึ้นช่วงอีกฝ่ายลา ใช้ past simple"],
+   ["I need to catch up on (my emails).","ต้องตาม (อีเมล) ที่ค้าง","catch up on + สิ่งที่ค้าง"],
+   ["I'll call her back.","จะโทรกลับหาเธอ","call + คน + back"],
+   ["Thanks for keeping things running.","ขอบคุณที่ช่วยให้งานเดินต่อ","ขอบคุณเพื่อนที่ดูแลงานระหว่างคุณไม่อยู่"]],
+  talk:[
+   {q:"Where did Arthit go?",a:"He went to Chiang Mai. The weather was cool and the food was great."},
+   {q:"Why did the launch date move?",a:"It moved because the testing team found some bugs."},
+   {q:"Who called about the Lotus project?",a:"Their manager called twice. She wants to discuss the budget with Arthit."},
+   {q:"How did Sarah help Arthit with his emails?",a:"She put the important emails in a summary for him."}],
+  you:[
+   {th:"ถามเพื่อนร่วมงานว่าระหว่างที่คุณลามีอะไรเกิดขึ้นบ้าง",starter:"Hi, I'm back! What did I miss? Can you fill me in on …?"},
+   {th:"เล่าว่าวันแรกหลังลาหยุด คุณจัดการงานค้างอย่างไร",starter:"On my first day back, I usually catch up on …"}],
+  quiz:[
+   {q:"Can you fill me ___ on the meeting?",o:["in","up","out"],a:0,why:"fill + คน + in = เล่ารายละเอียดให้ฟัง"},
+   {q:"I have so many emails. I need to catch ___ on them.",o:["in","up","off"],a:1,why:"catch up on = ตามสิ่งที่ค้าง"},
+   {q:"Which question do you ask when you come back from leave?",o:["What did I miss?","Where did you study?","How much is it?"],a:0,why:"What did I miss? = ฉันพลาดอะไรไปบ้าง"},
+   {q:"The client called. Please call her ___ this afternoon.",o:["out","over","back"],a:2,why:"call back = โทรกลับ"}]},
+
+ {id:"b25",theme:5,title:"Checking In on Your Colleagues",th:"ถามไถ่เพื่อนร่วมงาน",
+  intro:"ถามไถ่เพื่อนร่วมงานที่เพิ่งหายป่วยหรือดูเครียด แสดงความห่วงใยและเสนอความช่วยเหลือ ใช้ Are you feeling better?, Is there anything I can do to help? และ Let me know if …",
+  cast:{A:"Wan",B:"Jason"},
+  lines:[
+   ["A","Hi Jason. Are you feeling better? I heard you were sick last week.","สวัสดีค่ะเจสัน ดีขึ้นหรือยังคะ ได้ยินว่าอาทิตย์ที่แล้วไม่สบาย"],
+   ["B","Much better, thanks, Wan. It was just a bad flu.","ดีขึ้นเยอะแล้วครับวัน ขอบคุณครับ แค่ไข้หวัดใหญ่หนักไปหน่อยครับ"],
+   ["A","Good to hear. You look a bit tired, though. Is everything OK?","ดีใจที่ได้ยินค่ะ แต่ดูเหนื่อยๆ นะคะ ทุกอย่างโอเคไหมคะ"],
+   ["B","To be honest, I'm a little stressed. I have a lot of work to catch up on.","พูดตรงๆ ก็เครียดนิดหน่อยครับ มีงานค้างต้องตามเยอะครับ"],
+   ["A","That's understandable. Is there anything I can do to help?","เข้าใจได้ค่ะ มีอะไรที่ดิฉันช่วยได้ไหมคะ"],
+   ["B","Well, the training slides for Friday aren't finished yet.","คือ สไลด์อบรมสำหรับวันศุกร์ยังไม่เสร็จเลยครับ"],
+   ["A","I made similar slides last year. I can share them with you this afternoon.","ปีที่แล้วดิฉันทำสไลด์คล้ายๆ กันไว้ บ่ายนี้ส่งให้คุณได้นะคะ"],
+   ["B","That would be a big help. Thank you so much.","ช่วยได้มากเลยครับ ขอบคุณมากครับ"],
+   ["A","No problem. And don't push yourself too hard. Your health comes first.","ไม่เป็นไรค่ะ แล้วอย่าหักโหมเกินไปนะคะ สุขภาพต้องมาก่อน"],
+   ["B","I know. I'll try to leave on time this week.","ทราบครับ อาทิตย์นี้ผมจะพยายามเลิกงานตรงเวลาครับ"],
+   ["A","Good idea. Let me know if you need anything else.","ดีค่ะ ถ้าต้องการอะไรเพิ่มบอกได้เลยนะคะ"],
+   ["B","I will. It's nice to know someone has my back.","ได้ครับ ดีใจที่รู้ว่ามีคนคอยหนุนหลังผมอยู่ครับ"]],
+  vocab:[
+   ["stressed","เครียด","adj.","I always feel stressed before a big deadline.","ฉันรู้สึกเครียดทุกครั้งก่อนถึงกำหนดส่งงานใหญ่"],
+   ["burnout","ภาวะหมดไฟ","n.","Long hours every day can lead to burnout.","ทำงานหลายชั่วโมงทุกวันอาจทำให้หมดไฟได้"],
+   ["overwhelmed","รับมือไม่ไหว ท่วมท้น","adj.","New staff often feel overwhelmed in their first week.","พนักงานใหม่มักรู้สึกรับมือไม่ไหวในสัปดาห์แรก"],
+   ["flu","ไข้หวัดใหญ่","n.","Half the office was off with the flu.","ครึ่งออฟฟิศลาป่วยเพราะไข้หวัดใหญ่"],
+   ["push yourself","ฝืนตัวเอง หักโหม","phr.","You're still sick. Don't push yourself.","คุณยังป่วยอยู่ อย่าฝืนตัวเองนะ"],
+   ["leave on time","เลิกงานตรงเวลา","phr.","I try to leave on time on Fridays.","ฉันพยายามเลิกงานตรงเวลาทุกวันศุกร์"],
+   ["have someone's back","คอยสนับสนุน คอยหนุนหลัง (ใคร)","idiom","Don't worry about the client. I have your back.","ไม่ต้องห่วงเรื่องลูกค้า ฉันคอยหนุนหลังคุณอยู่"],
+   ["check in on","แวะถามไถ่ ดูว่า (ใคร) เป็นยังไงบ้าง","phr.","The manager checks in on new staff every Monday.","ผู้จัดการแวะถามไถ่พนักงานใหม่ทุกวันจันทร์"]],
+  phrases:[
+   ["Are you feeling better?","ดีขึ้นหรือยัง","ถามคนที่เพิ่งหายป่วย"],
+   ["Is everything OK?","ทุกอย่างโอเคไหม","ถามอย่างอ่อนโยนเมื่อเห็นเพื่อนดูไม่เหมือนปกติ"],
+   ["Is there anything I can do to help?","มีอะไรให้ช่วยไหม","เสนอความช่วยเหลือแบบสุภาพ"],
+   ["That would be a big help.","ช่วยได้มากเลย","ใช้ตอบรับเมื่อมีคนเสนอความช่วยเหลือ"],
+   ["Don't push yourself too hard.","อย่าหักโหมเกินไป","เตือนด้วยความห่วงใย"],
+   ["Let me know if you need anything else.","ถ้าต้องการอะไรเพิ่มบอกได้เลย","ปิดบทสนทนาแบบเปิดทางให้ขอความช่วยเหลือได้อีก"]],
+  talk:[
+   {q:"Why was Jason away last week?",a:"He was away because he had a bad flu."},
+   {q:"Why is Jason stressed?",a:"He is stressed because he has a lot of work to catch up on."},
+   {q:"How will Wan help him?",a:"She will share her training slides from last year with him this afternoon."},
+   {q:"What will Jason try to do this week?",a:"He will try to leave on time."}],
+  you:[
+   {th:"ถามไถ่เพื่อนร่วมงานที่เพิ่งกลับมาจากลาป่วย",starter:"Hi …, are you feeling better? I heard you were …"},
+   {th:"เสนอความช่วยเหลือเพื่อนที่มีงานเยอะ",starter:"Is there anything I can do to help? I can …"},
+   {th:"เล่าว่าคุณทำอะไรเวลาเครียดเรื่องงาน",starter:"When I feel stressed at work, I …"}],
+  quiz:[
+   {q:"Which question offers help?",o:["Can you fill me in?","Is there anything I can do to help?","What did I miss?"],a:1,why:"Is there anything I can do to help? = มีอะไรให้ช่วยไหม"},
+   {q:"Don't push ___ too hard. Your health comes first.",o:["you","your","yourself"],a:2,why:"push yourself = ฝืนตัวเอง ใช้ yourself เพราะทำกับตัวเอง"},
+   {q:"Jason accepts Wan's help. What does he say?",o:["That would be a big help.","That's not my job.","Enjoy the trip!"],a:0,why:"That would be a big help. ใช้ตอบรับความช่วยเหลือ"},
+   {q:"She works twelve hours a day and feels tired all the time. She is close to ___.",o:["handover","itinerary","burnout"],a:2,why:"burnout = ภาวะหมดไฟจากการทำงานหนักเกินไป"}]},
+
+ {id:"b26",theme:6,title:"Giving an Overview",th:"เปิดประชุมและสรุปภาพรวม",
+  intro:"เปิดการประชุม บอกจุดประสงค์ และเล่าภาพรวมวาระให้ทุกคนเห็นตรงกัน ใช้ The purpose of this meeting is to …, First, … Then, … Finally, … และ Let's move on to …",
+  cast:{A:"Pim",B:"Richard"},
+  lines:[
+   ["A","Good morning, everyone. Thanks for coming. Shall we get started?","สวัสดีตอนเช้าค่ะทุกคน ขอบคุณที่มากันนะคะ เริ่มกันเลยไหมคะ"],
+   ["B","Yes, we're all here except Nina. She'll join online.","ครับ มากันครบแล้วยกเว้นนีน่า เขาจะเข้าร่วมทางออนไลน์ครับ"],
+   ["A","Great. The purpose of this meeting is to review the plan for our new branch in Khon Kaen.","ดีค่ะ จุดประสงค์ของการประชุมนี้คือทบทวนแผนสาขาใหม่ที่ขอนแก่นค่ะ"],
+   ["B","Sounds good. What's on the agenda?","ดีครับ วาระมีอะไรบ้างครับ"],
+   ["A","There are three main points. First, I'll give a quick overview. Then you'll talk about the costs, Richard. Finally, we'll agree on the next steps.","มีสามประเด็นหลักค่ะ อย่างแรก ดิฉันจะสรุปภาพรวมสั้นๆ ต่อมาริชาร์ดจะพูดเรื่องค่าใช้จ่าย สุดท้ายเราจะตกลงขั้นตอนต่อไปกันค่ะ"],
+   ["B","OK. How long will the meeting take?","โอเคครับ ประชุมจะใช้เวลานานแค่ไหนครับ"],
+   ["A","About forty-five minutes. We need to finish by ten thirty.","ประมาณสี่สิบห้านาทีค่ะ เราต้องเสร็จภายในสิบโมงครึ่งค่ะ"],
+   ["B","Fine with me. So where are we with the building?","ได้ครับ แล้วตอนนี้เรื่องอาคารไปถึงไหนแล้วครับ"],
+   ["A","In short, the building is ready and the furniture arrives next week. Our main concern is hiring staff.","สรุปสั้นๆ คือ อาคารพร้อมแล้ว เฟอร์นิเจอร์จะมาสัปดาห์หน้า เรื่องที่น่ากังวลที่สุดคือการจ้างพนักงานค่ะ"],
+   ["B","How many people do we still need?","เรายังต้องการคนอีกกี่คนครับ"],
+   ["A","We still need eight sales staff. The opening date is the first of March, so time is short.","ยังต้องการพนักงานขายอีกแปดคนค่ะ วันเปิดสาขาคือวันที่หนึ่งมีนาคม เวลาจึงเหลือไม่มากค่ะ"],
+   ["B","I see. That will affect the costs too. I'll cover it in my part.","เข้าใจแล้วครับ เรื่องนี้จะกระทบค่าใช้จ่ายด้วย ผมจะพูดถึงในส่วนของผมครับ"],
+   ["A","Perfect. Let's move on to the costs, then. Over to you, Richard.","เยี่ยมค่ะ งั้นไปต่อที่เรื่องค่าใช้จ่ายกันเลย เชิญริชาร์ดค่ะ"]],
+  vocab:[
+   ["agenda","วาระการประชุม","n.","The agenda has four items this week.","สัปดาห์นี้วาระการประชุมมีสี่หัวข้อ"],
+   ["purpose","จุดประสงค์","n.","What is the purpose of this visit?","จุดประสงค์ของการมาครั้งนี้คืออะไร"],
+   ["overview","ภาพรวม","n.","She gave us an overview of the project.","เธอเล่าภาพรวมของโปรเจกต์ให้เราฟัง"],
+   ["item","หัวข้อ (ในวาระ)","n.","Let's look at the next item on the agenda.","มาดูหัวข้อถัดไปในวาระกัน"],
+   ["opening date","วันเปิด (ร้าน/สาขา)","n.","The opening date for the new shop is the tenth of July.","วันเปิดร้านใหม่คือวันที่สิบกรกฎาคม"],
+   ["concern","เรื่องที่น่ากังวล","n.","Safety is our biggest concern.","ความปลอดภัยคือเรื่องที่เรากังวลที่สุด"],
+   ["in short","สรุปสั้นๆ","phr.","In short, the project is on schedule.","สรุปสั้นๆ คือ โปรเจกต์เป็นไปตามกำหนด"],
+   ["move on","ไปต่อ (หัวข้อถัดไป)","phr.v.","We're short of time, so let's move on.","เราเหลือเวลาน้อย ไปต่อกันเถอะ"]],
+  phrases:[
+   ["Shall we get started?","เริ่มกันเลยไหม","ใช้เปิดประชุมอย่างสุภาพ"],
+   ["The purpose of this meeting is to …","จุดประสงค์ของการประชุมนี้คือ…","to + กริยาช่องหนึ่ง บอกเป้าหมายให้ชัดตั้งแต่ต้น"],
+   ["There are (three) main points.","มี (สาม) ประเด็นหลัก","บอกจำนวนหัวข้อก่อน ผู้ฟังจะตามได้ง่าย"],
+   ["First, … Then, … Finally, …","อย่างแรก… ต่อมา… สุดท้าย…","ใช้เรียงลำดับวาระ"],
+   ["In short, …","สรุปสั้นๆ คือ…","ใช้ก่อนเล่าภาพรวมแบบย่อ"],
+   ["Let's move on to …","ไปต่อที่เรื่อง…กัน","ใช้เปลี่ยนหัวข้อในการประชุม"],
+   ["Over to you, (name).","เชิญ (ชื่อ) ต่อเลย","ใช้ส่งต่อให้ผู้พูดคนถัดไป"]],
+  talk:[
+   {q:"What is the purpose of the meeting?",a:"The purpose is to review the plan for the new branch in Khon Kaen."},
+   {q:"What are the three points on the agenda?",a:"First, Pim will give an overview. Then Richard will talk about the costs. Finally, they will agree on the next steps."},
+   {q:"What is the main concern?",a:"The main concern is hiring staff. They still need eight sales staff."},
+   {q:"When will the new branch open?",a:"It will open on the first of March."}],
+  you:[
+   {th:"เปิดประชุมทีมของคุณ แล้วบอกจุดประสงค์",starter:"Good morning, everyone. Shall we get started? The purpose of this meeting is to …"},
+   {th:"บอกวาระการประชุมสามหัวข้อ",starter:"There are three main points. First, … Then, … Finally, …"}],
+  quiz:[
+   {q:"The purpose of this meeting ___ to review the plan.",o:["are","is","be"],a:1,why:"purpose เป็นนามเอกพจน์ ใช้ is"},
+   {q:"First, … Then, … ___, we'll agree on the next steps.",o:["Finally","Firstly","Before"],a:0,why:"Finally = สุดท้าย ใช้กับหัวข้อสุดท้าย"},
+   {q:"How do you hand over to the next speaker?",o:["Shall we get started?","In short, we're late.","Over to you, Richard."],a:2,why:"Over to you, … = เชิญคุณต่อเลย"},
+   {q:"A list of topics for a meeting is called an ___.",o:["overview","agenda","item"],a:1,why:"agenda = วาระการประชุม"}]},
+
+ {id:"b27",theme:6,title:"Sharing Opinions",th:"แสดงความคิดเห็น",
+  intro:"แสดงความคิดเห็นในที่ประชุมพร้อมเหตุผล และถามความเห็นคนอื่น ใช้ In my opinion, …, Personally, I feel …, It seems to me that … และ What do you think?",
+  cast:{A:"Kanya",B:"Peter"},
+  lines:[
+   ["B","Next item: should we move our staff training online? Kanya, what do you think?","หัวข้อต่อไป เราควรย้ายการอบรมพนักงานไปออนไลน์ไหม กัญญาคิดยังไงครับ"],
+   ["A","In my opinion, it's a good idea. Online training saves time and money.","ในความเห็นของดิฉัน เป็นความคิดที่ดีค่ะ การอบรมออนไลน์ประหยัดเวลาและเงินค่ะ"],
+   ["B","Can you give an example?","ยกตัวอย่างได้ไหมครับ"],
+   ["A","Sure. Last year, staff from our factories travelled to Bangkok for every course. The hotel bills were huge.","ได้ค่ะ ปีที่แล้วพนักงานจากโรงงานต้องเดินทางมากรุงเทพฯ ทุกหลักสูตร ค่าโรงแรมสูงมากค่ะ"],
+   ["B","That's a good point. Personally, though, I feel people learn better face to face.","เป็นประเด็นที่ดีครับ แต่ส่วนตัวผมรู้สึกว่าคนเรียนได้ดีกว่าเมื่อเจอหน้ากันครับ"],
+   ["A","I see what you mean. Some courses, like safety training, need hands-on practice.","เข้าใจที่คุณหมายถึงค่ะ บางหลักสูตรอย่างการอบรมความปลอดภัยต้องลงมือฝึกจริงค่ะ"],
+   ["B","Exactly. As far as I'm concerned, we can't do that on a screen.","ใช่เลยครับ เท่าที่ผมเห็น เราทำแบบนั้นผ่านหน้าจอไม่ได้ครับ"],
+   ["A","So how about a mix? Theory online and practice on site.","งั้นทำแบบผสมดีไหมคะ ทฤษฎีเรียนออนไลน์ ส่วนการฝึกปฏิบัติทำที่หน้างานค่ะ"],
+   ["B","I think that could work. It seems to me that it's the best of both.","ผมคิดว่าน่าจะได้ผลครับ ผมว่าได้ข้อดีของทั้งสองแบบครับ"],
+   ["A","I also believe staff will like it, because they can study at their own pace.","ดิฉันยังเชื่อว่าพนักงานจะชอบด้วย เพราะเรียนได้ตามจังหวะของตัวเองค่ะ"],
+   ["B","Good. Let's ask HR to try it with one course first.","ดีครับ ให้ฝ่าย HR ลองกับหลักสูตรเดียวก่อนนะครับ"],
+   ["A","Sounds good. I'll send them a short proposal this week.","ได้ค่ะ สัปดาห์นี้ดิฉันจะส่งข้อเสนอสั้นๆ ให้เขาค่ะ"]],
+  vocab:[
+   ["opinion","ความคิดเห็น","n.","Everyone can give their opinion in this meeting.","ทุกคนแสดงความคิดเห็นได้ในการประชุมนี้"],
+   ["personally","ส่วนตัวแล้ว","adv.","Personally, I prefer working in the office.","ส่วนตัวแล้วฉันชอบทำงานที่ออฟฟิศมากกว่า"],
+   ["face to face","ต่อหน้า เจอตัวกัน","phr.","It's easier to solve problems face to face.","แก้ปัญหาต่อหน้ากันง่ายกว่า"],
+   ["hands-on","ลงมือทำจริง","adj.","The course gives you hands-on experience with the machines.","หลักสูตรนี้ให้คุณได้ลงมือใช้เครื่องจริง"],
+   ["on site","ที่หน้างาน ในสถานที่จริง","phr.","The engineer will be on site all day.","วิศวกรจะอยู่ที่หน้างานทั้งวัน"],
+   ["at your own pace","ตามจังหวะของตัวเอง","phr.","You can finish the online course at your own pace.","คุณเรียนหลักสูตรออนไลน์ให้จบตามจังหวะของตัวเองได้"],
+   ["proposal","ข้อเสนอ","n.","Please send me your proposal by Friday.","กรุณาส่งข้อเสนอของคุณมาภายในวันศุกร์"],
+   ["theory","ทฤษฎี","n.","The theory is easy, but the practice is hard.","ทฤษฎีง่าย แต่ปฏิบัติยาก"]],
+  phrases:[
+   ["In my opinion, …","ในความเห็นของฉัน…","ขึ้นต้นความเห็นแบบสุภาพ ใช้ในที่ประชุมได้ดี"],
+   ["I think … because …","ฉันคิดว่า…เพราะ…","ให้เหตุผลทุกครั้ง ความเห็นจะมีน้ำหนักขึ้น"],
+   ["Personally, I feel …","ส่วนตัวฉันรู้สึกว่า…","ใช้กับความรู้สึกส่วนตัว ฟังนุ่มนวล"],
+   ["As far as I'm concerned, …","เท่าที่ฉันเห็น…","ความเห็นที่ค่อนข้างหนักแน่น"],
+   ["It seems to me that …","ฉันว่า…","แสดงความเห็นแบบไม่ฟันธง"],
+   ["What do you think?","คุณคิดยังไง","ชวนคนอื่นแสดงความเห็น"],
+   ["Can you give an example?","ยกตัวอย่างได้ไหม","ขอให้อีกฝ่ายอธิบายความเห็นเพิ่ม"]],
+  talk:[
+   {q:"What is Kanya's opinion about online training?",a:"She thinks it's a good idea because it saves time and money."},
+   {q:"What example does Kanya give?",a:"Last year, factory staff travelled to Bangkok for every course, and the hotel bills were huge."},
+   {q:"Why does Peter prefer face-to-face training?",a:"He feels people learn better face to face, and some courses need hands-on practice."},
+   {q:"What do they decide?",a:"They decide to try a mix: theory online and practice on site, starting with one course."}],
+  you:[
+   {th:"บอกความเห็นว่าควรประชุมออนไลน์หรือเจอหน้ากัน พร้อมเหตุผล",starter:"In my opinion, … because …"},
+   {th:"ถามความเห็นเพื่อนร่วมงานในที่ประชุม",starter:"…, what do you think about …?"}],
+  quiz:[
+   {q:"In my ___, online training saves money.",o:["opinion","think","believe"],a:0,why:"In my opinion = ในความเห็นของฉัน หลัง my ต้องเป็นคำนาม"},
+   {q:"As far as I'm ___, we can't do that online.",o:["concern","concerned","concerning"],a:1,why:"As far as I'm concerned = เท่าที่ฉันเห็น"},
+   {q:"Which sentence gives an opinion with a reason?",o:["What do you think?","Can you give an example?","I think it's a good idea because it saves time."],a:2,why:"I think … because … ให้ทั้งความเห็นและเหตุผล"},
+   {q:"Which is the softest way to give an opinion?",o:["You're wrong about this.","That's the only answer.","It seems to me that we need more time."],a:2,why:"It seems to me that … เป็นการแสดงความเห็นแบบไม่ฟันธง ฟังนุ่มนวล"}]},
+
+ {id:"b28",theme:6,title:"Asking Questions",th:"ถามคำถามในที่ประชุม",
+  intro:"ถามคำถามในที่ประชุมอย่างสุภาพหลังมีคนนำเสนองาน ใช้ I have a question about …, Could you tell us …? และ I was wondering if you could …",
+  cast:{A:"Ben",B:"Suda"},
+  lines:[
+   ["B","That's the end of my presentation. Does anyone have any questions?","การนำเสนอของดิฉันจบแล้วค่ะ มีใครมีคำถามไหมคะ"],
+   ["A","Yes, I have a question about the online campaign. How many new customers did it bring in?","ครับ ผมมีคำถามเรื่องแคมเปญออนไลน์ครับ ได้ลูกค้าใหม่มากี่รายครับ"],
+   ["B","About two thousand in three months. Most of them came from social media.","ประมาณสองพันรายในสามเดือนค่ะ ส่วนใหญ่มาจากโซเชียลมีเดียค่ะ"],
+   ["A","That's impressive. Could you tell us how much the campaign cost?","น่าประทับใจมากครับ ช่วยบอกได้ไหมครับว่าแคมเปญใช้เงินไปเท่าไร"],
+   ["B","The total cost was around three hundred thousand baht.","ค่าใช้จ่ายรวมประมาณสามแสนบาทค่ะ"],
+   ["A","I was wondering if you could compare that with the TV advertising last year.","ผมสงสัยว่าคุณช่วยเทียบกับโฆษณาทางทีวีปีที่แล้วได้ไหมครับ"],
+   ["B","Good question. TV cost much more, but it brought in fewer new customers.","เป็นคำถามที่ดีค่ะ ทีวีแพงกว่ามาก แต่ได้ลูกค้าใหม่น้อยกว่าค่ะ"],
+   ["A","Do you have the exact figures for that?","มีตัวเลขที่แน่นอนไหมครับ"],
+   ["B","Not with me right now, but I'll check and get back to you this afternoon.","ตอนนี้ไม่มีติดมือค่ะ แต่ดิฉันจะตรวจสอบแล้วแจ้งกลับบ่ายนี้ค่ะ"],
+   ["A","Thanks. One more question, if I may. What are your plans for next quarter?","ขอบคุณครับ ขอถามอีกข้อนะครับ ไตรมาสหน้ามีแผนอะไรบ้างครับ"],
+   ["B","We'd like to try short videos and work with local influencers.","เราอยากลองทำวิดีโอสั้นและร่วมงานกับอินฟลูเอนเซอร์ท้องถิ่นค่ะ"],
+   ["A","Sounds promising. Thank you, Suda. That answers my questions.","ฟังดูมีอนาคตครับ ขอบคุณครับสุดา ตอบคำถามผมครบแล้วครับ"]],
+  vocab:[
+   ["campaign","แคมเปญ การรณรงค์ทางการตลาด","n.","The new campaign starts on the first of May.","แคมเปญใหม่เริ่มวันที่หนึ่งพฤษภาคม"],
+   ["figures","ตัวเลข (สถิติ)","n.","The sales figures for June look good.","ตัวเลขยอดขายเดือนมิถุนายนดูดี"],
+   ["quarter","ไตรมาส","n.","Profits went up in the second quarter.","กำไรเพิ่มขึ้นในไตรมาสที่สอง"],
+   ["presentation","การนำเสนอ","n.","She gave a short presentation on the new product.","เธอนำเสนอสินค้าใหม่สั้นๆ"],
+   ["compare","เปรียบเทียบ","v.","Let's compare the prices of the two suppliers.","มาเปรียบเทียบราคาของผู้ขายสองรายกัน"],
+   ["advertising","การโฆษณา","n.","We spend a lot on online advertising.","เราใช้เงินกับการโฆษณาออนไลน์เยอะ"],
+   ["get back to","ติดต่อกลับ (พร้อมคำตอบ)","phr.","I'll get back to you with the price tomorrow.","พรุ่งนี้ฉันจะติดต่อกลับเรื่องราคา"],
+   ["promising","มีแนวโน้มดี มีอนาคต","adj.","The first results look promising.","ผลลัพธ์แรกดูมีแนวโน้มดี"]],
+  phrases:[
+   ["Does anyone have any questions?","มีใครมีคำถามไหม","ผู้นำเสนอใช้เปิดช่วงถามตอบ"],
+   ["I have a question about …","ฉันมีคำถามเรื่อง…","บอกหัวข้อก่อนถาม ผู้ตอบจะเตรียมตัวได้"],
+   ["Could you tell us …?","ช่วยบอกพวกเราได้ไหมว่า…","หลัง tell us ใช้ลำดับประโยคบอกเล่า เช่น how much it cost"],
+   ["I was wondering if you could …","ไม่ทราบว่าคุณช่วย…ได้ไหม","สุภาพมาก เหมาะกับการถามผู้ใหญ่หรือลูกค้า"],
+   ["One more question, if I may.","ขออนุญาตถามอีกข้อ","ขอถามต่ออย่างสุภาพ"],
+   ["I'll get back to you.","จะแจ้งกลับนะ","ใช้เมื่อยังตอบไม่ได้ทันที"],
+   ["That answers my question.","ตอบคำถามฉันแล้ว","บอกว่าพอใจกับคำตอบ"]],
+  talk:[
+   {q:"How many new customers did the online campaign bring in?",a:"It brought in about two thousand new customers in three months."},
+   {q:"How much did the campaign cost?",a:"It cost around three hundred thousand baht."},
+   {q:"How was TV advertising different?",a:"TV cost much more, but it brought in fewer new customers."},
+   {q:"What will Suda do about the exact figures?",a:"She will check and get back to Ben this afternoon."}],
+  you:[
+   {th:"ถามคำถามหลังเพื่อนร่วมงานนำเสนองาน",starter:"Thank you. I have a question about … Could you tell us …?"},
+   {th:"ถามคำถามแบบสุภาพมากกับหัวหน้าหรือลูกค้า",starter:"I was wondering if you could …"}],
+  quiz:[
+   {q:"Could you tell us how much ___?",o:["did the campaign cost","cost the campaign","the campaign cost"],a:2,why:"คำถามซ้อนใน Could you tell us … ใช้ลำดับประโยคบอกเล่า: the campaign cost"},
+   {q:"I was ___ if you could send me the report.",o:["wonder","wondering","wondered"],a:1,why:"I was wondering if … = ไม่ทราบว่า… (was + -ing)"},
+   {q:"You can't answer a question now. What do you say?",o:["I'll get back to you.","That answers my question.","Does anyone have any questions?"],a:0,why:"I'll get back to you. = จะแจ้งกลับทีหลัง"},
+   {q:"Three months of a company's year is called a ___.",o:["quarter","campaign","figure"],a:0,why:"quarter = ไตรมาส (สามเดือน)"}]},
+
+ {id:"b29",theme:6,title:"Asking for Clarification",th:"ขอให้อธิบายเพิ่ม",
+  intro:"ขอให้อีกฝ่ายพูดซ้ำหรืออธิบายเพิ่มเมื่อฟังไม่ชัดหรือไม่เข้าใจ โดยเฉพาะในประชุมออนไลน์ ใช้ Could you repeat …?, What exactly do you mean by …? และ So you mean …?",
+  cast:{A:"Fon",B:"Hans"},
+  lines:[
+   ["B","From next month, all travel requests must go through the new system, and claims over five thousand baht need two signatures.","ตั้งแต่เดือนหน้า คำขอเดินทางทั้งหมดต้องผ่านระบบใหม่ และการเบิกเกินห้าพันบาทต้องมีลายเซ็นสองคนครับ"],
+   ["A","Sorry, Hans, you broke up a little. Could you repeat the last part?","ขอโทษค่ะฮันส์ เสียงขาดๆ ไปนิดหน่อย ช่วยพูดส่วนสุดท้ายอีกครั้งได้ไหมคะ"],
+   ["B","Sure. Claims over five thousand baht need two signatures.","ได้ครับ การเบิกเกินห้าพันบาทต้องมีลายเซ็นสองคนครับ"],
+   ["A","Thanks. What exactly do you mean by two signatures?","ขอบคุณค่ะ ที่ว่าลายเซ็นสองคนหมายความว่ายังไงคะ"],
+   ["B","Your manager signs first, and then someone from finance.","หัวหน้าของคุณเซ็นก่อน แล้วตามด้วยคนจากฝ่ายการเงินครับ"],
+   ["A","I see. So you mean a manager can't approve it alone anymore?","เข้าใจแล้วค่ะ หมายความว่าหัวหน้าอนุมัติคนเดียวไม่ได้แล้วใช่ไหมคะ"],
+   ["B","That's right. Not for amounts over that limit.","ถูกต้องครับ ไม่ได้สำหรับยอดที่เกินวงเงินนั้นครับ"],
+   ["A","Could you clarify one more thing? Does this include hotel bills?","ช่วยอธิบายอีกเรื่องได้ไหมคะ รวมค่าโรงแรมด้วยหรือเปล่าคะ"],
+   ["B","Yes, it covers all travel costs: flights, hotels and taxis.","ใช่ครับ ครอบคลุมค่าเดินทางทั้งหมด ทั้งตั๋วเครื่องบิน โรงแรม และแท็กซี่ครับ"],
+   ["A","Just to make sure I understand: everything over five thousand needs two signatures, right?","ขอทวนเพื่อให้แน่ใจว่าเข้าใจถูกนะคะ ทุกอย่างที่เกินห้าพันต้องมีลายเซ็นสองคน ใช่ไหมคะ"],
+   ["B","Exactly. I'll email you the new guidelines after the call.","ถูกต้องครับ หลังวางสายผมจะส่งแนวปฏิบัติใหม่ไปทางอีเมลครับ"],
+   ["A","That would be great. Thanks for explaining.","ดีเลยค่ะ ขอบคุณที่อธิบายนะคะ"]],
+  vocab:[
+   ["clarify","ทำให้ชัดเจน อธิบายเพิ่ม","v.","Could you clarify the payment terms?","ช่วยอธิบายเงื่อนไขการชำระเงินให้ชัดขึ้นได้ไหม"],
+   ["claim","การเบิกเงิน คำขอเบิก","n.","Send your taxi claim to finance with the receipt.","ส่งคำขอเบิกค่าแท็กซี่ให้ฝ่ายการเงินพร้อมใบเสร็จ"],
+   ["signature","ลายเซ็น","n.","This form needs your signature at the bottom.","แบบฟอร์มนี้ต้องมีลายเซ็นของคุณที่ด้านล่าง"],
+   ["limit","วงเงิน ขีดจำกัด","n.","The daily limit for meals is five hundred baht.","วงเงินค่าอาหารต่อวันคือห้าร้อยบาท"],
+   ["break up","(เสียง) ขาดๆ หายๆ","phr.v.","You're breaking up. Can you hear me?","เสียงคุณขาดๆ หายๆ ได้ยินฉันไหม"],
+   ["guidelines","แนวปฏิบัติ","n.","Please follow the new safety guidelines.","กรุณาปฏิบัติตามแนวปฏิบัติด้านความปลอดภัยใหม่"],
+   ["reimburse","จ่ายเงินคืน (ค่าใช้จ่ายที่สำรองไป)","v.","The company will reimburse your hotel costs.","บริษัทจะจ่ายค่าโรงแรมคืนให้คุณ"],
+   ["video call","การประชุม/โทรผ่านวิดีโอ","n.","We have a video call with the Singapore team at nine.","เรามีวิดีโอคอลกับทีมสิงคโปร์ตอนเก้าโมง"]],
+  phrases:[
+   ["Sorry, could you repeat that?","ขอโทษ ช่วยพูดอีกครั้งได้ไหม","ใช้เมื่อฟังไม่ทัน ไม่ถือว่าเสียมารยาท"],
+   ["You broke up a little.","เสียงขาดๆ ไปหน่อย","ใช้ในประชุมออนไลน์เมื่อสัญญาณไม่ดี"],
+   ["What exactly do you mean by …?","ที่ว่า…หมายความว่ายังไง","ถามความหมายของคำหรือส่วนที่ไม่ชัด"],
+   ["So you mean …?","หมายความว่า…ใช่ไหม","ทวนความเข้าใจด้วยคำของตัวเอง"],
+   ["Could you clarify …?","ช่วยอธิบาย…ให้ชัดขึ้นได้ไหม","สุภาพและเป็นทางการ"],
+   ["Just to make sure I understand, …","ขอทวนเพื่อให้แน่ใจว่าเข้าใจ…","ใช้ก่อนสรุปสิ่งที่ได้ยิน ป้องกันความเข้าใจผิด"],
+   ["Thanks for explaining.","ขอบคุณที่อธิบาย","ปิดท้ายหลังได้คำตอบ"]],
+  talk:[
+   {q:"Why did Fon ask Hans to repeat?",a:"She asked him to repeat because the call broke up a little."},
+   {q:"Who signs a claim over five thousand baht?",a:"The manager signs first, and then someone from finance signs."},
+   {q:"Does the new rule include hotel bills?",a:"Yes, it covers all travel costs, including flights, hotels and taxis."},
+   {q:"What will Hans do after the call?",a:"He will email Fon the new guidelines."}],
+  you:[
+   {th:"ขอให้ผู้พูดในประชุมออนไลน์พูดซ้ำ",starter:"Sorry, you broke up a little. Could you repeat …?"},
+   {th:"ทวนความเข้าใจเรื่องกฎใหม่ที่ทำงานของคุณ",starter:"Just to make sure I understand, …, right?"},
+   {th:"ถามความหมายของคำที่หัวหน้าใช้แล้วคุณไม่เข้าใจ",starter:"What exactly do you mean by …?"}],
+  quiz:[
+   {q:"What exactly do you mean ___ two signatures?",o:["with","about","by"],a:2,why:"What do you mean by …? = ที่ว่า…หมายความว่ายังไง"},
+   {q:"The line is bad on a video call. What do you say?",o:["Sorry, you broke up. Could you repeat that?","That's a good point.","Over to you."],a:0,why:"broke up = เสียงขาด แล้วขอให้พูดซ้ำ"},
+   {q:"Could you ___ one more thing?",o:["clear","clarify","clean"],a:1,why:"clarify = อธิบายให้ชัดเจน"},
+   {q:"Which sentence checks your understanding?",o:["Exactly.","Thanks for explaining.","So you mean the manager can't approve it alone?"],a:2,why:"So you mean …? ใช้ทวนความเข้าใจ"}]},
+
+ {id:"b30",theme:6,title:"Agreeing and Disagreeing",th:"เห็นด้วยและไม่เห็นด้วย",
+  intro:"เห็นด้วยและไม่เห็นด้วยในที่ประชุมอย่างสุภาพโดยไม่เสียบรรยากาศ ใช้ I completely agree, I see your point, but … และ I'm afraid I don't agree",
+  cast:{A:"Narin",B:"Emma"},
+  lines:[
+   ["B","So we need to choose a packaging supplier. I think we should go with GreenBox. Their price is the lowest.","เราต้องเลือกผู้ขายบรรจุภัณฑ์ค่ะ ดิฉันคิดว่าเราควรเลือกกรีนบ็อกซ์ ราคาถูกที่สุดค่ะ"],
+   ["A","I agree that the price is good, but I'm worried about their delivery times.","ผมเห็นด้วยว่าราคาดีครับ แต่ผมกังวลเรื่องระยะเวลาจัดส่งของเขาครับ"],
+   ["B","Why is that?","ทำไมล่ะคะ"],
+   ["A","Last year they delivered late three times. That's a big risk before our product launch.","ปีที่แล้วเขาส่งของช้าสามครั้งครับ เป็นความเสี่ยงใหญ่ก่อนเปิดตัวสินค้าของเราครับ"],
+   ["B","I see your point, but they've hired a new logistics team since then.","ดิฉันเข้าใจประเด็นของคุณค่ะ แต่หลังจากนั้นเขาจ้างทีมโลจิสติกส์ใหม่แล้วค่ะ"],
+   ["A","I'm afraid I don't agree. A new team doesn't guarantee better service.","เสียใจครับ ผมไม่เห็นด้วย ทีมใหม่ไม่ได้รับประกันว่าบริการจะดีขึ้นครับ"],
+   ["B","That's true. So what would you suggest?","ก็จริงค่ะ แล้วคุณจะแนะนำยังไงคะ"],
+   ["A","How about PackPro? They cost a bit more, but they've never missed a deadline.","แพ็กโปรดีไหมครับ แพงกว่านิดหน่อย แต่ไม่เคยส่งช้ากว่ากำหนดเลยครับ"],
+   ["B","Hmm, I'm not so sure. Our budget is already tight.","อืม ดิฉันไม่ค่อยแน่ใจค่ะ งบเราตึงอยู่แล้วค่ะ"],
+   ["A","Then maybe we could give GreenBox a trial order first and see.","งั้นเราอาจสั่งทดลองกับกรีนบ็อกซ์ก่อนแล้วดูผลดีไหมครับ"],
+   ["B","Now that's a great idea. I completely agree.","นั่นเป็นความคิดที่ดีมากค่ะ ดิฉันเห็นด้วยทุกประการค่ะ"],
+   ["A","Good. If they deliver on time, we can sign a full contract.","ดีครับ ถ้าเขาส่งตรงเวลา เราก็เซ็นสัญญาเต็มรูปแบบได้ครับ"],
+   ["B","Exactly. Let's put that in the minutes.","ใช่เลยค่ะ บันทึกไว้ในรายงานการประชุมเลยค่ะ"]],
+  vocab:[
+   ["packaging","บรรจุภัณฑ์","n.","The new packaging uses less plastic.","บรรจุภัณฑ์ใหม่ใช้พลาสติกน้อยลง"],
+   ["risk","ความเสี่ยง","n.","There's a risk that the shipment will be late.","มีความเสี่ยงที่สินค้าจะมาถึงช้า"],
+   ["guarantee","รับประกัน","v.","We can't guarantee delivery before Friday.","เรารับประกันการส่งของก่อนวันศุกร์ไม่ได้"],
+   ["deadline","กำหนดส่ง เส้นตาย","n.","The deadline for the report is next Monday.","กำหนดส่งรายงานคือวันจันทร์หน้า"],
+   ["trial order","คำสั่งซื้อทดลอง","n.","We placed a small trial order to test the quality.","เราสั่งซื้อทดลองจำนวนน้อยเพื่อทดสอบคุณภาพ"],
+   ["go with","เลือก (ตัวเลือกหนึ่ง)","phr.v.","After a long talk, we decided to go with the cheaper plan.","หลังคุยกันนาน เราตัดสินใจเลือกแผนที่ถูกกว่า"],
+   ["minutes","รายงานการประชุม","n.","Nan will take the minutes at today's meeting.","น่านจะจดรายงานการประชุมวันนี้"],
+   ["tight","(งบ/เวลา) ตึง จำกัด","adj.","The schedule is tight, so we can't make any mistakes.","กำหนดการตึงมาก เราจึงพลาดไม่ได้เลย"]],
+  phrases:[
+   ["I completely agree.","เห็นด้วยทุกประการ","เห็นด้วยแบบหนักแน่น"],
+   ["I agree that …, but …","เห็นด้วยว่า… แต่…","เห็นด้วยบางส่วนก่อนแย้ง ฟังนุ่มนวล"],
+   ["I see your point, but …","เข้าใจประเด็นของคุณ แต่…","ยอมรับความเห็นอีกฝ่ายก่อนแย้ง"],
+   ["I'm afraid I don't agree.","เสียใจ ฉันไม่เห็นด้วย","I'm afraid ทำให้การไม่เห็นด้วยฟังสุภาพขึ้น"],
+   ["I'm not so sure.","ฉันไม่ค่อยแน่ใจ","ไม่เห็นด้วยแบบอ่อนๆ"],
+   ["That's true.","ก็จริง","ยอมรับข้อเท็จจริงที่อีกฝ่ายพูด"],
+   ["What would you suggest?","คุณจะแนะนำอะไร","ชวนอีกฝ่ายเสนอทางออกแทนการเถียงต่อ"]],
+  talk:[
+   {q:"Why does Emma want GreenBox?",a:"She wants GreenBox because their price is the lowest."},
+   {q:"Why is Narin worried about GreenBox?",a:"He's worried because they delivered late three times last year."},
+   {q:"Why does Narin suggest PackPro?",a:"He suggests PackPro because they have never missed a deadline."},
+   {q:"What do they decide in the end?",a:"They decide to give GreenBox a trial order first. If they deliver on time, they will sign a full contract."}],
+  you:[
+   {th:"เห็นด้วยบางส่วนแล้วแย้งความเห็นของเพื่อนร่วมงานอย่างสุภาพ",starter:"I see your point, but …"},
+   {th:"บอกว่าไม่เห็นด้วยกับแผนหนึ่งในที่ทำงาน พร้อมเหตุผล",starter:"I'm afraid I don't agree because …"}],
+  quiz:[
+   {q:"I see your ___, but the price is too high.",o:["point","mind","think"],a:0,why:"I see your point = เข้าใจประเด็นของคุณ"},
+   {q:"Which sentence disagrees politely?",o:["You're totally wrong.","I'm afraid I don't agree.","No way."],a:1,why:"I'm afraid I don't agree. สุภาพที่สุด"},
+   {q:"Which sentence shows strong agreement?",o:["I'm not so sure.","I see your point, but …","I completely agree."],a:2,why:"I completely agree. = เห็นด้วยทุกประการ"},
+   {q:"The written record of a meeting is called the ___.",o:["minutes","seconds","hours"],a:0,why:"minutes = รายงานการประชุม"}]}
+);
+/* ---------- business English content end ---------- */
+
+/* ---------- business English UI ---------- */
+// List by theme (#practice-biz), a lesson page with tabs (#practice-biz.b1), and a review quiz per theme (#practice-biz.r1).
+// Role-play practice: pick a part, the app speaks the other part, your lines show Thai first; the mic scores you in the app.
+let BZ=null;
+BIZ.forEach(b=>b.vocab.forEach(w=>{if(!WORDS[w[0]]) WORDS[w[0]]={en:w[0],th:w[1],pos:w[2],ex:w[3],exTh:w[4],unit:"biz-"+b.id}}));
+function bizStat(){const s=stat("biz"); if(!s.done||typeof s.done!=="object") s.done={}; return s}
+function viewBizList(){
+  const st=bizStat();
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">Business English</h1><p class="lede">ภาษาอังกฤษในที่ทำงาน '+BIZ.length+' บท แต่ละบทมีบทสนทนา (role play) คำศัพท์ ประโยคสำคัญ คำถามท้ายบท และโหมดฝึกเล่นบทบาทที่แอปพูดอีกฝ่ายให้ ท้ายแต่ละหมวดมีแบบทดสอบทบทวน</p>';
+  BIZ_THEMES.forEach(t=>{const ls=BIZ.filter(b=>b.theme===t[0]); if(!ls.length) return;
+    h+='<section class="section"><h2 class="h3"><span lang="en">'+esc(t[1])+'</span> <span class="muted" style="font-weight:400">· '+esc(t[2])+'</span></h2><div class="lessons" style="margin-top:10px">'
+     +ls.map(b=>{const n=BIZ.indexOf(b)+1, sc=st.done[b.id]; return '<button class="lrow" data-act="pgo" data-id="biz.'+b.id+'"><span class="lnum">'+n+'</span><span class="ltitle"><b lang="en">'+esc(b.title)+'</b><small>'+esc(b.th)+(sc!=null?' · แบบทดสอบ '+sc+'%':'')+'</small></span></button>'}).join("")
+     +'<button class="lrow" data-act="pgo" data-id="biz.r'+t[0]+'"><span class="lnum">★</span><span class="ltitle"><b>ทบทวนหมวด</b><small>Performance Review'+(st.done["r"+t[0]]!=null?' · '+st.done["r"+t[0]]+'%':'')+'</small></span></button></div></section>'});
+  return h;
+}
+function bizInit(id){if(!BZ||BZ.id!==id) BZ={id,tab:"rp",th:false,role:null,step:0,shown:false,ans:{},open:{}}; return BZ}
+function bizQuizHTML(qs){
+  const done=qs.every((_,i)=>BZ.ans[i]!=null), right=qs.filter((q,i)=>BZ.ans[i]===q.a).length;
+  return qs.map((q,i)=>{const pick=BZ.ans[i];
+    return '<div class="card" style="margin-top:10px"><p lang="en"><b>'+(i+1)+'.</b> '+esc(q.q)+'</p><div class="stack" style="gap:6px;margin-top:8px">'
+      +q.o.map((o,k)=>'<button class="btn'+(pick!=null&&k===q.a?' btn-primary':'')+'" data-act="bz-ans" data-q="'+i+'" data-k="'+k+'"'+(pick!=null?' disabled':'')+' lang="en">'+esc(o)+(pick===k&&k!==q.a?' ✗':'')+(pick!=null&&k===q.a?' ✓':'')+'</button>').join("")
+      +'</div>'+(pick!=null?'<p class="muted" style="margin-top:8px">'+(pick===q.a?'ถูกต้อง ':'ยังไม่ถูก ')+esc(q.why||"")+'</p>':'')+'</div>'}).join("")
+    +(done?'<div class="card" style="margin-top:12px"><h2 class="h2">ถูก '+right+'/'+qs.length+'</h2><button class="btn btn-primary" style="margin-top:10px" data-act="bz-retry">ทำอีกครั้ง</button></div>':'');
+}
+function viewBizReview(n){
+  const t=BIZ_THEMES.find(x=>x[0]===n); if(!t) return viewBizList();
+  bizInit("r"+n); if(!BZ.qs){const all=[]; BIZ.filter(b=>b.theme===n).forEach(b=>b.quiz.forEach(q=>all.push(q))); BZ.qs=shuffle(all).slice(0,12)}
+  const ph=[]; BIZ.filter(b=>b.theme===n).forEach(b=>b.phrases.forEach(p=>ph.push(p)));
+  return pBack("biz","Business English")+'<h1 class="h2" style="margin-top:8px">ทบทวนหมวด <span lang="en">'+esc(t[1])+'</span></h1><p class="lede">ข้อสอบสุ่มจากทุกบทในหมวด ทำได้ 80% ขึ้นไปถือว่าผ่านหมวดนี้</p>'
+   +bizQuizHTML(BZ.qs)
+   +'<section class="section"><h2 class="h3">ประโยคสำคัญของหมวดนี้</h2><ul class="sent-list">'+ph.map(p=>'<li>'+sayBtn(p[0])+'<div><p lang="en">'+esc(p[0])+'</p><p class="muted">'+esc(p[1])+'</p></div>'+sentBtn(p[0],p[1],"biz")+'</li>').join("")+'</ul></section>';
+}
+function viewBiz(id){
+  if(/^r\d$/.test(id)) return viewBizReview(+id.slice(1));
+  const b=BIZ.find(x=>x.id===id); if(!b) return viewBizList();
+  bizInit(id);
+  const tabs=[["rp","บทสนทนา"],["vocab","คำศัพท์"],["phr","ประโยคสำคัญ"],["talk","ถาม-ตอบ"],["play","ฝึกบทบาท"],["quiz","แบบทดสอบ"]];
+  let h=pBack("biz","Business English")+'<p class="eyebrow" style="margin-top:8px">'+esc(BIZ_THEMES[b.theme-1][1])+' · บทที่ '+(BIZ.indexOf(b)+1)+'</p><h1 class="h2" lang="en">'+esc(b.title)+'</h1><p class="muted">'+esc(b.th)+'</p><p style="margin-top:8px">'+esc(b.intro)+'</p>'
+   +'<div class="tabs" role="group" style="margin-top:12px;flex-wrap:wrap">'+tabs.map(t=>'<button data-act="bz-tab" data-t="'+t[0]+'" aria-pressed="'+(BZ.tab===t[0])+'">'+t[1]+'</button>').join("")+'</div>';
+  if(BZ.tab==="rp") h+='<div class="row" style="margin-top:12px"><button class="btn btn-primary" data-act="bz-playall">'+ICON.say+'ฟังทั้งบทสนทนา</button><button class="btn" data-act="bz-th">'+(BZ.th?"ซ่อนคำแปล":"แสดงคำแปล")+'</button></div>'
+    +'<div class="card" style="margin-top:12px"><ul class="dlg">'+b.lines.map((l,i)=>'<li class="'+l[0]+'" id="bz-'+i+'"><span class="who">'+esc(b.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p>'+(BZ.th?'<p class="tr">'+esc(l[2])+'</p>':'')+pronResult(l[1])+'</div><div class="says">'+sayBtn(l[1])+micBtn(l[1])+sentBtn(l[1],l[2],"biz")+'</div></li>').join("")+'</ul></div>';
+  if(BZ.tab==="vocab"){const n=b.vocab.filter(w=>S.words[w[0]]).length;
+    h+='<div class="row" style="margin-top:12px">'+(n<b.vocab.length?'<button class="btn btn-primary" data-act="bz-words">เพิ่มคำศัพท์บทนี้เข้าทบทวน</button>':'<span class="muted">คำศัพท์บทนี้อยู่ในคลังทบทวนครบแล้ว</span>')+'</div>'
+     +'<ul class="sent-list">'+b.vocab.map(w=>'<li>'+sayBtn(w[0])+'<div><p lang="en"><b>'+esc(w[0])+'</b> <span class="muted mono">'+esc(w[2])+'</span></p><p>'+esc(w[1])+'</p><p class="muted" lang="en" style="font-size:14px">'+esc(w[3])+'</p><p class="muted" style="font-size:14px">'+esc(w[4])+'</p></div></li>').join("")+'</ul>'}
+  if(BZ.tab==="phr") h+='<ul class="sent-list" style="margin-top:8px">'+b.phrases.map(p=>'<li>'+sayBtn(p[0])+'<div><p lang="en"><b>'+esc(p[0])+'</b></p><p>'+esc(p[1])+'</p>'+(p[2]?'<p class="muted" style="font-size:14px">'+esc(p[2])+'</p>':'')+'</div>'+sentBtn(p[0],p[1],"biz")+'</li>').join("")+'</ul>';
+  if(BZ.tab==="talk") h+='<section class="section"><h2 class="h3">ถามเกี่ยวกับบทสนทนา</h2><p class="muted" style="margin-top:4px">ลองตอบด้วยปากก่อน แล้วแตะเพื่อดูคำตอบตัวอย่าง</p>'
+    +b.talk.map((q,i)=>'<div class="card" style="margin-top:10px"><p lang="en"><b>'+esc(q.q)+'</b> '+sayBtn(q.q)+'</p>'+(BZ.open[i]?'<p lang="en" style="margin-top:8px">'+esc(q.a)+'</p><div class="row" style="margin-top:6px">'+sayBtn(q.a,"ฟังคำตอบ")+micBtn(q.a)+'</div>'+pronResult(q.a):'<button class="btn btn-sm" style="margin-top:8px" data-act="bz-open" data-i="'+i+'">ดูคำตอบตัวอย่าง</button>')+'</div>').join("")+'</section>'
+    +'<section class="section"><h2 class="h3">พูดเรื่องของคุณเอง</h2>'+b.you.map(y=>'<div class="card" style="margin-top:10px"><p>'+esc(y.th)+'</p><p lang="en" class="muted" style="margin-top:6px">'+esc(y.starter)+'</p></div>').join("")+'</section>';
+  if(BZ.tab==="play"){
+    if(!BZ.role) h+='<div class="card" style="margin-top:12px"><p><b>เลือกบทที่คุณจะเล่น</b></p><p class="muted" style="margin-top:4px">แอปจะพูดบทของอีกฝ่าย บทของคุณขึ้นเป็นภาษาไทยก่อน ให้พูดเป็นภาษาอังกฤษ แล้วกดดูประโยคที่ถูก'+(NB?' กดไมค์ให้แอปฟังและให้คะแนนได้':'')+'</p><div class="row" style="margin-top:10px">'+["A","B"].map(r=>'<button class="btn btn-primary" data-act="bz-role" data-r="'+r+'">เล่นเป็น '+esc(b.cast[r])+'</button>').join("")+'</div></div>';
+    else{const me=BZ.role, past=b.lines.slice(0,BZ.step), cur=b.lines[BZ.step];
+      h+='<div class="card" style="margin-top:12px"><ul class="dlg">'+past.map(l=>'<li class="'+l[0]+'"><span class="who">'+esc(l[0]===me?"คุณ ("+b.cast[l[0]]+")":b.cast[l[0]])+'</span><div><p class="line" lang="en">'+esc(l[1])+'</p></div></li>').join("")+'</ul>';
+      if(!cur) h+='<p style="margin-top:12px"><b>จบบทแล้ว เก่งมาก</b></p><div class="row" style="margin-top:8px"><button class="btn btn-primary" data-act="bz-role" data-r="'+(me==="A"?"B":"A")+'">สลับไปเล่นเป็น '+esc(b.cast[me==="A"?"B":"A"])+'</button><button class="btn" data-act="bz-role" data-r="'+me+'">เล่นบทเดิมอีกครั้ง</button></div>';
+      else if(cur[0]!==me) h+='<div class="bz-turn"><p class="muted">'+esc(b.cast[cur[0]])+' พูด:</p><p class="line" lang="en" style="font-weight:600">'+esc(cur[1])+'</p>'+(BZ.th?'<p class="tr">'+esc(cur[2])+'</p>':'')+'<div class="row" style="margin-top:8px">'+sayBtn(cur[1],"ฟังอีกครั้ง")+'<button class="btn btn-primary" data-act="bz-next">ต่อไป</button><button class="btn btn-sm btn-ghost" data-act="bz-th">'+(BZ.th?"ซ่อนคำแปล":"ดูคำแปล")+'</button></div></div>';
+      else h+='<div class="bz-turn you"><p class="muted">ตาคุณ พูดประโยคนี้เป็นภาษาอังกฤษ:</p><p style="font-size:18px;margin-top:4px">'+esc(cur[2])+'</p>'
+        +(BZ.shown?'<p class="line" lang="en" style="font-weight:600;margin-top:8px">'+esc(cur[1])+'</p>'+pronResult(cur[1]):'')
+        +'<div class="row" style="margin-top:8px">'+(BZ.shown?sayBtn(cur[1],"ฟังประโยค"):'<button class="btn" data-act="bz-show">ดูประโยคที่ถูก</button>')+micBtn(cur[1])+'<button class="btn btn-primary" data-act="bz-next">ต่อไป</button></div></div>';
+      h+='</div><button class="btn btn-ghost" style="margin-top:10px" data-act="bz-role" data-r="">เลือกบทใหม่</button>'}
+  }
+  if(BZ.tab==="quiz") h+=bizQuizHTML(b.quiz);
+  return h;
+}
+async function bizSpeakTurn(){
+  const b=BIZ.find(x=>x&&BZ&&x.id===BZ.id); if(!b||!BZ.role) return;
+  const cur=b.lines[BZ.step]; if(cur&&cur[0]!==BZ.role) await Speech.say(cur[1],{voice:cur[0]==="A"?0:1});
+}
+const BZACT={
+  "bz-tab":t=>{BZ.tab=t.dataset.t; Speech.stop(); render()},
+  "bz-th":()=>{BZ.th=!BZ.th; render()},
+  "bz-open":t=>{BZ.open[t.dataset.i]=true; render()},
+  "bz-words":()=>{const b=BIZ.find(x=>x.id===BZ.id); let n=0; b.vocab.forEach(w=>{if(!S.words[w[0]]){S.words[w[0]]={b:0,due:Date.now()}; n++}}); save(); toast("เพิ่ม "+n+" คำเข้าทบทวนแล้ว"); render()},
+  "bz-playall":async()=>{const b=BIZ.find(x=>x.id===BZ.id), id=BZ.id; Speech.stop();
+    for(let i=0;i<b.lines.length;i++){if(!BZ||BZ.id!==id||BZ.tab!=="rp"||route.id!=="biz."+id) return; document.querySelectorAll(".dlg li").forEach(x=>x.classList.remove("playing")); const li=$("#bz-"+i); if(li) li.classList.add("playing"); await Speech.say(b.lines[i][1],{voice:b.lines[i][0]==="A"?0:1})}},
+  "bz-role":t=>{BZ.role=t.dataset.r||null; BZ.step=0; BZ.shown=false; render(); bizSpeakTurn()},
+  "bz-show":()=>{BZ.shown=true; render()},
+  "bz-next":()=>{BZ.step++; BZ.shown=false; Speech.stop(); render(); bizSpeakTurn()},
+  "bz-ans":t=>{const i=+t.dataset.q; if(BZ.ans[i]!=null) return; BZ.ans[i]=+t.dataset.k;
+    const qs=BZ.qs||(BIZ.find(x=>x.id===BZ.id)||{}).quiz||[];
+    if(qs.every((_,k)=>BZ.ans[k]!=null)){const pct=Math.round(100*qs.filter((q,k)=>BZ.ans[k]===q.a).length/qs.length), st=bizStat(); st.done[BZ.id]=Math.max(st.done[BZ.id]||0,pct); S.xp+=Math.round(pct/20); markDay(); save()}
+    render()},
+  "bz-retry":()=>{BZ.ans={}; if(BZ.qs) BZ.qs=null; render(); window.scrollTo(0,0)}
+};
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -16015,7 +17560,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
