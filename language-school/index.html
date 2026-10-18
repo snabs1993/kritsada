@@ -822,7 +822,7 @@ th,td{border-bottom:.5px solid var(--sep)}
     <nav class="nav" aria-label="เมนูหลัก">
       <button data-act="go" data-to="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>หน้าแรก</button>
       <button data-act="go" data-to="course"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20M9 8h7"/></svg>หลักสูตร</button>
-      <button data-act="go" data-to="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg>คำศัพท์</button>
+      <button data-act="go" data-to="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg>ทบทวน</button>
       <button data-act="go" data-to="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>ฝึกฝน</button>
       <button data-act="go" data-to="shadow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10v4M7 7v10M11 4v16M15 8v8M19 6v12M23 10v4"/></svg><span class="nl-lg">Shadowing</span><span class="nl-sm">พูดตาม</span></button>
       <button data-act="go" data-to="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg>ข้อสอบ</button>
@@ -17410,7 +17410,7 @@ function viewReview(){
       +'</div><button class="btn btn-ghost" style="margin-top:14px" data-act="rv-end">พอแค่นี้ก่อน</button></div>';
   }
   const due=dueWords();
-  const head='<h1 class="h1">ทบทวนคำศัพท์</h1><p class="lede">ระบบนัดทบทวนแบบเว้นระยะ คำที่จำได้แม่นจะเว้นห่างขึ้นเรื่อยๆ (1, 2, 4, 7, 15, 30 วัน) คำที่ลืมจะกลับมาเร็วขึ้น</p>';
+  const head='<h1 class="h1">ทบทวนคำศัพท์และประโยค</h1><p class="lede">ระบบนัดทบทวนแบบเว้นระยะ คำที่จำได้แม่นจะเว้นห่างขึ้นเรื่อยๆ (1, 2, 4, 7, 15, 30 วัน) คำที่ลืมจะกลับมาเร็วขึ้น</p>';
   if(!keys.length) return head+'<div class="card" style="margin-top:20px"><p><b>ยังไม่มีคำศัพท์ให้ทบทวน</b></p><p class="muted" style="margin-top:4px">เริ่มเรียนบทแรก คำศัพท์ในบทจะถูกเพิ่มที่นี่อัตโนมัติ</p><button class="btn btn-primary" style="margin-top:12px" data-act="open" data-id="'+COURSE[nextIdx()].id+'">เข้าห้องเรียน</button></div>'+sentSectionHTML()+decksHTML();
   const mastered=keys.filter(k=>S.words[k].b>=4).length, hard=hardWords(), easyN=keys.filter(k=>S.words[k].easy).length;
   const rows=keys.slice().sort((a,b)=>(S.words[a].easy?1:0)-(S.words[b].easy?1:0)||S.words[a].due-S.words[b].due).map(k=>{
