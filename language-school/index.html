@@ -17073,6 +17073,44 @@ function newWordsHTML(){
    +'<button class="btn btn-sm" style="margin-top:10px" data-act="rv-more">ขอคำใหม่เพิ่มอีก 10 คำตอนนี้</button></div>';
 }
 
+/* ---------- back up / move progress ---------- */
+// Progress lives in one browser or one phone. A backup code is the whole of S as text the learner can copy into
+// notes or a chat: "EC1:" + base64 of deflate-compressed JSON where CompressionStream exists, else "EC0:" + base64 JSON.
+// Restoring replaces this device's progress (after a confirm step) and goes through migrate() like a normal load.
+let BKP={code:"",busy:false,ask:false,err:""};
+function bkB64(bytes){let s=""; for(let i=0;i<bytes.length;i+=0x8000) s+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000)); return btoa(s)}
+function bkBytes(b64){const s=atob(b64), a=new Uint8Array(s.length); for(let i=0;i<s.length;i++) a[i]=s.charCodeAt(i); return a}
+async function bkStream(bytes,kind,compress){const cs=compress?new CompressionStream(kind):new DecompressionStream(kind); const out=await new Response(new Blob([bytes]).stream().pipeThrough(cs)).arrayBuffer(); return new Uint8Array(out)}
+async function bkMake(){
+  const raw=new TextEncoder().encode(JSON.stringify(S));
+  if(typeof CompressionStream==="function"){try{return "EC1:"+bkB64(await bkStream(raw,"deflate-raw",true))}catch(e){}}
+  return "EC0:"+bkB64(raw);
+}
+async function bkRead(code){
+  code=String(code||"").replace(/\s+/g,""); const m=code.match(/^EC([01]):([A-Za-z0-9+/=]+)$/); if(!m) throw new Error("format");
+  let bytes=bkBytes(m[2]); if(m[1]==="1") bytes=await bkStream(bytes,"deflate-raw",false);
+  const s=JSON.parse(new TextDecoder().decode(bytes)); if(!s||typeof s!=="object"||s.v!==1) throw new Error("data");
+  return s;
+}
+function bkSummary(s){const L=s.lessons||{}; return Object.keys(L).filter(k=>L[k]&&L[k].done).length+" บทที่ผ่าน · "+Object.keys(s.words||{}).length+" คำศัพท์ · "+Object.keys(s.sents||{}).length+" ประโยค · "+(s.xp||0)+" คะแนน"}
+function backupHTML(){
+  return '<section class="section"><h2 class="h3">สำรองและย้ายความคืบหน้า</h2><p class="muted" style="margin-top:4px">ความคืบหน้าเก็บไว้ในเครื่องนี้เท่านั้น กด “สร้างรหัสสำรอง” แล้วคัดลอกไปเก็บในโน้ตหรือส่ง LINE หาตัวเอง ถ้าข้อมูลหายหรืออยากย้ายไปอีกเครื่อง เอารหัสมาวางที่ “กู้คืน”</p>'
+   +'<div class="card" style="margin-top:12px"><p><b>สำรองข้อมูล</b> <span class="muted">· ตอนนี้มี '+esc(bkSummary(S))+'</span></p>'
+   +(BKP.code?'<textarea id="bk-code" class="dict-in" readonly rows="4" style="width:100%;margin-top:8px;font-family:var(--f-mono,monospace);font-size:12px">'+esc(BKP.code)+'</textarea><div class="row" style="margin-top:8px"><button class="btn btn-primary" data-act="bk-copy">คัดลอกรหัส</button><span class="muted" style="font-size:13.5px">รหัสยาว '+BKP.code.length.toLocaleString()+' ตัวอักษร</span></div>'
+     :'<button class="btn btn-primary" style="margin-top:10px" data-act="bk-make"'+(BKP.busy?' disabled':'')+'>'+(BKP.busy?'กำลังสร้าง…':'สร้างรหัสสำรอง')+'</button>')+'</div>'
+   +'<div class="card" style="margin-top:12px"><p><b>กู้คืน / ย้ายมาจากเครื่องอื่น</b></p><textarea id="bk-in" class="dict-in" rows="3" style="width:100%;margin-top:8px;font-size:12px" placeholder="วางรหัสสำรองที่นี่ (ขึ้นต้นด้วย EC1: หรือ EC0:)" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>'
+   +(BKP.err?'<p class="pen" style="margin-top:6px">'+esc(BKP.err)+'</p>':'')
+   +(BKP.ask?'<p style="margin-top:8px">รหัสนี้มี <b>'+esc(bkSummary(BKP.ask))+'</b><br><span class="pen">ความคืบหน้าในเครื่องนี้จะถูกแทนที่ทั้งหมด</span></p><div class="row" style="margin-top:8px"><button class="btn btn-danger" data-act="bk-yes">ยืนยันกู้คืน</button><button class="btn btn-ghost" data-act="bk-no">ยกเลิก</button></div>'
+     :'<button class="btn" style="margin-top:8px" data-act="bk-check">กู้คืน</button>')+'</div></section>';
+}
+const BKACT={
+  "bk-make":async()=>{BKP.busy=true; render(); try{BKP.code=await bkMake()}catch(e){toast("สร้างรหัสไม่สำเร็จ ลองใหม่อีกครั้ง")} BKP.busy=false; render()},
+  "bk-copy":async()=>{const t=$("#bk-code"); try{await navigator.clipboard.writeText(BKP.code); toast("คัดลอกรหัสแล้ว เอาไปวางเก็บในโน้ตหรือ LINE")}catch(e){if(t){t.focus(); t.select()} toast("กดค้างที่ช่องรหัสแล้วเลือก “คัดลอก”")}},
+  "bk-check":async()=>{const v=($("#bk-in")||{}).value; BKP.err=""; BKP.ask=false; try{BKP.ask=await bkRead(v); BKP.pending=v}catch(e){BKP.err="รหัสไม่ถูกต้อง ตรวจว่าคัดลอกมาครบทั้งรหัส (ขึ้นต้นด้วย EC1: หรือ EC0:)"} render(); const i=$("#bk-in"); if(i&&BKP.pending) i.value=BKP.pending},
+  "bk-yes":()=>{if(!BKP.ask) return; S=migrate(BKP.ask); BKP={code:"",busy:false,ask:false,err:""}; save(); toast("กู้คืนความคืบหน้าเรียบร้อยแล้ว"); render()},
+  "bk-no":()=>{BKP.ask=false; BKP.pending=""; render()}
+};
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -17489,7 +17527,7 @@ function viewReport(){
     }).join("")+'</div>'
     :'<div class="card"><p>ผ่านทุกบทในระดับเดียวกันครบ 4 บท เพื่อรับประกาศนียบัตรระดับนั้น</p><div class="stack" style="margin-top:14px;gap:10px">'+LEVELS.map(lv=>{const us=coreOf(lv.n),d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;return '<div><div class="row" style="justify-content:space-between"><span>'+lv.code+' <span lang="en">'+esc(lv.name)+'</span></span><span class="muted">'+d+'/4</span></div><div class="bar"><i style="width:'+(d/4*100)+'%"></i></div></div>'}).join("")+'</div></div>')
    +'</section>'
-   +xpChartHTML()+calendarHTML()+badgesHTML()+settingsHTML()
+   +xpChartHTML()+calendarHTML()+badgesHTML()+settingsHTML()+backupHTML()
    +otaSection()
    +'<section class="section"><h2 class="h3">เริ่มเรียนใหม่ทั้งหมด</h2><p class="muted" style="margin-top:4px">ลบคะแนน คำศัพท์ และประวัติการเรียนทั้งหมด</p>'
    +(resetAsk?'<div class="row" style="margin-top:10px"><span class="pen">ลบจริงหรือไม่ ย้อนกลับไม่ได้</span><button class="btn btn-danger" data-act="reset-yes">ลบทั้งหมด</button><button class="btn btn-ghost" data-act="reset-no">ยกเลิก</button></div>'
@@ -17586,7 +17624,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
