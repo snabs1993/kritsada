@@ -7255,10 +7255,16 @@ let S=fresh();
 try{const raw=localStorage.getItem(KEY); if(raw) S=migrate(JSON.parse(raw));}catch(e){}
 const LOADED_AT=S.updatedAt||0; // compare remote copies with what was on disk, not with saves made while booting
 const cloud={ref:null,timer:null,writing:false,again:false,on:false};
+// auto sync through the learner's own GitHub (see "auto sync between devices"); kept outside S so backups never carry the key
+const GS_KEY="eng-class-sync";
+let GS={token:"",gist:"",login:"",base:null,last:0};
+try{const g=JSON.parse(localStorage.getItem(GS_KEY)||"null"); if(g&&g.token) GS=Object.assign(GS,g)}catch(e){}
+const GSU={busy:false,err:"",timer:null,again:false,force:false};
 function save(){
   trackXp(); S.updatedAt=Date.now();
   try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
   if(cloud.ref){clearTimeout(cloud.timer);cloud.timer=setTimeout(flushCloud,1200)}
+  gsSoon();
   if(NB){clearTimeout(save.nt);save.nt=setTimeout(()=>{NB.save(JSON.stringify(S)).catch(()=>{})},300)}
 }
 async function flushCloud(){
@@ -17107,9 +17113,161 @@ const BKACT={
   "bk-make":async()=>{BKP.busy=true; render(); try{BKP.code=await bkMake()}catch(e){toast("สร้างรหัสไม่สำเร็จ ลองใหม่อีกครั้ง")} BKP.busy=false; render()},
   "bk-copy":async()=>{const t=$("#bk-code"); try{await navigator.clipboard.writeText(BKP.code); toast("คัดลอกรหัสแล้ว เอาไปวางเก็บในโน้ตหรือ LINE")}catch(e){if(t){t.focus(); t.select()} toast("กดค้างที่ช่องรหัสแล้วเลือก “คัดลอก”")}},
   "bk-check":async()=>{const v=($("#bk-in")||{}).value; BKP.err=""; BKP.ask=false; try{BKP.ask=await bkRead(v); BKP.pending=v}catch(e){BKP.err="รหัสไม่ถูกต้อง ตรวจว่าคัดลอกมาครบทั้งรหัส (ขึ้นต้นด้วย EC1: หรือ EC0:)"} render(); const i=$("#bk-in"); if(i&&BKP.pending) i.value=BKP.pending},
-  "bk-yes":()=>{if(!BKP.ask) return; S=migrate(BKP.ask); BKP={code:"",busy:false,ask:false,err:""}; save(); toast("กู้คืนความคืบหน้าเรียบร้อยแล้ว"); render()},
+  "bk-yes":()=>{if(!BKP.ask) return; S=migrate(BKP.ask); GSU.force=true; BKP={code:"",busy:false,ask:false,err:""}; save(); toast("กู้คืนความคืบหน้าเรียบร้อยแล้ว"); render()},
   "bk-no":()=>{BKP.ask=false; BKP.pending=""; render()}
 };
+
+/* ---------- auto sync between devices (a secret gist in the learner's own GitHub account) ---------- */
+// The learner pastes a GitHub key (classic token, scope "gist") once per device. Progress lives in one secret gist.
+// Every sync is pull -> three-way merge -> push. The merge base is the copy both sides last agreed on (GS.base), so
+// progress made on either device is kept and a deletion on one device (a saved sentence removed, a mistake cleared)
+// is not brought back by the other. With no base yet (first connect of a device) everything from both sides is kept.
+// Google Drive was not used: Google refuses sign-in inside an app web view, which is what the phone app is.
+const GS_FILE="english-class-progress.json", GS_DESC="English class app progress (sync) - do not delete";
+const GS_NEW="https://github.com/settings/tokens/new?scopes=gist&description=English%20class%20sync";
+function gsStore(){try{localStorage.setItem(GS_KEY,JSON.stringify(GS))}catch(e){}}
+async function gsApi(path,opt){
+  opt=opt||{};
+  const h={"Authorization":"Bearer "+GS.token,"Accept":"application/vnd.github+json"}; if(opt.body) h["Content-Type"]="application/json";
+  const r=await fetch("https://api.github.com"+path,{method:opt.method||"GET",cache:"no-store",headers:h,body:opt.body?JSON.stringify(opt.body):undefined});
+  if(r.status===401||r.status===403){const e=new Error("auth"); e.auth=true; throw e}
+  if(!r.ok){const e=new Error("http "+r.status); e.status=r.status; throw e}
+  return r.json();
+}
+async function gsFileOf(g){
+  const f=g&&g.files&&g.files[GS_FILE]; if(!f) return null;
+  let t=f.content; if(f.truncated||t==null){const r=await fetch(f.raw_url,{cache:"no-store"}); t=await r.text()}
+  try{const d=JSON.parse(t); return d&&typeof d==="object"&&d.v===1?d:null}catch(e){return null}
+}
+async function gsRemote(){
+  if(GS.gist){
+    try{const g=await gsApi("/gists/"+GS.gist); return {id:g.id,data:await gsFileOf(g)}}
+    catch(e){if(e.status!==404) throw e; GS.gist=""}
+  }
+  for(let page=1;page<=5;page++){
+    const list=await gsApi("/gists?per_page=100&page="+page);
+    const g=(Array.isArray(list)?list:[]).find(x=>x&&x.description===GS_DESC&&x.files&&x.files[GS_FILE]);
+    if(g) return {id:g.id,data:await gsFileOf(await gsApi("/gists/"+g.id))};
+    if(!Array.isArray(list)||list.length<100) break;
+  }
+  return {id:"",data:null};
+}
+// how each part of the progress is merged when both devices changed it since they last agreed
+const GS_RULE={"":"obj",lessons:"obj","lessons.*":"max",words:"obj","words.*":"srs",sents:"obj","sents.*":"srs",stats:"obj","stats.*":"obj",
+  xpDay:"obj","xpDay.*":"add",xp:"add",pron:"add",songs:"obj","songs.tracks":"obj",yt:"obj",placement:"place",updatedAt:"max",
+  days:"set",badges:"set",mistakes:"set",custom:"set",exams:"set","songs.lists":"set","songs.recent":"set","yt.list":"set"};
+const gsJ=x=>JSON.stringify(x);
+const gsObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
+function gsRule(path){if(GS_RULE[path]) return GS_RULE[path]; const i=path.lastIndexOf("."); return i>=0?(GS_RULE[path.slice(0,i)+".*"]||""):""}
+function gsMerge(base,a,b,aNewer,path){
+  if(gsJ(a)===gsJ(b)) return a;
+  const has=base!==undefined, rule=gsRule(path);
+  if(rule==="add"&&typeof a==="number"&&typeof b==="number") return has&&typeof base==="number"?a+b-base:Math.max(a,b);
+  if(rule==="max"&&typeof a==="number"&&typeof b==="number") return Math.max(a,b);
+  if(has&&gsJ(a)===gsJ(base)) return b;
+  if(has&&gsJ(b)===gsJ(base)) return a;
+  if(rule==="obj"&&gsObj(a)&&gsObj(b)){
+    const bo=gsObj(base)?base:{}, out={};
+    new Set(Object.keys(aNewer?a:b).concat(Object.keys(aNewer?b:a))).forEach(k=>{
+      const p=path?path+"."+k:k, inA=k in a, inB=k in b, inBase=k in bo;
+      if(inA&&inB) out[k]=gsMerge(inBase?bo[k]:undefined,a[k],b[k],aNewer,p);
+      else if(inA){if(!inBase||gsJ(a[k])!==gsJ(bo[k])) out[k]=a[k]}   // gone from b: b deleted it, unless a changed it since
+      else {if(!inBase||gsJ(b[k])!==gsJ(bo[k])) out[k]=b[k]}
+    });
+    return out;
+  }
+  if(rule==="max"&&gsObj(a)&&gsObj(b)){
+    const out=Object.assign({},aNewer?b:a,aNewer?a:b);
+    Object.keys(out).forEach(k=>{const x=a[k],y=b[k]; if(typeof x==="number"&&typeof y==="number") out[k]=Math.max(x,y); else if(typeof x==="boolean"&&typeof y==="boolean") out[k]=x||y});
+    return out;
+  }
+  if(rule==="srs"&&gsObj(a)&&gsObj(b)){
+    const sa=a.seen||0, sb=b.seen||0, da=a.due||0, db=b.due||0;
+    return sa!==sb?(sa>sb?a:b):da!==db?(da>db?a:b):(aNewer?a:b);
+  }
+  if(rule==="set"&&Array.isArray(a)&&Array.isArray(b)){
+    const id=x=>gsObj(x)&&x.id!=null?"id:"+x.id:gsObj(x)&&x.en!=null?"en:"+x.en:gsJ(x);
+    const inBase=new Set(Array.isArray(base)?base.map(id):[]), ia=new Set(a.map(id)), ib=new Set(b.map(id)), out=[], seen=new Set();
+    const add=(list,other)=>list.forEach(x=>{const k=id(x); if(seen.has(k)||(!other.has(k)&&inBase.has(k))) return; seen.add(k); out.push(x)});
+    if(aNewer){add(a,ib); add(b,ia)} else {add(b,ia); add(a,ib)}
+    if(path==="days") out.sort();
+    return out;
+  }
+  if(rule==="place"&&gsObj(a)&&gsObj(b)&&!!a.done!==!!b.done) return a.done?a:b;
+  if(!has&&(a==null||a==="")) return b;
+  if(!has&&(b==null||b==="")) return a;
+  return aNewer?a:b;
+}
+function gsTyping(){const e=document.activeElement; return !!e&&(e.tagName==="INPUT"||e.tagName==="TEXTAREA")}
+function gsSoon(){if(!GS.token) return; clearTimeout(GSU.timer); GSU.timer=setTimeout(()=>{GSU.timer=null; gsSync("save")},4000)}
+async function gsSync(why){
+  if(!GS.token) return;
+  if(GSU.busy){GSU.again=true; return}
+  GSU.busy=true; GSU.err=""; gsShow();
+  try{
+    trackXp();
+    const mark=S.updatedAt, local=JSON.parse(gsJ(S)), rem=await gsRemote();
+    let m=local;
+    if(rem.data&&!GSU.force){
+      m=JSON.parse(gsJ(gsMerge(GS.base||undefined,local,rem.data,(local.updatedAt||0)>=(rem.data.updatedAt||0),"")));
+      m.updatedAt=Math.max(local.updatedAt||0,rem.data.updatedAt||0); m._xpSeen=m.xp;
+    }
+    if(S.updatedAt!==mark){GSU.again=true; return}    // learner saved while we were away: start over with the new state
+    if(gsJ(m)!==gsJ(local)){
+      S=migrate(m);
+      try{localStorage.setItem(KEY,gsJ(S))}catch(e){}
+      if(NB) NB.save(gsJ(S)).catch(()=>{});
+      if(route.name==="lesson"||gsTyping()) updateChrome(); else render();
+    }
+    if(!rem.data||gsJ(m)!==gsJ(rem.data)){
+      const body={files:{[GS_FILE]:{content:gsJ(m)}}};
+      if(rem.id) await gsApi("/gists/"+rem.id,{method:"PATCH",body});
+      else {const g=await gsApi("/gists",{method:"POST",body:Object.assign({description:GS_DESC,public:false},body)}); rem.id=g.id}
+    }
+    GSU.force=false; GS.gist=rem.id; GS.base=m; GS.last=Date.now(); gsStore();
+  }catch(e){
+    GSU.err=e.auth||e.status===404?"กุญแจนี้ใช้ไม่ได้ (หมดอายุ ถูกลบ หรือไม่ได้ติ๊ก gist) สร้างกุญแจใหม่แล้วเชื่อมอีกครั้ง":"ซิงก์ไม่สำเร็จ อาจไม่มีอินเทอร์เน็ต จะลองใหม่เองครั้งหน้า";
+  }finally{
+    GSU.busy=false; gsShow();
+    if(GSU.again){GSU.again=false; gsSoon()}
+  }
+}
+function gsTime(t){if(!t) return "ยังไม่เคย"; const d=new Date(t); return (dayKey(d)===dayKey()?"วันนี้ ":d.getDate()+"/"+(d.getMonth()+1)+" ")+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function gsStatus(){return GSU.busy?"กำลังซิงก์…":GSU.err?'<span class="pen">'+esc(GSU.err)+'</span>':"ซิงก์ล่าสุด "+gsTime(GS.last)}
+function gsShow(){const el=$("#gs-status"); if(el) el.innerHTML=gsStatus()}
+function syncHTML(){
+  const head='<section class="section"><h2 class="h3">ซิงก์อัตโนมัติระหว่างเครื่อง</h2>';
+  if(GS.token) return head+'<div class="card" style="margin-top:12px"><p><b>เปิดซิงก์อยู่</b>'+(GS.login?' <span class="muted">· บัญชี GitHub '+esc(GS.login)+'</span>':'')+'</p>'
+    +'<p class="muted" id="gs-status" style="margin-top:4px">'+gsStatus()+'</p>'
+    +'<p class="muted" style="margin-top:6px;font-size:13.5px">เรียนเครื่องไหน อีกเครื่องจะได้ความคืบหน้าเดียวกันเมื่อเปิดแอป (ต้องต่ออินเทอร์เน็ต)</p>'
+    +'<div class="row" style="margin-top:10px"><button class="btn btn-primary" data-act="gs-now">ซิงก์ตอนนี้</button><button class="btn btn-ghost" data-act="gs-off">เลิกเชื่อม</button></div></div></section>';
+  return head+'<p class="muted" style="margin-top:4px">ให้มือถือกับ iPad มีความคืบหน้าเดียวกันเอง เก็บไว้ในบัญชี GitHub ของคุณเป็นไฟล์ลับ คนอื่นมองไม่เห็น ตั้งครั้งเดียวต่อเครื่อง</p>'
+    +'<div class="card" style="margin-top:12px"><ol style="margin:0;padding-left:20px;line-height:1.75">'
+    +'<li>กดปุ่ม “เปิดหน้าสร้างกุญแจใน GitHub” ช่อง <b>Expiration</b> เลือก <b>No expiration</b> (ช่อง gist ติ๊กไว้ให้แล้ว) เลื่อนลงล่างสุดกด <b>Generate token</b></li>'
+    +'<li>คัดลอกกุญแจที่ขึ้นต้นด้วย <b>ghp_</b> เก็บไว้ในโน้ตด้วย เพราะ GitHub จะไม่โชว์ให้อีก</li>'
+    +'<li>วางในช่องข้างล่างแล้วกด “เชื่อมต่อ” · อีกเครื่องวางกุญแจเดียวกันได้เลย ไม่ต้องสร้างใหม่</li></ol>'
+    +'<a class="btn" style="margin-top:12px" href="'+GS_NEW+'" target="_blank" rel="noopener">เปิดหน้าสร้างกุญแจใน GitHub</a>'
+    +'<input id="gs-in" class="dict-in" style="width:100%;margin-top:10px" placeholder="วางกุญแจ ghp_… ที่นี่" autocomplete="off" autocapitalize="off" spellcheck="false">'
+    +(GSU.err?'<p class="pen" style="margin-top:6px">'+esc(GSU.err)+'</p>':'')
+    +'<button class="btn btn-primary" style="margin-top:10px" data-act="gs-connect"'+(GSU.busy?' disabled':'')+'>'+(GSU.busy?'กำลังเชื่อม…':'เชื่อมต่อ')+'</button></div></section>';
+}
+const GSACT={
+  "gs-connect":async()=>{
+    const v=(($("#gs-in")||{}).value||"").trim(); if(!v){GSU.err="วางกุญแจในช่องก่อน"; render(); return}
+    const old=GS; GS={token:v,gist:"",login:"",base:null,last:0}; GSU.busy=true; GSU.err=""; render();
+    try{const u=await gsApi("/user"); GS.login=u&&u.login||""}
+    catch(e){GS=old; GSU.busy=false; GSU.err=e.auth?"กุญแจนี้ใช้ไม่ได้ ตรวจว่าคัดลอกมาครบ (ขึ้นต้นด้วย ghp_)":"เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่"; render(); return}
+    gsStore(); GSU.busy=false; await gsSync("connect");
+    if(!GSU.err) toast("เชื่อมแล้ว ความคืบหน้าจะซิงก์เองทุกครั้งที่เรียน"); render();
+  },
+  "gs-now":async()=>{await gsSync("button"); if(!GSU.err) toast("ซิงก์แล้ว")},
+  "gs-off":()=>{clearTimeout(GSU.timer); GS={token:"",gist:"",login:"",base:null,last:0}; try{localStorage.removeItem(GS_KEY)}catch(e){} GSU.err=""; render(); toast("เลิกเชื่อมแล้ว ความคืบหน้ายังอยู่ในเครื่องนี้")}
+};
+document.addEventListener("visibilitychange",()=>{
+  if(!GS.token) return;
+  if(document.visibilityState==="hidden"){if(GSU.timer){clearTimeout(GSU.timer); GSU.timer=null; gsSync("hide")}}
+  else if(Date.now()-(GS.last||0)>30000) gsSync("show");
+});
 
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
@@ -17515,7 +17673,7 @@ function viewReport(){
     return '<tr><td class="mono">U'+String(u.n).padStart(2,"0")+'</td><td><span lang="en">'+esc(u.en)+'</span><br><span class="muted" style="font-size:14px">'+esc(u.th)+'</span></td><td>'+LEVELS[u.lv-1].code+'</td>'
      +'<td>'+(r&&r.done?'<span class="chip ok">ผ่าน</span>':unlocked(i)?(r&&r.reached?'<span class="chip now">กำลังเรียน</span>':'<span class="chip">ยังไม่เริ่ม</span>'):'<span class="chip lock">ล็อก</span>')+'</td>'
      +'<td style="font-variant-numeric:tabular-nums">'+(r&&r.best?r.best+"%":"–")+'</td><td class="stars">'+(r&&r.stars?"★".repeat(r.stars)+"☆".repeat(3-r.stars):"")+'</td><td style="font-variant-numeric:tabular-nums">'+(r&&r.writing!=null?r.writing+"/10":"–")+'</td></tr>';}).join("");
-  return '<h1 class="h1">สมุดพกของฉัน</h1><p class="lede">'+(NB?"ความคืบหน้าบันทึกไว้ในเครื่องนี้ ถ้าลบแอป ข้อมูลจะหายไปด้วย":cloud.on?"ความคืบหน้าบันทึกไว้กับบัญชีของคุณ เปิดจากเครื่องไหนก็เรียนต่อได้":"ความคืบหน้าบันทึกไว้ในเบราว์เซอร์นี้ ถ้าล้างข้อมูลเบราว์เซอร์ ข้อมูลจะหายไป")+'</p>'
+  return '<h1 class="h1">สมุดพกของฉัน</h1><p class="lede">'+(GS.token?"ความคืบหน้าซิงก์กับบัญชี GitHub ของคุณ เรียนเครื่องไหนก็ต่อกันได้":NB?"ความคืบหน้าบันทึกไว้ในเครื่องนี้ ถ้าลบแอป ข้อมูลจะหายไปด้วย":cloud.on?"ความคืบหน้าบันทึกไว้กับบัญชีของคุณ เปิดจากเครื่องไหนก็เรียนต่อได้":"ความคืบหน้าบันทึกไว้ในเบราว์เซอร์นี้ ถ้าล้างข้อมูลเบราว์เซอร์ ข้อมูลจะหายไป")+'</p>'
    +'<div class="stats" style="margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><div><b>'+done.length+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+(avg?avg+"%":"–")+'</b><span>คะแนนเฉลี่ย</span></div><div><b>'+keys.length+'</b><span>คำศัพท์</span></div><div><b>'+keys.filter(k=>S.words[k].b>=4).length+'</b><span>จำได้แม่น</span></div><div><b>'+streak()+'</b><span>วันต่อเนื่อง</span></div><div><b>'+S.days.length+'</b><span>วันที่เข้าเรียน</span></div>'+(NB?'<div><b>'+(S.pron||0)+'</b><span>ประโยคที่พูดผ่าน</span></div>':'')+'</div>'
    +'<section class="section"><h2 class="h3" style="margin-bottom:10px">ผลการเรียนรายบท</h2><div class="tbl-wrap"><table class="rep-tbl"><thead><tr><th>บท</th><th>ชื่อบท</th><th>ระดับ</th><th>สถานะ</th><th>คะแนนสูงสุด</th><th>ดาว</th><th>การบ้านเขียน</th></tr></thead><tbody>'+table+'</tbody></table></div></section>'
    +'<section class="section"><div class="section-head"><h2 class="h3">ประกาศนียบัตร</h2><div class="name-field"><label for="cert-name" class="muted">ชื่อบนประกาศนียบัตร</label><input id="cert-name" value="'+esc(S.name)+'" placeholder="ชื่อของคุณ" maxlength="40"></div></div>'
@@ -17527,7 +17685,7 @@ function viewReport(){
     }).join("")+'</div>'
     :'<div class="card"><p>ผ่านทุกบทในระดับเดียวกันครบ 4 บท เพื่อรับประกาศนียบัตรระดับนั้น</p><div class="stack" style="margin-top:14px;gap:10px">'+LEVELS.map(lv=>{const us=coreOf(lv.n),d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;return '<div><div class="row" style="justify-content:space-between"><span>'+lv.code+' <span lang="en">'+esc(lv.name)+'</span></span><span class="muted">'+d+'/4</span></div><div class="bar"><i style="width:'+(d/4*100)+'%"></i></div></div>'}).join("")+'</div></div>')
    +'</section>'
-   +xpChartHTML()+calendarHTML()+badgesHTML()+settingsHTML()+backupHTML()
+   +xpChartHTML()+calendarHTML()+badgesHTML()+settingsHTML()+syncHTML()+backupHTML()
    +otaSection()
    +'<section class="section"><h2 class="h3">เริ่มเรียนใหม่ทั้งหมด</h2><p class="muted" style="margin-top:4px">ลบคะแนน คำศัพท์ และประวัติการเรียนทั้งหมด</p>'
    +(resetAsk?'<div class="row" style="margin-top:10px"><span class="pen">ลบจริงหรือไม่ ย้อนกลับไม่ได้</span><button class="btn btn-danger" data-act="reset-yes">ลบทั้งหมด</button><button class="btn btn-ghost" data-act="reset-no">ยกเลิก</button></div>'
@@ -17624,7 +17782,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT,GSACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
@@ -17688,6 +17846,6 @@ document.addEventListener("change",e=>{if(e.target.id==="cert-name") render();
   render();
 })();
 initCloud();
-initNative();
+Promise.resolve(initNative()).catch(()=>{}).then(()=>gsSync("open"));
 })();
 </script>
