@@ -10195,7 +10195,7 @@ function calendarHTML(){
 /* ---------- games ---------- */
 let MG=null, SB=null;
 function gamePool(){
-  let keys=Object.keys(S.words).filter(k=>WORDS[k]&&WORDS[k].th&&!S.words[k].easy);
+  let keys=Object.keys(S.words).filter(k=>WORDS[k]&&WORDS[k].th&&!S.words[k].easy).concat(freshWords(8));
   if(keys.length<6) keys=keys.concat(COURSE.slice(0,2).reduce((a,u)=>a.concat(u.vocab.map(v=>v.en)),[]));
   return shuffle(Array.from(new Set(keys)));
 }
@@ -17052,6 +17052,25 @@ const BZACT={
   "bz-retry":()=>{BZ.ans={}; if(BZ.qs) BZ.qs=null; render(); window.scrollTo(0,0)}
 };
 
+/* ---------- new words every day ---------- */
+// Review used to cycle only the words of lessons already opened. Each day the review page adds
+// S.settings.newWords (default 10) words the learner has never had: any word in the app (lessons, bonus units,
+// word decks, business English) at or below the next level, nearest level first. "Review more" prefers words not seen
+// for longest (s.seen), and the games mix in unseen words.
+function freshWords(n){
+  const cur=levelOf().n, lvOfWord=k=>{const u=COURSE.find(x=>x.id===WORDS[k].unit); return u?u.lv:cur};
+  return shuffle(Object.keys(WORDS).filter(k=>!S.words[k]&&WORDS[k].th&&lvOfWord(k)<=cur+1)).sort((a,b)=>Math.abs(lvOfWord(a)-cur)-Math.abs(lvOfWord(b)-cur)).slice(0,n);
+}
+function newWordsPerDay(){const v=S.settings.newWords; return v==null?10:v}
+function addFreshWords(n){const now=Date.now(), today=dayKey(); const ks=freshWords(n); ks.forEach(k=>{S.words[k]={b:0,due:now,fresh:today}}); return ks.length}
+function dailyNewWords(){const n=newWordsPerDay(); if(!n||S.newWordsDay===dayKey()) return; addFreshWords(n); S.newWordsDay=dayKey(); save()}
+function newWordsHTML(){
+  const today=dayKey(), got=Object.keys(S.words).filter(k=>S.words[k].fresh===today).length, n=newWordsPerDay();
+  return '<div class="card" style="margin-top:14px;max-width:560px"><p><b>คำใหม่ทุกวัน</b> <span class="muted">· วันนี้ได้คำใหม่ '+got+' คำ</span></p><p class="muted" style="font-size:14px;margin-top:4px">แอปเพิ่มคำที่คุณยังไม่เคยเจอเข้ารอบทบทวนให้ทุกวัน เลือกจากบทเรียน ชุดคำศัพท์ และ Business English ตามระดับของคุณ คำเดิมจะได้ไม่วนซ้ำจนน่าเบื่อ</p>'
+   +'<div class="tabs" role="group" aria-label="คำใหม่ต่อวัน" style="margin-top:10px">'+[[0,"ปิด"],[5,"วันละ 5"],[10,"วันละ 10"],[20,"วันละ 20"]].map(o=>'<button data-act="rv-newn" data-n="'+o[0]+'" aria-pressed="'+(n===o[0])+'">'+o[1]+'</button>').join("")+'</div>'
+   +'<button class="btn btn-sm" style="margin-top:10px" data-act="rv-more">ขอคำใหม่เพิ่มอีก 10 คำตอนนี้</button></div>';
+}
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -17395,12 +17414,13 @@ function viewPlacement(){
 
 /* ---------- views: review ---------- */
 function viewReview(){
+  dailyNewWords();
   if(SR&&SR.queue.length) return sentCardHTML();
   const keys=Object.keys(S.words).filter(k=>WORDS[k]);
   if(R&&R.queue.length){
     const w=WORDS[R.queue[0]], s=S.words[R.queue[0]];
     return '<div class="review-card"><div class="row" style="justify-content:space-between"><p class="muted">เหลือ '+R.queue.length+' คำ · ทบทวนแล้ว '+R.count+' คำ</p><button class="btn btn-sm btn-ghost" data-act="rv-mode">'+(S.settings.rvType?"โหมดดูคำ":"โหมดพิมพ์คำ")+'</button></div><div class="flash" style="margin-top:10px">'
-      +'<div class="flash-top"><span class="mono">'+esc(w.pos)+'</span><span class="mastery" aria-label="ระดับความจำ '+s.b+' จาก 6">'+[1,2,3,4,5,6].map(n=>'<i class="'+(n<=s.b?"on":"")+'"></i>').join("")+'</span></div>'
+      +'<div class="flash-top"><span class="mono">'+esc(w.pos)+(s.b===0&&s.fresh?' · <span style="color:var(--accent)">คำใหม่</span>':'')+'</span><span class="mastery" aria-label="ระดับความจำ '+s.b+' จาก 6">'+[1,2,3,4,5,6].map(n=>'<i class="'+(n<=s.b?"on":"")+'"></i>').join("")+'</span></div>'
       +'<div class="row" style="justify-content:center;gap:6px;margin-bottom:6px"><button class="btn btn-sm btn-ghost" data-act="w-hard" data-w="'+esc(R.queue[0])+'" aria-pressed="'+!!s.hard+'">'+(s.hard?"★ คำยากแล้ว":"☆ เก็บเป็นคำยาก")+'</button><button class="btn btn-sm btn-ghost" data-act="rv-easy">ง่ายไป ไม่ต้องเอามาอีก</button></div>'
       +(S.settings.rvType&&!R.revealed?'<div class="flash-th" style="font-size:22px">'+esc(w.th)+'</div>'+(w.ex?'<p class="flash-ex" lang="en" style="text-align:left;display:block">'+rvMask(w)+'</p>':'')
         :'<div class="flash-word" lang="en">'+esc(w.en)+'</div><div class="row" style="justify-content:center">'+sayBtn(w.en)+'</div>'+(S.settings.rvType&&R.typed!=null?'<div class="feedback '+(R.typedOk?"ok":"no")+'"><b>'+(R.typedOk?"พิมพ์ถูก!":"ยังไม่ถูก")+'</b><span>คุณพิมพ์: <span lang="en">'+esc(R.typed||"–")+'</span></span></div>':''))
@@ -17423,7 +17443,7 @@ function viewReview(){
     +(hard.length?'<div class="row" style="margin-top:10px"><button class="btn btn-primary" data-act="rv-hard">ทบทวนคำยาก '+hard.length+' คำ</button></div><ul class="deck-list" style="margin-top:10px">'+hard.map(k=>'<li>'+sayBtn(k)+'<span lang="en"><b>'+esc(k)+'</b></span><span class="muted">'+esc(WORDS[k].th)+'</span><button class="btn btn-sm btn-ghost" data-act="w-hard" data-w="'+esc(k)+'">เอาออก</button></li>').join("")+'</ul>':'<p style="margin-top:10px">ยังไม่มีคำยาก</p>')+'</section>';
   return head+'<div class="stats" style="margin-top:20px;max-width:560px"><div><b>'+due.length+'</b><span>ถึงรอบวันนี้</span></div><div><b>'+keys.length+'</b><span>คำที่เรียนแล้ว</span></div><div><b>'+mastered+'</b><span>จำได้แม่น</span></div></div>'
    +'<div class="row" style="margin-top:16px">'+(due.length?'<button class="btn btn-primary" data-act="rv-start">เริ่มทบทวน '+due.length+' คำ</button>':'<button class="btn btn-primary" data-act="rv-extra">ทบทวนเพิ่ม (สุ่ม 10 คำ)</button><span class="muted">วันนี้ทบทวนครบแล้ว</span>')+'</div>'
-   +hardSec+sentSectionHTML()
+   +newWordsHTML()+hardSec+sentSectionHTML()
    +'<section class="section"><h2 class="h3" style="margin-bottom:10px">คลังคำศัพท์ของฉัน</h2>'+(easyN?'<p class="muted" style="margin:-4px 0 10px">ตั้งว่าง่ายไป '+easyN+' คำ (ไม่ถูกนำมาทบทวน กด “เอาคืน” ได้)</p>':'')+'<div class="tbl-wrap"><table><thead><tr><th>คำศัพท์</th><th>ความหมาย</th><th>ความจำ</th><th>ทบทวนครั้งถัดไป</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div></section>'+decksHTML();
 }
 
@@ -17535,7 +17555,9 @@ const ACT={
   "r-next":()=>{const r=curRunner(); if(r&&r.answered) runnerNext(r)},
   "start-placement":()=>{P.runner=newRunner(PLACEMENT,"placement");render()},
   "rv-start":()=>{const q=shuffle(dueWords());R={queue:q,revealed:false,count:0};render()},
-  "rv-extra":()=>{const q=shuffle(Object.keys(S.words).filter(k=>WORDS[k]&&!S.words[k].easy)).slice(0,10);R={queue:q,revealed:false,count:0,extra:true};render()},
+  "rv-newn":t=>{S.settings.newWords=+t.dataset.n; if(S.settings.newWords&&S.newWordsDay!==dayKey()) dailyNewWords(); save(); render()},
+  "rv-more":()=>{const n=addFreshWords(10); save(); toast(n?"เพิ่มคำใหม่ "+n+" คำเข้ารอบทบทวนแล้ว":"ไม่มีคำใหม่ในระดับของคุณเหลือแล้ว"); render()},
+  "rv-extra":()=>{const q=shuffle(Object.keys(S.words).filter(k=>WORDS[k]&&!S.words[k].easy).sort((a,b)=>(S.words[a].seen||0)-(S.words[b].seen||0)).slice(0,10));R={queue:q,revealed:false,count:0,extra:true};render()},
   "rv-hard":()=>{const q=shuffle(hardWords());if(!q.length) return;R={queue:q,revealed:false,count:0,extra:true,hard:true};render();window.scrollTo(0,0)},
   "rv-easy":()=>{if(!R||!R.queue.length) return;const k=R.queue.shift();easyToggle(k);R.count++;R.revealed=false;R.typed=null;save();if(!R.queue.length){R=null}render()},
   "w-hard":t=>{hardToggle(t.dataset.w);save();render()},
@@ -17547,7 +17569,7 @@ const ACT={
     else if(g===1){s.b=Math.max(1,s.b);s.due=now+DAY}
     else if(g===3){s.b=6;s.due=now+365*DAY;s.easy=true}
     else{s.b=Math.min(s.b+1,6);s.due=now+INT[s.b]*DAY}
-    R.count++; R.revealed=false; R.typed=null; S.xp+=1; bump("review"); markDay(); save();
+    s.seen=now; R.count++; R.revealed=false; R.typed=null; S.xp+=1; bump("review"); markDay(); save();
     if(!R.queue.length){R=null;toast("ทบทวนเสร็จแล้ว เก่งมาก")}
     render();
   },
