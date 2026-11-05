@@ -308,7 +308,7 @@ textarea.ta{width:100%;min-height:110px;resize:vertical;border:1.5px solid var(-
 .shadow-list li{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 .sh-row{display:flex;align-items:center;gap:10px}
 .sh-row p{flex:1;font-size:17px}
-.is-native .ai-only{display:none!important}
+.is-native .ai-only,.no-ai .ai-only{display:none!important}
 .mic{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--red);cursor:pointer;flex:none}
 .mic svg{width:17px;height:17px}
 .mic.on{background:var(--red);border-color:var(--red);color:var(--surface);animation:pulse 1.2s ease-in-out infinite}
@@ -842,6 +842,8 @@ th,td{border-bottom:.5px solid var(--sep)}
 
 const NB=window.EnglishClassNative||null;   // set by the native app shell (Capacitor); null on the web
 if(NB) document.documentElement.classList.add("is-native");
+// the AI teacher needs claude.ai (window.claude); on the own website (GitHub Pages) hide it like in the phone app
+if(!NB&&!(window.claude&&typeof window.claude.use==="function")) document.documentElement.classList.add("no-ai");
 
 /* ---------- course content ---------- */
 const v=(en,th,pos,ex,exTh)=>({en,th,pos,ex,exTh});
