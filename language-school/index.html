@@ -17148,14 +17148,14 @@ const BKACT={
 // yet (first sign-in of a device) everything from both sides is kept. Writes carry the read's updateTime as a
 // precondition, so two devices saving at once cannot overwrite each other; the loser syncs again.
 // Google sign-in is not offered: Google refuses sign-in inside an app web view, which is what the phone app is.
-const FB=Object.assign({apiKey:"",projectId:""},   // public web config of the Firebase project (not secrets)
+const FB=Object.assign({apiKey:"AIzaSyAlZwQ-L0o05CT3uKFE9YHwlZB7rp3ML7E",projectId:"english-class-f719d"},   // public web config of the Firebase project (not secrets)
   typeof window.EC_FIREBASE==="object"&&window.EC_FIREBASE||{});   // tests point it at a fake project
 const fbReady=()=>!!(FB.apiKey&&FB.projectId);
 function acStore(){try{if(AC.uid) localStorage.setItem(AC_KEY,JSON.stringify(AC)); else localStorage.removeItem(AC_KEY)}catch(e){}}
 const AC_ERR={EMAIL_EXISTS:"อีเมลนี้มีบัญชีอยู่แล้ว กด “เข้าสู่ระบบ” แทน",EMAIL_NOT_FOUND:"อีเมลหรือรหัสผ่านไม่ถูกต้อง",INVALID_PASSWORD:"อีเมลหรือรหัสผ่านไม่ถูกต้อง",
   INVALID_LOGIN_CREDENTIALS:"อีเมลหรือรหัสผ่านไม่ถูกต้อง",WEAK_PASSWORD:"รหัสผ่านต้องยาวอย่างน้อย 6 ตัว",INVALID_EMAIL:"รูปแบบอีเมลไม่ถูกต้อง",
   MISSING_EMAIL:"ใส่อีเมลก่อน",MISSING_PASSWORD:"ใส่รหัสผ่านก่อน",TOO_MANY_ATTEMPTS_TRY_LATER:"ลองหลายครั้งเกินไป รอสักครู่แล้วลองใหม่",
-  USER_DISABLED:"บัญชีนี้ถูกปิดการใช้งาน",OPERATION_NOT_ALLOWED:"ระบบบัญชียังตั้งค่าไม่ครบ (ยังไม่ได้เปิดการเข้าสู่ระบบด้วยอีเมล)",
+  USER_DISABLED:"บัญชีนี้ถูกปิดการใช้งาน",OPERATION_NOT_ALLOWED:"ระบบบัญชียังตั้งค่าไม่ครบ (ยังไม่ได้เปิดการเข้าสู่ระบบด้วยอีเมล)",CONFIGURATION_NOT_FOUND:"ระบบบัญชียังตั้งค่าไม่ครบ (ยังไม่ได้เปิดการเข้าสู่ระบบด้วยอีเมล)",
   CONFIG:"ระบบบัญชียังตั้งค่าไม่ครบ",NET:"เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่"};
 async function acFetch(url,opt){
   let r; try{r=await fetch(url,Object.assign({cache:"no-store"},opt))}catch(e){const x=new Error("NET"); x.code="NET"; throw x}
