@@ -17185,7 +17185,7 @@ async function acRemote(){
     const d=await acDoc("GET"), f=d.fields||{}, code=f.data&&f.data.stringValue;
     let data=null; if(code){try{data=await bkRead(code)}catch(e){}}
     return {time:d.updateTime||"",data};
-  }catch(e){if(e.status===404&&!/database/i.test(e.full||"")) return {time:"",data:null}; throw e}
+  }catch(e){if(e.status===404&&!/does not exist/i.test(e.full||"")) return {time:"",data:null}; throw e}   // "Document … not found" = no copy yet; "The database (default) does not exist" = not set up
 }
 async function acPush(m,time){
   const q="?updateMask.fieldPaths=data&updateMask.fieldPaths=updatedAt&"+(time?"currentDocument.updateTime="+encodeURIComponent(time):"currentDocument.exists=false");

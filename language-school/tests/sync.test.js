@@ -39,7 +39,7 @@ async function store(route){
   if(!m) {fb.bad.push('bad path '+url.pathname); return err(route,404,'bad path','NOT_FOUND')}
   if(!uid||uid!==m[1]){fb.bad.push('touched another user'); return err(route,403,'Missing or insufficient permissions.','PERMISSION_DENIED')}
   const d=fb.docs[uid];
-  if(req.method()==='GET') return d?send(route,200,d):err(route,404,'Document "progress/'+uid+'" not found.','NOT_FOUND');
+  if(req.method()==='GET') return d?send(route,200,d):err(route,404,'Document "projects/test-project/databases/(default)/documents/progress/'+uid+'" not found.','NOT_FOUND');   // the real message, which names the database
   if(req.method()==='PATCH'){
     fb.patches++;
     if(fb.failNext){fb.failNext=false; return err(route,400,'the stored version does not match the required base version.','FAILED_PRECONDITION')}
