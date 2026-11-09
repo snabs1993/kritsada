@@ -9,13 +9,13 @@ let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
   const c1=await b.newContext({viewport:{width:390,height:844}}); const p=await c1.newPage(); p.on('pageerror',e=>errs.push('d1:'+e));
   await open(p,'#lesson-u1'); await p.locator('[data-act="step"]').nth(2).click(); await p.locator('.dlg .sent-btn').first().click();
   const s1=await p.evaluate(()=>JSON.parse(localStorage.getItem('eng-class-v1')));
-  await open(p,'#report'); await p.click('[data-act="bk-make"]'); await p.waitForSelector('#bk-code');
+  await open(p,'#account'); await p.click('[data-act="bk-make"]'); await p.waitForSelector('#bk-code');
   const code=await p.inputValue('#bk-code'); if(!/^EC[01]:/.test(code)) bad('code format: '+code.slice(0,10));
   // device 2: fresh, other progress
   const c2=await b.newContext({viewport:{width:820,height:1180}}); const q=await c2.newPage(); q.on('pageerror',e=>errs.push('d2:'+e));
   await open(q,'#lesson-u1'); await q.locator('[data-act="step"]').nth(2).click(); await q.locator('.dlg .sent-btn').last().click();
   const s0=await q.evaluate(()=>localStorage.getItem('eng-class-v1')); if(!s0) bad('device 2 saved nothing');
-  await open(q,'#report');
+  await open(q,'#account');
   // checking a code is async (decompression), so wait for its result instead of reading the page at once
   await q.fill('#bk-in','EC1:notreal'); await q.click('[data-act="bk-check"]');
   try{await q.waitForFunction(()=>/รหัสไม่ถูกต้อง/.test(document.querySelector('#app').textContent),null,{timeout:5000})}catch(e){bad('broken code accepted')}

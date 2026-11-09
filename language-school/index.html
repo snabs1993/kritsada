@@ -80,12 +80,33 @@ mark{background:linear-gradient(transparent 52%,var(--mark) 52%);color:inherit;p
 .nav button:hover{background:var(--accent-soft)}
 .nav button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
 .nav svg{width:20px;height:20px;flex:none}
-.streak{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink-2);padding:6px 10px;border-radius:99px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
-.streak svg{width:16px;height:16px;color:var(--red)}
+.acct-wrap{position:relative;flex:none}
+.acct{display:flex;align-items:center;gap:7px;min-height:36px;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);padding:5px 12px 5px 8px;border-radius:99px;border:1px solid var(--line);background:var(--surface);white-space:nowrap;cursor:pointer}
+.acct svg{width:18px;height:18px;color:var(--accent)}
+.acct-lbl{max-width:140px;overflow:hidden;text-overflow:ellipsis}
+.am-av{display:inline-grid;place-items:center;flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:15px}
+.am-av.sm{width:24px;height:24px;font-size:12.5px}
+.am-av.err{background:var(--red)}
+.acct-menu{position:absolute;right:0;top:calc(100% + 8px);width:min(340px,calc(100vw - 24px));z-index:40;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.18);padding:14px}
+.acct-menu[hidden]{display:none}
+.am-head{display:flex;align-items:center;gap:10px}
+.am-head>div{min-width:0}.am-head b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.am-head small{display:block;color:var(--muted);font-size:12.5px}
+.am-title{line-height:1.45;margin-bottom:6px}.am-title .muted{font-size:13px}
+.am-note{font-size:13px;margin:10px 0 6px}
+.am-item{display:block;width:100%;text-align:left;font:inherit;font-size:14.5px;color:var(--ink);background:none;border:0;border-top:1px solid var(--line);padding:11px 2px;cursor:pointer}
+.am-item:hover{color:var(--accent)}.am-out{color:var(--red)}
+.ac-form{display:flex;flex-direction:column;gap:8px}
+.ac-lbl{display:flex;flex-direction:column;gap:4px;font-size:13.5px;font-weight:600}
+.ac-lbl .dict-in{margin-top:0;width:100%;font-weight:400}
+.ac-form .ac-go{margin-top:4px;width:100%;justify-content:center}
+.ac-alt{font-size:13px;color:var(--muted);margin:2px 0 8px}
+.linkbtn{font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
 @media (max-width:1100px){
   .nav{position:fixed;left:0;right:0;bottom:0;margin:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around;z-index:30}
   .nav button{flex:1;flex-direction:column;gap:2px;font-size:11.5px;padding:6px 2px}
-  .streak{margin-left:auto}
+  .acct-wrap{margin-left:auto}
+  .acct-lbl{max-width:96px}
   .brand-sub{display:none}
   main{padding-bottom:84px}
 }
@@ -635,12 +656,12 @@ h1,h2,h3{letter-spacing:-.02em}
 
 /* glass material */
 /* the top bar's blur lives on a pseudo-element: a backdrop-filter on the bar itself would trap the fixed tab bar inside it */
-.nav,.streak,.xbar,.toast,.gloss-panel,.topbar::before{-webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%)}
+.nav,.acct,.xbar,.toast,.gloss-panel,.topbar::before{-webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%)}
 .topbar{background:transparent;border-bottom:.5px solid var(--glass-edge)}
 .topbar::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--glass)}
 .brand-mark{border-radius:11px;background:linear-gradient(145deg,var(--icon-1),var(--icon-2));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 2px 6px rgba(0,60,160,.25);color:#fff;font-family:var(--f-num)}
 .brand-name{font-weight:700;letter-spacing:-.02em}
-.streak{background:var(--glass);border:.5px solid var(--glass-edge);box-shadow:var(--glass-shadow)}
+.acct{background:var(--glass);border:.5px solid var(--glass-edge);box-shadow:var(--glass-shadow)}
 @media (min-width:1101px){
   .nav{background:var(--fill);border-radius:999px;padding:4px;gap:2px}
   .nav button{border-radius:999px;padding:7px 14px;color:var(--ink-2)}
@@ -659,9 +680,9 @@ h1,h2,h3{letter-spacing:-.02em}
   .gloss-panel{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .topbar::before,.nav,.streak,.xbar,.toast{background:var(--surface)}
+  .topbar::before,.nav,.acct,.xbar,.toast{background:var(--surface)}
 }
-@media (prefers-reduced-transparency:reduce){.topbar::before,.nav,.streak,.xbar,.toast,.gloss-panel{background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none}}
+@media (prefers-reduced-transparency:reduce){.topbar::before,.nav,.acct,.xbar,.toast,.gloss-panel{background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none}}
 
 /* surfaces: borderless, large continuous corners */
 .card,.notebook,.tile,.x-exam,.flash,.chat,.p-card,.stats,.tbl-wrap,.x-mode,.cal-wrap+.cal-legend,.dq-item,.tg-item,.pb-item,.mist-item,.badge,.deck,.goal-card,.daily,.phrase,.xpass,.xdir,.shadow-now{border-color:transparent}
@@ -830,7 +851,7 @@ th,td{border-bottom:.5px solid var(--sep)}
       <button class="ai-only" data-act="go" data-to="teacher"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>ครู AI</button>
       <button data-act="go" data-to="report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 20V11M11 20V5M17 20v-6M3 20h18"/></svg>สมุดพก</button>
     </nav>
-    <span class="streak" id="streak"></span>
+    <div class="acct-wrap"><button class="acct" id="acct" data-act="acct-menu" aria-haspopup="true" aria-expanded="false" aria-controls="acct-menu"></button><div class="acct-menu" id="acct-menu" role="dialog" aria-label="บัญชี" hidden></div></div>
   </div>
 </header>
 <main><div class="wrap" id="app"></div></main>
@@ -7237,6 +7258,7 @@ const DAY=864e5;
 const dayKey=d=>{d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 const norm=s=>String(s).toLowerCase().replace(/[’‘]/g,"'").replace(/[.,!?]/g,"").replace(/\s+/g," ").trim();
 const ICON={
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
   say:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
   mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
   flame:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.2 5 5.6 5 11a5 5 0 0 1-10 0c0-2.6 1.3-4 2.3-5.4.3 1.6 1 2.6 2 3C11 8 11.2 4.6 12 2z"/></svg>'
@@ -7255,16 +7277,18 @@ let S=fresh();
 try{const raw=localStorage.getItem(KEY); if(raw) S=migrate(JSON.parse(raw));}catch(e){}
 const LOADED_AT=S.updatedAt||0; // compare remote copies with what was on disk, not with saves made while booting
 const cloud={ref:null,timer:null,writing:false,again:false,on:false};
-// auto sync through the learner's own GitHub (see "auto sync between devices"); kept outside S so backups never carry the key
-const GS_KEY="eng-class-sync";
-let GS={token:"",gist:"",login:"",base:null,last:0};
-try{const g=JSON.parse(localStorage.getItem(GS_KEY)||"null"); if(g&&g.token) GS=Object.assign(GS,g)}catch(e){}
-const GSU={busy:false,err:"",timer:null,again:false,force:false};
+// signed-in account (see "account and sync between devices"); kept outside S so backups never carry the sign-in
+const AC_KEY="eng-class-acct";
+let AC={email:"",uid:"",idToken:"",refresh:"",exp:0,base:null,last:0};
+try{const a=JSON.parse(localStorage.getItem(AC_KEY)||"null"); if(a&&a.uid) AC=Object.assign(AC,a)}catch(e){}
+try{localStorage.removeItem("eng-class-sync")}catch(e){}   // key of the earlier GitHub sync, no longer used
+const ACU={busy:false,err:"",timer:null,again:false,force:false};
+const ACM={open:false,mode:"in",email:"",err:"",busy:false};   // top-bar account menu and sign-in form
 function save(){
   trackXp(); S.updatedAt=Date.now();
   try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
   if(cloud.ref){clearTimeout(cloud.timer);cloud.timer=setTimeout(flushCloud,1200)}
-  gsSoon();
+  acSoon();
   if(NB){clearTimeout(save.nt);save.nt=setTimeout(()=>{NB.save(JSON.stringify(S)).catch(()=>{})},300)}
 }
 async function flushCloud(){
@@ -10154,9 +10178,6 @@ const BADGES=[
  {id:"a2",t:"จบ A2",d:"ผ่านทุกบทระดับ Elementary",ok:()=>lvDone(2)},
  {id:"b1",t:"จบ B1",d:"ผ่านทุกบทระดับ Intermediate",ok:()=>lvDone(3)},
  {id:"b2",t:"จบ B2",d:"ผ่านทุกบทระดับ Upper-Intermediate",ok:()=>lvDone(4)},
- {id:"s3",t:"เรียนติดกัน 3 วัน",d:"เข้าเรียนต่อเนื่อง 3 วัน",ok:()=>maxStreak()>=3},
- {id:"s7",t:"หนึ่งสัปดาห์เต็ม",d:"เข้าเรียนต่อเนื่อง 7 วัน",ok:()=>maxStreak()>=7},
- {id:"s30",t:"นักเรียนตัวจริง",d:"เข้าเรียนต่อเนื่อง 30 วัน",ok:()=>maxStreak()>=30},
  {id:"w100",t:"คลังคำ 100",d:"มีคำศัพท์ในคลัง 100 คำ",ok:()=>Object.keys(S.words).length>=100},
  {id:"m50",t:"จำแม่น 50 คำ",d:"จำคำศัพท์ได้แม่น 50 คำ",ok:()=>Object.keys(S.words).filter(k=>S.words[k].b>=4).length>=50},
  {id:"d50",t:"หูไว",d:"ทำฟังแล้วพิมพ์ครบ 50 ประโยค",ok:()=>(stat("dict").n||0)>=50},
@@ -10179,7 +10200,7 @@ function checkBadges(){
 }
 function xpLevel(){const lv=Math.floor(S.xp/300)+1; return {lv,into:S.xp%300}}
 function badgesHTML(){
-  const got=Array.isArray(S.badges)?S.badges:[];
+  const got=(Array.isArray(S.badges)?S.badges:[]).filter(id=>BADGES.some(b=>b.id===id));
   return '<section class="section"><div class="section-head"><h2 class="h3">เหรียญความสำเร็จ</h2><span class="muted">ได้แล้ว '+got.length+'/'+BADGES.length+'</span></div><div class="badges">'
    +BADGES.map(b=>{const on=got.indexOf(b.id)>=0; return '<div class="badge'+(on?' on':'')+'"><span class="bd-icon" aria-hidden="true">'+(on?'★':'☆')+'</span><b>'+esc(b.t)+'</b><small>'+esc(b.d)+'</small></div>'}).join("")+'</div></section>';
 }
@@ -10195,7 +10216,7 @@ function calendarHTML(){
     }
   }
   const days=["อา","จ","อ","พ","พฤ","ศ","ส"];
-  return '<section class="section"><div class="section-head"><h2 class="h3">ปฏิทินการเรียน 12 สัปดาห์</h2><span class="muted">เข้าเรียน '+n+' วัน · ต่อเนื่องสูงสุด '+maxStreak()+' วัน</span></div>'
+  return '<section class="section"><div class="section-head"><h2 class="h3">ปฏิทินการเรียน 12 สัปดาห์</h2><span class="muted">เข้าเรียน '+n+' วัน</span></div>'
    +'<div class="cal-wrap"><div class="cal-days">'+days.map(d=>'<span>'+d+'</span>').join("")+'</div><div class="cal" role="img" aria-label="เข้าเรียน '+n+' วันใน 12 สัปดาห์ล่าสุด">'+cells+'</div></div>'
    +'<p class="cal-legend"><span><i class="cd on"></i>เข้าเรียน</span><span><i class="cd"></i>ไม่ได้เข้าเรียน</span></p></section>';
 }
@@ -17087,8 +17108,8 @@ let BKP={code:"",busy:false,ask:false,err:""};
 function bkB64(bytes){let s=""; for(let i=0;i<bytes.length;i+=0x8000) s+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000)); return btoa(s)}
 function bkBytes(b64){const s=atob(b64), a=new Uint8Array(s.length); for(let i=0;i<s.length;i++) a[i]=s.charCodeAt(i); return a}
 async function bkStream(bytes,kind,compress){const cs=compress?new CompressionStream(kind):new DecompressionStream(kind); const out=await new Response(new Blob([bytes]).stream().pipeThrough(cs)).arrayBuffer(); return new Uint8Array(out)}
-async function bkMake(){
-  const raw=new TextEncoder().encode(JSON.stringify(S));
+async function bkMake(obj){
+  const raw=new TextEncoder().encode(JSON.stringify(obj||S));
   if(typeof CompressionStream==="function"){try{return "EC1:"+bkB64(await bkStream(raw,"deflate-raw",true))}catch(e){}}
   return "EC0:"+bkB64(raw);
 }
@@ -17113,44 +17134,62 @@ const BKACT={
   "bk-make":async()=>{BKP.busy=true; render(); try{BKP.code=await bkMake()}catch(e){toast("สร้างรหัสไม่สำเร็จ ลองใหม่อีกครั้ง")} BKP.busy=false; render()},
   "bk-copy":async()=>{const t=$("#bk-code"); try{await navigator.clipboard.writeText(BKP.code); toast("คัดลอกรหัสแล้ว เอาไปวางเก็บในโน้ตหรือ LINE")}catch(e){if(t){t.focus(); t.select()} toast("กดค้างที่ช่องรหัสแล้วเลือก “คัดลอก”")}},
   "bk-check":async()=>{const v=($("#bk-in")||{}).value; BKP.err=""; BKP.ask=false; try{BKP.ask=await bkRead(v); BKP.pending=v}catch(e){BKP.err="รหัสไม่ถูกต้อง ตรวจว่าคัดลอกมาครบทั้งรหัส (ขึ้นต้นด้วย EC1: หรือ EC0:)"} render(); const i=$("#bk-in"); if(i&&BKP.pending) i.value=BKP.pending},
-  "bk-yes":()=>{if(!BKP.ask) return; S=migrate(BKP.ask); GSU.force=true; BKP={code:"",busy:false,ask:false,err:""}; save(); toast("กู้คืนความคืบหน้าเรียบร้อยแล้ว"); render()},
+  "bk-yes":()=>{if(!BKP.ask) return; S=migrate(BKP.ask); ACU.force=true; BKP={code:"",busy:false,ask:false,err:""}; save(); toast("กู้คืนความคืบหน้าเรียบร้อยแล้ว"); render()},
   "bk-no":()=>{BKP.ask=false; BKP.pending=""; render()}
 };
 
-/* ---------- auto sync between devices (a secret gist in the learner's own GitHub account) ---------- */
-// The learner pastes a GitHub key (classic token, scope "gist") once per device. Progress lives in one secret gist.
-// Every sync is pull -> three-way merge -> push. The merge base is the copy both sides last agreed on (GS.base), so
-// progress made on either device is kept and a deletion on one device (a saved sentence removed, a mistake cleared)
-// is not brought back by the other. With no base yet (first connect of a device) everything from both sides is kept.
-// Google Drive was not used: Google refuses sign-in inside an app web view, which is what the phone app is.
-const GS_FILE="english-class-progress.json", GS_DESC="English class app progress (sync) - do not delete";
-const GS_NEW="https://github.com/settings/tokens/new?scopes=gist&description=English%20class%20sync";
-function gsStore(){try{localStorage.setItem(GS_KEY,JSON.stringify(GS))}catch(e){}}
-async function gsApi(path,opt){
-  opt=opt||{};
-  const h={"Authorization":"Bearer "+GS.token,"Accept":"application/vnd.github+json"}; if(opt.body) h["Content-Type"]="application/json";
-  const r=await fetch("https://api.github.com"+path,{method:opt.method||"GET",cache:"no-store",headers:h,body:opt.body?JSON.stringify(opt.body):undefined});
-  if(r.status===401||r.status===403){const e=new Error("auth"); e.auth=true; throw e}
-  if(!r.ok){const e=new Error("http "+r.status); e.status=r.status; throw e}
-  return r.json();
-}
-async function gsFileOf(g){
-  const f=g&&g.files&&g.files[GS_FILE]; if(!f) return null;
-  let t=f.content; if(f.truncated||t==null){const r=await fetch(f.raw_url,{cache:"no-store"}); t=await r.text()}
-  try{const d=JSON.parse(t); return d&&typeof d==="object"&&d.v===1?d:null}catch(e){return null}
-}
-async function gsRemote(){
-  if(GS.gist){
-    try{const g=await gsApi("/gists/"+GS.gist); return {id:g.id,data:await gsFileOf(g)}}
-    catch(e){if(e.status!==404) throw e; GS.gist=""}
+/* ---------- account and sync between devices (email + password, Firebase) ---------- */
+// The learner signs in with an email and password; the same account on another device gets the same progress.
+// Auth is Firebase's Identity Toolkit REST API and the progress is one Firestore document, progress/<uid>, readable
+// and writable only by that user (rules in language-school/firebase/firestore.rules). The document holds the
+// progress as a backup code (see "back up / move progress") so it stays well under Firestore's 1 MiB limit.
+// Every sync is pull -> three-way merge -> push. The merge base is the copy both sides last agreed on (AC.base), so
+// progress made on either device is kept and a deletion on one device is not brought back by the other. With no base
+// yet (first sign-in of a device) everything from both sides is kept. Writes carry the read's updateTime as a
+// precondition, so two devices saving at once cannot overwrite each other; the loser syncs again.
+// Google sign-in is not offered: Google refuses sign-in inside an app web view, which is what the phone app is.
+const FB=Object.assign({apiKey:"",projectId:""},   // public web config of the Firebase project (not secrets)
+  typeof window.EC_FIREBASE==="object"&&window.EC_FIREBASE||{});   // tests point it at a fake project
+const fbReady=()=>!!(FB.apiKey&&FB.projectId);
+function acStore(){try{if(AC.uid) localStorage.setItem(AC_KEY,JSON.stringify(AC)); else localStorage.removeItem(AC_KEY)}catch(e){}}
+const AC_ERR={EMAIL_EXISTS:"อีเมลนี้มีบัญชีอยู่แล้ว กด “เข้าสู่ระบบ” แทน",EMAIL_NOT_FOUND:"อีเมลหรือรหัสผ่านไม่ถูกต้อง",INVALID_PASSWORD:"อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+  INVALID_LOGIN_CREDENTIALS:"อีเมลหรือรหัสผ่านไม่ถูกต้อง",WEAK_PASSWORD:"รหัสผ่านต้องยาวอย่างน้อย 6 ตัว",INVALID_EMAIL:"รูปแบบอีเมลไม่ถูกต้อง",
+  MISSING_EMAIL:"ใส่อีเมลก่อน",MISSING_PASSWORD:"ใส่รหัสผ่านก่อน",TOO_MANY_ATTEMPTS_TRY_LATER:"ลองหลายครั้งเกินไป รอสักครู่แล้วลองใหม่",
+  USER_DISABLED:"บัญชีนี้ถูกปิดการใช้งาน",OPERATION_NOT_ALLOWED:"ระบบบัญชียังตั้งค่าไม่ครบ (ยังไม่ได้เปิดการเข้าสู่ระบบด้วยอีเมล)",
+  CONFIG:"ระบบบัญชียังตั้งค่าไม่ครบ",NET:"เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่"};
+async function acFetch(url,opt){
+  let r; try{r=await fetch(url,Object.assign({cache:"no-store"},opt))}catch(e){const x=new Error("NET"); x.code="NET"; throw x}
+  let j=null; try{j=await r.json()}catch(e){}
+  if(!r.ok){
+    const er=j&&j.error||{}, msg=String(er.message||er.status||"").split(/[ :]/)[0];
+    const x=new Error(msg||("http "+r.status)); x.status=r.status; x.code=msg; x.st=er.status||""; x.full=String(er.message||""); throw x;
   }
-  for(let page=1;page<=5;page++){
-    const list=await gsApi("/gists?per_page=100&page="+page);
-    const g=(Array.isArray(list)?list:[]).find(x=>x&&x.description===GS_DESC&&x.files&&x.files[GS_FILE]);
-    if(g) return {id:g.id,data:await gsFileOf(await gsApi("/gists/"+g.id))};
-    if(!Array.isArray(list)||list.length<100) break;
-  }
-  return {id:"",data:null};
+  return j||{};
+}
+const acAuthUrl=m=>"https://identitytoolkit.googleapis.com/v1/accounts:"+m+"?key="+encodeURIComponent(FB.apiKey);
+const acDocUrl=()=>"https://firestore.googleapis.com/v1/projects/"+encodeURIComponent(FB.projectId)+"/databases/(default)/documents/progress/"+encodeURIComponent(AC.uid);
+function acTake(j){AC.idToken=j.idToken||j.id_token; AC.refresh=j.refreshToken||j.refresh_token||AC.refresh; AC.uid=j.localId||j.user_id||AC.uid; AC.exp=Date.now()+(Number(j.expiresIn||j.expires_in)||3600)*1000}
+async function acToken(){
+  if(AC.idToken&&Date.now()<AC.exp-60000) return AC.idToken;
+  try{
+    const j=await acFetch("https://securetoken.googleapis.com/v1/token?key="+encodeURIComponent(FB.apiKey),{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"grant_type=refresh_token&refresh_token="+encodeURIComponent(AC.refresh)});
+    acTake(j); acStore(); return AC.idToken;
+  }catch(e){if(e.code!=="NET"){e.signedOut=true} throw e}
+}
+async function acDoc(method,body,query){
+  const tok=await acToken();
+  return acFetch(acDocUrl()+(query||""),{method,headers:Object.assign({"Authorization":"Bearer "+tok},body?{"Content-Type":"application/json"}:{}),body:body?JSON.stringify(body):undefined});
+}
+async function acRemote(){
+  try{
+    const d=await acDoc("GET"), f=d.fields||{}, code=f.data&&f.data.stringValue;
+    let data=null; if(code){try{data=await bkRead(code)}catch(e){}}
+    return {time:d.updateTime||"",data};
+  }catch(e){if(e.status===404&&!/database/i.test(e.full||"")) return {time:"",data:null}; throw e}
+}
+async function acPush(m,time){
+  const q="?updateMask.fieldPaths=data&updateMask.fieldPaths=updatedAt&"+(time?"currentDocument.updateTime="+encodeURIComponent(time):"currentDocument.exists=false");
+  await acDoc("PATCH",{fields:{data:{stringValue:await bkMake(m)},updatedAt:{integerValue:String(m.updatedAt||0)}}},q);
 }
 // how each part of the progress is merged when both devices changed it since they last agreed
 const GS_RULE={"":"obj",lessons:"obj","lessons.*":"max",words:"obj","words.*":"srs",sents:"obj","sents.*":"srs",stats:"obj","stats.*":"obj",
@@ -17198,75 +17237,115 @@ function gsMerge(base,a,b,aNewer,path){
   if(!has&&(b==null||b==="")) return a;
   return aNewer?a:b;
 }
-function gsTyping(){const e=document.activeElement; return !!e&&(e.tagName==="INPUT"||e.tagName==="TEXTAREA")}
-function gsSoon(){if(!GS.token) return; clearTimeout(GSU.timer); GSU.timer=setTimeout(()=>{GSU.timer=null; gsSync("save")},4000)}
-async function gsSync(why){
-  if(!GS.token) return;
-  if(GSU.busy){GSU.again=true; return}
-  GSU.busy=true; GSU.err=""; gsShow();
+function acTyping(){const e=document.activeElement; return !!e&&(e.tagName==="INPUT"||e.tagName==="TEXTAREA")}
+function acSoon(){if(!AC.uid) return; clearTimeout(ACU.timer); ACU.timer=setTimeout(()=>{ACU.timer=null; acSync("save")},4000)}
+function acErrText(e){
+  if(e.signedOut) return "";
+  if(e.code==="NET") return "ซิงก์ไม่สำเร็จ ไม่มีอินเทอร์เน็ต จะลองใหม่เองเมื่อเปิดแอปครั้งหน้า";
+  if(e.status===403||e.status===404||e.code==="PERMISSION_DENIED") return AC_ERR.CONFIG;
+  return "ซิงก์ไม่สำเร็จ จะลองใหม่เองเมื่อเปิดแอปครั้งหน้า";
+}
+async function acSync(why){
+  if(!AC.uid||!fbReady()) return;
+  if(ACU.busy){ACU.again=true; return}
+  ACU.busy=true; ACU.err=""; acShow();
   try{
     trackXp();
-    const mark=S.updatedAt, local=JSON.parse(gsJ(S)), rem=await gsRemote();
+    const mark=S.updatedAt, local=JSON.parse(gsJ(S)), rem=await acRemote();
     let m=local;
-    if(rem.data&&!GSU.force){
-      m=JSON.parse(gsJ(gsMerge(GS.base||undefined,local,rem.data,(local.updatedAt||0)>=(rem.data.updatedAt||0),"")));
+    if(rem.data&&!ACU.force){
+      m=JSON.parse(gsJ(gsMerge(AC.base||undefined,local,rem.data,(local.updatedAt||0)>=(rem.data.updatedAt||0),"")));
       m.updatedAt=Math.max(local.updatedAt||0,rem.data.updatedAt||0); m._xpSeen=m.xp;
     }
-    if(S.updatedAt!==mark){GSU.again=true; return}    // learner saved while we were away: start over with the new state
+    if(S.updatedAt!==mark){ACU.again=true; return}    // learner saved while we were away: start over with the new state
     if(gsJ(m)!==gsJ(local)){
       S=migrate(m);
       try{localStorage.setItem(KEY,gsJ(S))}catch(e){}
       if(NB) NB.save(gsJ(S)).catch(()=>{});
-      if(route.name==="lesson"||gsTyping()) updateChrome(); else render();
+      if(route.name==="lesson"||acTyping()) updateChrome(); else render();
     }
     if(!rem.data||gsJ(m)!==gsJ(rem.data)){
-      const body={files:{[GS_FILE]:{content:gsJ(m)}}};
-      if(rem.id) await gsApi("/gists/"+rem.id,{method:"PATCH",body});
-      else {const g=await gsApi("/gists",{method:"POST",body:Object.assign({description:GS_DESC,public:false},body)}); rem.id=g.id}
+      try{await acPush(m,rem.time)}
+      catch(e){if(e.status===409||e.st==="FAILED_PRECONDITION"||e.st==="ALREADY_EXISTS"||e.st==="ABORTED"){ACU.again=true; return} throw e}
     }
-    GSU.force=false; GS.gist=rem.id; GS.base=m; GS.last=Date.now(); gsStore();
+    ACU.force=false; AC.base=m; AC.last=Date.now(); acStore();
   }catch(e){
-    GSU.err=e.auth||e.status===404?"กุญแจนี้ใช้ไม่ได้ (หมดอายุ ถูกลบ หรือไม่ได้ติ๊ก gist) สร้างกุญแจใหม่แล้วเชื่อมอีกครั้ง":"ซิงก์ไม่สำเร็จ อาจไม่มีอินเทอร์เน็ต จะลองใหม่เองครั้งหน้า";
+    if(e.signedOut){acSignOut(); toast("หมดเวลาการเข้าสู่ระบบ กรุณาเข้าสู่ระบบอีกครั้ง"); return}
+    ACU.err=acErrText(e);
   }finally{
-    GSU.busy=false; gsShow();
-    if(GSU.again){GSU.again=false; gsSoon()}
+    ACU.busy=false; acShow();
+    if(ACU.again){ACU.again=false; acSoon()}
   }
 }
-function gsTime(t){if(!t) return "ยังไม่เคย"; const d=new Date(t); return (dayKey(d)===dayKey()?"วันนี้ ":d.getDate()+"/"+(d.getMonth()+1)+" ")+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
-function gsStatus(){return GSU.busy?"กำลังซิงก์…":GSU.err?'<span class="pen">'+esc(GSU.err)+'</span>':"ซิงก์ล่าสุด "+gsTime(GS.last)}
-function gsShow(){const el=$("#gs-status"); if(el) el.innerHTML=gsStatus()}
-function syncHTML(){
-  const head='<section class="section"><h2 class="h3">ซิงก์อัตโนมัติระหว่างเครื่อง</h2>';
-  if(GS.token) return head+'<div class="card" style="margin-top:12px"><p><b>เปิดซิงก์อยู่</b>'+(GS.login?' <span class="muted">· บัญชี GitHub '+esc(GS.login)+'</span>':'')+'</p>'
-    +'<p class="muted" id="gs-status" style="margin-top:4px">'+gsStatus()+'</p>'
-    +'<p class="muted" style="margin-top:6px;font-size:13.5px">เรียนเครื่องไหน อีกเครื่องจะได้ความคืบหน้าเดียวกันเมื่อเปิดแอป (ต้องต่ออินเทอร์เน็ต)</p>'
-    +'<div class="row" style="margin-top:10px"><button class="btn btn-primary" data-act="gs-now">ซิงก์ตอนนี้</button><button class="btn btn-ghost" data-act="gs-off">เลิกเชื่อม</button></div></div></section>';
-  return head+'<p class="muted" style="margin-top:4px">ให้มือถือกับ iPad มีความคืบหน้าเดียวกันเอง เก็บไว้ในบัญชี GitHub ของคุณเป็นไฟล์ลับ คนอื่นมองไม่เห็น ตั้งครั้งเดียวต่อเครื่อง</p>'
-    +'<div class="card" style="margin-top:12px"><ol style="margin:0;padding-left:20px;line-height:1.75">'
-    +'<li>กดปุ่ม “เปิดหน้าสร้างกุญแจใน GitHub” ช่อง <b>Expiration</b> เลือก <b>No expiration</b> (ช่อง gist ติ๊กไว้ให้แล้ว) เลื่อนลงล่างสุดกด <b>Generate token</b></li>'
-    +'<li>คัดลอกกุญแจที่ขึ้นต้นด้วย <b>ghp_</b> เก็บไว้ในโน้ตด้วย เพราะ GitHub จะไม่โชว์ให้อีก</li>'
-    +'<li>วางในช่องข้างล่างแล้วกด “เชื่อมต่อ” · อีกเครื่องวางกุญแจเดียวกันได้เลย ไม่ต้องสร้างใหม่</li></ol>'
-    +'<a class="btn" style="margin-top:12px" href="'+GS_NEW+'" target="_blank" rel="noopener">เปิดหน้าสร้างกุญแจใน GitHub</a>'
-    +'<input id="gs-in" class="dict-in" style="width:100%;margin-top:10px" placeholder="วางกุญแจ ghp_… ที่นี่" autocomplete="off" autocapitalize="off" spellcheck="false">'
-    +(GSU.err?'<p class="pen" style="margin-top:6px">'+esc(GSU.err)+'</p>':'')
-    +'<button class="btn btn-primary" style="margin-top:10px" data-act="gs-connect"'+(GSU.busy?' disabled':'')+'>'+(GSU.busy?'กำลังเชื่อม…':'เชื่อมต่อ')+'</button></div></section>';
+function acSignOut(){clearTimeout(ACU.timer); AC={email:"",uid:"",idToken:"",refresh:"",exp:0,base:null,last:0}; acStore(); ACU.err=""; ACM.open=false; render()}
+function acTime(t){if(!t) return "ยังไม่เคย"; const d=new Date(t); return (dayKey(d)===dayKey()?"วันนี้ ":d.getDate()+"/"+(d.getMonth()+1)+" ")+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function acStatus(){return ACU.busy?"กำลังซิงก์…":ACU.err?'<span class="pen">'+esc(ACU.err)+'</span>':"ซิงก์ล่าสุด "+acTime(AC.last)}
+function acShow(){document.querySelectorAll(".ac-status").forEach(el=>{el.innerHTML=acStatus()}); updateChrome()}
+// sign-in form, used in the top-bar menu and on the account page
+function acFormHTML(){
+  if(!fbReady()) return '<p class="muted">ระบบบัญชีกำลังเตรียมอยู่ ระหว่างนี้ย้ายความคืบหน้าด้วย “รหัสสำรอง” ในหน้าบัญชีได้</p>';
+  const up=ACM.mode==="signup";
+  return '<form class="ac-form" data-form="ac" novalidate>'
+   +'<label class="ac-lbl">อีเมล<input class="dict-in" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" value="'+esc(ACM.email||"")+'"></label>'
+   +'<label class="ac-lbl">รหัสผ่าน'+(up?' <span class="muted">(อย่างน้อย 6 ตัว)</span>':'')+'<input class="dict-in" name="password" type="password" autocomplete="'+(up?'new-password':'current-password')+'"></label>'
+   +(ACM.err?'<p class="pen" style="margin-top:6px">'+esc(ACM.err)+'</p>':'')
+   +'<button class="btn btn-primary ac-go" type="submit"'+(ACM.busy?' disabled':'')+'>'+(ACM.busy?'กำลังเข้าสู่ระบบ…':up?'สมัครบัญชีและเข้าสู่ระบบ':'เข้าสู่ระบบ')+'</button>'
+   +'<p class="ac-alt">'+(up?'มีบัญชีแล้ว? <button type="button" class="linkbtn" data-act="ac-mode" data-v="in">เข้าสู่ระบบ</button>'
+     :'ยังไม่มีบัญชี? <button type="button" class="linkbtn" data-act="ac-mode" data-v="signup">สมัครบัญชีใหม่</button> · <button type="button" class="linkbtn" data-act="ac-reset">ลืมรหัสผ่าน</button>')+'</p>'
+   +'</form>';
 }
-const GSACT={
-  "gs-connect":async()=>{
-    const v=(($("#gs-in")||{}).value||"").trim(); if(!v){GSU.err="วางกุญแจในช่องก่อน"; render(); return}
-    const old=GS; GS={token:v,gist:"",login:"",base:null,last:0}; GSU.busy=true; GSU.err=""; render();
-    try{const u=await gsApi("/user"); GS.login=u&&u.login||""}
-    catch(e){GS=old; GSU.busy=false; GSU.err=e.auth?"กุญแจนี้ใช้ไม่ได้ ตรวจว่าคัดลอกมาครบ (ขึ้นต้นด้วย ghp_)":"เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่"; render(); return}
-    gsStore(); GSU.busy=false; await gsSync("connect");
-    if(!GSU.err) toast("เชื่อมแล้ว ความคืบหน้าจะซิงก์เองทุกครั้งที่เรียน"); render();
+function acMenuHTML(){
+  if(AC.uid) return '<div class="am-head"><span class="am-av" aria-hidden="true">'+esc((AC.email||"?").charAt(0).toUpperCase())+'</span><div><b>'+esc(AC.email)+'</b><small class="ac-status">'+acStatus()+'</small></div></div>'
+    +'<p class="muted am-note">ใช้อีเมลนี้เข้าสู่ระบบในอีกเครื่อง ความคืบหน้าจะตรงกันเอง</p>'
+    +'<button class="am-item" data-act="ac-now">ซิงก์ตอนนี้</button><button class="am-item" data-act="go" data-to="account">บัญชีและการสำรองข้อมูล</button><button class="am-item am-out" data-act="ac-out">ออกจากระบบ</button>';
+  return '<p class="am-title"><b>'+(ACM.mode==="signup"?'สมัครบัญชี':'เข้าสู่ระบบ')+'</b><br><span class="muted">ใช้บัญชีเดียวกันทั้งมือถือและ iPad ความคืบหน้าจะซิงก์กันเอง</span></p>'+acFormHTML()
+    +'<button class="am-item" data-act="go" data-to="account">สำรองข้อมูลด้วยรหัส</button>';
+}
+function acButtonHTML(){
+  if(!AC.uid) return ICON.user+'<span class="acct-lbl">เข้าสู่ระบบ</span>';
+  return '<span class="am-av sm'+(ACU.err?' err':'')+'" aria-hidden="true">'+esc((AC.email||"?").charAt(0).toUpperCase())+'</span><span class="acct-lbl">'+esc(AC.email.split("@")[0])+'</span>';
+}
+function viewAccount(){
+  const head='<h1 class="h1">บัญชีของฉัน</h1>';
+  const body=AC.uid
+    ?'<section class="section"><div class="card"><p><b>เข้าสู่ระบบแล้ว</b> <span class="muted">· '+esc(AC.email)+'</span></p><p class="muted ac-status" style="margin-top:4px">'+acStatus()+'</p>'
+      +'<p class="muted" style="margin-top:6px;font-size:13.5px">เรียนเครื่องไหน อีกเครื่องที่เข้าสู่ระบบด้วยอีเมลเดียวกันจะได้ความคืบหน้าเดียวกันเมื่อเปิดแอป (ต้องต่ออินเทอร์เน็ต)</p>'
+      +'<div class="row" style="margin-top:10px"><button class="btn btn-primary" data-act="ac-now">ซิงก์ตอนนี้</button><button class="btn btn-ghost" data-act="ac-out">ออกจากระบบ</button></div></div></section>'
+    :'<p class="lede">เข้าสู่ระบบด้วยอีเมลและรหัสผ่าน แล้วใช้บัญชีเดียวกันในมือถือและ iPad ความคืบหน้าจะตรงกันเอง ครั้งแรกให้กด “สมัครบัญชีใหม่”</p><section class="section"><div class="card" style="max-width:460px">'+acFormHTML()+'</div></section>';
+  return head+body+backupHTML();
+}
+async function acSubmit(form){
+  const email=((form.querySelector('[name=email]')||{}).value||"").trim(), pw=(form.querySelector('[name=password]')||{}).value||"";
+  ACM.email=email; ACM.err="";
+  if(!email){ACM.err=AC_ERR.MISSING_EMAIL; render(); return}
+  if(!pw){ACM.err=AC_ERR.MISSING_PASSWORD; render(); return}
+  ACM.busy=true; render();
+  try{
+    const j=await acFetch(acAuthUrl(ACM.mode==="signup"?"signUp":"signInWithPassword"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pw,returnSecureToken:true})});
+    AC={email:j.email||email,uid:"",idToken:"",refresh:"",exp:0,base:null,last:0}; acTake(j); acStore();
+    ACM.busy=false; ACM.open=false; ACM.mode="in"; ACM.email="";
+    render(); await acSync("signin");
+    toast(ACU.err?"เข้าสู่ระบบแล้ว แต่ยังซิงก์ไม่ได้":"เข้าสู่ระบบแล้ว ความคืบหน้าจะซิงก์เองทุกครั้งที่เรียน");
+  }catch(e){ACM.busy=false; ACM.err=AC_ERR[e.code]||(e.status>=500?AC_ERR.NET:AC_ERR.CONFIG); render()}
+}
+const ACACT={
+  "acct-menu":()=>{ACM.open=!ACM.open; ACM.err=""; updateChrome(); if(ACM.open){const i=$("#acct-menu input"); if(i&&!("ontouchstart" in window)) i.focus()}},
+  "ac-mode":t=>{ACM.mode=t.dataset.v; ACM.err=""; render(); const i=document.querySelector(ACM.open?"#acct-menu [name=email]":".ac-form [name=email]"); if(i) i.focus()},
+  "ac-reset":async t=>{
+    const f=t.closest(".ac-form"), email=((f&&f.querySelector('[name=email]')||{}).value||"").trim();
+    if(!email){ACM.err="ใส่อีเมลก่อน แล้วกด “ลืมรหัสผ่าน” อีกครั้ง"; render(); return}
+    try{await acFetch(acAuthUrl("sendOobCode"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({requestType:"PASSWORD_RESET",email})}); ACM.err=""; ACM.email=email; render(); toast("ส่งลิงก์ตั้งรหัสผ่านใหม่ไปที่อีเมลแล้ว")}
+    catch(e){ACM.err=AC_ERR[e.code]||AC_ERR.NET; ACM.email=email; render()}
   },
-  "gs-now":async()=>{await gsSync("button"); if(!GSU.err) toast("ซิงก์แล้ว")},
-  "gs-off":()=>{clearTimeout(GSU.timer); GS={token:"",gist:"",login:"",base:null,last:0}; try{localStorage.removeItem(GS_KEY)}catch(e){} GSU.err=""; render(); toast("เลิกเชื่อมแล้ว ความคืบหน้ายังอยู่ในเครื่องนี้")}
+  "ac-now":async()=>{await acSync("button"); if(!ACU.err) toast("ซิงก์แล้ว")},
+  "ac-out":()=>{acSignOut(); toast("ออกจากระบบแล้ว ความคืบหน้ายังอยู่ในเครื่องนี้")}
 };
+document.addEventListener("click",e=>{if(ACM.open&&!e.target.closest(".acct-wrap")){ACM.open=false; ACM.err=""; updateChrome()}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&ACM.open){ACM.open=false; updateChrome(); const b=$("#acct"); if(b) b.focus()}});
 document.addEventListener("visibilitychange",()=>{
-  if(!GS.token) return;
-  if(document.visibilityState==="hidden"){if(GSU.timer){clearTimeout(GSU.timer); GSU.timer=null; gsSync("hide")}}
-  else if(Date.now()-(GS.last||0)>30000) gsSync("show");
+  if(!AC.uid) return;
+  if(document.visibilityState==="hidden"){if(ACU.timer){clearTimeout(ACU.timer); ACU.timer=null; acSync("hide")}}
+  else if(Date.now()-(AC.last||0)>30000) acSync("show");
 });
 
 /* ---------- routing ---------- */
@@ -17302,7 +17381,7 @@ function go(name,id){
   }
   if(name==="placement") P={runner:null,result:null};
   if(name==="review"){R=null; SR=null}
-  resetAsk=false;
+  resetAsk=false; ACM.open=false; ACM.err="";
   route={name,id:id||null};
   try{history.replaceState(null,"","#"+(name==="lesson"?"lesson-"+id:name==="examrun"?"exam-"+id:name==="practice"&&id?"practice-"+id:name))}catch(e){}
   render(); window.scrollTo(0,0);
@@ -17311,7 +17390,7 @@ function go(name,id){
 function render(){
   if(typeof ytKeep==="function"&&ytKeep()) return;
   if(typeof sgKeep==="function"&&sgKeep()) return;
-  const V={home:viewHome,course:viewCourse,lesson:viewLesson,review:viewReview,teacher:viewTeacher,report:viewReport,placement:viewPlacement,exam:viewExamHub,examrun:viewExamRun,practice:viewPractice}[route.name]||viewHome;
+  const V={account:viewAccount,home:viewHome,course:viewCourse,lesson:viewLesson,review:viewReview,teacher:viewTeacher,report:viewReport,placement:viewPlacement,exam:viewExamHub,examrun:viewExamRun,practice:viewPractice}[route.name]||viewHome;
   registerWords();
   $("#app").innerHTML=V();
   const cs=$(".stepper .is-current"); if(cs){const sc=cs.parentElement; sc.scrollLeft+=cs.getBoundingClientRect().left-sc.getBoundingClientRect().left-(sc.clientWidth-cs.offsetWidth)/2}
@@ -17328,8 +17407,11 @@ function render(){
   if(NB&&route.name==="practice"&&String(route.id||"").indexOf("song.")===0) sgEnter();
 }
 function updateChrome(){
-  const n=streak();
-  $("#streak").innerHTML=ICON.flame+(n?"เรียนต่อเนื่อง "+n+" วัน":"เริ่มนับวันเรียน");
+  const b=$("#acct"), m=$("#acct-menu"); if(!b||!m) return;
+  b.innerHTML=acButtonHTML(); b.setAttribute("aria-expanded",ACM.open?"true":"false"); b.setAttribute("aria-label",AC.uid?"บัญชี "+AC.email:"เข้าสู่ระบบ");
+  const k=[ACM.open,AC.uid,ACM.mode,ACM.err,ACM.busy,fbReady()].join("|");   // rebuild only when it changes, so typing is kept
+  if(m.dataset.k!==k){m.dataset.k=k; m.innerHTML=ACM.open?acMenuHTML():""}
+  m.hidden=!ACM.open;
 }
 let toastT=null;
 function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},2600)}
@@ -17673,8 +17755,8 @@ function viewReport(){
     return '<tr><td class="mono">U'+String(u.n).padStart(2,"0")+'</td><td><span lang="en">'+esc(u.en)+'</span><br><span class="muted" style="font-size:14px">'+esc(u.th)+'</span></td><td>'+LEVELS[u.lv-1].code+'</td>'
      +'<td>'+(r&&r.done?'<span class="chip ok">ผ่าน</span>':unlocked(i)?(r&&r.reached?'<span class="chip now">กำลังเรียน</span>':'<span class="chip">ยังไม่เริ่ม</span>'):'<span class="chip lock">ล็อก</span>')+'</td>'
      +'<td style="font-variant-numeric:tabular-nums">'+(r&&r.best?r.best+"%":"–")+'</td><td class="stars">'+(r&&r.stars?"★".repeat(r.stars)+"☆".repeat(3-r.stars):"")+'</td><td style="font-variant-numeric:tabular-nums">'+(r&&r.writing!=null?r.writing+"/10":"–")+'</td></tr>';}).join("");
-  return '<h1 class="h1">สมุดพกของฉัน</h1><p class="lede">'+(GS.token?"ความคืบหน้าซิงก์กับบัญชี GitHub ของคุณ เรียนเครื่องไหนก็ต่อกันได้":NB?"ความคืบหน้าบันทึกไว้ในเครื่องนี้ ถ้าลบแอป ข้อมูลจะหายไปด้วย":cloud.on?"ความคืบหน้าบันทึกไว้กับบัญชีของคุณ เปิดจากเครื่องไหนก็เรียนต่อได้":"ความคืบหน้าบันทึกไว้ในเบราว์เซอร์นี้ ถ้าล้างข้อมูลเบราว์เซอร์ ข้อมูลจะหายไป")+'</p>'
-   +'<div class="stats" style="margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><div><b>'+done.length+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+(avg?avg+"%":"–")+'</b><span>คะแนนเฉลี่ย</span></div><div><b>'+keys.length+'</b><span>คำศัพท์</span></div><div><b>'+keys.filter(k=>S.words[k].b>=4).length+'</b><span>จำได้แม่น</span></div><div><b>'+streak()+'</b><span>วันต่อเนื่อง</span></div><div><b>'+S.days.length+'</b><span>วันที่เข้าเรียน</span></div>'+(NB?'<div><b>'+(S.pron||0)+'</b><span>ประโยคที่พูดผ่าน</span></div>':'')+'</div>'
+  return '<h1 class="h1">สมุดพกของฉัน</h1><p class="lede">'+(AC.uid?"ความคืบหน้าซิงก์กับบัญชี "+AC.email+" เรียนเครื่องไหนก็ต่อกันได้":NB?"ความคืบหน้าบันทึกไว้ในเครื่องนี้ ถ้าลบแอป ข้อมูลจะหายไปด้วย":cloud.on?"ความคืบหน้าบันทึกไว้กับบัญชีของคุณ เปิดจากเครื่องไหนก็เรียนต่อได้":"ความคืบหน้าบันทึกไว้ในเบราว์เซอร์นี้ ถ้าล้างข้อมูลเบราว์เซอร์ ข้อมูลจะหายไป")+'</p>'
+   +'<div class="stats" style="margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><div><b>'+done.length+'/'+COURSE.length+'</b><span>บทที่ผ่าน</span></div><div><b>'+(avg?avg+"%":"–")+'</b><span>คะแนนเฉลี่ย</span></div><div><b>'+keys.length+'</b><span>คำศัพท์</span></div><div><b>'+keys.filter(k=>S.words[k].b>=4).length+'</b><span>จำได้แม่น</span></div><div><b>'+S.days.length+'</b><span>วันที่เข้าเรียน</span></div>'+(NB?'<div><b>'+(S.pron||0)+'</b><span>ประโยคที่พูดผ่าน</span></div>':'')+'</div>'
    +'<section class="section"><h2 class="h3" style="margin-bottom:10px">ผลการเรียนรายบท</h2><div class="tbl-wrap"><table class="rep-tbl"><thead><tr><th>บท</th><th>ชื่อบท</th><th>ระดับ</th><th>สถานะ</th><th>คะแนนสูงสุด</th><th>ดาว</th><th>การบ้านเขียน</th></tr></thead><tbody>'+table+'</tbody></table></div></section>'
    +'<section class="section"><div class="section-head"><h2 class="h3">ประกาศนียบัตร</h2><div class="name-field"><label for="cert-name" class="muted">ชื่อบนประกาศนียบัตร</label><input id="cert-name" value="'+esc(S.name)+'" placeholder="ชื่อของคุณ" maxlength="40"></div></div>'
    +(certs.length?'<div class="cert-grid">'+certs.map(lv=>{
@@ -17685,7 +17767,7 @@ function viewReport(){
     }).join("")+'</div>'
     :'<div class="card"><p>ผ่านทุกบทในระดับเดียวกันครบ 4 บท เพื่อรับประกาศนียบัตรระดับนั้น</p><div class="stack" style="margin-top:14px;gap:10px">'+LEVELS.map(lv=>{const us=coreOf(lv.n),d=us.filter(u=>S.lessons[u.id]&&S.lessons[u.id].done).length;return '<div><div class="row" style="justify-content:space-between"><span>'+lv.code+' <span lang="en">'+esc(lv.name)+'</span></span><span class="muted">'+d+'/4</span></div><div class="bar"><i style="width:'+(d/4*100)+'%"></i></div></div>'}).join("")+'</div></div>')
    +'</section>'
-   +xpChartHTML()+calendarHTML()+badgesHTML()+settingsHTML()+syncHTML()+backupHTML()
+   +xpChartHTML()+calendarHTML()+badgesHTML()+settingsHTML()+'<section class="section"><h2 class="h3">บัญชีและการสำรองข้อมูล</h2><p class="muted" style="margin-top:4px">'+(AC.uid?'เข้าสู่ระบบด้วย '+esc(AC.email)+' · ความคืบหน้าซิงก์ระหว่างเครื่องเอง':'เข้าสู่ระบบเพื่อให้มือถือกับ iPad มีความคืบหน้าเดียวกัน หรือย้ายข้อมูลด้วยรหัสสำรอง')+'</p><button class="btn" style="margin-top:10px" data-act="go" data-to="account">'+(AC.uid?'จัดการบัญชีและสำรองข้อมูล':'เข้าสู่ระบบ / สำรองข้อมูล')+'</button></section>'
    +otaSection()
    +'<section class="section"><h2 class="h3">เริ่มเรียนใหม่ทั้งหมด</h2><p class="muted" style="margin-top:4px">ลบคะแนน คำศัพท์ และประวัติการเรียนทั้งหมด</p>'
    +(resetAsk?'<div class="row" style="margin-top:10px"><span class="pen">ลบจริงหรือไม่ ย้อนกลับไม่ได้</span><button class="btn btn-danger" data-act="reset-yes">ลบทั้งหมด</button><button class="btn btn-ghost" data-act="reset-no">ยกเลิก</button></div>'
@@ -17782,12 +17864,13 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT,GSACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT,ACACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
 });
 document.addEventListener("submit",e=>{
+  if(e.target.matches('[data-form="ac"]')){e.preventDefault(); acSubmit(e.target); return}
   if(e.target.matches('[data-form^="sg"]')){e.preventDefault(); sgSubmit(e.target); return}
   if(e.target.matches('[data-form="ytadd"]')){
     e.preventDefault(); const id=ytParse(($("#yt-url")||{}).value);
@@ -17842,10 +17925,10 @@ document.addEventListener("change",e=>{if(e.target.id==="cert-name") render();
   if(h.indexOf("lesson-")===0){const id=h.slice(7), i=COURSE.findIndex(u=>u.id===id); if(i>=0&&unlocked(i)){go("lesson",id);return}}
   if(h.indexOf("exam-")===0&&secById(h.slice(5))){go("examrun",h.slice(5));return}
   if(h.indexOf("practice-")===0){go("practice",h.slice(9));return}
-  if(["home","course","review","teacher","report","placement","exam","practice"].includes(h)){go(h);return}
+  if(["home","course","review","teacher","report","placement","exam","practice","account"].includes(h)){go(h);return}
   render();
 })();
 initCloud();
-Promise.resolve(initNative()).catch(()=>{}).then(()=>gsSync("open"));
+Promise.resolve(initNative()).catch(()=>{}).then(()=>acSync("open"));
 })();
 </script>
