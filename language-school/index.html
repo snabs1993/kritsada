@@ -604,6 +604,24 @@ body{margin:0}
 .shadow-now p{font-size:18px;font-weight:600;margin-top:4px}
 .shadow-now.your-turn{border-color:var(--accent);background:var(--accent-soft)}
 .shadow-now.your-turn::after{content:"ถึงตาคุณพูดตาม";display:block;font-size:13px;color:var(--accent);font-weight:600;margin-top:4px}
+/* guided speaking */
+.sp-review{display:flex;flex-direction:column;gap:2px;width:100%;margin-top:14px;text-align:left;cursor:pointer;border:1px solid var(--accent);background:var(--accent-soft)}
+.sp-prog{display:flex;align-items:center;gap:10px;margin-top:12px}.sp-prog .bar{flex:1;margin:0}
+.sp-card{margin-top:12px}
+.sp-q{font-size:17px;line-height:1.5;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sp-th{font-size:20px;font-weight:600;line-height:1.45}
+.sp-hint{margin-top:12px}.sp-hint>.muted{font-size:13px}
+.sp-kw{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.sp-chip{padding:5px 10px;border-radius:99px;background:var(--accent-soft);font-size:15px}
+.sp-frame,.sp-en{font-size:19px;line-height:1.5;margin-top:2px}
+.sp-blank{display:inline-block;min-width:56px;border-bottom:2px solid var(--accent);margin:0 2px}
+.sp-ans .sp-en{font-weight:600}
+.sp-tip{margin-top:6px;font-size:14px;color:var(--ink-2);background:var(--paper);border-radius:10px;padding:8px 10px}
+.sp-acts{margin-top:14px;gap:8px;flex-wrap:wrap}
+.sp-mic svg{width:18px;height:18px;margin-right:4px}
+.sp-ok{color:var(--green);font-weight:600}
+.sp-mic.on{background:var(--red);border-color:var(--red);color:#fff}
+.sp-self{margin-top:14px;display:flex;flex-direction:column;gap:6px}.sp-self .row{gap:8px;flex-wrap:wrap}
 /* touch screens: bigger speaker buttons, hide the tab bar while the keyboard is up */
 @media (pointer:coarse){.say,.mic{width:42px;height:42px}.mic svg{width:19px;height:19px}.say svg{width:19px;height:19px}.msg .say{width:34px;height:34px}.opt{padding:15px 16px}.tl{padding:10px 16px}}
 @media (max-width:1100px){body:has(textarea:focus,input:focus) .nav{display:none}body:has(textarea:focus,input:focus) main{padding-bottom:24px}}
@@ -9784,6 +9802,8 @@ function viewPractice(){
   if(id==="lookup") return viewLookup();
   if(id==="verbs") return viewVerbs();
   if(id==="numbers") return viewNumbers();
+  if(id==="speak") return viewSpeakList();
+  if(id.indexOf("speak.")===0) return viewSpeak(id.slice(6));
   if(id==="phrasebook") return viewPhrasebook();
   if(id.indexOf("pb.")===0) return viewPbSit(id.slice(3));
   if(id==="lvtest") return viewLvTests();
@@ -9824,7 +9844,8 @@ function viewPracticeHub(){
      +card("pgo","sounds","ฝึกหูแยกเสียง","เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W, S/Z, เสียงท้ายคำ -s -ed, TH และ -teen/-ty",snd+" / "+SOUNDS.length+" ชุดเสียง")
      +card("pgo","numbers","ฟังตัวเลขและการสะกด","ราคา เวลา ปี เบอร์โทร และสะกดชื่อ จุดที่พลาดบ่อยในชีวิตจริงและข้อสอบ",nums+" / "+NUM_MODES.length+" ประเภท"))
     +group("ฝึกพูด",
-      card("pgo","phrasebook","ประโยคพร้อมใช้ตามสถานการณ์","สนามบิน โรงแรม ร้านอาหาร ช้อปปิ้ง ถามทาง ที่ทำงาน หาหมอ โทรศัพท์",pbN+" / "+PHRASEBOOK.length+" หมวดทดสอบแล้ว")
+      card("pgo","speak","พาพูด: นึกคำให้ออก","แอปบอกเป็นภาษาไทยว่าจะให้พูดอะไร คุณลองพูดเป็นภาษาอังกฤษเอง ติดตรงไหนกดขอคำใบ้ทีละขั้น ประโยคที่ยังพูดไม่ได้จะวนกลับมาให้ลองใหม่",SPEAK.length+" หัวข้อ · "+SPEAK.reduce((n,t)=>n+t.items.length,0)+" ประโยค"+(spHard().length?" · ทบทวน "+spHard().length:""))
+     +card("pgo","phrasebook","ประโยคพร้อมใช้ตามสถานการณ์","สนามบิน โรงแรม ร้านอาหาร ช้อปปิ้ง ถามทาง ที่ทำงาน หาหมอ โทรศัพท์",pbN+" / "+PHRASEBOOK.length+" หมวดทดสอบแล้ว")
      +card("pgo","stress","ฝึกเน้นเสียงพยางค์","ฟังแล้วแตะพยางค์ที่ออกเสียงหนัก แก้นิสัยลงเสียงท้ายคำแบบไทย",stat("stress").best!=null?"ดีที่สุด "+stat("stress").best+"/10":STRESS.length+" คำ")
      +card("pgo","scenes","สถานการณ์จำลองกับครู AI","คุยกับครู AI ใน "+SCENES.length+" สถานการณ์จริง เช่น สัมภาษณ์งาน สนามบิน หาหมอ ขอขึ้นเงินเดือน","ครูแก้ภาษาให้ทุกประโยค"," ai-only"))
     +group("คำศัพท์และไวยากรณ์",
@@ -11601,6 +11622,7 @@ function viewShadowList(){
   let h='<h1 class="h1">ห้องฝึก Shadowing</h1><p class="lede">ฟังเจ้าของภาษาแล้วพูดตามทันที เลียนแบบทั้งเสียง จังหวะ การเชื่อมคำ และน้ำเสียง วันละ 10–15 นาทีช่วยให้พูดคล่องและสำเนียงดีขึ้นเร็วที่สุด'+(NB?' แอปจะฟังเสียงคุณและให้คะแนนทุกประโยค':' ในแอป Android แอปจะฟังเสียงคุณและให้คะแนนด้วย')+'</p>'
    +'<div class="card sh-how"><ol><li><b>ฟังแล้วพูดตาม</b> ฟังจบหนึ่งประโยค แล้วพูดตามในช่วงเว้นจังหวะ เหมาะกับการเริ่มต้น</li><li><b>พูดพร้อมกัน</b> พูดทับเสียงไปพร้อมกัน ห่างแค่ครึ่งจังหวะ นี่คือ shadowing แท้ๆ ฝึกความลื่นไหล</li><li><b>ซ่อนข้อความ</b> เมื่อคล่องแล้ว ลองฟังอย่างเดียวโดยไม่ดูตัวหนังสือ</li></ol><p class="muted" style="font-size:14px">ฝึกไปแล้ว <b>'+(st.n||0)+'</b> ประโยค'+(st.yt?' · จากคลิป YouTube <b>'+st.yt+'</b> ช่วง':'')+'</p></div>'
    +'<button class="p-card yt-entry" data-act="pgo" data-id="yt"><span class="p-title">Shadowing จากคลิป YouTube</span><span class="p-desc">วางลิงก์คลิปที่ชอบ แอปเล่นทีละช่วงแล้วหยุดให้พูดตาม ตัดช่วงตามประโยคเองได้'+(NB?'':' (ใช้ได้ในแอป Android)')+'</span><span class="p-meta">'+ytList().length+' คลิปของฉัน</span></button>'
+   +'<button class="p-card yt-entry sp-entry" data-act="pgo" data-id="speak"><span class="p-title">พาพูด: นึกคำให้ออกเอง</span><span class="p-desc">พูดตามได้แล้ว แต่พอต้องพูดเองนึกคำไม่ออก? แอปบอกเป็นภาษาไทย ให้ลองพูดเองก่อน ติดตรงไหนกดขอคำใบ้ทีละขั้น</span><span class="p-meta">'+SPEAK.length+' หัวข้อ</span></button>'
    +'<div class="tabs" role="group" aria-label="ประเภท" style="margin-top:18px">'+SH_CATS.map(c=>'<button data-act="shcat" data-c="'+c[0]+'" aria-pressed="'+(shCat===c[0])+'">'+c[1]+'</button>').join("")+'</div>';
   if(shCat==="pb") return h+'<div class="lessons" style="margin-top:14px">'+sets.map(row).join("")+'</div>';
   return h+LEVELS.filter(lv=>sets.some(x=>x.lv===lv.code)).map(lv=>'<section class="section" style="margin-top:20px"><h2 class="h3">'+lv.code+' <span lang="en">'+lv.name+'</span></h2><div class="lessons" style="margin-top:10px">'+sets.filter(x=>x.lv===lv.code).map(row).join("")+'</div></section>').join("");
@@ -17100,6 +17122,142 @@ function newWordsHTML(){
    +'<button class="btn btn-sm" style="margin-top:10px" data-act="rv-more">ขอคำใหม่เพิ่มอีก 10 คำตอนนี้</button></div>';
 }
 
+/* ---------- guided speaking ("พาพูด") ---------- */
+// For learners who understand English but cannot find the words when they speak. Each item gives a Thai instruction
+// of what to say; the learner tries first, then opens hints one step at a time (key words -> sentence frame -> model
+// answer, read aloud). Items they could not say on their own come back at the end of the round and stay on a
+// "hard" list (stat "spkHard") for the review session until they say them without help.
+// Topics: SPEAK.push({id,lv,cat,title,en,th,items:[{th,q?,kw:[[en,th]],frame,en,alts?,free?,tip?}]}) (content blocks).
+const SPEAK=[];
+const SP_CATS=[["all","ทั้งหมด"],["life","ชีวิตประจำวัน"],["work","ที่ทำงาน"],["talk","คุยต่อให้ได้"]];
+let SPR=null, SPCAT="all";   // the running session, the list filter
+// speech recognition: the phone app's recogniser, or the browser's (Safari on iPad, Chrome) on the website
+const STT={
+  web(){return window.SpeechRecognition||window.webkitSpeechRecognition||null},
+  can(){return !!NB||(!!this.web()&&(!navigator.webdriver||!!window.EC_FAKE_STT))},
+  async ready(){if(NB){try{return (await NB.sttAvailable())&&(await NB.sttPermission())}catch(e){return false}} return this.can()},
+  listen(o){
+    if(NB) return NB.listen(o);
+    return new Promise((res,rej)=>{
+      const R=this.web(); let r, text="", end=false;
+      try{r=new R()}catch(e){return rej(new Error("start"))}
+      const fin=()=>{if(end) return; end=true; clearTimeout(t); this.cur=null; res(text)};
+      r.lang=S.settings.accent==="GB"?"en-GB":"en-US"; r.interimResults=true; r.continuous=false; r.maxAlternatives=1;
+      r.onresult=e=>{let s=""; for(let i=0;i<e.results.length;i++) s+=e.results[i][0].transcript; text=s.trim(); if(o.onPartial) o.onPartial(text)};
+      r.onerror=e=>{if(end) return; if(e.error==="no-speech"||e.error==="aborted") return fin(); end=true; clearTimeout(t); this.cur=null; const x=new Error(e.error||"error"); x.code=e.error; rej(x)};
+      r.onend=fin;
+      const t=setTimeout(()=>{try{r.stop()}catch(e){} setTimeout(fin,800)},o.maxMs||8000);
+      this.cur=r; try{r.start()}catch(e){end=true; clearTimeout(t); this.cur=null; rej(e)}
+    });
+  },
+  stop(){if(NB) return NB.stopListening().catch(()=>{}); if(this.cur) try{this.cur.stop()}catch(e){}}
+};
+function spTopic(id){return SPEAK.find(t=>t.id===id)}
+function spKey(t,i){return t.id+"#"+i}
+function spHard(){const h=stat("spkHard"); return Object.keys(h).filter(k=>h[k]>0).map(k=>{const p=k.split("#"), t=spTopic(p[0]); return t&&t.items[+p[1]]?{t,i:+p[1]}:null}).filter(Boolean)}
+const spPass=it=>it.free?50:70;   // a personal answer (own name, job…) is only checked on the frame's fixed words
+function spTargets(it){return it.free?[it.frame.replace(/_{3,}/g," ").replace(/\s+/g," ").trim()]:[it.en].concat(it.alts||[])}
+function spGrade(it,heard){   // best match over the model answer and its alternatives
+  let best=null; spTargets(it).forEach(t=>{const g=gradePron(t,heard); if(!best||g.score>best.score) best=g}); return best;
+}
+function spStart(id){
+  const items=id==="review"?spHard().slice(0,10):(spTopic(id)?spTopic(id).items.map((_,i)=>({t:spTopic(id),i})):[]);
+  SPR={id,items,q:items.map((_,k)=>k),pos:0,round:1,hint:0,heard:null,listening:false,res:{},again:[],err:""};
+}
+function spCur(){if(!SPR) return null; const k=SPR.q[SPR.pos]; return k==null?null:SPR.items[k]}
+function spStop(){if(SPR&&SPR.listening){SPR.listening=false; STT.stop()} Speech.stop()}
+function viewSpeakList(){
+  const st=stat("spk"), hard=spHard().length;
+  const list=SPEAK.filter(t=>SPCAT==="all"||t.cat===SPCAT);
+  return pBack()+'<h1 class="h1">พาพูด</h1><p class="lede">ฝึกนึกคำให้ออกเอง แอปบอกเป็นภาษาไทยว่าจะให้พูดอะไร ลองพูดเป็นภาษาอังกฤษก่อน ติดตรงไหนกดขอคำใบ้ทีละขั้น: คำสำคัญ → โครงประโยค → คำตอบ ประโยคที่ยังพูดเองไม่ได้จะวนกลับมาให้ลองใหม่</p>'
+   +(STT.can()?'':'<p class="muted" style="margin-top:6px">เครื่องนี้ใช้ไมค์ตรวจไม่ได้ พูดออกเสียงจริงแล้วกดประเมินตัวเองแทนได้</p>')
+   +(hard?'<button class="card sp-review" data-act="pgo" data-id="speak.review"><b>ทบทวนประโยคที่ยังพูดไม่คล่อง</b><span class="muted">'+hard+' ประโยค · ลองใหม่จนพูดได้เอง</span></button>':'')
+   +'<div class="tabs" style="margin-top:16px">'+SP_CATS.map(c=>'<button aria-pressed="'+(SPCAT===c[0])+'" data-act="spcat" data-v="'+c[0]+'">'+c[1]+'</button>').join("")+'</div>'
+   +'<div class="p-grid" style="margin-top:14px">'+list.map(t=>{const r=st[t.id];
+      return '<button class="p-card" data-act="pgo" data-id="speak.'+t.id+'"><span class="p-title">'+esc(t.title)+' <span class="chip">'+esc(t.lv)+'</span></span><span class="p-desc">'+esc(t.th)+'</span><span class="p-meta">'+(r?'พูดได้เอง '+r.best+'/'+t.items.length+' ประโยค':t.items.length+' ประโยค')+'</span></button>'}).join("")+'</div>';
+}
+function spHintHTML(it,h){
+  let out="";
+  if(h>=1) out+='<div class="sp-hint"><span class="muted">คำสำคัญ</span><div class="sp-kw">'+it.kw.map(k=>'<span class="sp-chip"><b lang="en">'+esc(k[0])+'</b> '+esc(k[1])+'</span>').join("")+'</div></div>';
+  if(h>=2) out+='<div class="sp-hint"><span class="muted">โครงประโยค</span><p class="sp-frame" lang="en">'+esc(it.frame).replace(/_{3,}/g,'<span class="sp-blank">&nbsp;</span>')+'</p></div>';
+  if(h>=3) out+='<div class="sp-hint sp-ans"><span class="muted">'+(it.free?'ตัวอย่างคำตอบ (เปลี่ยนเป็นของตัวเองได้)':'คำตอบ')+'</span><p class="sp-en" lang="en">'+esc(it.en)+' '+sayBtn(it.en,"ฟังคำตอบ")+'</p>'
+    +(it.alts&&it.alts.length?'<p class="muted" style="font-size:14px">พูดแบบนี้ก็ได้: <span lang="en">'+it.alts.map(esc).join(" · ")+'</span></p>':'')
+    +(it.tip?'<p class="sp-tip">'+esc(it.tip)+'</p>':'')+'</div>';
+  return out;
+}
+function viewSpeak(id){
+  if(!SPR||SPR.id!==id) spStart(id);
+  const t=id==="review"?null:spTopic(id);
+  if(!SPR.items.length) return pBack("speak","พาพูด")+'<h1 class="h1">พาพูด</h1><p class="lede">'+(id==="review"?'ยังไม่มีประโยคที่ต้องทบทวน เก่งมาก!':'ไม่พบหัวข้อนี้')+'</p><button class="btn" data-act="pgo" data-id="speak">กลับไปเลือกหัวข้อ</button>';
+  const head=pBack("speak","พาพูด")+'<h1 class="h2" style="margin-top:8px">'+(t?esc(t.title)+' <span class="chip">'+esc(t.lv)+'</span>':'ทบทวนประโยคที่ยังพูดไม่คล่อง')+'</h1>';
+  const cur=spCur();
+  if(!cur){
+    const vals=Object.values(SPR.res), own=vals.filter(v=>v==="own").length, help=vals.filter(v=>v==="hint").length, miss=vals.filter(v=>v==="miss").length;
+    return head+'<div class="card sp-done"><p class="h3">จบรอบแล้ว</p><div class="stats" style="margin-top:12px;grid-template-columns:repeat(3,1fr)"><div><b>'+own+'</b><span>พูดได้เอง</span></div><div><b>'+help+'</b><span>ใช้คำใบ้</span></div><div><b>'+miss+'</b><span>ยังพูดไม่ได้</span></div></div>'
+      +'<p class="muted" style="margin-top:12px">'+(own===SPR.items.length?'พูดได้เองครบทุกประโยค ยอดเยี่ยม!':'ประโยคที่ยังพูดเองไม่ได้ถูกเก็บไว้ใน “ทบทวนประโยคที่ยังพูดไม่คล่อง” ลองอีกครั้งพรุ่งนี้ จะจำได้ดีขึ้นมาก')+'</p>'
+      +'<div class="row" style="margin-top:14px"><button class="btn btn-primary" data-act="sprestart">ฝึกหัวข้อนี้อีกรอบ</button><button class="btn btn-ghost" data-act="pgo" data-id="speak">เลือกหัวข้ออื่น</button></div></div>';
+  }
+  const it=cur.t.items[cur.i], n=SPR.q.length, h=SPR.hint, g=SPR.heard, done=SPR.res[SPR.pos+"@"+SPR.round]!=null;
+  const mic=STT.can()&&!SPR.noMic;
+  let res="";
+  if(SPR.listening) res='<div class="pron live" role="status"><span class="muted">กำลังฟัง… พูดได้เลย แตะไมค์อีกครั้งเมื่อพูดจบ</span><p class="heard" lang="en">'+esc(SPR.live||"")+'</p></div>';
+  else if(SPR.err) res='<div class="pron" role="status"><span class="pen">'+esc(SPR.err)+'</span></div>';
+  else if(g) res='<div class="pron" role="status">'+(g.heard?'<p class="pron-words" lang="en">'+g.tokens.map(x=>'<span class="'+(x.ok?"ok":"miss")+'">'+esc(x.w)+'</span>').join(" ")+'</p><p><b>'+g.score+'%</b> <span class="'+(g.score>=spPass(it)?'sp-ok':'pen')+'">'+(g.score>=spPass(it)?(SPR.hintAtTry?'ดีมาก! พูดได้แล้ว':'เยี่ยม! นึกออกเองเลย'):'ยังไม่ครบ ลองขอคำใบ้ หรือพูดอีกครั้ง')+'</span></p><p class="muted" style="font-size:14px">แอปได้ยินว่า: <span lang="en">'+esc(g.heard)+'</span></p>':'<p class="pen">ไม่ได้ยินเสียง ลองพูดใกล้ไมค์ขึ้นอีกนิด</p>')+'</div>';
+  const micB=mic?'<button class="btn'+(done?'':' btn-primary')+' sp-mic'+(SPR.listening?' on':'')+'" data-act="spmic" aria-pressed="'+SPR.listening+'">'+ICON.mic+(SPR.listening?'หยุดฟัง':done||h>=3?'พูดตามอีกครั้ง':'กดแล้วพูด')+'</button>':'';
+  return head
+   +'<div class="sp-prog"><div class="bar"><i style="width:'+Math.round(SPR.pos/n*100)+'%"></i></div><span class="muted">'+(SPR.round>1?'รอบทวน · ':'')+(SPR.pos+1)+' / '+n+'</span></div>'
+   +'<div class="card sp-card">'
+   +(it.q?'<p class="sp-q"><span class="muted">อีกฝ่ายพูดว่า</span><br><span lang="en">'+esc(it.q)+'</span> '+sayBtn(it.q,"ฟังอีกฝ่ายพูด")+'</p>':'')
+   +'<p class="sp-th">'+esc(it.th)+'</p>'
+   +(h===0&&!done?'<p class="muted" style="margin-top:4px">ลองพูดเป็นภาษาอังกฤษออกเสียงจริงก่อน ไม่ต้องกลัวผิด</p>':'')
+   +spHintHTML(it,h)+res
+   +'<div class="row sp-acts">'+micB
+   +(h<3?'<button class="btn" data-act="sphint">'+(h===0?'ขอคำใบ้':h===1?'ขอโครงประโยค':'ดูคำตอบ')+'</button>':'')
+   +'</div>'
+   +(done?'<div class="row sp-acts"><button class="btn btn-primary" data-act="spnext">ประโยคต่อไป</button></div>'
+     :(h>=3||!mic)&&!SPR.listening?'<div class="sp-self"><span class="muted">พูดออกเสียงแล้ว ประเมินตัวเอง:</span><div class="row"><button class="btn" data-act="spself" data-v="own">พูดได้เอง</button><button class="btn" data-act="spself" data-v="hint">ได้เพราะคำใบ้</button><button class="btn" data-act="spself" data-v="miss">ยังพูดไม่ได้</button></div></div>':'')
+   +'</div>';
+}
+function spMark(v){   // grade the current item once per round
+  const k=SPR.pos+"@"+SPR.round; if(SPR.res[k]!=null) return;
+  SPR.res[k]=v; const cur=spCur(), key=spKey(cur.t,cur.i), hd=stat("spkHard");
+  if(v==="own"){if(hd[key]) delete hd[key]; S.xp+=3} else {hd[key]=(hd[key]||0)+1; SPR.again.push(SPR.q[SPR.pos]); S.xp+=1}
+  markDay(); save();
+}
+function spNext(){
+  SPR.pos++; SPR.hint=0; SPR.hintAtTry=0; SPR.heard=null; SPR.err=""; SPR.live="";
+  if(SPR.pos>=SPR.q.length&&SPR.again.length&&SPR.round===1){SPR.q=SPR.again.slice(); SPR.again=[]; SPR.pos=0; SPR.round=2}
+  if(SPR.pos>=SPR.q.length&&SPR.id!=="review"){
+    const t=spTopic(SPR.id), first={}; Object.keys(SPR.res).forEach(k=>{if(k.endsWith("@1")) first[k]=SPR.res[k]});
+    const own=Object.values(first).filter(v=>v==="own").length, st=stat("spk");
+    st[SPR.id]={best:Math.max(own,(st[SPR.id]||{}).best||0),at:Date.now()}; save();
+  }
+  render(); window.scrollTo(0,0);
+  const c=spCur(); if(c&&c.t.items[c.i].q) Speech.say(c.t.items[c.i].q);
+}
+async function spListen(){
+  if(SPR.listening){SPR.listening=false; STT.stop(); return}
+  Speech.stop(); SPR.err="";
+  if(!(await STT.ready())){SPR.err=NB?"ใช้ไมโครโฟนไม่ได้ เปิดสิทธิ์ไมโครโฟนและการรู้จำเสียงพูดให้แอปนี้ในการตั้งค่าของเครื่อง":"เบราว์เซอร์นี้ใช้ไมค์ไม่ได้ พูดออกเสียงแล้วประเมินตัวเองแทน"; SPR.noMic=!NB; render(); return}
+  const cur=spCur(), it=cur.t.items[cur.i], words=pronWords(it.en).length, pos=SPR.pos;
+  SPR.listening=true; SPR.live=""; SPR.heard=null; render();
+  let heard="";
+  try{heard=await STT.listen({maxMs:4000+words*700,hints:spTargets(it),onPartial:x=>{SPR.live=x; const el=document.querySelector(".pron.live .heard"); if(el) el.textContent=x}})}
+  catch(e){if(!SPR||SPR.pos!==pos) return; SPR.listening=false; SPR.err=e&&/not-allowed|service-not-allowed/.test(e.code||"")?"ไม่ได้รับอนุญาตให้ใช้ไมค์ อนุญาตไมค์ให้เว็บนี้ หรือพูดแล้วประเมินตัวเองแทน":"ฟังเสียงไม่สำเร็จ ลองกดไมค์อีกครั้ง"; if(e&&/not-allowed|service-not-allowed/.test(e.code||"")) SPR.noMic=true; render(); return}
+  if(!SPR||SPR.pos!==pos) return;
+  SPR.listening=false; SPR.heard=spGrade(it,heard);
+  if(SPR.heard.heard&&SPR.heard.score>=spPass(it)){if(SPR.hint<3) SPR.hint=Math.max(SPR.hint,3); spMark(SPR.hintAtTry===0?"own":"hint")}
+  render();
+}
+const SPACT={
+  spcat:t=>{SPCAT=t.dataset.v; render()},
+  sphint:()=>{SPR.hint=Math.min(3,SPR.hint+1); render(); if(SPR.hint===3){const c=spCur(); Speech.say(c.t.items[c.i].en)}},
+  spmic:()=>{SPR.hintAtTry=SPR.hint; spListen()},
+  spself:t=>{spMark(t.dataset.v); if(SPR.hint<3) SPR.hint=3; render()},
+  spnext:()=>spNext(),
+  sprestart:()=>{const id=SPR.id; spStart(id); render(); window.scrollTo(0,0)}
+};
+
 /* ---------- back up / move progress ---------- */
 // Progress lives in one browser or one phone. A backup code is the whole of S as text the learner can copy into
 // notes or a chat: "EC1:" + base64 of deflate-compressed JSON where CompressionStream exists, else "EC0:" + base64 JSON.
@@ -17348,6 +17506,326 @@ document.addEventListener("visibilitychange",()=>{
   else if(Date.now()-(AC.last||0)>30000) acSync("show");
 });
 
+/* ---------- guided speaking topics ---------- */
+SPEAK.push(
+ {id:"sp01",lv:"A1",cat:"life",title:"แนะนำตัวเอง",en:"Introducing yourself",th:"ทักทาย บอกชื่อ บ้านเกิด ที่อยู่ งาน งานอดิเรก และถามอีกฝ่ายกลับได้",
+  items:[
+   {th:"ทักทายแล้วบอกชื่อของคุณ",q:"Hi! What's your name?",kw:[["name","ชื่อ"],["Nice to meet you","ยินดีที่ได้รู้จัก"]],frame:"Hi, I'm ___. Nice to meet you.",en:"Hi, I'm Tong. Nice to meet you.",alts:["Hi, my name is Tong. Nice to meet you.","Hi, I'm Tong. Nice to meet you too."],free:true},
+   {th:"ตอบว่าคุณมาจากประเทศไทย",q:"Where are you from?",kw:[["from","มาจาก"],["Thailand","ประเทศไทย"]],frame:"I'm ___ ___.",en:"I'm from Thailand.",alts:["I come from Thailand.","I'm Thai."],tip:"มาจากประเทศไทยพูดว่า I'm from Thailand หรือ I'm Thai อย่าพูด I'm Thailand"},
+   {th:"บอกว่าเดิมทีคุณมาจากกรุงเทพฯ แต่ตอนนี้อาศัยอยู่ที่สิงคโปร์",kw:[["originally","เดิมที"],["live in","อาศัยอยู่ที่"]],frame:"I'm ___ from Bangkok, but I ___ Singapore now.",en:"I'm originally from Bangkok, but I live in Singapore now.",alts:["I'm from Bangkok, but now I live in Singapore."]},
+   {th:"ตอบว่าคุณอยู่คอนโดใกล้สถานีรถไฟฟ้า MRT",q:"Where do you live?",kw:[["condo","คอนโด"],["near","ใกล้"]],frame:"I live in a ___ ___ the MRT station.",en:"I live in a condo near the MRT station.",alts:["I live in a condo close to the MRT station."]},
+   {th:"ตอบว่าคุณเป็นวิศวกร (เปลี่ยนเป็นอาชีพของคุณเองได้)",q:"What do you do?",kw:[["engineer","วิศวกร"]],frame:"I'm an ___.",en:"I'm an engineer.",alts:["I work as an engineer."],free:true,tip:"What do you do? คือถามอาชีพ ไม่ได้ถามว่ากำลังทำอะไรอยู่ และอย่าลืม a หรือ an หน้าอาชีพ"},
+   {th:"บอกว่าคุณทำงานที่บริษัทก่อสร้าง",kw:[["work for","ทำงานให้กับ"],["construction company","บริษัทก่อสร้าง"]],frame:"I ___ a ___.",en:"I work for a construction company.",alts:["I work at a construction company."],free:true},
+   {th:"ตอบว่าคุณชอบว่ายน้ำและดูหนัง",q:"What do you like to do in your free time?",kw:[["swimming","ว่ายน้ำ"],["watching movies","ดูหนัง"]],frame:"I like ___ and ___.",en:"I like swimming and watching movies.",alts:["I enjoy swimming and watching movies.","I like to swim and watch movies."],free:true,tip:"หลัง like ใช้ V-ing หรือ to + กริยา อย่าพูด I like swim"},
+   {th:"บอกว่าคุณมาอยู่สิงคโปร์ได้สองปีแล้ว",kw:[["been","อยู่มา"],["for two years","เป็นเวลาสองปี"]],frame:"I've ___ in Singapore ___.",en:"I've been in Singapore for two years.",alts:["I've lived in Singapore for two years."],free:true,tip:"อย่าพูด I live here two years ให้ใช้ I've been ... for ... เพราะยังอยู่ต่อถึงตอนนี้"},
+   {th:"ถามเขากลับว่าแล้วคุณล่ะ มาจากไหน",kw:[["How about you","แล้วคุณล่ะ"]],frame:"___? Where are you from?",en:"How about you? Where are you from?",alts:["And you? Where are you from?","What about you? Where are you from?"]},
+   {th:"บอกว่ายินดีที่ได้คุยด้วย แล้วเจอกันใหม่นะ",kw:[["nice talking","ยินดีที่ได้คุย"],["see you around","แล้วเจอกันนะ"]],frame:"It was ___ to you. See you ___.",en:"It was nice talking to you. See you around.",alts:["Nice talking to you. See you around.","It was nice talking to you. See you soon."]}
+  ]},
+ {id:"sp02",lv:"A1",cat:"life",title:"ครอบครัวและคนใกล้ตัว",en:"Family and people close to you",th:"เล่าเรื่องพี่น้อง พ่อแม่ แฟน และเพื่อนสนิท แล้วถามเรื่องครอบครัวของอีกฝ่ายได้",
+  items:[
+   {th:"ตอบว่ามีพี่สาวหนึ่งคนและน้องชายหนึ่งคน",q:"Do you have any brothers or sisters?",kw:[["older sister","พี่สาว"],["younger brother","น้องชาย"]],frame:"I have an ___ and a ___.",en:"I have an older sister and a younger brother.",alts:["I've got an older sister and a younger brother."],free:true,tip:"ภาษาอังกฤษไม่มีคำว่าพี่หรือน้องโดด ๆ ต้องเติม older หรือ younger หน้า sister และ brother"},
+   {th:"บอกว่าครอบครัวของคุณมีกันห้าคน",kw:[["There are","มี"],["in my family","ในครอบครัวของฉัน"]],frame:"___ five people ___.",en:"There are five people in my family.",alts:["We're a family of five."],free:true},
+   {th:"บอกว่าพ่อแม่ของคุณยังอยู่ที่เชียงใหม่",kw:[["parents","พ่อแม่"],["still","ยังคง"]],frame:"My ___ ___ live in Chiang Mai.",en:"My parents still live in Chiang Mai.",alts:["My parents are still in Chiang Mai."],free:true,tip:"parents แปลว่าพ่อและแม่ ไม่ได้แปลว่าญาติ ถ้าหมายถึงญาติให้ใช้ relatives"},
+   {th:"ตอบว่าพ่อเกษียณแล้ว ส่วนแม่เปิดร้านเล็ก ๆ",q:"What do your parents do?",kw:[["retired","เกษียณแล้ว"],["runs","เปิด/ดูแล (ร้าน)"]],frame:"My dad's ___, and my mum ___ a small shop.",en:"My dad's retired, and my mum runs a small shop.",alts:["My father's retired, and my mother runs a small shop.","My dad's retired, and my mom runs a small shop."],free:true},
+   {th:"ตอบว่ายังไม่แต่งงาน แต่มีแฟนแล้ว",q:"Are you married?",kw:[["Not yet","ยังไม่"],["girlfriend","แฟน (ผู้หญิง)"]],frame:"___, but I have a ___.",en:"Not yet, but I have a girlfriend.",alts:["No, not yet, but I have a girlfriend.","Not yet, but I have a boyfriend."],free:true,tip:"แฟนผู้หญิงคือ girlfriend แฟนผู้ชายคือ boyfriend ส่วน fan แปลว่าแฟนคลับ"},
+   {th:"บอกว่าคุณสนิทกับน้องชายมาก",kw:[["really close","สนิทมาก"]],frame:"I'm ___ to my younger brother.",en:"I'm really close to my younger brother.",alts:["I'm very close to my younger brother.","My younger brother and I are really close."]},
+   {th:"บอกว่าคุณโทรหาแม่ทุกวันอาทิตย์",kw:[["call","โทรหา"],["every Sunday","ทุกวันอาทิตย์"]],frame:"I ___ my mum ___.",en:"I call my mum every Sunday.",alts:["I call my mom every Sunday.","I call my mother every Sunday."]},
+   {th:"บอกว่าคุณกลับไปเยี่ยมครอบครัวปีละสองครั้ง",kw:[["go back","กลับไป"],["twice a year","ปีละสองครั้ง"]],frame:"I ___ to visit my family ___.",en:"I go back to visit my family twice a year.",alts:["I visit my family twice a year.","I go home to see my family twice a year."],free:true},
+   {th:"ตอบว่าเพื่อนสนิทของคุณเป็นเพื่อนร่วมงานชื่อเบน",q:"Who's your best friend here?",kw:[["colleague","เพื่อนร่วมงาน"],["called","ชื่อ"]],frame:"My best friend is a ___ ___ Ben.",en:"My best friend is a colleague called Ben.",alts:["My best friend is a colleague named Ben.","My best friend is Ben, a colleague."],free:true},
+   {th:"ถามเขาว่าครอบครัวของเขาอยู่ที่สิงคโปร์ด้วยหรือเปล่า",kw:[["Does your family","ครอบครัวของคุณ...ไหม"],["too","ด้วย"]],frame:"___ live in Singapore ___?",en:"Does your family live in Singapore too?",alts:["Is your family in Singapore too?","Does your family live here too?"]}
+  ]},
+ {id:"sp03",lv:"A1",cat:"life",title:"กิจวัตรประจำวัน",en:"Daily routine",th:"เล่าว่าแต่ละวันทำอะไร ตั้งแต่ตื่นนอน เดินทาง กินข้าวเที่ยง หลังเลิกงาน จนถึงวันหยุด",
+  items:[
+   {th:"ตอบว่าปกติคุณตื่นตอนหกโมงครึ่ง",q:"What time do you usually get up?",kw:[["usually","ปกติ"],["half past six","หกโมงครึ่ง"]],frame:"I ___ get up at ___.",en:"I usually get up at half past six.",alts:["I usually wake up at six thirty.","I usually get up at six thirty."],free:true,tip:"wake up คือตื่น get up คือลุกจากเตียง ในประโยคนี้ใช้แทนกันได้"},
+   {th:"บอกว่าคุณอาบน้ำแล้วกินอาหารเช้าง่าย ๆ",kw:[["take a shower","อาบน้ำ"],["quick breakfast","อาหารเช้าง่าย ๆ"]],frame:"I ___ and have a ___.",en:"I take a shower and have a quick breakfast.",alts:["I have a shower and a quick breakfast."]},
+   {th:"ตอบว่าคุณนั่ง MRT ไปทำงาน",q:"How do you get to work?",kw:[["take","นั่ง (รถ รถไฟ)"]],frame:"I ___ the MRT to work.",en:"I take the MRT to work.",alts:["I go to work by MRT."],tip:"นั่งรถไฟหรือรถเมล์ใช้ take อย่าแปลตรงตัวว่า sit the MRT"},
+   {th:"บอกว่าใช้เวลาเดินทางประมาณสี่สิบนาที",kw:[["takes about","ใช้เวลาประมาณ"]],frame:"It ___ forty minutes.",en:"It takes about forty minutes.",alts:["It takes around forty minutes.","About forty minutes."],free:true},
+   {th:"บอกว่าคุณเริ่มงานตอนเก้าโมง",kw:[["start work","เริ่มงาน"]],frame:"I ___ at nine.",en:"I start work at nine.",alts:["I start work at nine o'clock.","I start at nine."],free:true},
+   {th:"ตอบว่าปกติกินข้าวเที่ยงที่ศูนย์อาหารใกล้ออฟฟิศ",q:"Where do you usually have lunch?",kw:[["hawker centre","ศูนย์อาหาร"],["near the office","ใกล้ออฟฟิศ"]],frame:"I usually eat at a ___ ___.",en:"I usually eat at a hawker centre near the office.",alts:["I usually have lunch at the hawker centre nearby.","I usually eat at a food court near the office."]},
+   {th:"บอกว่าคุณเลิกงานประมาณหกโมงเย็น",kw:[["finish work","เลิกงาน"],["around","ประมาณ"]],frame:"I ___ ___ six.",en:"I finish work around six.",alts:["I finish work at around six.","I get off work around six."],free:true},
+   {th:"ตอบว่าหลังเลิกงานคุณไปยิม ไม่ก็พักผ่อนอยู่บ้าน",q:"What do you do after work?",kw:[["go to the gym","ไปยิม"],["relax at home","พักผ่อนที่บ้าน"]],frame:"I ___ or just ___.",en:"I go to the gym or just relax at home.",alts:["I go to the gym or just stay home."]},
+   {th:"บอกว่าปกติคุณเข้านอนประมาณห้าทุ่ม",kw:[["go to bed","เข้านอน"],["eleven","ห้าทุ่ม"]],frame:"I usually ___ around ___.",en:"I usually go to bed around eleven.",alts:["I usually go to bed at around eleven.","I usually sleep around eleven."],free:true,tip:"ห้าทุ่มคือ eleven ลองนึกเป็นเวลา ยี่สิบสามนาฬิกาก่อนแปล จะได้ไม่นับผิด"},
+   {th:"ตอบว่าวันเสาร์ไปซื้อของ ส่วนวันอาทิตย์นอนตื่นสาย",q:"What do you usually do at the weekend?",kw:[["on Saturdays","ทุกวันเสาร์"],["sleep in","นอนตื่นสาย"]],frame:"I shop ___ and ___ on Sundays.",en:"I shop on Saturdays and sleep in on Sundays.",alts:["I go shopping on Saturdays and sleep in on Sundays."],free:true}
+  ]},
+ {id:"sp04",lv:"A2",cat:"life",title:"สั่งอาหารและเครื่องดื่ม",en:"Ordering food and drinks",th:"สั่งกาแฟและอาหาร ขอหวานน้อย เผ็ดน้อย ไม่ใส่น้ำแข็ง เอากลับบ้าน และจ่ายเงินได้",
+  items:[
+   {th:"ที่ร้านกาแฟ ขอลาเต้เย็นหนึ่งแก้ว",q:"Hi, what can I get for you?",kw:[["Can I have","ขอ..."],["iced latte","ลาเต้เย็น"]],frame:"___ an ___, please?",en:"Can I have an iced latte, please?",alts:["Could I have an iced latte, please?","I'd like an iced latte, please."],tip:"I want ... ฟังห้วนไปเวลาสั่งของ ให้ใช้ Can I have ... หรือ I'd like ..."},
+   {th:"ขอให้ทำแบบหวานน้อย",kw:[["less sweet","หวานน้อย"]],frame:"Can you make it ___, please?",en:"Can you make it less sweet, please?",alts:["Could you make it less sweet, please?","Less sugar, please."]},
+   {th:"ตอบว่าเอากลับบ้าน",q:"For here or to go?",kw:[["to go","เอากลับบ้าน"],["take away","ห่อกลับ"]],frame:"___, please.",en:"To go, please.",alts:["Takeaway, please.","Take away, please."],tip:"ที่สิงคโปร์นิยมพูด take away ส่วน to go เป็นแบบอเมริกัน ใช้ได้ทั้งคู่ แต่อย่าพูด take home"},
+   {th:"ที่ศูนย์อาหาร สั่งข้าวมันไก่หนึ่งจาน",q:"Hi, what would you like?",kw:[["chicken rice","ข้าวมันไก่"]],frame:"I'd like one ___, please.",en:"I'd like one chicken rice, please.",alts:["One chicken rice, please.","Can I have one chicken rice, please?"]},
+   {th:"บอกว่าขอเผ็ดแค่นิดเดียว",kw:[["a little","นิดหน่อย"],["spicy","เผ็ด"]],frame:"Just ___ ___, please.",en:"Just a little spicy, please.",alts:["Not too spicy, please."]},
+   {th:"ที่ร้านเครื่องดื่ม สั่งชามะนาวหนึ่งแก้ว ไม่ใส่น้ำแข็ง",kw:[["lemon tea","ชามะนาว"],["no ice","ไม่ใส่น้ำแข็ง"]],frame:"One ___, ___, please.",en:"One lemon tea, no ice, please.",alts:["Can I have a lemon tea with no ice, please?","One lemon tea without ice, please."]},
+   {th:"ตอบว่าแค่นี้พอแล้ว ขอบคุณ",q:"Anything else?",kw:[["That's all","แค่นี้"]],frame:"___, thanks.",en:"That's all, thanks.",alts:["That's it, thanks.","No, that's all, thanks."]},
+   {th:"ถามว่าทั้งหมดเท่าไหร่",kw:[["How much","เท่าไหร่"],["altogether","ทั้งหมด"]],frame:"___ is it ___?",en:"How much is it altogether?",alts:["How much is that altogether?","How much is it in total?"]},
+   {th:"ถามว่าจ่ายเงินด้วยการสแกน QR ได้ไหม",kw:[["pay by","จ่ายด้วย"],["scanning","สแกน"]],frame:"Can I ___ ___ the QR code?",en:"Can I pay by scanning the QR code?",alts:["Can I scan to pay?","Can I pay with the QR code?"]},
+   {th:"บอกพนักงานอย่างสุภาพว่าคุณขอแบบไม่ใส่น้ำแข็งไว้",kw:[["Excuse me","ขอโทษนะ"],["asked for","ขอ/สั่งไว้"]],frame:"___, I ___ no ice.",en:"Excuse me, I asked for no ice.",alts:["Sorry, I asked for no ice.","Excuse me, I ordered it with no ice."]}
+  ]},
+ {id:"sp05",lv:"A2",cat:"life",title:"ซื้อของและถามราคา",en:"Shopping and asking prices",th:"ถามไซซ์ ถามสี ขอลอง ถามราคาและส่วนลด จ่ายด้วยบัตร และขอคืนของได้",
+  items:[
+   {th:"ตอบพนักงานว่าแค่ดูก่อน ขอบคุณ",q:"Hi, can I help you?",kw:[["just looking","แค่ดู ๆ"]],frame:"I'm ___, thanks.",en:"I'm just looking, thanks.",alts:["I'm just browsing, thanks.","Just looking, thank you."]},
+   {th:"ถามว่าเสื้อตัวนี้มีไซซ์ M ไหม",kw:[["in a medium","ไซซ์ M"]],frame:"Do you have this ___?",en:"Do you have this in a medium?",alts:["Do you have this in medium?","Do you have this shirt in a medium?"],tip:"ถามไซซ์ใช้ Do you have this in ...? อย่าพูดสั้น ๆ ว่า Have size M?"},
+   {th:"ถามว่ามีสีน้ำเงินไหม",kw:[["come in","มี (สีหรือแบบ)"]],frame:"Does it ___ blue?",en:"Does it come in blue?",alts:["Do you have it in blue?","Is it available in blue?"]},
+   {th:"ขอลองใส่หน่อย",kw:[["try it on","ลองใส่"]],frame:"Can I ___?",en:"Can I try it on?",alts:["Could I try it on?","Can I try this on?"],tip:"ลองใส่คือ try on และต้องวาง it ไว้ตรงกลาง พูดว่า try it on ไม่ใช่ try on it"},
+   {th:"ตอบว่ามันคับไปหน่อย แล้วถามว่ามีไซซ์ใหญ่กว่านี้ไหม",q:"How does it fit?",kw:[["a bit tight","คับไปหน่อย"],["bigger size","ไซซ์ใหญ่กว่า"]],frame:"It's ___. Do you have a ___?",en:"It's a bit tight. Do you have a bigger size?",alts:["It's a little tight. Do you have a larger size?","It's a bit tight. Do you have a bigger one?"]},
+   {th:"ชี้ไปที่กระเป๋าใบหนึ่ง แล้วถามว่าใบนี้ราคาเท่าไหร่",q:"Is there anything else you'd like to see?",kw:[["How much","ราคาเท่าไหร่"]],frame:"___ is this one?",en:"How much is this one?",alts:["How much does this cost?","What's the price of this one?"]},
+   {th:"ถามว่าตอนนี้มีส่วนลดอะไรไหม",kw:[["discounts","ส่วนลด"],["right now","ตอนนี้"]],frame:"Are there any ___ ___?",en:"Are there any discounts right now?",alts:["Is there a discount right now?","Do you have any promotions right now?"]},
+   {th:"ตอบว่าจะจ่ายด้วยบัตร",q:"Cash or card?",kw:[["pay by card","จ่ายด้วยบัตร"]],frame:"I'll ___.",en:"I'll pay by card.",alts:["Card, please.","By card, please."],tip:"จ่ายด้วยบัตรพูดว่า pay by card ส่วนจ่ายเงินสดพูดว่า pay in cash"},
+   {th:"ถามว่าถ้าใส่ไม่ได้ จะเอามาคืนได้ไหม",kw:[["return","คืน (ของ)"],["doesn't fit","ใส่ไม่พอดี"]],frame:"Can I ___ it if it ___?",en:"Can I return it if it doesn't fit?",alts:["Can I bring it back if it doesn't fit?"]},
+   {th:"วันต่อมา บอกพนักงานว่าอยากคืนเสื้อตัวนี้ และมีใบเสร็จมาด้วย",kw:[["return","คืน"],["receipt","ใบเสร็จ"]],frame:"I'd like to ___ this. I have the ___.",en:"I'd like to return this. I have the receipt.",alts:["I'd like to return this. Here's the receipt.","I want to return this. I have the receipt."]}
+  ]},
+ {id:"sp06",lv:"A2",cat:"life",title:"ถามทางและเดินทาง",en:"Directions and getting around",th:"ถามทาง ถามสายรถไฟ ถามเวลาเดินทาง ถามป้ายที่ต้องลง และบอกคนขับแท็กซี่หรือ Grab ได้",
+  items:[
+   {th:"ขอโทษแล้วถามทางไปสถานี MRT ที่ใกล้ที่สุด",kw:[["Excuse me","ขอโทษนะ"],["nearest","ใกล้ที่สุด"]],frame:"___, where's the ___ MRT station?",en:"Excuse me, where's the nearest MRT station?",alts:["Sorry, where's the nearest MRT station?","Excuse me, where is the nearest MRT station?"]},
+   {th:"ถามเขาว่าไกลไหม เดินไปได้หรือเปล่า",q:"Go straight and turn left at the lights.",kw:[["far","ไกล"],["walk there","เดินไป"]],frame:"Is it ___? Can I ___?",en:"Is it far? Can I walk there?",alts:["Is it far? Can I walk?","Is it within walking distance?"]},
+   {th:"ถามว่าถ้าจะไปออร์ชาร์ดต้องนั่งสายไหน",kw:[["Which line","สายไหน"]],frame:"___ goes to Orchard?",en:"Which line goes to Orchard?",alts:["Which line do I take to Orchard?","Which line should I take to get to Orchard?"]},
+   {th:"ทวนคำตอบให้แน่ใจว่าต้องเปลี่ยนสายที่สถานีซิตี้ฮอลล์",q:"Take the red line and change at City Hall.",kw:[["change","เปลี่ยน (สาย)"],["right","ใช่ไหม"]],frame:"So I ___ at City Hall, ___?",en:"So I change at City Hall, right?",alts:["So I need to change at City Hall, right?","So I change trains at City Hall, right?"],tip:"ปิดท้ายด้วย ..., right? เป็นวิธีทวนว่าเข้าใจถูกที่ฟังเป็นธรรมชาติ"},
+   {th:"ถามว่าใช้เวลานั่งไปนานแค่ไหน",kw:[["How long","นานแค่ไหน"],["take","ใช้เวลา"]],frame:"___ does it ___ to get there?",en:"How long does it take to get there?",alts:["How long will it take to get there?","How long does it take?"],tip:"อย่าพูด How long time ...? ให้พูด How long does it take?"},
+   {th:"ถามคนที่ป้ายรถเมล์ว่ารถเมล์คันนี้ไปโรงพยาบาลไหม",kw:[["Does this bus","รถเมล์คันนี้...ไหม"],["go to","ไป"]],frame:"___ ___ the hospital?",en:"Does this bus go to the hospital?",alts:["Does this bus stop at the hospital?","Is this the bus to the hospital?"]},
+   {th:"บนรถเมล์ ถามคนข้าง ๆ ว่าถ้าจะไปวีโว่ซิตี้ต้องลงป้ายไหน",kw:[["stop","ป้าย"],["get off","ลง (รถ)"]],frame:"Which ___ should I ___ at for VivoCity?",en:"Which stop should I get off at for VivoCity?",alts:["Where do I get off for VivoCity?","Which stop is for VivoCity?"],tip:"ลงรถเมล์หรือรถไฟใช้ get off ส่วนขึ้นใช้ get on"},
+   {th:"บอกคนขับแท็กซี่ว่าขอไปสนามบินชางงี",q:"Hi, where to?",kw:[["take me to","พาไปส่งที่"]],frame:"Hi, can you ___ Changi Airport, please?",en:"Hi, can you take me to Changi Airport, please?",alts:["Changi Airport, please.","Could you take me to Changi Airport, please?"]},
+   {th:"บอกคนขับว่าจอดตรงนี้ได้เลย ขอบคุณ",kw:[["stop here","จอดตรงนี้"]],frame:"You can ___, thanks.",en:"You can stop here, thanks.",alts:["Can you stop here, please?","Just here is fine, thanks."],tip:"Stop the car here ฟังแข็งไป ใช้ You can stop here หรือ Just here is fine จะสุภาพกว่า"},
+   {th:"อีกวันหนึ่ง คนขับ Grab โทรมา บอกเขาว่าคุณยืนรออยู่หน้าทางเข้าหลัก",q:"Hi, I'm here. Where are you?",kw:[["outside","หน้า/ข้างนอก"],["main entrance","ทางเข้าหลัก"]],frame:"I'm standing ___ the ___.",en:"I'm standing outside the main entrance.",alts:["I'm waiting at the main entrance.","I'm outside the main entrance."]}
+  ]},
+ {id:"sp07",lv:"A2",cat:"life",title:"ไปหาหมอและบอกอาการ",en:"Seeing a doctor",th:"บอกอาการ บอกว่าเป็นมาตั้งแต่เมื่อไร แจ้งว่าแพ้ยา ถามวิธีกินยา และขอใบรับรองแพทย์ได้",
+  items:[
+   {th:"ที่เคาน์เตอร์คลินิก บอกว่าอยากพบหมอ",kw:[["see a doctor","พบหมอ"]],frame:"Hi, I'd like to ___, please.",en:"Hi, I'd like to see a doctor, please.",alts:["Hi, can I see a doctor, please?","Hi, I'd like to see the doctor, please."]},
+   {th:"ตอบว่าคุณมีไข้และเจ็บคอ",q:"What seems to be the problem?",kw:[["fever","ไข้"],["sore throat","เจ็บคอ"]],frame:"I have a ___ and a ___.",en:"I have a fever and a sore throat.",alts:["I've got a fever and a sore throat."],tip:"เจ็บคอพูดว่า I have a sore throat อย่าพูด My throat is pain"},
+   {th:"ตอบว่าเป็นมาตั้งแต่เมื่อวานซืน",q:"How long have you had it?",kw:[["since","ตั้งแต่"],["the day before yesterday","เมื่อวานซืน"]],frame:"I've had it ___ ___.",en:"I've had it since the day before yesterday.",alts:["Since the day before yesterday.","For about two days."]},
+   {th:"บอกเพิ่มว่าคุณปวดหัวและรู้สึกเหนื่อยมากด้วย",kw:[["headache","ปวดหัว"],["really tired","เหนื่อยมาก"]],frame:"I also have a ___ and feel ___.",en:"I also have a headache and feel really tired.",alts:["I've also got a headache and I feel really tired.","I also have a headache and feel very tired."]},
+   {th:"ตอบว่าคุณแพ้ยาเพนิซิลลิน",q:"Are you allergic to any medicine?",kw:[["allergic to","แพ้"]],frame:"Yes, I'm ___ penicillin.",en:"Yes, I'm allergic to penicillin.",alts:["Yes, I have a penicillin allergy."],free:true,tip:"แพ้อะไรพูดว่า I'm allergic to ... อย่าพูด I allergy ..."},
+   {th:"ตอบว่าตอนนี้ไม่ได้กินยาอะไรอยู่เลย",q:"Are you taking any medicine right now?",kw:[["not taking","ไม่ได้กิน (ยา)"],["anything","อะไรเลย"]],frame:"No, I'm ___ ___.",en:"No, I'm not taking anything.",alts:["No, I'm not on any medication.","No, nothing at the moment."],tip:"กินยาใช้ take medicine ไม่ใช่ eat medicine"},
+   {th:"ถามหมอว่ายานี้ต้องกินวันละกี่ครั้ง",kw:[["How many times a day","วันละกี่ครั้ง"]],frame:"___ should I take it?",en:"How many times a day should I take it?",alts:["How often should I take it?","How many times a day do I take it?"]},
+   {th:"ถามว่าต้องกินหลังอาหารหรือเปล่า",kw:[["after meals","หลังอาหาร"]],frame:"Should I take it ___?",en:"Should I take it after meals?",alts:["Do I take it after meals?","Do I need to take it after food?"]},
+   {th:"ขอใบรับรองแพทย์ไปยื่นที่ทำงาน",kw:[["medical certificate","ใบรับรองแพทย์"]],frame:"Could I get a ___ for work?",en:"Could I get a medical certificate for work?",alts:["Could I have a medical certificate for work?","Can I get an MC for work, please?"],tip:"ที่สิงคโปร์มักเรียกใบรับรองแพทย์สั้น ๆ ว่า MC"},
+   {th:"ถามว่าถ้าอาการยังไม่ดีขึ้น ควรกลับมาหาหมออีกไหม",kw:[["come back","กลับมา"],["get better","ดีขึ้น"]],frame:"Should I ___ if I don't ___?",en:"Should I come back if I don't get better?",alts:["What should I do if I don't get better?","Should I come back if it doesn't get better?"]}
+  ]},
+ {id:"sp08",lv:"A2",cat:"life",title:"ชวนเพื่อนและนัดเจอ",en:"Making plans with friends",th:"ชวนเพื่อน เสนอวันเวลาและที่นัด ตอบรับ ปฏิเสธอย่างสุภาพ เลื่อนนัด และบอกว่าจะไปสายได้",
+  items:[
+   {th:"ชวนเพื่อนไปกินข้าวเย็นด้วยกันวันศุกร์นี้",kw:[["grab dinner","ไปกินข้าวเย็น"],["this Friday","ศุกร์นี้"]],frame:"Do you want to ___ ___?",en:"Do you want to grab dinner this Friday?",alts:["Would you like to have dinner this Friday?","Are you free for dinner this Friday?"],tip:"grab dinner เป็นภาษาพูดแปลว่าไปกินข้าวกัน ไม่ได้แปลว่าคว้า"},
+   {th:"เสนอว่าเจอกันตอนหนึ่งทุ่มดีไหม",q:"Sure! What time?",kw:[["How about","...ดีไหม"],["seven","หนึ่งทุ่ม"]],frame:"___ ___ o'clock?",en:"How about seven o'clock?",alts:["What about seven?","How about seven?"]},
+   {th:"เสนอให้เจอกันที่หน้าสถานี MRT",kw:[["Let's meet","เจอกันที่"],["outside","หน้า/ข้างนอก"]],frame:"___ ___ the MRT station.",en:"Let's meet outside the MRT station.",alts:["Shall we meet outside the MRT station?","Let's meet at the MRT station."]},
+   {th:"ตอบรับอย่างดีใจว่าอยากไปมาก แล้วขอบคุณที่ชวน",q:"Do you want to come to my birthday party on Saturday?",kw:[["I'd love to","อยากไปมาก"],["inviting","ชวน"]],frame:"___! Thanks for ___ me.",en:"I'd love to! Thanks for inviting me.",alts:["I'd love to come! Thanks for inviting me.","Sure, I'd love to! Thanks for inviting me."]},
+   {th:"ปฏิเสธอย่างสุภาพว่าเสียดายจัง ไปไม่ได้ เพราะมีนัดแล้ว",q:"Are you free on Sunday afternoon?",kw:[["I'm afraid","เสียดายที่..."],["have plans","มีนัดแล้ว"]],frame:"___ I can't. I already ___.",en:"I'm afraid I can't. I already have plans.",alts:["Sorry, I can't. I already have plans.","I'd love to, but I already have plans."],tip:"ปฏิเสธให้นุ่มนวลใช้ I'm afraid ... หรือ I'd love to, but ... แทน No, I can't"},
+   {th:"เสนอว่าไปวันอื่นแทนได้ไหม",kw:[["another day","วันอื่น"],["instead","แทน"]],frame:"Can we do ___ ___?",en:"Can we do another day instead?",alts:["How about another day instead?","Can we make it another day?"]},
+   {th:"บอกเพื่อนว่าขอเลื่อนนัดวันศุกร์ เพราะมีงานด่วนเข้ามา",kw:[["reschedule","เลื่อนนัด"],["came up","มีเรื่องเข้ามา"]],frame:"I need to ___ Friday. Something ___ at work.",en:"I need to reschedule Friday. Something came up at work.",alts:["Can we move Friday? Something came up at work.","I have to reschedule Friday. Something came up at work."],tip:"เลื่อนนัดพูดว่า reschedule หรือ move อย่าพูด delay the appointment"},
+   {th:"ตอบว่าคุณว่างวันเสาร์ตอนเย็น",q:"No problem. When are you free?",kw:[["free","ว่าง"],["evening","ตอนเย็น"]],frame:"I'm ___ on Saturday ___.",en:"I'm free on Saturday evening.",alts:["Saturday evening works for me.","I'm free Saturday evening."],free:true},
+   {th:"ส่งข้อความบอกเพื่อนว่าจะไปสายประมาณสิบนาที",kw:[["running","กำลัง (ไปสาย)"],["late","สาย"]],frame:"Sorry, I'm ___ about ten minutes ___.",en:"Sorry, I'm running about ten minutes late.",alts:["Sorry, I'll be about ten minutes late.","Sorry, I'm running ten minutes late."]},
+   {th:"บอกเพื่อนว่าคุณถึงแล้ว และกำลังรออยู่ที่ทางออก B",kw:[["I'm here","ถึงแล้ว"],["waiting at","รออยู่ที่"]],frame:"___. I'm ___ Exit B.",en:"I'm here. I'm waiting at Exit B.",alts:["I'm here now. I'm at Exit B.","I'm here. I'm at Exit B."]}
+  ]}
+);
+SPEAK.push(
+ {id:"sp09",lv:"A2",cat:"work",title:"แนะนำตัวที่ทำงานใหม่",en:"Introducing yourself at a new job",th:"แนะนำตัวกับทีมใหม่ บอกตำแหน่งและงานเก่า และถามหน้าที่ของเพื่อนร่วมงาน",
+  items:[
+   {th:"ตอบว่าใช่ บอกชื่อของคุณ และบอกว่าเพิ่งเริ่มงานวันนี้",q:"Hi, you must be new here.",kw:[["just started","เพิ่งเริ่ม"]],frame:"Yes, I'm Tong. I ___ today.",en:"Yes, I'm Tong. I just started today.",alts:["Yes, I'm Tong. Today is my first day.","Yes, I'm Tong. I started today."],free:true},
+   {th:"บอกว่าคุณเข้ามาร่วมทีม BIM",kw:[["joined","เข้าร่วม"],["team","ทีม"]],frame:"I've ___ the BIM ___.",en:"I've joined the BIM team.",alts:["I'm joining the BIM team.","I'm in the BIM team."]},
+   {th:"ตอบว่าคุณเป็นคนทำโมเดล BIM",q:"What's your role?",kw:[["BIM modeller","ผู้ทำโมเดล BIM"]],frame:"I'm a ___.",en:"I'm a BIM modeller.",alts:["I work as a BIM modeller."],free:true,tip:"ต้องมี a หน้าชื่อตำแหน่งงาน อย่าพูด I'm BIM modeller ให้พูด I'm a BIM modeller"},
+   {th:"บอกว่าก่อนหน้านี้คุณทำงานที่บริษัทออกแบบในกรุงเทพฯ",kw:[["worked","ทำงาน (อดีต)"],["design firm","บริษัทออกแบบ"]],frame:"Before this, I ___ at a ___ in Bangkok.",en:"Before this, I worked at a design firm in Bangkok.",alts:["Before this, I worked for a design firm in Bangkok."],free:true,tip:"พูดถึงงานเก่าต้องใช้อดีต worked ไม่ใช่ I work at"},
+   {th:"ตอบว่าคุณใช้ Revit มาประมาณห้าปีแล้ว",q:"How long have you used Revit?",kw:[["for","เป็นเวลา"],["about","ประมาณ"]],frame:"I've used Revit ___ ___ five years.",en:"I've used Revit for about five years.",alts:["I've been using Revit for about five years.","For about five years."],free:true,tip:"ใช้ for กับระยะเวลา อย่าพูด since five years ให้พูด for five years"},
+   {th:"ถามเพื่อนร่วมงานว่าเขาทำหน้าที่อะไรในทีม",kw:[["role","หน้าที่ / บทบาท"]],frame:"What's your ___ on the team?",en:"What's your role on the team?",alts:["What do you do on the team?","What's your role in the team?"]},
+   {th:"ตอบว่าดีจัง แล้วบอกว่าตั้งตารอที่จะได้ทำงานด้วยกัน",q:"I'm the structural engineer for this project.",kw:[["look forward to","ตั้งตารอ"],["working","การทำงาน"]],frame:"Great. I ___ ___ with you.",en:"Great. I look forward to working with you.",alts:["Great. I'm looking forward to working with you."],tip:"หลัง look forward to ใช้ V-ing ให้พูด working with you ไม่ใช่ work with you"},
+   {th:"ถามว่าใครเป็นคนดูแลโปรเจกต์นี้",kw:[["in charge of","รับผิดชอบ / ดูแล"]],frame:"Who's ___ this project?",en:"Who's in charge of this project?",alts:["Who's managing this project?","Who leads this project?"]},
+   {th:"บอกเพื่อนร่วมงานว่าถ้าต้องการให้ช่วยอะไร บอกได้เลย",kw:[["let me know","บอกฉัน"],["need","ต้องการ"]],frame:"___ if you ___ any help.",en:"Let me know if you need any help.",alts:["Just let me know if you need any help.","Let me know if you need anything."]},
+   {th:"บอกว่าคุณยังเรียนรู้งานอยู่ อาจจะถามเยอะหน่อย",kw:[["still learning","ยังเรียนรู้อยู่"],["ask","ถาม"]],frame:"I'm ___, so I may ___ lots of questions.",en:"I'm still learning, so I may ask lots of questions.",alts:["I'm still new, so I may have lots of questions.","I'm still learning, so I might ask lots of questions."]}
+  ]},
+ {id:"sp10",lv:"A2",cat:"work",title:"อธิบายงานของตัวเอง",en:"Explaining what you do",th:"อธิบายว่างาน BIM modeller ทำอะไรบ้าง ตั้งแต่ทำโมเดล ออกแบบ ประสานงาน ไปจนถึงตรวจจุดชนกัน",
+  items:[
+   {th:"ตอบว่าคุณสร้างโมเดลอาคารในโปรแกรม Revit",q:"So what do you do exactly?",kw:[["create","สร้าง"],["models","โมเดล"]],frame:"I ___ ___ of buildings in Revit.",en:"I create models of buildings in Revit.",alts:["I make building models in Revit.","I model buildings in Revit."]},
+   {th:"บอกว่าคุณยังทำแบบก่อสร้างออกมาจากโมเดลด้วย",kw:[["produce","ทำออกมา / ผลิต"],["drawings","แบบ"]],frame:"I also ___ ___ from the model.",en:"I also produce drawings from the model.",alts:["I also make drawings from the model.","I also create drawings from the model."]},
+   {th:"บอกว่าคุณประสานงานกับวิศวกรและผู้รับเหมา",kw:[["coordinate with","ประสานงานกับ"],["contractors","ผู้รับเหมา"]],frame:"I ___ engineers and ___.",en:"I coordinate with engineers and contractors.",alts:["I work with engineers and contractors."],tip:"เวลาพูดถึงคน ต้องมี with หลัง coordinate: coordinate with engineers"},
+   {th:"บอกว่าคุณตรวจหาจุดที่งานชนกันในโมเดล",kw:[["check","ตรวจ"],["clashes","จุดชนกัน"]],frame:"I ___ the model for ___.",en:"I check the model for clashes.",alts:["I check for clashes in the model.","I run clash checks on the model."]},
+   {th:"ยกตัวอย่างว่า เช่น ตอนที่ท่อชนกับคาน",q:"What kind of clashes?",kw:[["pipe","ท่อ"],["beam","คาน"]],frame:"For example, when a ___ hits a ___.",en:"For example, when a pipe hits a beam.",alts:["Like a pipe hitting a beam.","For example, a pipe clashing with a beam."]},
+   {th:"บอกว่าคุณอัปเดตโมเดลทุกครั้งที่มีแบบแก้ไขฉบับใหม่",kw:[["update","อัปเดต"],["revision","ฉบับแก้ไข"]],frame:"I ___ the model when there's a new ___.",en:"I update the model when there's a new revision.",alts:["I update the model for each new revision."]},
+   {th:"ตอบว่าส่วนใหญ่คุณทำโปรเจกต์ที่อยู่อาศัย",q:"What kind of projects do you work on?",kw:[["mostly","ส่วนใหญ่"],["residential","ที่อยู่อาศัย"]],frame:"I ___ work on ___ projects.",en:"I mostly work on residential projects.",alts:["Mostly residential projects."],free:true},
+   {th:"ตอบว่าไปบ้างเป็นบางครั้ง แต่ปกติทำงานอยู่ในออฟฟิศ",q:"Do you go to the site?",kw:[["sometimes","บางครั้ง"],["usually","ปกติ"]],frame:"___, but I ___ work in the office.",en:"Sometimes, but I usually work in the office.",alts:["Sometimes, but mostly I'm in the office.","Sometimes, but I usually work at the office."]},
+   {th:"บอกว่าส่วนที่คุณชอบที่สุดคือการแก้ปัญหาไปกับทีม",kw:[["best part","ส่วนที่ดีที่สุด"],["solving problems","การแก้ปัญหา"]],frame:"The ___ is ___ with the team.",en:"The best part is solving problems with the team.",alts:["My favourite part is solving problems with the team."]},
+   {th:"บอกว่าส่วนที่ยากคือกำหนดส่งที่กระชั้น",kw:[["tight","กระชั้น / แน่น"],["deadlines","กำหนดส่ง"]],frame:"The hard part is the ___ ___.",en:"The hard part is the tight deadlines.",alts:["The difficult part is the tight deadlines.","The tight deadlines are the hard part."],tip:"เดดไลน์กระชั้นใช้ tight deadline อย่าพูด the deadline is very near"}
+  ]},
+ {id:"sp11",lv:"B1",cat:"work",title:"อัปเดตงานในประชุม",en:"Giving a progress update",th:"อัปเดตงานในประชุมได้ครบ ว่าทำอะไรเสร็จ กำลังทำอะไร ต่อไปจะทำอะไร ติดอะไร และจะเสร็จเมื่อไร",
+  items:[
+   {th:"ตอบว่าได้เลย แล้วบอกว่าจะเริ่มจากงานที่ทำเสร็จแล้ว",q:"Tong, can you give us a quick update?",kw:[["start with","เริ่มจาก"],["finished","ทำเสร็จ"]],frame:"Sure. I'll ___ what I've ___.",en:"Sure. I'll start with what I've finished.",alts:["Sure. Let me start with what I've finished."]},
+   {th:"บอกว่าคุณทำโมเดลโครงสร้างของชั้นสองถึงชั้นห้าเสร็จแล้ว",kw:[["structural model","โมเดลโครงสร้าง"],["levels","ชั้น"]],frame:"I've finished the ___ for ___ two to five.",en:"I've finished the structural model for levels two to five.",alts:["The structural model for levels two to five is done."]},
+   {th:"ตอบว่าตอนนี้กำลังทำแบบงานระบบ MEP อยู่",q:"And what are you working on now?",kw:[["right now","ตอนนี้"],["working on","กำลังทำ"]],frame:"___, I'm ___ the MEP drawings.",en:"Right now, I'm working on the MEP drawings.",alts:["I'm currently working on the MEP drawings.","At the moment, I'm working on the MEP drawings."],tip:"กำลังทำงานชิ้นไหนใช้ I'm working on ... อย่าพูด I'm doing on"},
+   {th:"บอกว่าเสร็จไปประมาณเจ็ดสิบเปอร์เซ็นต์แล้ว",kw:[["about","ประมาณ"],["percent done","เปอร์เซ็นต์ที่เสร็จ"]],frame:"It's ___ seventy ___.",en:"It's about seventy percent done.",alts:["I'm about seventy percent done.","It's around seventy percent complete."]},
+   {th:"บอกว่าขั้นต่อไปคุณจะตรวจจุดชนกันกับโมเดลงานระบบ",kw:[["next","ต่อไป"],["run a clash check","ตรวจจุดชนกัน"]],frame:"___, I'll ___ with the MEP model.",en:"Next, I'll run a clash check with the MEP model.",alts:["After that, I'll run a clash check with the MEP model."]},
+   {th:"บอกว่าตอนนี้ติดอยู่นิดหน่อย เพราะยังรอแบบสถาปัตย์ฉบับล่าสุด",kw:[["stuck","ติด / ไปต่อไม่ได้"],["waiting for","รอ"]],frame:"I'm a bit ___ because I'm still ___ the latest architectural drawings.",en:"I'm a bit stuck because I'm still waiting for the latest architectural drawings.",alts:["I'm stuck because I'm still waiting for the latest architectural drawings."],tip:"wait ต้องตามด้วย for: waiting for the drawings ไม่ใช่ waiting the drawings"},
+   {th:"ตอบว่ารอทีมสถาปนิก และคุณส่งอีเมลหาเขาไปเมื่อวานแล้ว",q:"Who are you waiting on?",kw:[["architects","สถาปนิก"],["emailed","ส่งอีเมลหา"]],frame:"The ___. I ___ them yesterday.",en:"The architects. I emailed them yesterday.",alts:["The architects. I sent them an email yesterday."],tip:"email เป็นกริยาได้เลย พูด I emailed them ไม่ต้องมี to"},
+   {th:"บอกว่าถ้าได้แบบภายในวันพุธ คุณจะทำเสร็จได้ภายในวันศุกร์",kw:[["by","ภายใน (ไม่เกิน)"],["finish","ทำเสร็จ"]],frame:"If I get them ___ Wednesday, I can ___ by Friday.",en:"If I get them by Wednesday, I can finish by Friday.",alts:["If I get them by Wednesday, I'll finish by Friday."],tip:"by Friday แปลว่าไม่เกินวันศุกร์ ส่วน until Friday แปลว่าต่อเนื่องไปจนถึงวันศุกร์"},
+   {th:"ตอบว่าความเสี่ยงหลักคือกำหนดส่งงานให้ผู้รับเหมาสัปดาห์หน้า",q:"Any risks we should know about?",kw:[["main risk","ความเสี่ยงหลัก"],["deadline","กำหนดส่ง"]],frame:"The ___ is the contractor's ___ next week.",en:"The main risk is the contractor's deadline next week.",alts:["The main risk is the deadline for the contractor next week."]},
+   {th:"ปิดท้ายว่าของคุณมีเท่านี้ แล้วถามว่ามีใครมีคำถามไหม",kw:[["that's all","มีเท่านี้"],["questions","คำถาม"]],frame:"___ from me. Any ___?",en:"That's all from me. Any questions?",alts:["That's it from me. Any questions?","That's everything from me. Any questions?"]}
+  ]},
+ {id:"sp12",lv:"A2",cat:"work",title:"ขอให้พูดซ้ำและถามให้ชัด",en:"Asking someone to repeat and clarify",th:"ขอให้อีกฝ่ายพูดซ้ำหรือพูดช้าลง ถามให้ชัด และทวนกำหนดส่ง ตัวสะกด และสิ่งที่เข้าใจ",
+  items:[
+   {th:"ขอโทษ แล้วขอให้เขาพูดอีกครั้ง",kw:[["say that again","พูดอีกครั้ง"]],frame:"Sorry, could you ___?",en:"Sorry, could you say that again?",alts:["Sorry, could you repeat that?","Sorry, can you say that again?"],tip:"อย่าพูดแค่ Again? หรือ What? เพราะฟังห้วน ให้ขึ้นต้นด้วย Sorry, could you..."},
+   {th:"ขอให้เขาพูดช้าลงหน่อย",kw:[["a bit","หน่อย"],["more slowly","ช้าลง"]],frame:"Could you speak ___ ___, please?",en:"Could you speak a bit more slowly, please?",alts:["Could you speak a little more slowly, please?","Can you speak more slowly, please?"]},
+   {th:"ถามให้แน่ใจว่าเขาหมายถึงไฟล์ Revit หรือไฟล์ PDF",q:"Can you send me the file?",kw:[["do you mean","หมายถึง...ใช่ไหม"]],frame:"Do you ___ the Revit file ___ the PDF?",en:"Do you mean the Revit file or the PDF?",alts:["Do you mean the Revit model or the PDF?","You mean the Revit file or the PDF?"]},
+   {th:"ทวนเพื่อยืนยันว่ากำหนดส่งคือวันพฤหัสนี้ใช่ไหม",q:"We need it by Thursday.",kw:[["just to confirm","ขอยืนยันอีกที"],["deadline","กำหนดส่ง"]],frame:"___, the ___ is this Thursday?",en:"Just to confirm, the deadline is this Thursday?",alts:["Just to confirm, it's due this Thursday?","So the deadline is this Thursday, right?"]},
+   {th:"ถามว่าเป็นวันพฤหัสนี้ หรือวันพฤหัสสัปดาห์หน้า",kw:[["this","นี้"],["next","หน้า"]],frame:"___ Thursday or ___ Thursday?",en:"This Thursday or next Thursday?",alts:["Is it this Thursday or next Thursday?"]},
+   {th:"ถามเขาว่าชื่อของเขาสะกดอย่างไร",q:"This is Keith from the main contractor.",kw:[["spell","สะกด"]],frame:"How do you ___ your name?",en:"How do you spell your name?",alts:["Could you spell your name, please?","Sorry, how do you spell that?"]},
+   {th:"ทวนว่า คุณต้องยกท่อลมขึ้นสองร้อยมิลลิเมตรใช่ไหม",q:"Can you move the duct up by two hundred mil?",kw:[["move up","ยกขึ้น"],["duct","ท่อลม"]],frame:"So I should ___ the ___ up two hundred millimetres?",en:"So I should move the duct up two hundred millimetres?",alts:["So I should raise the duct by two hundred millimetres?"]},
+   {th:"ขอโทษ แล้วบอกว่าฟังส่วนสุดท้ายไม่ค่อยทัน",kw:[["catch","ฟังทัน"],["last part","ส่วนสุดท้าย"]],frame:"Sorry, I didn't quite ___ the ___.",en:"Sorry, I didn't quite catch the last part.",alts:["Sorry, I didn't catch the last part."],tip:"I didn't catch that แปลว่าฟังไม่ทัน ฟังสุภาพกว่าพูดว่า I don't understand"},
+   {th:"ถามว่า RFI ย่อมาจากอะไร",q:"We'll need an RFI for that.",kw:[["stand for","ย่อมาจาก"]],frame:"Sorry, what does RFI ___?",en:"Sorry, what does RFI stand for?",alts:["Sorry, what does RFI mean?"],tip:"ถามว่าตัวย่อมาจากอะไรใช้ stand for: What does RFI stand for?"},
+   {th:"บอกว่าขอเช็กว่าคุณเข้าใจถูกต้อง",kw:[["check","เช็ก"],["got this right","เข้าใจถูก"]],frame:"Let me ___ I've ___.",en:"Let me check I've got this right.",alts:["Let me make sure I've got this right.","Let me check I understand correctly."]}
+  ]},
+ {id:"sp13",lv:"B1",cat:"work",title:"ขอความช่วยเหลือและขอไฟล์",en:"Asking for help and files",th:"ขอแบบหรือโมเดลล่าสุด ขอสิทธิ์เข้าโฟลเดอร์ ขอให้ช่วยดูงาน นัดโทรคุยสั้น ๆ และขอบคุณอย่างเป็นธรรมชาติ",
+  items:[
+   {th:"ทักเพื่อนร่วมงานแล้วถามว่าว่างสักครู่ไหม",kw:[["have a minute","ว่างสักครู่"]],frame:"Hi, do you ___?",en:"Hi, do you have a minute?",alts:["Hi, have you got a minute?","Hi, are you free for a minute?"]},
+   {th:"ขอให้เขาส่งแบบสถาปัตย์ฉบับล่าสุดให้",q:"Sure, what do you need?",kw:[["latest","ล่าสุด"],["architectural drawings","แบบสถาปัตย์"]],frame:"Could you send me the ___ ___?",en:"Could you send me the latest architectural drawings?",alts:["Can you send me the latest architectural drawings?","Could I get the latest architectural drawings?"]},
+   {th:"ถามว่าโมเดลโครงสร้างที่อยู่บนเซิร์ฟเวอร์เป็นเวอร์ชันปัจจุบันหรือเปล่า",kw:[["server","เซิร์ฟเวอร์"],["current version","เวอร์ชันปัจจุบัน"]],frame:"Is the structural model on the ___ the ___?",en:"Is the structural model on the server the current version?",alts:["Is the structural model on the server up to date?"]},
+   {th:"บอกว่าคุณเปิดโฟลเดอร์นั้นไม่ได้ เพราะไม่มีสิทธิ์เข้าถึง",q:"I think it's in the project folder.",kw:[["open","เปิด"],["access","สิทธิ์เข้าถึง"]],frame:"I can't ___ that folder. I don't have ___.",en:"I can't open that folder. I don't have access.",alts:["I can't open it. I don't have access to that folder."],tip:"ไม่มีสิทธิ์เข้าถึงพูดว่า I don't have access ไม่ใช่ I have no permission access"},
+   {th:"ถามว่าควรไปขอสิทธิ์เข้าถึงจากใคร",kw:[["ask for","ขอ"]],frame:"Who should I ___ access?",en:"Who should I ask for access?",alts:["Who can give me access?","Who do I ask for access?"]},
+   {th:"ขอให้เขาช่วยดูงานนี้ให้หน่อย เพราะไม่แน่ใจว่าถูกไหม",kw:[["take a quick look","ช่วยดูหน่อย"],["sure","แน่ใจ"]],frame:"Could you ___ at this? I'm not ___ it's right.",en:"Could you take a quick look at this? I'm not sure it's right.",alts:["Could you have a quick look at this? I'm not sure it's right."]},
+   {th:"ถามว่าโทรคุยกันสั้น ๆ เพื่อไล่ดูไปด้วยกันได้ไหม",kw:[["quick call","โทรคุยสั้น ๆ"],["go through","ไล่ดูไปด้วยกัน"]],frame:"Could we have a ___ to ___ it?",en:"Could we have a quick call to go through it?",alts:["Can we have a quick call to go through it?","Could we jump on a quick call to go through it?"]},
+   {th:"ตอบว่าไม่เป็นไร แล้วถามว่าบ่ายสองโมงสะดวกไหม",q:"I'm busy this morning.",kw:[["work for you","สะดวกสำหรับคุณ"]],frame:"No problem. Does two o'clock ___?",en:"No problem. Does two o'clock work for you?",alts:["No problem. Are you free at two?","No problem. Is two o'clock okay for you?"],tip:"ถามว่าเวลานี้สะดวกไหมใช้ Does ... work for you? อย่าพูด Are you convenient?"},
+   {th:"ขอให้เขาส่งไฟล์ DWG มาด้วย ถ้าเป็นไปได้",kw:[["if possible","ถ้าเป็นไปได้"],["too","ด้วย"]],frame:"___, could you send the DWG files ___?",en:"If possible, could you send the DWG files too?",alts:["If possible, could you also send the DWG files?"]},
+   {th:"ขอบคุณที่ช่วย แล้วบอกว่าซาบซึ้งมาก",q:"Here you go. I've shared the folder with you.",kw:[["help","ความช่วยเหลือ"],["appreciate","ซาบซึ้ง / ขอบคุณ"]],frame:"Thanks so much for your ___. I really ___ it.",en:"Thanks so much for your help. I really appreciate it.",alts:["Thanks a lot for your help. I really appreciate it."],tip:"appreciate ต้องมีกรรมตามหลัง พูด I really appreciate it ไม่ใช่ I really appreciate"}
+  ]},
+ {id:"sp14",lv:"B1",cat:"work",title:"แจ้งปัญหาและความล่าช้า",en:"Reporting problems and delays",th:"แจ้งจุดชนกันหรือข้อมูลที่ขาด บอกว่างานจะช้า ขอเวลาเพิ่ม เสนอวันใหม่ และขอโทษอย่างมืออาชีพ",
+  items:[
+   {th:"ตอบว่าคุณเจอจุดชนกันระหว่างท่อลมกับคานที่ชั้นสาม",q:"Any issues with the model?",kw:[["clash","จุดชนกัน"],["duct","ท่อลม"],["beam","คาน"]],frame:"I've found a ___ between the ___ and a ___ on level three.",en:"I've found a clash between the duct and a beam on level three.",alts:["I found a clash between the duct and a beam on level three."]},
+   {th:"ตอบว่าท่อลมทับกับคานประมาณหนึ่งร้อยมิลลิเมตร",q:"How bad is it?",kw:[["overlaps","ทับกับ"],["by","เป็นระยะ"]],frame:"The duct ___ the beam ___ about one hundred millimetres.",en:"The duct overlaps the beam by about one hundred millimetres.",alts:["The duct goes into the beam by about one hundred millimetres."]},
+   {th:"บอกว่าในแบบไม่มีความสูงของฝ้าเพดาน",kw:[["ceiling height","ความสูงฝ้า"],["missing","ขาดไป / ไม่มี"]],frame:"The ___ is ___ from the drawings.",en:"The ceiling height is missing from the drawings.",alts:["The drawings don't show the ceiling height."],tip:"ข้อมูลไม่มีในแบบใช้ missing from the drawings (ใช้ from)"},
+   {th:"บอกว่าคุณจะส่ง RFI ไปให้สถาปนิกเพื่อยืนยันข้อมูล",kw:[["send an RFI","ส่งเอกสารขอข้อมูล"],["confirm","ยืนยัน"]],frame:"I'll ___ to the architect to ___ it.",en:"I'll send an RFI to the architect to confirm it.",alts:["I'll send the architect an RFI to confirm it."]},
+   {th:"ตอบว่าเกรงว่าจะทำเสร็จไม่ทันวันศุกร์",q:"Will it be ready on Friday?",kw:[["I'm afraid","เกรงว่า"],["won't be able to","จะไม่สามารถ"]],frame:"___ I ___ finish by Friday.",en:"I'm afraid I won't be able to finish by Friday.",alts:["I'm afraid I can't finish by Friday."],tip:"I'm afraid ตรงนี้ไม่ได้แปลว่ากลัว แต่เป็นการบอกข่าวไม่ดีแบบสุภาพ"},
+   {th:"อธิบายว่าแบบที่แก้ไขแล้วมาถึงช้ากว่าที่คาดไว้",kw:[["revised","ที่แก้ไขแล้ว"],["later than expected","ช้ากว่าที่คาด"]],frame:"The ___ drawings came in ___.",en:"The revised drawings came in later than expected.",alts:["The revised drawings arrived later than expected."]},
+   {th:"บอกว่าคุณต้องการเวลาอีกสองวันเพื่อทำให้เรียบร้อย",kw:[["two more days","อีกสองวัน"],["properly","อย่างเรียบร้อย"]],frame:"I'll need ___ to finish it ___.",en:"I'll need two more days to finish it properly.",alts:["I'll need another two days to finish it properly."],tip:"พูด two more days หรือ another two days อย่าพูด more two days"},
+   {th:"เสนอว่าขอเปลี่ยนเป็นวันอังคารหน้าแทนได้ไหม",q:"So when can you send it?",kw:[["next Tuesday","วันอังคารหน้า"],["instead","แทน"]],frame:"Would ___ be okay ___?",en:"Would next Tuesday be okay instead?",alts:["Could we move it to next Tuesday?","Is next Tuesday okay instead?"]},
+   {th:"ขอโทษที่ล่าช้า และขอบคุณที่อดทนรอ",kw:[["delay","ความล่าช้า"],["patience","ความอดทน"]],frame:"Sorry for the ___, and thanks for your ___.",en:"Sorry for the delay, and thanks for your patience.",alts:["Sorry about the delay, and thanks for your patience."],tip:"พูด Sorry for the delay ไม่ใช่ Sorry for late"},
+   {th:"ตอบว่าได้เลย คุณจะอัปเดตความคืบหน้าให้เขาทุกวัน",q:"Okay. Please keep me posted.",kw:[["keep you updated","อัปเดตให้ทราบเรื่อย ๆ"]],frame:"Sure, I'll ___ every day.",en:"Sure, I'll keep you updated every day.",alts:["Sure, I'll update you every day.","Will do. I'll send you an update every day."]}
+  ]},
+ {id:"sp15",lv:"B1",cat:"work",title:"คุยโทรศัพท์และประชุมออนไลน์",en:"Phone calls and online meetings",th:"รับสาย ถามว่าใครพูด เช็กเสียง แชร์หน้าจอ บอกว่าปิดไมค์อยู่ และปิดประชุมด้วยอีเมลสรุป",
+  items:[
+   {th:"รับโทรศัพท์ ทักทาย แล้วบอกชื่อและว่าคุณอยู่ทีม BIM",kw:[["this is","นี่คือ (บอกชื่อทางโทรศัพท์)"]],frame:"Hello, ___ Tong from the BIM team.",en:"Hello, this is Tong from the BIM team.",alts:["Hi, this is Tong from the BIM team.","Hello, Tong speaking, from the BIM team."],free:true,tip:"ทางโทรศัพท์ใช้ This is Tong หรือ Tong speaking ไม่ใช่ I am Tong"},
+   {th:"ถามอย่างสุภาพว่าใครเป็นคนโทรมา",q:"Hi, I'm calling about the drawings.",kw:[["may I ask","ขอถามหน่อย"],["who's calling","ใครโทรมา"]],frame:"Sorry, ___ ___?",en:"Sorry, may I ask who's calling?",alts:["Sorry, who's speaking, please?","Sorry, who's calling, please?"]},
+   {th:"ตอบว่าอยู่ในสายแล้ว แล้วถามว่าทุกคนได้ยินชัดไหม",q:"Tong, are you there?",kw:[["here","อยู่ (ในสาย)"],["hear me","ได้ยินฉัน"]],frame:"Yes, I'm ___. Can you ___ okay?",en:"Yes, I'm here. Can you hear me okay?",alts:["Yes, I'm here. Can you hear me?"]},
+   {th:"ตอบว่าได้ แล้วบอกว่าจะแชร์หน้าจอให้ดู",q:"Can you show us the model?",kw:[["share my screen","แชร์หน้าจอ"]],frame:"Sure, let me ___.",en:"Sure, let me share my screen.",alts:["Sure, I'll share my screen."]},
+   {th:"ถามว่าตอนนี้ทุกคนเห็นหน้าจอของคุณไหม",kw:[["everyone","ทุกคน"],["screen","หน้าจอ"]],frame:"Can ___ see my ___ now?",en:"Can everyone see my screen now?",alts:["Can you all see my screen now?","Can everyone see my screen?"]},
+   {th:"บอกเจมส์ว่าเขาน่าจะปิดไมค์อยู่",kw:[["on mute","ปิดไมค์อยู่"]],frame:"James, I think you're ___.",en:"James, I think you're on mute.",alts:["James, you're on mute."],tip:"ปิดไมค์อยู่พูดว่า You're on mute ไม่ใช่ You close the mic"},
+   {th:"บอกว่าเสียงเขาขาด ๆ หาย ๆ แล้วขอให้พูดอีกครั้ง",kw:[["breaking up","เสียงขาด ๆ หาย ๆ"]],frame:"Sorry, you're ___. Could you say that again?",en:"Sorry, you're breaking up. Could you say that again?",alts:["Sorry, you're breaking up. Can you repeat that?"],tip:"สัญญาณไม่ดีจนเสียงขาดหายใช้ You're breaking up"},
+   {th:"บอกว่าสัญญาณเน็ตไม่ดี เลยจะปิดกล้อง",kw:[["connection","สัญญาณ / การเชื่อมต่อ"],["turn off","ปิด"]],frame:"My ___ is bad, so I'll ___ my camera.",en:"My connection is bad, so I'll turn off my camera.",alts:["My connection isn't good, so I'll switch off my camera.","My internet is slow, so I'll turn off my camera."]},
+   {th:"บอกว่าหลังประชุมคุณจะส่งอีเมลสรุปพร้อมรายการงานที่ต้องทำต่อ",q:"Okay, we're almost out of time.",kw:[["follow-up email","อีเมลสรุปหลังประชุม"],["action items","งานที่ต้องทำต่อ"]],frame:"I'll send a ___ with the ___.",en:"I'll send a follow-up email with the action items.",alts:["I'll send a follow-up email with the action points."]},
+   {th:"ขอบคุณทุกคน แล้วบอกว่าคุยกันใหม่สัปดาห์หน้า",kw:[["talk to you","คุยกันใหม่"]],frame:"Thanks, everyone. ___ next week.",en:"Thanks, everyone. Talk to you next week.",alts:["Thanks, everyone. Speak to you next week.","Thanks, everyone. See you next week."]}
+  ]},
+ {id:"sp16",lv:"B1",cat:"work",title:"พูดถึงแบบและการแก้ไข",en:"Talking about drawings and revisions",th:"คุยเรื่องฉบับแก้ไข ชั้น เส้นกริด ระยะที่ไม่ตรงกัน ขอให้มาร์กอัป และบอกว่าจะแก้แล้วออกแบบฉบับใหม่",
+  items:[
+   {th:"ถามเขาว่ากำลังดูแบบฉบับแก้ไขไหนอยู่",q:"I think this wall is in the wrong place.",kw:[["revision","ฉบับแก้ไข"],["looking at","ดูอยู่"]],frame:"Which ___ are you ___?",en:"Which revision are you looking at?",alts:["Which revision are you using?"]},
+   {th:"บอกว่าฉบับล่าสุดคือ Revision C ซึ่งออกเมื่อวานนี้",q:"I'm on Revision B.",kw:[["latest","ล่าสุด"],["issued","ออก (แบบ)"]],frame:"The ___ one is Revision C. It was ___ yesterday.",en:"The latest one is Revision C. It was issued yesterday.",alts:["The latest is Revision C. It was issued yesterday."],tip:"แบบถูกออกโดยคน จึงใช้ It was issued ไม่ใช่ It issued"},
+   {th:"บอกว่าเสาบนเส้นกริด C ขยับไปห้าสิบมิลลิเมตร",kw:[["grid line","เส้นกริด"],["moved","ขยับ / ย้าย"]],frame:"The column on ___ C has ___ by fifty millimetres.",en:"The column on grid line C has moved by fifty millimetres.",alts:["The column on gridline C has moved fifty millimetres."]},
+   {th:"ตอบว่าอยู่ชั้นสาม ใกล้ ๆ แกนกลางอาคาร",q:"Which level is that?",kw:[["level","ชั้น"],["core","แกนกลางอาคาร"]],frame:"It's on ___ three, near the ___.",en:"It's on level three, near the core.",alts:["Level three, near the core."]},
+   {th:"บอกว่าระยะในแบบไม่ตรงกับในโมเดล",kw:[["dimension","ระยะ / ขนาด"],["match","ตรงกัน"]],frame:"The ___ on the drawing doesn't ___ the model.",en:"The dimension on the drawing doesn't match the model.",alts:["The dimension on the drawing is different from the model."],tip:"match ไม่ต้องมี with พูด doesn't match the model ไม่ใช่ not match with the model"},
+   {th:"ถามว่าคุณควรยึดตามอันไหน ระหว่างแบบกับโมเดล",kw:[["follow","ยึดตาม"]],frame:"Which one should I ___, the drawing or the model?",en:"Which one should I follow, the drawing or the model?",alts:["Should I follow the drawing or the model?"]},
+   {th:"ขอให้เขาช่วยมาร์กอัปจุดที่ต้องแก้ลงในไฟล์ PDF",kw:[["mark up","มาร์กอัป / ทำเครื่องหมาย"],["changes","จุดที่ต้องแก้"]],frame:"Could you ___ the ___ on the PDF?",en:"Could you mark up the changes on the PDF?",alts:["Could you mark the changes on the PDF?","Can you mark up the changes on the PDF?"]},
+   {th:"ตอบว่าได้รับแล้ว ขอบคุณ และจะอัปเดตโมเดลวันนี้",q:"I've sent you the markups.",kw:[["got them","ได้รับแล้ว"],["update","อัปเดต"]],frame:"___, thanks. I'll ___ the model today.",en:"Got them, thanks. I'll update the model today.",alts:["I got them, thanks. I'll update the model today."]},
+   {th:"บอกว่าคุณจะออกแบบฉบับใหม่ให้ภายในพรุ่งนี้",kw:[["re-issue","ออกฉบับใหม่"],["by","ภายใน"]],frame:"I'll ___ the drawings ___ tomorrow.",en:"I'll re-issue the drawings by tomorrow.",alts:["I'll reissue the drawings by tomorrow.","I'll issue the revised drawings by tomorrow."]},
+   {th:"บอกว่าคุณจะวาดเมฆล้อมจุดที่แก้ เพื่อให้เห็นได้ง่าย",kw:[["cloud","วาดเมฆล้อม (revision cloud)"],["easy to see","เห็นได้ง่าย"]],frame:"I'll ___ the changes so they're ___.",en:"I'll cloud the changes so they're easy to see.",alts:["I'll add revision clouds so the changes are easy to see."],tip:"ในงานเขียนแบบ ใช้ cloud เป็นกริยาได้ แปลว่าวาด revision cloud ล้อมจุดที่แก้"}
+  ]}
+);
+SPEAK.push(
+ {id:"sp17",lv:"A2",cat:"talk",title:"คุยเล่นเรื่องสัพเพเหระ",en:"Easy small talk",th:"เปิดบทสนทนาเรื่องอากาศ สุดสัปดาห์ ข้าวเที่ยง และชีวิตในสิงคโปร์ แล้วถามกลับให้คุยต่อได้",
+  items:[
+   {th:"เปิดบทสนทนาด้วยการพูดถึงอากาศว่าวันนี้ร้อนมาก แล้วถามว่าใช่ไหม",kw:[["so hot","ร้อนมาก"],["isn't it","ใช่ไหม"]],frame:"It's ___ today, ___?",en:"It's so hot today, isn't it?",alts:["It's really hot today, isn't it?"],tip:"ลงท้ายด้วย isn't it? เป็นการชวนอีกฝ่ายตอบ ไม่ต้องรอให้เขาเริ่มก่อน"},
+   {th:"ตอบว่าแย่แล้ว คุณลืมเอาร่มมา",q:"Yeah, and it might rain later.",kw:[["forgot","ลืม"],["umbrella","ร่ม"]],frame:"Oh no, I ___ my ___.",en:"Oh no, I forgot my umbrella.",alts:["Oh no, I didn't bring my umbrella."]},
+   {th:"ตอบว่าสุดสัปดาห์สบาย ๆ ส่วนใหญ่อยู่บ้าน",q:"How was your weekend?",kw:[["relaxing","สบาย ๆ ผ่อนคลาย"],["mostly","ส่วนใหญ่"],["stayed home","อยู่บ้าน"]],frame:"It was ___. I ___ ___.",en:"It was relaxing. I mostly stayed home.",alts:["It was quiet. I mostly stayed home."],tip:"อย่าตอบแค่ Fine. แล้วเงียบ ให้เพิ่มอีกหนึ่งประโยคเสมอ บทสนทนาจะไปต่อได้"},
+   {th:"ถามกลับว่าแล้วเขาล่ะ ได้ทำอะไรสนุก ๆ ไหม",kw:[["How about you","แล้วคุณล่ะ"],["anything fun","อะไรสนุก ๆ"]],frame:"___? Did you do ___?",en:"How about you? Did you do anything fun?",alts:["What about you? Did you do anything fun?"],tip:"ตอบเสร็จแล้วถามกลับทุกครั้ง อีกฝ่ายจะได้พูดบ้าง และคุณได้พักคิด"},
+   {th:"ตอบว่ายัง กำลังจะไปศูนย์อาหารตอนนี้เลย",q:"Have you had lunch yet?",kw:[["Not yet","ยัง"],["hawker centre","ศูนย์อาหาร"]],frame:"___. I'm going to the ___ now.",en:"Not yet. I'm going to the hawker centre now.",alts:["Not yet. I'm heading to the hawker centre now."]},
+   {th:"ถามเขาว่าแถวนี้มีที่กินอร่อย ๆ แนะนำไหม",kw:[["recommend","แนะนำ"],["around here","แถวนี้"]],frame:"Can you ___ a good place to eat ___?",en:"Can you recommend a good place to eat around here?",alts:["Is there a good place to eat around here?"]},
+   {th:"ตอบว่าอยู่ที่นี่มาประมาณสองปีแล้ว",q:"How long have you been in Singapore?",kw:[["about","ประมาณ"],["two years","สองปี"]],frame:"For ___ ___ now.",en:"For about two years now.",alts:["About two years.","I've been here for about two years."],free:true,tip:"ตอบด้วย For... หรือ I've been here for... อย่าพูด I stay here two years"},
+   {th:"ตอบว่าชอบนะ แต่บางครั้งก็คิดถึงอาหารไทย",q:"Do you like living here?",kw:[["sometimes","บางครั้ง"],["miss","คิดถึง"]],frame:"I like it, but I ___ ___ Thai food.",en:"I like it, but I sometimes miss Thai food.",alts:["Yes, I like it, but sometimes I miss Thai food."]},
+   {th:"ถามเขาว่าเขาเป็นคนที่นี่มาแต่เดิมหรือเปล่า",kw:[["originally","แต่เดิม"]],frame:"Are you ___ from here?",en:"Are you originally from here?",alts:["Are you from here?","Are you from Singapore?"]},
+   {th:"ปิดการคุยอย่างสุภาพว่า ยินดีที่ได้คุยด้วย แล้วเจอกันนะ",kw:[["nice talking","ยินดีที่ได้คุย"],["See you around","แล้วเจอกัน"]],frame:"It was ___ to you. ___!",en:"It was nice talking to you. See you around!",alts:["Nice talking to you. See you later!"]}
+  ]},
+ {id:"sp18",lv:"A2",cat:"talk",title:"คุยเล่นกับเพื่อนร่วมงานตอนพัก",en:"Chatting with colleagues on a break",th:"ชวนไปกาแฟ คุยเรื่องอาหารและแผนเย็นนี้ ชมกันเล็กน้อย และขอตัวกลับไปทำงานอย่างสุภาพ",
+  items:[
+   {th:"ชวนเพื่อนร่วมงานว่าคุณจะไปซื้อกาแฟ จะไปด้วยกันไหม",kw:[["grab","ไปซื้อ (แบบสบาย ๆ)"],["come","มาด้วย"]],frame:"I'm going to ___ a coffee. Want to ___?",en:"I'm going to grab a coffee. Want to come?",alts:["I'm getting a coffee. Do you want to come?"],tip:"grab a coffee เป็นภาษาพูดที่เป็นธรรมชาติ ใช้ชวนเพื่อนร่วมงานได้เลย"},
+   {th:"ตอบว่าเอาแค่กาแฟเย็นไม่ใส่น้ำตาล",q:"Sure! What are you getting?",kw:[["iced","เย็น (ใส่น้ำแข็ง)"],["no sugar","ไม่ใส่น้ำตาล"]],frame:"Just an ___ coffee with ___.",en:"Just an iced coffee with no sugar.",alts:["An iced coffee with no sugar.","I'll get an iced coffee, no sugar."]},
+   {th:"ถามเขาว่าวันนี้ไปกินข้าวเที่ยงที่ไหนมา",kw:[["go for lunch","ไปกินข้าวเที่ยง"]],frame:"Where did you ___ today?",en:"Where did you go for lunch today?",alts:["Where did you have lunch today?"]},
+   {th:"ถามว่าเป็นยังไงบ้าง ดีไหม",q:"I tried the new noodle place downstairs.",kw:[["any good","ดีไหม อร่อยไหม"]],frame:"Oh nice, was it ___?",en:"Oh nice, was it any good?",alts:["Oh nice, how was it?","Oh nice, was it good?"]},
+   {th:"ชมว่าคุณชอบเสื้อเขา ดูดีมาก",kw:[["like","ชอบ"],["shirt","เสื้อ"]],frame:"I ___ your ___. It looks great.",en:"I like your shirt. It looks great.",alts:["Nice shirt! It looks great on you."],tip:"ชมด้วย I like your... ฟังเป็นธรรมชาติ ถ้ามีคนชมคุณ ตอบ Thanks! ได้เลย ไม่ต้องถ่อมตัวปฏิเสธ"},
+   {th:"ขอบคุณแล้วบอกว่าซื้อมาตอนลดราคา",q:"Thanks! I really like your bag too.",kw:[["on sale","ตอนลดราคา"]],frame:"Thanks! I got it ___.",en:"Thanks! I got it on sale.",alts:["Thank you! I bought it on sale."]},
+   {th:"ถามว่าเย็นนี้หลังเลิกงานมีแผนอะไรไหม",kw:[["plans","แผน"],["after work","หลังเลิกงาน"]],frame:"Any ___ ___ today?",en:"Any plans after work today?",alts:["Do you have any plans after work?","What are you doing after work?"]},
+   {th:"บอกว่าคุณเหนื่อยมาก เลยจะเข้านอนเร็ว",q:"Not really. Maybe just the gym. You?",kw:[["exhausted","เหนื่อยมาก"],["early night","เข้านอนเร็ว"]],frame:"I'm ___, so I'll have an ___.",en:"I'm exhausted, so I'll have an early night.",alts:["I'm really tired, so I'll go to bed early."]},
+   {th:"ขอตัวว่าควรกลับไปทำงานแล้ว เพราะมีประชุมตอนบ่ายสอง",kw:[["head back","กลับไป"],["meeting","ประชุม"]],frame:"I should ___. I have a ___ at two.",en:"I should head back. I have a meeting at two.",alts:["I should go back. I have a meeting at two."],tip:"บอกเหตุผลสั้น ๆ ก่อนขอตัว จะฟังสุภาพและไม่ห้วน"},
+   {th:"บอกว่าคุยสนุกดี แล้วค่อยคุยกันต่อนะ",q:"Okay, no problem.",kw:[["chatting","การคุย"],["catch up","คุยกันต่อ อัปเดตกัน"]],frame:"Nice ___. Let's ___ later.",en:"Nice chatting. Let's catch up later.",alts:["Good chatting with you. Talk to you later."]}
+  ]},
+ {id:"sp19",lv:"A2",cat:"talk",title:"เล่าเรื่องเมื่อวานและสุดสัปดาห์",en:"Telling about yesterday and the weekend",th:"เล่าว่าเมื่อวานและสุดสัปดาห์ทำอะไรบ้าง เรียงลำดับด้วย then และ after that และบอกว่าเป็นอย่างไร",
+  items:[
+   {th:"ตอบว่าเมื่อวานยุ่งมากทั้งวัน",q:"What did you do yesterday?",kw:[["busy","ยุ่ง"],["all day","ทั้งวัน"]],frame:"I was really ___ ___.",en:"I was really busy all day.",alts:["I was very busy all day."],tip:"เล่าเรื่องในอดีตใช้ was ไม่ใช่ is และอย่าลืมกริยา: I was busy ไม่ใช่ I busy"},
+   {th:"เล่าว่าตอนเช้าคุณไปทำงานแต่เช้า",kw:[["went to work","ไปทำงาน"],["early","แต่เช้า"]],frame:"In the morning, I ___ ___.",en:"In the morning, I went to work early.",alts:["I went to work early in the morning."]},
+   {th:"เล่าต่อว่า จากนั้นมีประชุมยาวกับหัวหน้า",kw:[["Then","จากนั้น"],["long","ยาว"]],frame:"___ I had a ___ meeting with my boss.",en:"Then I had a long meeting with my boss.",alts:["After that, I had a long meeting with my boss."]},
+   {th:"เล่าว่า หลังจากนั้นคุณไปกินข้าวเย็นกับเพื่อน",kw:[["After that","หลังจากนั้น"],["had dinner","กินข้าวเย็น"]],frame:"___, I ___ with a friend.",en:"After that, I had dinner with a friend.",alts:["Then I had dinner with a friend."],tip:"ใช้ First, Then, After that เรียงเหตุการณ์ คนฟังจะตามเรื่องได้ง่าย และคุณก็นึกเรื่องต่อได้ง่ายด้วย"},
+   {th:"ตอบว่าไปร้านอาหารไทยแถวบูกิส",q:"Where did you go?",kw:[["restaurant","ร้านอาหาร"],["near","แถว ใกล้"]],frame:"We went to a Thai ___ ___ Bugis.",en:"We went to a Thai restaurant near Bugis.",alts:["We tried a Thai restaurant near Bugis."]},
+   {th:"ตอบว่าอร่อยมาก แต่เผ็ดไปหน่อย",q:"How was it?",kw:[["delicious","อร่อย"],["a bit too spicy","เผ็ดไปหน่อย"]],frame:"It was ___, but ___.",en:"It was delicious, but a bit too spicy.",alts:["The food was delicious, but a bit too spicy."]},
+   {th:"เล่าว่าวันเสาร์ไปเดินเล่นที่สวนพฤกษศาสตร์",q:"And what about the weekend?",kw:[["walked","เดินเล่น"],["Botanic Gardens","สวนพฤกษศาสตร์"]],frame:"On Saturday, I ___ in the ___.",en:"On Saturday, I walked in the Botanic Gardens.",alts:["On Saturday, I went to the Botanic Gardens."]},
+   {th:"เล่าว่าวันอาทิตย์แค่ดูหนังอยู่ที่บ้าน",kw:[["just","แค่"],["watched movies","ดูหนัง"]],frame:"On Sunday, I ___ ___ at home.",en:"On Sunday, I just watched movies at home.",alts:["I just watched movies at home on Sunday."],tip:"กริยาอดีตต้องเปลี่ยนรูป watch เป็น watched, go เป็น went คนไทยมักลืมเติม -ed เวลาพูด"},
+   {th:"สรุปว่าเป็นสุดสัปดาห์ที่ดี ได้พักผ่อนเต็มที่",kw:[["great weekend","สุดสัปดาห์ที่ดี"],["rest","การพักผ่อน"]],frame:"It was a ___. I got lots of ___.",en:"It was a great weekend. I got lots of rest.",alts:["It was a nice weekend. I got lots of rest."]},
+   {th:"ถามเขากลับว่า แล้วเขาล่ะ เมื่อวานทำอะไรบ้าง",kw:[["What about you","แล้วคุณล่ะ"]],frame:"___? What did you do ___?",en:"What about you? What did you do yesterday?",alts:["How about you? What did you do yesterday?"]}
+  ]},
+ {id:"sp20",lv:"B1",cat:"talk",title:"เล่าประสบการณ์",en:"Sharing experiences",th:"ถามและตอบว่าเคยทำอะไรมาบ้าง เล่าทริปที่ดีที่สุดและแย่ที่สุด ว่าเกิดอะไรขึ้นและรู้สึกอย่างไร",
+  items:[
+   {th:"ตอบว่าเคยไปครั้งหนึ่ง ประมาณสามปีที่แล้ว",q:"Have you ever been to Japan?",kw:[["once","ครั้งหนึ่ง"],["ago","ที่แล้ว"]],frame:"Yes, I went there ___, about three years ___.",en:"Yes, I went there once, about three years ago.",alts:["Yes, once. I went about three years ago."],tip:"ถ้าบอกเวลาที่แน่นอน เช่น three years ago ให้ใช้ I went ไม่ใช่ I've been"},
+   {th:"ถามเขากลับว่าเคยไปเที่ยวเมืองไทยไหม",kw:[["Have you ever","คุณเคย...ไหม"],["been to","ไป (เคยไปที่)"]],frame:"___ ___ Thailand?",en:"Have you ever been to Thailand?",alts:["Have you been to Thailand before?"],tip:"เคยไปที่ไหน ใช้ been to ไม่ใช่ gone to"},
+   {th:"ตอบว่าทริปที่ดีที่สุดคือไปเชียงใหม่กับครอบครัว",q:"What's the best trip you've ever had?",kw:[["best trip","ทริปที่ดีที่สุด"],["with my family","กับครอบครัว"]],frame:"My ___ was to Chiang Mai ___.",en:"My best trip was to Chiang Mai with my family.",alts:["The best one was Chiang Mai with my family."]},
+   {th:"อธิบายว่าอากาศเย็นสบาย และได้ใช้เวลากับพ่อแม่",q:"Why was it so good?",kw:[["cool","เย็นสบาย"],["spend time","ใช้เวลา"]],frame:"The weather was ___, and I got to ___ with my parents.",en:"The weather was cool, and I got to spend time with my parents.",alts:["It was cool, and I spent time with my parents."]},
+   {th:"ตอบว่าแย่ที่สุดคือตอนที่เที่ยวบินดีเลย์หกชั่วโมง",q:"And the worst trip?",kw:[["The worst","ที่แย่ที่สุด"],["flight","เที่ยวบิน"],["delayed","ล่าช้า"]],frame:"___ was when my ___ was ___ for six hours.",en:"The worst was when my flight was delayed for six hours.",alts:["The worst was when my flight was six hours late."]},
+   {th:"เล่าว่ามีพายุ เลยติดอยู่ที่สนามบินทั้งคืน",q:"Oh no! What happened?",kw:[["storm","พายุ"],["stuck","ติดอยู่"],["airport","สนามบิน"]],frame:"There was a ___, so we were ___ at the ___ all night.",en:"There was a storm, so we were stuck at the airport all night.",alts:["There was a storm, so we waited at the airport all night."]},
+   {th:"บอกว่าตอนนั้นรู้สึกทั้งเหนื่อยและหงุดหงิดมาก",q:"How did you feel?",kw:[["frustrated","หงุดหงิด"]],frame:"I felt really tired and ___.",en:"I felt really tired and frustrated.",alts:["I was so tired and frustrated."],tip:"เล่าความรู้สึกตอนนั้นใช้ felt ซึ่งเป็นอดีตของ feel อย่าพูด I feel ถ้าเรื่องผ่านไปแล้ว"},
+   {th:"เล่าว่าแต่สุดท้ายก็ได้รู้จักนักท่องเที่ยวที่นิสัยดีมากคนหนึ่ง",kw:[["in the end","สุดท้าย"],["met","ได้รู้จัก ได้เจอ"],["traveller","นักท่องเที่ยว"]],frame:"But ___, I ___ a really nice ___.",en:"But in the end, I met a really nice traveller.",alts:["But in the end, I met a very nice traveller."]},
+   {th:"บอกว่าพอนึกย้อนไป ตอนนี้กลับรู้สึกว่าเรื่องนั้นค่อนข้างตลก",kw:[["Looking back","พอนึกย้อนไป"],["funny","ตลก"]],frame:"___, it's actually pretty ___.",en:"Looking back, it's actually pretty funny.",alts:["Now it's actually pretty funny."]},
+   {th:"ถามเขาว่าเคยเจอเรื่องแบบนี้บ้างไหม",kw:[["anything like that","อะไรแบบนั้น"],["happened to","เกิดขึ้นกับ"]],frame:"Has ___ ever ___ you?",en:"Has anything like that ever happened to you?",alts:["Have you ever had something like that happen?"]}
+  ]},
+ {id:"sp21",lv:"B1",cat:"talk",title:"แสดงความคิดเห็น",en:"Giving your opinion",th:"บอกความคิดเห็น ให้เหตุผล ยกตัวอย่าง และถามความเห็นของอีกฝ่าย",
+  items:[
+   {th:"ตอบว่าคุณคิดว่าเป็นความคิดที่ดีมาก",q:"What do you think of working from home?",kw:[["I think","ฉันคิดว่า"],["great idea","ความคิดที่ดี"]],frame:"___ it's a ___.",en:"I think it's a great idea.",alts:["I think it's a good idea."],tip:"อย่าพูด I am think ให้พูด I think เฉย ๆ"},
+   {th:"ให้เหตุผลว่า เหตุผลคือไม่ต้องเสียเวลาเดินทางไปทำงาน",q:"Why do you say that?",kw:[["The reason is","เหตุผลคือ"],["commuting","การเดินทางไปทำงาน"]],frame:"___ that you don't waste time ___.",en:"The reason is that you don't waste time commuting.",alts:["Because you don't waste time commuting."]},
+   {th:"ยกตัวอย่างว่า เช่น คุณประหยัดเวลาได้วันละประมาณหนึ่งชั่วโมง",kw:[["For example","ยกตัวอย่างเช่น"],["save","ประหยัด"]],frame:"___, I ___ about an hour every day.",en:"For example, I save about an hour every day.",alts:["For example, I save around an hour a day."]},
+   {th:"บอกอีกมุมหนึ่งว่า แต่ในความเห็นของคุณ การเจอหน้ากันก็ยังสำคัญ",kw:[["in my opinion","ในความเห็นของฉัน"],["face to face","เจอหน้ากัน"]],frame:"But ___, meeting ___ is still important.",en:"But in my opinion, meeting face to face is still important.",alts:["But I think meeting face to face is still important."],tip:"ใช้ In my opinion หรือ I think อย่างใดอย่างหนึ่ง ไม่ต้องพูด In my opinion, I think ซ้อนกัน"},
+   {th:"สรุปว่า สรุปคือคุณคิดว่ามีทั้งข้อดีและข้อเสีย",kw:[["So basically","สรุปคือ"],["pros and cons","ข้อดีข้อเสีย"]],frame:"___, I think there are ___.",en:"So basically, I think there are pros and cons.",alts:["So I think there are pros and cons."]},
+   {th:"ตอบว่าสะดวกมาก แต่ช่วงชั่วโมงเร่งด่วนคนแน่น",q:"What's your opinion of the MRT here?",kw:[["convenient","สะดวก"],["crowded","คนแน่น"],["rush hour","ชั่วโมงเร่งด่วน"]],frame:"It's very ___, but it gets ___ during ___.",en:"It's very convenient, but it gets crowded during rush hour.",alts:["It's really convenient, but it's crowded during rush hour."]},
+   {th:"บอกว่าจากที่คุณเห็นมา ค่าครองชีพที่นี่สูงขึ้นทุกปี",kw:[["From what I've seen","จากที่ฉันเห็นมา"],["cost of living","ค่าครองชีพ"]],frame:"___, the ___ goes up every year.",en:"From what I've seen, the cost of living goes up every year.",alts:["I feel like the cost of living goes up every year."]},
+   {th:"ตอบว่าโดยรวมแล้วใช่ เพราะปลอดภัยและสะอาด",q:"So do you think it's a good place to live?",kw:[["Overall","โดยรวม"],["safe","ปลอดภัย"]],frame:"___, yes, because it's ___ and clean.",en:"Overall, yes, because it's safe and clean.",alts:["Overall, yes. It's safe and clean."]},
+   {th:"ตอบว่าแล้วแต่ แต่ส่วนตัวชอบอาหารไทยมากกว่า",q:"Do you prefer Thai food or local food?",kw:[["It depends","แล้วแต่"],["personally","ส่วนตัวแล้ว"],["prefer","ชอบมากกว่า"]],frame:"___, but ___ I ___ Thai food.",en:"It depends, but personally I prefer Thai food.",alts:["It depends, but I personally prefer Thai food."]},
+   {th:"ถามความเห็นของเขาแบบเป็นกันเองว่าเขามองเรื่องนี้ยังไง",kw:[["What's your take","คุณมองยังไง"]],frame:"___ on it?",en:"What's your take on it?",alts:["What do you think?","What's your opinion?"],tip:"What's your take on...? เป็นวิธีถามความเห็นแบบสบาย ๆ ใช้กับเพื่อนร่วมงานได้"}
+  ]},
+ {id:"sp22",lv:"B1",cat:"talk",title:"เห็นด้วยและไม่เห็นด้วยอย่างสุภาพ",en:"Agreeing and disagreeing politely",th:"บอกว่าเห็นด้วย เห็นด้วยบางส่วน หรือไม่เห็นด้วย โดยไม่ทำให้อีกฝ่ายรู้สึกไม่ดี",
+  items:[
+   {th:"บอกว่าเห็นด้วยกับเขาเต็มที่",q:"I think meetings are often a waste of time.",kw:[["totally agree","เห็นด้วยเต็มที่"]],frame:"I ___ with you.",en:"I totally agree with you.",alts:["I completely agree with you.","I agree with you."],tip:"อย่าพูด I am agree ให้พูด I agree เพราะ agree เป็นกริยาอยู่แล้ว"},
+   {th:"บอกว่าเป็นประเด็นที่ดี โดยเฉพาะประชุมยาว ๆ",q:"Most of them could just be an email.",kw:[["good point","ประเด็นที่ดี"],["especially","โดยเฉพาะ"]],frame:"That's a ___, ___ the long ones.",en:"That's a good point, especially the long ones.",alts:["Good point, especially the long ones."]},
+   {th:"บอกว่าเข้าใจที่เขาหมายถึงนะ แต่บางประชุมก็มีประโยชน์",q:"We should cancel all weekly meetings.",kw:[["I see what you mean","เข้าใจที่คุณหมายถึง"],["useful","มีประโยชน์"]],frame:"___, but some meetings are ___.",en:"I see what you mean, but some meetings are useful.",alts:["I see your point, but some meetings are useful."],tip:"ยอมรับความเห็นเขาก่อน แล้วค่อยตามด้วย but จะนุ่มนวลกว่าการพูด No ตรง ๆ"},
+   {th:"บอกว่าอืม คุณไม่แน่ใจเรื่องนั้นนะ",q:"Everyone hates them anyway.",kw:[["not sure about that","ไม่แน่ใจเรื่องนั้น"]],frame:"Hmm, I'm ___.",en:"Hmm, I'm not sure about that.",alts:["Hmm, I'm not so sure about that."]},
+   {th:"ให้เหตุผลว่าทีมของคุณชอบประชุมวันจันทร์ เพราะได้วางแผนงานของสัปดาห์",kw:[["plan the week","วางแผนงานของสัปดาห์"]],frame:"My team likes Monday meetings to ___.",en:"My team likes Monday meetings to plan the week.",alts:["My team likes Monday meetings for planning the week."]},
+   {th:"บอกว่าคุณเห็นด้วยในระดับหนึ่ง แต่ไม่ทั้งหมด",kw:[["to some extent","ในระดับหนึ่ง"],["completely","ทั้งหมด"]],frame:"I agree ___, but not ___.",en:"I agree to some extent, but not completely.",alts:["I partly agree, but not completely."]},
+   {th:"เสนอว่าบางทีเราอาจทำให้ประชุมสั้นลง",q:"So what would you do?",kw:[["Maybe","บางที"],["shorter","สั้นลง"]],frame:"___ we could make them ___.",en:"Maybe we could make them shorter.",alts:["Maybe we could just make them shorter.","Why don't we make them shorter?"]},
+   {th:"เห็นด้วยทันทีว่า ใช่เลย ตรงกับที่คุณคิดอยู่พอดี",q:"Like fifteen minutes each?",kw:[["Exactly","ใช่เลย"],["what I was thinking","สิ่งที่ฉันคิดอยู่"]],frame:"___! That's ___.",en:"Exactly! That's what I was thinking.",alts:["Exactly! That's just what I was thinking."]},
+   {th:"แย้งอย่างสุภาพว่าคุณไม่คิดอย่างนั้น จริง ๆ แล้วหัวหน้าบอกว่าประชุมยาวเกินไป",q:"But the boss loves long meetings.",kw:[["I don't think so","ฉันไม่คิดอย่างนั้น"],["actually","จริง ๆ แล้ว"]],frame:"___. He ___ says they're too long.",en:"I don't think so. He actually says they're too long.",alts:["I'm not sure. He actually says they're too long."],tip:"แย้งด้วย I don't think so หรือ Actually... แทน You're wrong ซึ่งฟังแรงเกินไปในที่ทำงาน"},
+   {th:"ตอบตกลงว่าฟังดูดี เดี๋ยวคุณจะยกเรื่องนี้ขึ้นมาพูดในประชุมครั้งหน้า",q:"Really? Then let's suggest it to him.",kw:[["Sounds good","ฟังดูดี ตกลง"],["bring it up","ยกเรื่องขึ้นมาพูด"]],frame:"___. I'll ___ at the next meeting.",en:"Sounds good. I'll bring it up at the next meeting.",alts:["Good idea. I'll bring it up at the next meeting."]}
+  ]},
+ {id:"sp23",lv:"B1",cat:"talk",title:"พูดถึงแผนและเป้าหมาย",en:"Talking about plans and goals",th:"เล่าแผนใกล้ ๆ และเป้าหมายระยะยาว บอกว่าทำไมเรียนภาษาอังกฤษ และถามเป้าหมายของอีกฝ่าย",
+  items:[
+   {th:"ตอบว่าจะกลับไปเยี่ยมครอบครัวที่กรุงเทพฯ",q:"Any plans for the long weekend?",kw:[["going to","จะ (ตั้งใจไว้แล้ว)"],["visit","เยี่ยม"]],frame:"I'm ___ ___ my family in Bangkok.",en:"I'm going to visit my family in Bangkok.",alts:["I'm visiting my family in Bangkok."],tip:"แผนที่ตัดสินใจไว้แล้วใช้ I'm going to... ส่วน I will... มักใช้กับสิ่งที่เพิ่งตัดสินใจตอนพูด"},
+   {th:"บอกว่าคุณกำลังวางแผนจะย้ายไปอยู่ที่ที่ใกล้ที่ทำงานมากขึ้น",kw:[["planning to","กำลังวางแผนจะ"],["move","ย้าย"],["closer to","ใกล้...มากขึ้น"]],frame:"I'm ___ ___ to a place ___ work.",en:"I'm planning to move to a place closer to work.",alts:["I'm planning to move somewhere closer to work."]},
+   {th:"ตอบว่าหวังว่าจะได้เลื่อนตำแหน่ง",q:"What are your goals for next year?",kw:[["hope to","หวังว่าจะ"],["promoted","ได้เลื่อนตำแหน่ง"]],frame:"I ___ get ___.",en:"I hope to get promoted.",alts:["I hope I get promoted.","I'm hoping to get promoted."],tip:"ได้เลื่อนตำแหน่ง พูดว่า get promoted ไม่ใช่ up position"},
+   {th:"ตอบว่าเพราะอยากพูดแสดงความเห็นในที่ประชุมได้อย่างมั่นใจ",q:"Why are you learning English?",kw:[["speak up","พูดแสดงความเห็น"],["confidently","อย่างมั่นใจ"]],frame:"Because I want to ___ ___ in meetings.",en:"Because I want to speak up confidently in meetings.",alts:["I want to speak more confidently in meetings."]},
+   {th:"เล่าว่าตอนนี้คุณพยายามพูดภาษาอังกฤษวันละสิบห้านาที",kw:[["trying to","พยายาม"],["a day","ต่อวัน"]],frame:"Right now, I'm ___ speak English for fifteen minutes ___.",en:"Right now, I'm trying to speak English for fifteen minutes a day.",alts:["I'm trying to speak English for fifteen minutes every day."]},
+   {th:"ตอบว่าในระยะยาว คุณอยากเป็นผู้จัดการโครงการ",q:"What's your long-term goal?",kw:[["In the long run","ในระยะยาว"],["project manager","ผู้จัดการโครงการ"]],frame:"___, I'd like to become a ___.",en:"In the long run, I'd like to become a project manager.",alts:["Eventually, I'd like to be a project manager."],free:true},
+   {th:"บอกว่าคุณอาจจะสมัครเรียนคอร์สออนไลน์ แต่ยังไม่แน่ใจ",kw:[["might","อาจจะ"],["sign up for","สมัครเรียน"]],frame:"I ___ ___ an online course, but I'm not sure yet.",en:"I might sign up for an online course, but I'm not sure yet.",alts:["I might take an online course, but I'm not sure yet."],tip:"ยังไม่แน่ใจใช้ might ฟังเป็นธรรมชาติกว่า maybe I will"},
+   {th:"ตอบว่าอย่างน้อยก็อีกสองสามปี หลังจากนั้นค่อยว่ากัน",q:"Do you plan to stay in Singapore?",kw:[["at least","อย่างน้อย"],["a few more years","อีกสองสามปี"],["we'll see","ค่อยว่ากัน"]],frame:"For ___ ___. After that, ___.",en:"For at least a few more years. After that, we'll see.",alts:["At least a few more years. Then we'll see."]},
+   {th:"บอกว่าเป้าหมายใหญ่ที่สุดของคุณคือเก็บเงินซื้อบ้านที่เมืองไทย",kw:[["biggest goal","เป้าหมายใหญ่ที่สุด"],["save up","เก็บเงิน"]],frame:"My ___ is to ___ for a house in Thailand.",en:"My biggest goal is to save up for a house in Thailand.",alts:["My biggest goal is to save money for a house in Thailand."],free:true},
+   {th:"ถามเขาว่าแล้วเขาล่ะ ปีนี้กำลังมุ่งไปที่เป้าหมายอะไร",kw:[["working towards","กำลังมุ่งไปสู่"]],frame:"What about you? What are you ___ this year?",en:"What about you? What are you working towards this year?",alts:["How about you? What are your goals this year?"]}
+  ]},
+ {id:"sp24",lv:"B1",cat:"talk",title:"ซื้อเวลาตอนนึกคำไม่ออก",en:"When you can't find the word",th:"ขอเวลาคิด ถามหาคำศัพท์ อธิบายคำที่นึกไม่ออก และแก้ไขเมื่ออีกฝ่ายเข้าใจผิด โดยไม่เงียบหายไปกลางประโยค",
+  items:[
+   {th:"ขอเวลาว่า อืม ขอคิดแป๊บหนึ่งนะ",q:"So what do you think we should do?",kw:[["let me think","ขอคิดก่อน"],["a second","แป๊บหนึ่ง"]],frame:"Hmm, ___ for ___.",en:"Hmm, let me think for a second.",alts:["Let me think for a second.","Give me a second to think."],tip:"ถ้าเงียบไปเฉย ๆ อีกฝ่ายจะคิดว่าคุณไม่เข้าใจ ให้พูด Let me think... เพื่อบอกว่ากำลังคิดอยู่"},
+   {th:"ชี้ไปที่ของชิ้นหนึ่งแล้วถามว่า ขอโทษนะ สิ่งนี้ภาษาอังกฤษพูดว่าอะไร",kw:[["how do you say","พูดว่าอะไร"],["in English","เป็นภาษาอังกฤษ"]],frame:"Sorry, ___ this ___?",en:"Sorry, how do you say this in English?",alts:["Sorry, what do you call this in English?","Sorry, what's this called in English?"]},
+   {th:"ถามหาคำศัพท์ว่า อาการที่นอนไม่หลับเรียกว่าอะไรนะ",kw:[["What's the word for","คำที่ใช้เรียก...คืออะไร"],["can't sleep","นอนไม่หลับ"]],frame:"___ when you ___?",en:"What's the word for when you can't sleep?",alts:["What do you call it when you can't sleep?"],tip:"สูตร What's the word for when...? ใช้ถามคำที่คุณรู้ความหมายแต่ไม่รู้คำได้ทุกเรื่อง"},
+   {th:"บอกว่าขอโทษ คำนั้นติดอยู่ที่ปลายลิ้น นึกไม่ออก",kw:[["on the tip of my tongue","ติดอยู่ที่ปลายลิ้น"]],frame:"Sorry, the word is ___.",en:"Sorry, the word is on the tip of my tongue.",alts:["Sorry, it's on the tip of my tongue."]},
+   {th:"ตอบว่าลืมคำไปแล้ว แต่ขออธิบายให้ฟัง",q:"So what did you buy at the market?",kw:[["forgot the word","ลืมคำ"],["explain","อธิบาย"]],frame:"I ___, but let me ___.",en:"I forgot the word, but let me explain.",alts:["I can't remember the word, but let me explain."]},
+   {th:"อธิบายของที่นึกชื่อไม่ออก (กระเป๋าใส่เหรียญ) ว่ามันเหมือนกระเป๋าเล็ก ๆ ไว้ใส่เหรียญ",kw:[["It's like a","มันเหมือน..."],["for keeping","ไว้ใส่ ไว้เก็บ"]],frame:"___ small bag ___ coins.",en:"It's like a small bag for keeping coins.",alts:["It's a small bag you keep coins in."]},
+   {th:"อธิบายของที่ต้องการแต่นึกชื่อไม่ออก (ที่เปิดขวด) ว่ามันเป็นของที่ใช้เปิดขวด",q:"Sorry, what do you need?",kw:[["the thing you use","ของที่ใช้"],["to open","เพื่อเปิด"]],frame:"It's ___ ___ bottles.",en:"It's the thing you use to open bottles.",alts:["It's something you use to open bottles."],tip:"จำสามสูตรนี้ไว้อธิบายได้แทบทุกอย่าง: It's the thing you use to... / It's a kind of... / It's the person who..."},
+   {th:"นึกชื่ออาชีพไม่ออก (ผู้สอบบัญชี) ให้อธิบายว่าเธอเป็นคนที่ตรวจบัญชีของบริษัท",q:"What does your sister do?",kw:[["the person who","คนที่"],["accounts","บัญชี"]],frame:"She's ___ checks a company's ___.",en:"She's the person who checks a company's accounts.",alts:["She's someone who checks a company's accounts.","She checks companies' accounts."]},
+   {th:"แก้ความเข้าใจผิดว่า ไม่ใช่ สิ่งที่หมายถึงคือแผนดีแล้ว แต่เราต้องการเวลาเพิ่ม",q:"Sorry, so you don't like the plan?",kw:[["what I mean is","สิ่งที่ฉันหมายถึงคือ"],["need more time","ต้องการเวลาเพิ่ม"]],frame:"No, ___ the plan is good, but we ___.",en:"No, what I mean is the plan is good, but we need more time.",alts:["No, I mean the plan is good, but we need more time."],tip:"ถ้าพูดแล้วเขาเข้าใจผิด ใช้ What I mean is... หรือ Let me put it another way แก้ได้ทันที"},
+   {th:"เช็กกับอีกฝ่ายว่า เขาเข้าใจที่คุณหมายถึงไหม",kw:[["know what I mean","เข้าใจที่ฉันหมายถึง"]],frame:"Do you ___?",en:"Do you know what I mean?",alts:["Does that make sense?","You know what I mean?"]}
+  ]}
+);
+
 /* ---------- routing ---------- */
 let route={name:"home",id:null};
 let L=null;   // lesson runtime
@@ -17365,6 +17843,7 @@ function go(name,id){
   if(typeof SH!=="undefined"&&SH&&SH.playing) shStop();
   if(typeof YTS!=="undefined"&&YTS){if(YTS.running) ytStop(); ytPlayer=null}
   if(typeof sgStop==="function") sgStop();
+  if(typeof spStop==="function") spStop();
   if(NB&&name==="teacher") name="home";
   xTok++; if(X){if(X.playing&&X.mode==="exam"&&!X.submitted&&X.plays[X.playing]>0) X.plays[X.playing]--; X.playing=null}
   if(name==="practice"){storyTok++; if(!id||String(id).indexOf("gram.")!==0&&id!=="mistakes"){PRUN=null;PRUN_META=null} if(!id||String(id).indexOf("story.")!==0) ST=null}
@@ -17864,7 +18343,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT,ACACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT,ACACT,SPACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
