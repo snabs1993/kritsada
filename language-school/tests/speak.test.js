@@ -1,7 +1,8 @@
 // Guided speaking ("พาพูด"): the hub card and topic list; hints open one step at a time (key words, frame, answer);
 // without a mic the learner grades themselves and missed items come back in a second round and on the review list;
 // with a (fake) browser speech recogniser, saying the model answer without hints counts as "said it on my own",
-// a wrong answer does not, and a personal ("free") item only checks the fixed words of the frame.
+// an answer split by a pause is joined and still accepted, a close mishearing ("says" for "say") passes,
+// a wrong answer does not, listening ends by itself when nothing more is said, and a personal ("free") item only checks the fixed words of the frame.
 const HTML=require('path').resolve(__dirname,'../index.html'), APP=require('url').pathToFileURL(HTML).href;
 const { chromium } = require('./pw');
 let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
@@ -9,7 +10,9 @@ let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
   const b=await chromium.launch(); const errs=[], bad=m=>errs.push(m);
   const dev=async(fake)=>{const c=await b.newContext({viewport:{width:390,height:844}});
     if(fake) await c.addInitScript(()=>{window.EC_FAKE_STT=true; window.__say='';
-      window.SpeechRecognition=window.webkitSpeechRecognition=class{start(){setTimeout(()=>{const t=window.__say; if(t) this.onresult&&this.onresult({results:[[{transcript:t}]]}); this.onend&&this.onend()},60)} stop(){}}});
+      window.__segs=[]; window.__starts=0;
+      // like a phone recogniser: each start hears one stretch of speech and ends at the next pause
+      window.SpeechRecognition=window.webkitSpeechRecognition=class{start(){window.__starts++; setTimeout(()=>{const t=window.__segs.length?window.__segs.shift():window.__say; window.__say=''; if(t) this.onresult&&this.onresult({results:[[{transcript:t}]]}); this.onend&&this.onend()},60)} stop(){}}});
     const p=await c.newPage(); p.on('pageerror',e=>errs.push(String(e))); return p};
   const data=p=>p.evaluate(()=>JSON.parse(localStorage.getItem('eng-class-v1')||'{}'));
   // no mic: self grading
@@ -54,6 +57,21 @@ let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
   if(await q.locator('[data-act="spnext"]').count()) bad('wrong answer accepted');
   await q.evaluate(a=>{window.__say=a},ans); await q.click('[data-act="spmic"]'); await q.waitForSelector('[data-act="spnext"]');
   console.log('heard score:',(await q.textContent('.pron b')).trim());
+  // the same answer said in two stretches with a pause, with one word slightly misheard
+  await open(q,'#practice-speak.sp03'); await open(q,'#practice-speak.sp02');
+  const words=ans.replace(/[.?!,]/g,'').split(/\s+/), half=Math.ceil(words.length/2);
+  let changed=''; const misheard=words.slice(half).map(w=>!changed&&w.length>=4&&!/s$/.test(w)?(changed=w,w+'s'):w).join(' ');
+  if(!changed) bad('no word to mishear in: '+ans);
+  await q.evaluate(([a,b])=>{window.__starts=0; window.__segs=[a,b]},[words.slice(0,half).join(' '),misheard]);
+  await q.click('[data-act="spmic"]'); try{await q.waitForSelector('[data-act="spnext"]',{timeout:8000})}catch(e){bad('answer split by a pause not accepted: '+await q.textContent('.sp-card'))}
+  console.log('split answer:',(await q.textContent('.pron .muted')).trim(),'| recogniser starts:',await q.evaluate(()=>window.__starts));
+  // nothing said: listening stops by itself and the self-grade buttons are offered
+  await open(q,'#practice-speak.sp03'); await open(q,'#practice-speak.sp02');
+  await q.evaluate(()=>{window.__segs=[]; window.__say=''}); const t0=Date.now();
+  await q.click('[data-act="spmic"]'); await q.waitForSelector('.pron:not(.live)',{timeout:10000});
+  console.log('silent try ended after',Date.now()-t0,'ms | self-grade offered:',await q.locator('[data-act="spself"]').count()>0);
+  if(!await q.locator('[data-act="spself"]').count()) bad('no self-grade after a try');
+  await q.evaluate(a=>{window.__say=a},ans); await q.click('[data-act="spmic"]'); await q.waitForSelector('[data-act="spnext"]');
   await q.click('[data-act="spnext"]');
   const h=(await data(q)).stats||{}; if(h.spkHard&&Object.keys(h.spkHard).length) bad('own answer put on the hard list');
   // a "free" item: any name passes when the fixed words are said

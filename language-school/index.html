@@ -7539,17 +7539,22 @@ function pronWords(s){
   });
   return out;
 }
-function align(t,h){
+function align(t,h,eq){
+  eq=eq||((a,b)=>a===b);
   const n=t.length,m=h.length,d=[];
   for(let i=0;i<=n;i++) d.push(new Array(m+1).fill(0));
-  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--) d[i][j]=t[i]===h[j]?d[i+1][j+1]+1:Math.max(d[i+1][j],d[i][j+1]);
+  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--) d[i][j]=eq(t[i],h[j])?d[i+1][j+1]+1:Math.max(d[i+1][j],d[i][j+1]);
   const ok=new Array(n).fill(false); let i=0,j=0;
-  while(i<n&&j<m){if(t[i]===h[j]){ok[i]=true;i++;j++} else if(d[i+1][j]>=d[i][j+1]) i++; else j++}
+  while(i<n&&j<m){if(eq(t[i],h[j])){ok[i]=true;i++;j++} else if(d[i+1][j]>=d[i][j+1]) i++; else j++}
   return ok;
 }
-function gradePron(text,heard){
+function editDist(a,b){if(Math.abs(a.length-b.length)>2) return 9; let p=[]; for(let j=0;j<=b.length;j++) p[j]=j;
+  for(let i=1;i<=a.length;i++){const c=[i]; for(let j=1;j<=b.length;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c} return p[b.length]}
+const wordClose=(a,b)=>{if(a===b) return true; const s=w=>w.replace(/our$/,"or").replace(/ise$/,"ize").replace(/(es|s|ed|d)$/,""); if(s(a)===s(b)) return true;
+  const n=Math.min(a.length,b.length); return n>=4&&editDist(a,b)<=(n>=7?2:1)};
+function gradePron(text,heard,eq){
   const toks=text.split(/\s+/).filter(Boolean), groups=toks.map(pronWords), flat=[].concat.apply([],groups);
-  const ok=align(flat,pronWords(heard)); let k=0;
+  const ok=align(flat,pronWords(heard),eq); let k=0;
   const tokens=toks.map((w,i)=>{const n=groups[i].length, good=ok.slice(k,k+n).every(Boolean); k+=n; return {w,ok:good}});
   const score=flat.length?Math.round(ok.filter(Boolean).length/flat.length*100):0;
   return {state:"done",heard,score,tokens};
@@ -7570,7 +7575,7 @@ function pronResult(text){
 }
 async function pronounce(text){
   if(!NB) return;
-  if(prActive){const same=prActive===text; await NB.stopListening(); if(same) return}
+  if(prActive){const same=prActive===text; await STT.stop(); if(same) return}
   Speech.stop();
   let ok=false;
   try{ok=(await NB.sttAvailable())&&(await NB.sttPermission())}catch(e){}
@@ -7579,12 +7584,12 @@ async function pronounce(text){
   prActive=text; PR[text]={state:"listening",heard:""}; render();
   let heard="";
   try{
-    heard=await NB.listen({maxMs:4000+target.length*600,hints:[text],
+    heard=await STT.listenLong({maxMs:Math.min(30000,8000+target.length*900),hints:[text],
       onPartial:t=>{const r=PR[text]; if(r&&r.state==="listening"){r.heard=t; const el=document.querySelector(".pron.live .heard"); if(el) el.textContent=t}},
-      done:t=>align(target,pronWords(t)).every(Boolean)});
+      done:t=>align(target,pronWords(t),wordClose).every(Boolean)});
   }catch(e){if(prActive===text) prActive=null;PR[text]={state:"error",msg:"ฟังเสียงไม่สำเร็จ ลองกดไมค์อีกครั้ง"};render();return}
   if(prActive===text) prActive=null;
-  PR[text]=gradePron(text,heard);
+  PR[text]=gradePron(text,heard,wordClose);
   if(PR[text].score>=70){S.xp+=2;S.pron=(S.pron||0)+1;markDay();save()}
   render();
 }
@@ -17150,7 +17155,28 @@ const STT={
       this.cur=r; try{r.start()}catch(e){end=true; clearTimeout(t); this.cur=null; rej(e)}
     });
   },
-  stop(){if(NB) return NB.stopListening().catch(()=>{}); if(this.cur) try{this.cur.stop()}catch(e){}}
+  stop(){this.userStop=true; if(NB) return NB.stopListening().catch(()=>{}); if(this.cur) try{this.cur.stop()}catch(e){}},
+  // Phone and browser recognisers end at the first pause, which cuts off a learner who stops to think. Keep listening:
+  // restart after each pause and join the pieces, until the learner taps stop, done(text) says the answer is complete,
+  // they stay quiet (two empty pieces after speaking, three before), or maxMs passes.
+  async listenLong(o){
+    const t0=Date.now(), max=o.maxMs||30000, parts=[]; let quiet=0; this.userStop=false;
+    const joined=x=>parts.concat(x?[x]:[]).join(" ").trim();
+    while(!this.userStop&&Date.now()-t0<max){
+      const s0=Date.now(); let cur="";
+      let seg="";
+      try{seg=await this.listen({maxMs:Math.min(15000,max-(Date.now()-t0)),hints:o.hints,
+        onPartial:x=>{cur=x; if(o.onPartial) o.onPartial(joined(x))},
+        done:o.done?(x=>o.done(joined(x))):undefined})}
+      catch(e){if(parts.length) break; throw e}
+      seg=String(seg||cur||"").trim();
+      if(seg){parts.push(seg); quiet=0} else quiet++;
+      if(this.userStop||(o.done&&o.done(joined("")))) break;
+      if(quiet>=(parts.length?2:3)) break;
+      await new Promise(r=>setTimeout(r,Date.now()-s0<600?400:120));   // a recogniser that stopped at once needs a moment
+    }
+    return joined("");
+  }
 };
 function spTopic(id){return SPEAK.find(t=>t.id===id)}
 function spKey(t,i){return t.id+"#"+i}
@@ -17158,7 +17184,7 @@ function spHard(){const h=stat("spkHard"); return Object.keys(h).filter(k=>h[k]>
 const spPass=it=>it.free?50:70;   // a personal answer (own name, job…) is only checked on the frame's fixed words
 function spTargets(it){return it.free?[it.frame.replace(/_{3,}/g," ").replace(/\s+/g," ").trim()]:[it.en].concat(it.alts||[])}
 function spGrade(it,heard){   // best match over the model answer and its alternatives
-  let best=null; spTargets(it).forEach(t=>{const g=gradePron(t,heard); if(!best||g.score>best.score) best=g}); return best;
+  let best=null; spTargets(it).forEach(t=>{const g=gradePron(t,heard,wordClose); if(!best||g.score>best.score) best=g}); return best;
 }
 function spStart(id){
   const items=id==="review"?spHard().slice(0,10):(spTopic(id)?spTopic(id).items.map((_,i)=>({t:spTopic(id),i})):[]);
@@ -17215,7 +17241,7 @@ function viewSpeak(id){
    +(h<3?'<button class="btn" data-act="sphint">'+(h===0?'ขอคำใบ้':h===1?'ขอโครงประโยค':'ดูคำตอบ')+'</button>':'')
    +'</div>'
    +(done?'<div class="row sp-acts"><button class="btn btn-primary" data-act="spnext">ประโยคต่อไป</button></div>'
-     :(h>=3||!mic)&&!SPR.listening?'<div class="sp-self"><span class="muted">พูดออกเสียงแล้ว ประเมินตัวเอง:</span><div class="row"><button class="btn" data-act="spself" data-v="own">พูดได้เอง</button><button class="btn" data-act="spself" data-v="hint">ได้เพราะคำใบ้</button><button class="btn" data-act="spself" data-v="miss">ยังพูดไม่ได้</button></div></div>':'')
+     :(h>=3||!mic||g)&&!SPR.listening?'<div class="sp-self"><span class="muted">'+(g&&mic?'แอปฟังไม่ตรง? ประเมินตัวเองได้:':'พูดออกเสียงแล้ว ประเมินตัวเอง:')+'</span><div class="row"><button class="btn" data-act="spself" data-v="own">พูดได้เอง</button><button class="btn" data-act="spself" data-v="hint">ได้เพราะคำใบ้</button><button class="btn" data-act="spself" data-v="miss">ยังพูดไม่ได้</button></div></div>':'')
    +'</div>';
 }
 function spMark(v){   // grade the current item once per round
@@ -17239,10 +17265,10 @@ async function spListen(){
   if(SPR.listening){SPR.listening=false; STT.stop(); return}
   Speech.stop(); SPR.err="";
   if(!(await STT.ready())){SPR.err=NB?"ใช้ไมโครโฟนไม่ได้ เปิดสิทธิ์ไมโครโฟนและการรู้จำเสียงพูดให้แอปนี้ในการตั้งค่าของเครื่อง":"เบราว์เซอร์นี้ใช้ไมค์ไม่ได้ พูดออกเสียงแล้วประเมินตัวเองแทน"; SPR.noMic=!NB; render(); return}
-  const cur=spCur(), it=cur.t.items[cur.i], words=pronWords(it.en).length, pos=SPR.pos;
+  const cur=spCur(), it=cur.t.items[cur.i], pos=SPR.pos;
   SPR.listening=true; SPR.live=""; SPR.heard=null; render();
   let heard="";
-  try{heard=await STT.listen({maxMs:4000+words*700,hints:spTargets(it),onPartial:x=>{SPR.live=x; const el=document.querySelector(".pron.live .heard"); if(el) el.textContent=x}})}
+  try{heard=await STT.listenLong({maxMs:30000,hints:spTargets(it),done:x=>spGrade(it,x).score>=100,onPartial:x=>{SPR.live=x; const el=document.querySelector(".pron.live .heard"); if(el) el.textContent=x}})}
   catch(e){if(!SPR||SPR.pos!==pos) return; SPR.listening=false; SPR.err=e&&/not-allowed|service-not-allowed/.test(e.code||"")?"ไม่ได้รับอนุญาตให้ใช้ไมค์ อนุญาตไมค์ให้เว็บนี้ หรือพูดแล้วประเมินตัวเองแทน":"ฟังเสียงไม่สำเร็จ ลองกดไมค์อีกครั้ง"; if(e&&/not-allowed|service-not-allowed/.test(e.code||"")) SPR.noMic=true; render(); return}
   if(!SPR||SPR.pos!==pos) return;
   SPR.listening=false; SPR.heard=spGrade(it,heard);
@@ -17839,7 +17865,7 @@ let TESTOUT=null; // unit id opened straight into its quiz to skip it
 function go(name,id){
   if(name==="shadow"){name="practice"; id=id?"shadow."+id:"shadow"}
   Speech.stop();
-  if(NB&&prActive) NB.stopListening();
+  if(NB&&prActive) STT.stop();
   if(typeof SH!=="undefined"&&SH&&SH.playing) shStop();
   if(typeof YTS!=="undefined"&&YTS){if(YTS.running) ytStop(); ytPlayer=null}
   if(typeof sgStop==="function") sgStop();
