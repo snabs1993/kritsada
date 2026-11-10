@@ -17,7 +17,8 @@ let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
   const data=p=>p.evaluate(()=>JSON.parse(localStorage.getItem('eng-class-v1')||'{}'));
   // no mic: self grading
   const p=await dev(false);
-  await open(p,'#practice');
+  await open(p,'#home'); await p.click('.nav button[data-to="talk"]');
+  if(await p.getAttribute('.nav button[data-to="talk"]','aria-current')!=='page') bad('speaking tab not current');
   if(!await p.locator('[data-act="pgo"][data-id="speak"]').count()) bad('no hub card');
   await open(p,'#practice-speak');
   const topics=await p.locator('[data-id^="speak.sp"]').count(); console.log('topics',topics);

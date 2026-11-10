@@ -17,8 +17,9 @@ let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
   await p.click('.class-card [data-act="open"]'); await p.click('[data-act="next-step"]'); await p.click('[data-act="next-step"]'); await p.click('[data-act="next-step"]');
   await p.click('[data-act="r-opt"] >> nth=0').catch(()=>{});
   await p.fill('#fill-in','wrongword'); await p.click('form[data-form="fill"] button');
+  await open(p,'#home'); const goalStep=(await p.textContent('.goal >> nth=1')).replace(/\s+/g,' ');
   await open(p,'#practice'); await p.waitForTimeout(150);
-  console.log('hub cards:', await p.locator('.p-card').count(), '| goals step:', (await p.textContent('.goal >> nth=1')).replace(/\s+/g,' '), '| mistakes meta:', await p.textContent('[data-id="mistakes"] .p-meta'));
+  console.log('hub cards:', await p.locator('.p-card').count(), '| goals step:', goalStep, '| mistakes meta:', await p.textContent('[data-id="mistakes"] .p-meta'));
   // dictation
   await p.click('[data-act="pgo"][data-id="dictation"]');
   const target=await p.evaluate(()=>{return null});
@@ -53,7 +54,7 @@ let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
   await open(p,'#teacher'); console.log('teacher modes:', await p.locator('.tabs button').count());
   // review page decks + custom word
   await open(p,'#review'); console.log('decks:', await p.locator('.deck').count());
-  await p.click('[data-act="deck-add"][data-id="phrasal"]'); await p.fill('#aw-en','serendipity'); await p.fill('#aw-th','ความบังเอิญที่ดี'); await p.click('form[data-form="addword"] button');
+  await p.click('[data-act="fold"][data-k="decks"]'); await p.click('[data-act="deck-add"][data-id="phrasal"]'); await p.fill('#aw-en','serendipity'); await p.fill('#aw-th','ความบังเอิญที่ดี'); await p.click('form[data-form="addword"] button');
   console.log('word bank rows:', await p.locator('.section table tbody tr').count());
   await p.click('[data-act="rv-start"]'); for(let i=0;i<3;i++){ await p.click('[data-act="rv-reveal"]'); await p.click('[data-act="rv-grade"][data-g="2"]'); }
   await open(p,''); console.log('home goals:', (await p.textContent('.daily .goals')).replace(/\s+/g,' '));

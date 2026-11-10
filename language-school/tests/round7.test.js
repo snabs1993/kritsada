@@ -8,7 +8,7 @@ const URL=APP+''; let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
   await open(p,'#practice'); console.log('hub cards:', await p.locator('.p-group .p-card').count());
   // pods
   await open(p,'#practice-pods'); console.log('pod rows:', await p.locator('[data-id^="pod."]').count());
-  await p.click('[data-id="pod.p5"]'); await p.click('[data-act="podplay"]'); await p.waitForTimeout(1500);
+  await open(p,'#practice-pod.p5'); await p.click('[data-act="podplay"]'); await p.waitForTimeout(1500);
   console.log('pod said lines:', (await p.evaluate(()=>__said.length)), '| now:', await p.textContent('#pod-now').catch(()=>'-'));
   for(let q=0;q<4;q++) await p.click(`[data-act="podq"][data-q="${q}"][data-o="0"]`);
   console.log('pod result:', (await p.textContent('.comp .feedback')).trim().slice(0,30));

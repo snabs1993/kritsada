@@ -32,7 +32,7 @@ const URL=APP+''; let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
   await p.evaluate(()=>{window.speechSynthesis.speak=u=>{__said.push(u.text)}}); // never ends
   await btns.nth(2).click(); await p.click('.nav button[data-to="home"]'); await p.goBack().catch(()=>{});
   await p.evaluate(()=>{location.hash="#exam-toeic-listening-2"}); await p.waitForTimeout(100);
-  await p.click('.nav button[data-to="exam"]'); await p.click('[data-act="xopen"][data-id="toeic-listening-2"]').catch(()=>{});
+  await p.click('.nav button[data-to="practice"]'); await p.click('.hub-tile[data-to="exam"]'); await p.click('[data-act="xopen"][data-id="toeic-listening-2"]').catch(()=>{});
   console.log('play button enabled after leaving:', await p.locator('[data-act="xplay"]').nth(2).isEnabled().catch(e=>'n/a'));
   // band names
   console.log('bandName 2/1/0:', await p.evaluate(()=>0));

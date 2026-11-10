@@ -29,7 +29,7 @@ let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
   // vocabulary into word review
   await p.click('[data-act="bz-tab"][data-t="vocab"]'); await p.click('[data-act="bz-words"]');
   const w=await p.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('eng-class-v1')).words).length); if(w<8) bad('words not added: '+w);
-  await open(p,'#review'); if(!/accountant/.test(await p.textContent('#app'))) bad('business word missing from the word list');
+  await open(p,'#review'); await p.click('[data-act="fold"][data-k="bank"]'); if(!/accountant/.test(await p.textContent('#app'))) bad('business word missing from the word list');
   // theme review
   await open(p,'#practice-biz.r1'); const q=await p.locator('[data-act="bz-ans"]').count(); if(q!==36) bad('theme review has '+q/3+' questions');
   console.log('errors:',errs); await b.close();

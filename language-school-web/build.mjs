@@ -20,7 +20,7 @@ const head = [
   '<html lang="th">',
   '<meta charset="utf-8">',
   '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">',
-  '<meta name="theme-color" content="#F2F2F7">',
+  '<meta name="theme-color" content="#FFFFFF">',
   '<meta name="apple-mobile-web-app-capable" content="yes">',
   '<meta name="mobile-web-app-capable" content="yes">',
   '<meta name="apple-mobile-web-app-status-bar-style" content="default">',
@@ -39,8 +39,8 @@ writeFileSync(join(out, 'manifest.webmanifest'), JSON.stringify({
   start_url: './',
   scope: './',
   display: 'standalone',
-  background_color: '#F2F2F7',
-  theme_color: '#F2F2F7',
+  background_color: '#FFFFFF',
+  theme_color: '#FFFFFF',
   icons: [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' }],
 }, null, 2));
 writeFileSync(join(out, '.nojekyll'), '');

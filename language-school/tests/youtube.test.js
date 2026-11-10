@@ -13,7 +13,7 @@ const URL=APP+''; let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
   const b=await chromium.launch(); const errs=[];
   const p=await b.newPage({viewport:{width:390,height:844}}); p.on('pageerror',e=>errs.push('web:'+e));
   await open(p,'#home'); console.log('nav labels:', (await p.locator('.nav button').allInnerTexts()).map(s=>s.trim()).join(' | '));
-  await p.click('.nav button[data-to="shadow"]'); console.log('shadow tab:', location=await p.evaluate(()=>location.hash), '| current:', await p.getAttribute('.nav button[data-to="shadow"]','aria-current'), '| practice current:', await p.getAttribute('.nav button[data-to="practice"]','aria-current'));
+  await p.click('.nav button[data-to="talk"]'); console.log('speaking tab:', location=await p.evaluate(()=>location.hash), '| current:', await p.getAttribute('.nav button[data-to="talk"]','aria-current'), '| practice current:', await p.getAttribute('.nav button[data-to="practice"]','aria-current'));
   console.log('h1:', (await p.textContent('#app h1')).trim(), '| yt card:', await p.locator('.yt-entry').count());
   await p.click('.yt-entry'); console.log('web yt:', (await p.textContent('.card b')).trim());
   await p.click('.nav button[data-to="practice"]'); console.log('practice current now:', await p.getAttribute('.nav button[data-to="practice"]','aria-current'));

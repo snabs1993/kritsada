@@ -4,7 +4,7 @@ const URL=APP+''; let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
 (async()=>{
   const b=await chromium.launch(); const errs=[];
   const p=await b.newPage({viewport:{width:390,height:844}}); p.on('pageerror',e=>errs.push(String(e)));
-  await open(p,'#report'); console.log('report table width vs box:', await p.evaluate(()=>{const t=document.querySelector('.rep-tbl'); return [t.scrollWidth,t.parentElement.clientWidth]}));
+  await open(p,'#report'); await p.click('[data-act="fold"][data-k="reptbl"]'); console.log('report table width vs box:', await p.evaluate(()=>{const t=document.querySelector('.rep-tbl'); return [t.scrollWidth,t.parentElement.clientWidth]}));
   await p.locator('.rep-tbl').screenshot({path:OUT+'qa_ui/after_report.png'});
   await open(p,'#practice-verbs'); console.log('verb table:', await p.evaluate(()=>{const t=document.querySelector('.vb-tbl'); return [t.scrollWidth,t.parentElement.clientWidth]}));
   console.log('back height:', await p.evaluate(()=>document.querySelector('.back').getBoundingClientRect().height), '| body margin:', await p.evaluate(()=>getComputedStyle(document.body).margin));

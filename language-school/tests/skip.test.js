@@ -10,7 +10,7 @@ const URL=APP+''; let nav=0; const open=(pg,h)=>pg.goto(URL+'?n='+(++nav)+h);
   await open(p,'#lesson-u1'); await p.click('[data-act="step"][data-s="3"]'); console.log('jumped to step:', (await p.textContent('.step.is-current')).replace(/\s+/g,' '));
   await p.click('[data-act="skip-quiz"]'); console.log('quiz shown:', (await p.textContent('.stepper .is-current')).replace(/\s+/g,' '), '| skip btn gone:', await p.locator('[data-act="skip-quiz"]').count()===0);
   // test out a locked unit (u5) with correct answers: harvest from runner by answering and reading feedback is hard; just answer and check flow
-  await open(p,'#course'); await p.click('[data-act="testout"][data-id="u5"]');
+  await open(p,'#course'); await p.click('[data-act="lvf"][data-k="course"][data-v="A2"]'); await p.click('[data-act="testout"][data-id="u5"]');
   console.log('testout route:', await p.evaluate(()=>location.hash), '| banner:', (await p.textContent('.feedback b')).trim());
   // answer quiz: try each option until correct is known via feedback: simple loop pick first option / fill guess
   const answerAll=async()=>{for(let i=0;i<20;i++){ if(await p.locator('.result').count()) break;

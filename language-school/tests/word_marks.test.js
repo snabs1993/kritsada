@@ -33,7 +33,7 @@ let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
   await open(p,'#review'); await p.click('[data-act="rv-hard"]');
   const hk=(await p.textContent('.review-card .flash-word')).trim(); if(hk!==first) bad('hard review showed '+hk);
   // undo both marks from the word list
-  await open(p,'#review');
+  await open(p,'#review'); await p.click('[data-act="fold"][data-k="bank"]');
   await p.click('td [data-act="w-easy"][data-w="'+second+'"]'); await p.click('td [data-act="w-hard"][data-w="'+first+'"]');
   w=await words(); if(w[second].easy) bad('easy not undone'); if(w[first].hard) bad('hard not undone');
   console.log('reviewed:',seen.length,'| first:',first,'| easy:',second);
