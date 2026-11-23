@@ -844,6 +844,10 @@ th,td{border-bottom:.5px solid var(--sep)}
 .sub-th .sg-th{font-size:17px;color:inherit}
 .sub-off .sg-line,.sub-off .sg-row{display:none}.sub-off .sg-offnote{display:block}
 .sg-row{display:flex;align-items:flex-start;gap:2px}.sg-row .sg-line{flex:1}
+.lr-lyrics{margin-top:4px}.lr-gap{height:14px}
+.lr-line{flex:1;display:block;text-align:left;background:none;border:0;border-radius:10px;padding:8px 10px;font:inherit;color:inherit;cursor:pointer}
+.lr-lyrics.sub-th .sg-en{display:none}.lr-lyrics.sub-th .sg-th{font-size:17px;color:inherit}
+.lr-lyrics.sub-tap .lr-line:not(.show) .sg-th{display:none}.lr-lyrics.sub-tap .lr-line:not(.show){background:rgba(127,127,127,.06)}
 .sent-btn{min-width:38px;font-size:17px}
 .sent-en{font-size:21px;font-weight:600;text-align:center;margin-top:8px;line-height:1.35}
 .sent-th{text-align:center;color:var(--muted,#6e6e73);margin-top:8px;line-height:1.45}
@@ -9937,6 +9941,8 @@ function viewPractice(){
   if(id.indexOf("biz.")===0) return viewBiz(id.slice(4));
   if(id==="songs") return viewSongs();
   if(id.indexOf("song.")===0) return viewSong(id.slice(5));
+  if(id==="lyrics") return viewLyrics();
+  if(id.indexOf("lyr.")===0) return viewLyric(id.slice(4));
   if(id==="yt") return viewYtList();
   if(id.indexOf("yt.")===0) return viewYt(id.slice(3));
   if(id.indexOf("shadow.")===0) return viewShadow(id.slice(7));
@@ -15408,7 +15414,7 @@ function sgCan(){return !!(NB&&((NB.translate&&NB.fetchText)||sgHttp()))}
 function sgOffline(){return !!(NB&&NB.translate)}
 async function sgFetchText(url){
   if(NB&&NB.fetchText) return NB.fetchText(url);
-  const p=sgHttp(); if(!p) throw new Error("no http");
+  const p=sgHttp(); if(!p){if(NB) throw new Error("no http"); const r=await fetch(url); if(!r.ok) throw new Error("http "+r.status); return r.text()}
   const r=await p.get({url,responseType:"text",headers:{"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36","Accept-Language":"en-US,en;q=0.9"},connectTimeout:10000,readTimeout:20000});
   if(r.status!==200) throw new Error("http "+r.status); return typeof r.data==="string"?r.data:JSON.stringify(r.data);
 }
@@ -15504,20 +15510,25 @@ function sgEnter(){
   if(!SG.started){SG.started=true; sgLoad(SG.id)}
   else if(SG.vid&&!sgPlayer) sgMount();
 }
+// timed (or plain) lyrics for a track from LRCLIB: {lines:[{t,en}],synced} or null
+async function sgFindLyrics(tr){
+  let lines=null, synced=false;
+  try{
+    const q="artist_name="+encodeURIComponent(tr.a)+"&track_name="+encodeURIComponent(tr.t);
+    let r=await fetch("https://lrclib.net/api/get?"+q+(tr.secs?"&duration="+tr.secs:"")), j=r.ok?await r.json():null;
+    if(!j||!(j.syncedLyrics||j.plainLyrics)){r=await fetch("https://lrclib.net/api/search?"+q); const arr=r.ok?await r.json():[]; j=arr.find(x=>x.syncedLyrics)||arr.find(x=>x.plainLyrics)||null}
+    if(j){synced=!!j.syncedLyrics; lines=synced?sgParseLrc(j.syncedLyrics):String(j.plainLyrics||"").split(/\r?\n/).map(en=>({t:null,en:en.trim()})); if(!tr.secs&&j.duration){tr.secs=Math.round(j.duration); save()}}
+  }catch(e){}
+  return lines&&lines.length?{lines,synced}:null;
+}
 async function sgLoad(id){
   const tr=sgData().tracks[id], me=SG; if(!tr) return;
   const set=o=>{if(SG!==me) return false; Object.assign(SG,o); sgPaint(); return true};
   if(!SG.lines){
     set({status:"กำลังหาเนื้อเพลง…"});
-    let lines=null, synced=false;
-    try{
-      const q="artist_name="+encodeURIComponent(tr.a)+"&track_name="+encodeURIComponent(tr.t);
-      let r=await fetch("https://lrclib.net/api/get?"+q+(tr.secs?"&duration="+tr.secs:"")), j=r.ok?await r.json():null;
-      if(!j||!(j.syncedLyrics||j.plainLyrics)){r=await fetch("https://lrclib.net/api/search?"+q); const arr=r.ok?await r.json():[]; j=arr.find(x=>x.syncedLyrics)||arr.find(x=>x.plainLyrics)||null}
-      if(j){synced=!!j.syncedLyrics; lines=synced?sgParseLrc(j.syncedLyrics):String(j.plainLyrics||"").split(/\r?\n/).map(en=>({t:null,en:en.trim()})); if(!tr.secs&&j.duration){tr.secs=Math.round(j.duration); save()}}
-    }catch(e){}
-    if(!lines||!lines.length){set({status:"",err:"หาเนื้อเพลงนี้ไม่เจอ ลองเพลงอื่น หรือค้นหาด้วยชื่อเพลงที่สะกดถูกต้อง"}); return}
-    sgCachePut(id,{lines,synced}); if(!set({lines,synced})) return;
+    const got=await sgFindLyrics(tr);
+    if(!got){set({status:"",err:"หาเนื้อเพลงนี้ไม่เจอ ลองเพลงอื่น หรือค้นหาด้วยชื่อเพลงที่สะกดถูกต้อง"}); return}
+    sgCachePut(id,got); if(!set(got)) return;
   }
   if(!SG.vid){
     set({status:"กำลังหาเพลงใน YouTube…"});
@@ -15575,13 +15586,13 @@ async function sgSubmit(form){
     try{const r=await fetch("https://lrclib.net/api/search?q="+encodeURIComponent(q)), arr=r.ok?await r.json():[], seen=new Set();
       SGF.res=arr.filter(x=>x.syncedLyrics||x.plainLyrics).map(x=>({t:x.trackName,a:x.artistName,secs:Math.round(x.duration||0),synced:!!x.syncedLyrics})).sort((a,b)=>(b.synced?1:0)-(a.synced?1:0)).filter(x=>{const k=(x.t+"|"+x.a).toLowerCase(); if(seen.has(k)) return false; seen.add(k); return true}).slice(0,8)}
     catch(e){SGF.res=null; toast("ค้นหาไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองใหม่")}
-    SGF.busy=false; if(route.name==="practice"&&route.id==="songs") render(); return true;
+    SGF.busy=false; if(route.name==="practice"&&(route.id==="songs"||route.id==="lyrics")) render(); return true;
   }
   if(form.matches('[data-form="sgspot"]')){
     const pid=sgSpotifyId(($("#sg-spot")||{}).value); if(!pid){toast("ลิงก์ไม่ถูกต้อง คัดลอกลิงก์เพลย์ลิสต์จากปุ่มแชร์ของ Spotify แล้ววางใหม่"); return true}
     toast("กำลังดึงเพลย์ลิสต์…");
     try{const p=sgParseSpotify(await sgFetchText("https://open.spotify.com/embed/playlist/"+pid)); if(!p||!p.tracks.length) throw new Error("empty");
-      const d=sgData(); d.lists=[{id:pid,name:p.name,tracks:p.tracks.slice(0,300)}].concat(d.lists.filter(x=>x.id!==pid)).slice(0,20); save(); toast("เพิ่มเพลย์ลิสต์ "+p.name+" "+p.tracks.length+" เพลง"); if(route.name==="practice"&&route.id==="songs") render()}
+      const d=sgData(); d.lists=[{id:pid,name:p.name,tracks:p.tracks.slice(0,300)}].concat(d.lists.filter(x=>x.id!==pid)).slice(0,20); save(); toast("เพิ่มเพลย์ลิสต์ "+p.name+" "+p.tracks.length+" เพลง"); if(route.name==="practice"&&(route.id==="songs"||route.id==="lyrics")) render()}
     catch(e){toast("ดึงเพลย์ลิสต์ไม่ได้ ตรวจว่าเป็นเพลย์ลิสต์สาธารณะ และต่ออินเทอร์เน็ตอยู่")}
     return true;
   }
@@ -15591,6 +15602,80 @@ async function sgSubmit(form){
   }
   return false;
 }
+
+/* ---------- lyrics reading: read a song's lyrics with Thai, no video (app and website) ---------- */
+// Same songs as song mode (search, playlists, recent are shared through sgData) and the same per-song cache, but no
+// YouTube: lyrics from LRCLIB and Thai from the phone's translator or Google's web translator, both reachable from the
+// website too (CORS open). Lyrics are fetched at runtime only; never write lyrics into the app or the repo.
+// View modes (S.settings.lrSub): both = English + Thai, tap = Thai hidden until the line is tapped, th = Thai only.
+let LR=null;
+function lrSub(){const v=S.settings.lrSub; return ["both","tap","th"].includes(v)?v:"both"}
+function lrCan(){return sgCan()||!NB}
+function viewLyrics(){
+  let h=pBack()+'<h1 class="h2" style="margin-top:8px">อ่านเนื้อเพลง</h1><p class="lede">อ่านเนื้อเพลงภาษาอังกฤษพร้อมคำแปลไทยทีละบรรทัด ไม่ต้องเปิดวิดีโอ กดลำโพงฟังการออกเสียง กด ☆ เก็บประโยคไว้ทบทวน</p>';
+  if(!lrCan()) return h+'<div class="card" style="margin-top:16px"><p><b>ต้องลงแอปเวอร์ชันใหม่ก่อน</b></p><p class="muted" style="margin-top:6px">หรือเปิดเมนูนี้ในเว็บบน iPad ได้เลย</p><a class="btn btn-primary" style="margin-top:12px" href="'+APK_URL+'">ดาวน์โหลดแอปเวอร์ชันใหม่</a></div>';
+  const d=sgData(), seen=stat("lyr");
+  const row=(t,a,secs)=>{const id=sgId(a,t); return '<button class="lrow" data-act="lropen" data-t="'+esc(t)+'" data-a="'+esc(a)+'" data-s="'+(secs||0)+'"><span class="lnum">'+(seen[id]?"✓":"♪")+'</span><span class="ltitle"><b lang="en">'+esc(t)+'</b><small lang="en">'+esc(a)+'</small></span></button>'};
+  h+='<form class="card" data-form="sgfind" style="margin-top:16px"><label for="sg-q"><b>ค้นหาเพลง</b></label><div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="sg-q" class="dict-in" style="margin-top:0" lang="en" autocomplete="off" spellcheck="false" placeholder="ชื่อเพลง หรือ ชื่อเพลง + ศิลปิน" value="'+esc(SGF?SGF.q:"")+'"><button class="btn btn-primary" type="submit">ค้นหา</button></div>'
+    +(SGF&&SGF.busy?'<p class="muted" style="margin-top:8px">กำลังค้นหา…</p>':'')
+    +(SGF&&!SGF.busy&&SGF.res?(SGF.res.length?'<div class="lessons" style="margin-top:10px">'+SGF.res.map(x=>row(x.t,x.a,x.secs)).join("")+'</div>':'<p class="muted" style="margin-top:8px">ไม่เจอเพลงที่มีเนื้อเพลง ลองพิมพ์ชื่อเพลงให้ถูก หรือใส่ชื่อศิลปินด้วย</p>'):'')+'</form>';
+  if(sgCan()) h+='<form class="card" data-form="sgspot" style="margin-top:12px"><label for="sg-spot"><b>ดึงเพลย์ลิสต์จาก Spotify</b></label><div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="sg-spot" class="dict-in" style="margin-top:0" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://open.spotify.com/playlist/..."><button class="btn btn-primary" type="submit">ดึง</button></div><p class="muted" style="font-size:13.5px;margin-top:6px">ในแอป Spotify เปิดเพลย์ลิสต์ กด ⋯ → แชร์ → คัดลอกลิงก์ แล้วมาวางที่นี่ (เพลย์ลิสต์ต้องเป็นแบบสาธารณะ)</p></form>';
+  else h+='<p class="muted" style="font-size:13.5px;margin-top:10px">ดึงเพลย์ลิสต์จาก Spotify ได้ในแอป Android แล้วเพลย์ลิสต์จะตามมาที่นี่เองถ้าเข้าบัญชีเดียวกัน</p>';
+  const rec=d.recent.filter(id=>d.tracks[id]);
+  if(rec.length) h+='<section class="section"><h2 class="h3">เปิดล่าสุด</h2><div class="lessons" style="margin-top:10px">'+rec.map(id=>{const x=d.tracks[id]; return row(x.t,x.a,x.secs)}).join("")+'</div></section>';
+  d.lists.forEach(p=>{h+='<section class="section"><details class="card"><summary><b>'+esc(p.name)+'</b> <span class="muted">· '+p.tracks.length+' เพลง</span></summary><div class="lessons" style="margin-top:10px">'+p.tracks.map(x=>row(x.t,x.a,x.secs)).join("")+'</div></details></section>'});
+  return h;
+}
+function viewLyric(id){
+  const tr=sgData().tracks[id];
+  if(!lrCan()||!tr) return viewLyrics();
+  if(!LR||LR.id!==id){const c=sgCacheGet(id); LR={id,lines:c.lines||null,th:c.th||null,status:"",err:"",started:false,open:{}}}
+  const sub=lrSub();
+  const tabs='<div class="tabs" role="group" aria-label="คำแปล" style="margin-top:12px">'+[["both","อังกฤษ + ไทย"],["tap","ซ่อนคำแปล"],["th","ไทย"]].map(o=>'<button data-act="lrsub" data-v="'+o[0]+'" aria-pressed="'+(sub===o[0])+'">'+o[1]+'</button>').join("")+'</div>';
+  return pBack("lyrics","อ่านเนื้อเพลง")+'<h1 class="h2" style="margin-top:8px" lang="en">'+esc(tr.t)+'</h1><p class="muted" lang="en">'+esc(tr.a)+'</p>'
+   +tabs+'<p class="muted lr-taphint" style="font-size:13.5px;margin-top:8px"'+(sub==="tap"?'':' hidden')+'>ลองแปลในใจก่อน แล้วแตะบรรทัดเพื่อดูคำแปล</p>'
+   +'<p class="muted" id="lr-status" style="margin-top:8px;min-height:1.3em">'+esc(LR.status)+'</p><p class="pen" id="lr-err"'+(LR.err?'':' hidden')+'>'+esc(LR.err)+'</p>'
+   +'<div id="lr-box" class="lr-lyrics sub-'+sub+'" data-sid="'+esc(id)+'">'+lrLinesHTML()+'</div>'
+   +(sgCan()?'<button class="btn" style="margin-top:14px" data-act="pgo" data-id="song.'+esc(id)+'">ฟังเพลงนี้พร้อมวิดีโอ</button>':'');
+}
+function lrLinesHTML(){
+  if(!LR||!LR.lines) return '<p class="muted">'+(LR&&LR.err?"":"กำลังโหลดเนื้อเพลง…")+'</p>';
+  return LR.lines.map((l,i)=>{
+    if(!l.en) return '<div class="lr-gap"></div>';
+    const th=LR.th?LR.th[i]:"";
+    return '<div class="sg-row"><button class="lr-line'+(LR.open[i]?' show':'')+'" data-act="lrtap" data-i="'+i+'"><span class="sg-en" lang="en">'+esc(l.en)+'</span>'+(th?'<span class="sg-th">'+esc(th)+'</span>':'')+'</button>'+sayBtn(l.en)+sentBtn(l.en,th,"song")+'</div>'}).join("");
+}
+function lrPaint(){
+  const box=$("#lr-box"); if(!LR||!box||box.dataset.sid!==LR.id) return;
+  const st=$("#lr-status"); if(st) st.textContent=LR.status;
+  const er=$("#lr-err"); if(er){er.textContent=LR.err; er.hidden=!LR.err}
+  box.innerHTML=lrLinesHTML();
+}
+function lrEnter(){if(LR&&!LR.started&&$("#lr-box")){LR.started=true; lrLoad(LR.id)}}
+async function lrLoad(id){
+  const tr=sgData().tracks[id], me=LR; if(!tr) return;
+  const set=o=>{if(LR!==me) return false; Object.assign(LR,o); lrPaint(); return true};
+  if(!LR.lines){
+    set({status:"กำลังหาเนื้อเพลง…"});
+    const got=await sgFindLyrics(tr);
+    if(!got){set({status:"",err:"หาเนื้อเพลงนี้ไม่เจอ ลองเพลงอื่น หรือค้นหาด้วยชื่อเพลงที่สะกดถูกต้อง"}); return}
+    sgCachePut(id,got); if(!set({lines:got.lines})) return;
+  }
+  if(!LR.th){
+    set({status:"กำลังแปลเป็นไทย…"});
+    try{const th=await sgTranslate(LR.lines.map(l=>l.en),(i,n)=>{if(LR===me){LR.status="กำลังแปลเป็นไทย "+i+"/"+n; const st=$("#lr-status"); if(st) st.textContent=LR.status}}); sgCachePut(id,{th}); set({th})}
+    catch(e){set({err:"แปลเป็นไทยไม่สำเร็จ ตรวจอินเทอร์เน็ต แล้วเปิดเพลงนี้ใหม่อีกครั้ง (เนื้อเพลงอังกฤษยังอ่านได้)"})}
+  }
+  const s=stat("lyr"); if(!s[id]){s[id]=1; save()}
+  set({status:""});
+}
+const LRACT={
+  lropen:t=>{const id=sgAddTrack(t.dataset.t,t.dataset.a,+t.dataset.s||0); save(); go("practice","lyr."+id)},
+  lrsub:t=>{S.settings.lrSub=t.dataset.v; save(); const v=lrSub(), box=$("#lr-box"); if(box) box.className="lr-lyrics sub-"+v;
+    const hint=$(".lr-taphint"); if(hint) hint.hidden=v!=="tap";
+    document.querySelectorAll('[data-act="lrsub"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v)))},
+  lrtap:t=>{if(!LR) return; const i=+t.dataset.i; LR.open[i]=!LR.open[i]; t.classList.toggle("show",!!LR.open[i])}
+};
 
 /* ---------- sentence review: saved sentences on the same spaced schedule as words ---------- */
 // A ☆ next to a sentence (lesson dialogues, grammar examples, podcasts, phrasebook, song lines) saves it here.
@@ -17413,7 +17498,7 @@ function hubTile(o){
   return '<button class="p-card hub-tile'+(o.cls||"")+'" data-act="'+o.act+'" '+(o.act==="go"?'data-to="'+o.id+'"':'data-id="'+o.id+'"')+' data-k="'+esc((o.t+" "+o.d).toLowerCase())+'"><span class="hub-ic" aria-hidden="true">'+o.ic+'</span><span class="hub-tx"><span class="p-title">'+o.t+'</span><span class="p-desc">'+o.d+'</span><span class="p-meta">'+o.m+'</span></span></button>';
 }
 // recently opened exercises, per device (not part of the synced progress)
-const RECENT_KEY="eng-class-recent", HUB_ROOT={pod:"pods",story:"reading",gram:"grammar",game:"games",email:"email",pb:"phrasebook",biz:"biz",song:"songs",lvtest:"lvtest",yt:"yt",shadow:"shadow",speak:"speak",scene:"scenes"};
+const RECENT_KEY="eng-class-recent", HUB_ROOT={pod:"pods",story:"reading",gram:"grammar",game:"games",email:"email",pb:"phrasebook",biz:"biz",song:"songs",lyr:"lyrics",lvtest:"lvtest",yt:"yt",shadow:"shadow",speak:"speak",scene:"scenes"};
 function hubRecent(){try{const l=JSON.parse(localStorage.getItem(RECENT_KEY)||"[]"); return Array.isArray(l)?l:[]}catch(e){return []}}
 function hubSeen(id){
   let k=String(id||"").split(".")[0]; k=HUB_ROOT[k]||k; if(!k||k==="talk") return;
@@ -17448,6 +17533,7 @@ function practiceCatalog(){
    ["ฟังและอ่าน",[
     {act:"pgo",id:"pods",ic:HI.head,t:"ห้องฟังพอดแคสต์",d:"บทสนทนายาว ฟังจับใจความ ตอบคำถาม",m:Object.keys(stat("pod")).length+" / "+PODS.length+" ตอน"},
     {act:"pgo",id:"songs",ic:HI.music,t:"ฟังเพลง แปลเพลง",d:"เนื้อเพลงขึ้นตามจังหวะพร้อมคำแปลไทย ดึงเพลย์ลิสต์จาก Spotify ได้"+(sgCan()?"":NB?" (ต้องลงแอปเวอร์ชันใหม่)":" (ใช้ได้ในแอป Android)"),m:sgData().recent.length?"ฟังแล้ว "+sgData().recent.length+" เพลง":"เพลงใหม่"},
+    {act:"pgo",id:"lyrics",ic:HI.music,t:"อ่านเนื้อเพลง",d:"เนื้อเพลงพร้อมคำแปลไทยทีละบรรทัด ไม่ต้องเปิดวิดีโอ ใช้ได้ทั้งแอปและเว็บ",m:Object.keys(stat("lyr")).length?"อ่านแล้ว "+Object.keys(stat("lyr")).length+" เพลง":"ใหม่"},
     {act:"pgo",id:"reading",ic:HI.book,t:"ห้องสมุดบทอ่าน",d:"เรื่องสั้นตามระดับ แตะคำเพื่อดูความหมาย",m:"อ่านแล้ว "+read+" / "+STORIES.length+" เรื่อง"},
     {act:"pgo",id:"dictation",ic:HI.keys,t:"ฟังแล้วพิมพ์",d:"ฟังประโยคแล้วพิมพ์ตาม ฝึกหู การสะกด และไวยากรณ์",m:"ทำแล้ว "+dict+" ประโยค"},
     {act:"pgo",id:"sounds",ic:HI.ear,t:"ฝึกหูแยกเสียง",d:"เสียงที่คนไทยมักสับสน เช่น L/R, SH/CH, V/W",m:snd+" / "+SOUNDS.length+" ชุดเสียง"},
@@ -18115,6 +18201,7 @@ function render(){
   const tb=$(".topbar"); if(tb) document.documentElement.style.setProperty("--topbar-h",tb.offsetHeight+"px");
   if(NB&&route.name==="practice"&&String(route.id||"").indexOf("yt.")===0) ytMount();
   if(NB&&route.name==="practice"&&String(route.id||"").indexOf("song.")===0) sgEnter();
+  if(route.name==="practice"&&String(route.id||"").indexOf("lyr.")===0) lrEnter();
 }
 function updateChrome(){
   const b=$("#acct"), m=$("#acct-menu"); if(!b||!m) return;
@@ -18574,7 +18661,7 @@ const ACT={
   "reset-no":()=>{resetAsk=false;render()},
   "reset-yes":()=>{["email-drafts","exam-drafts","exam-progress"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}}); Object.keys(XD).forEach(k=>delete XD[k]); Object.keys(EMD).forEach(k=>delete EMD[k]); Object.keys(XP).forEach(k=>delete XP[k]); S=fresh();S.updatedAt=Date.now();save();resetAsk=false;L=null;R=null;toast("ล้างความคืบหน้าแล้ว");go("home")}
 };
-Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT,ACACT,SPACT,UXACT);
+Object.assign(ACT,XACT,PACT,GACT,RACT,SACT,TACT,HACT,YACT,MACT,STACT,BZACT,BKACT,ACACT,SPACT,UXACT,LRACT);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-act]"); if(!t||t.disabled) return;
   const f=ACT[t.dataset.act]; if(f){e.preventDefault(); f(t,e)}
