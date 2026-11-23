@@ -64,7 +64,7 @@ let nav=0; const open=(pg,h)=>pg.goto(APP+'?n='+(++nav)+h);
   await q.screenshot({path:path.join(__dirname,'out','songs.png')});
   // reopening uses the cache: no new YouTube search, no new translation
   const before=await q.evaluate(()=>({f:__fetched.length,t:__translated}));
-  await open(q,'#practice-songs'); await q.click('[data-act="sgopen"]');
+  await open(q,'#practice-songs'); await q.click('[data-act="sgopen"][data-t="Fake Song"]');
   await q.waitForFunction(()=>document.querySelectorAll('#sg-lyrics .sg-th').length>=3,null,{timeout:10000});
   // the page reloaded, so the fake's counters restarted at zero: anything above zero is a new request
   const after=await q.evaluate(()=>({f:__fetched.length,t:__translated})); if(before.f<1||before.t<1||after.f!==0||after.t!==0) bad('cache not used: '+JSON.stringify([before,after]));
